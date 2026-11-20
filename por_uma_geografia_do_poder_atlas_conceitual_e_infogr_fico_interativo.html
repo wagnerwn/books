@@ -1,0 +1,2953 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Por uma Geografia do Poder — Atlas Conceitual e Infográfico Interativo | Claude Raffestin</title>
+
+  <style>
+    /* =========================================================================
+       TOKENS DE DESIGN — PALETA EDITORIAL (EDITORA ÁTICA • SÉRIE TEMAS VOL. 29)
+       ========================================================================= */
+    :root {
+      --bg-paper: #F7F4EC;
+      --bg-card: #FFFDF8;
+      --bg-soft: #F1ECE0;
+      --border-soft: #DDD5C7;
+      --border-strong: #C5BAA6;
+
+      /* Cor Primária — Poder / Destaque / Faixa Editorial */
+      --crimson: #9E2424;
+      --crimson-dark: #731818;
+      --crimson-soft: #F9EBEB;
+
+      /* Cor Secundária — Estrutura / Estado / Tipografia */
+      --slate: #1B2635;
+      --slate-muted: #4A5564;
+      --petrol: #2B5B6C;
+      --petrol-soft: #E8F1F4;
+
+      /* Cores de Acento — Energia / Informação / Trunfos */
+      --ochre: #C98A2C;
+      --ochre-soft: #FBF3E3;
+      --olive: #3D6B59;
+      --olive-soft: #E8F2EE;
+
+      /* Tipografia Editorial 100% Nativa */
+      --font-serif: Georgia, 'Times New Roman', Cambria, serif;
+      --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      --sidebar-w: 300px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 10px rgba(27, 38, 53, 0.06);
+      --shadow-md: 0 12px 30px rgba(27, 38, 53, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--slate);
+      font-family: var(--font-sans);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        linear-gradient(rgba(27, 38, 53, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(27, 38, 53, 0.035) 1px, transparent 1px);
+      background-size: 28px 28px;
+      overflow-x: hidden;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================================================
+       LAYOUT PRINCIPAL & BARRA LATERAL
+       ========================================================================= */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Topo Mobile */
+    .mobile-topbar {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(247, 244, 236, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--crimson);
+      padding: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--slate);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.16s ease;
+    }
+    .icon-btn:hover {
+      border-color: var(--crimson);
+      color: var(--crimson);
+      background: var(--crimson-soft);
+    }
+
+    .mobile-brand {
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .mobile-brand strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 0.98rem;
+      color: var(--slate);
+      line-height: 1.15;
+    }
+    .mobile-brand span {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--crimson);
+    }
+
+    .mobile-progress-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--crimson-soft);
+      color: var(--crimson-dark);
+      border: 1px solid rgba(158, 36, 36, 0.3);
+      white-space: nowrap;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(27, 38, 53, 0.48);
+      z-index: 45;
+    }
+    .sidebar-overlay.open {
+      display: block;
+    }
+
+    /* Sidebar Fixa */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar-header {
+      padding: 20px 18px 16px;
+      background: linear-gradient(155deg, var(--slate) 0%, #141C28 65%, #34161A 100%);
+      color: #F7F4EC;
+      position: relative;
+      border-bottom: 4px solid var(--crimson);
+    }
+
+    .edition-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.61rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(158, 36, 36, 0.45);
+      border: 1px solid rgba(247, 244, 236, 0.25);
+      color: #FBF3E3;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-weight: 700;
+      line-height: 1.18;
+      color: #FFFFFF;
+    }
+
+    .sidebar-author {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: #E7BE79;
+      margin-top: 5px;
+      letter-spacing: 0.04em;
+    }
+
+    .close-drawer-btn {
+      display: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* Progresso */
+    .progress-wrap {
+      margin-top: 14px;
+      padding-top: 11px;
+      border-top: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.71rem;
+      margin-bottom: 6px;
+      color: rgba(247, 244, 236, 0.9);
+    }
+    .progress-meta strong {
+      font-family: var(--font-mono);
+      color: #E7BE79;
+    }
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--crimson), var(--ochre));
+      transition: width 0.3s ease;
+    }
+
+    /* Busca */
+    .search-box {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border-soft);
+      background: #F4EFE3;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 30px 9px 32px;
+      font-size: 0.79rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--slate);
+      outline: none;
+      transition: border-color 0.16s, box-shadow 0.16s;
+    }
+    .search-input:focus {
+      border-color: var(--crimson);
+      box-shadow: 0 0 0 3px rgba(158, 36, 36, 0.12);
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate-muted);
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border: none;
+      background: transparent;
+      color: var(--slate-muted);
+      border-radius: 6px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+    }
+    .search-clear.visible {
+      display: inline-flex;
+    }
+    .search-clear:hover {
+      background: var(--border-soft);
+      color: var(--slate);
+    }
+
+    /* Lista da Sidebar */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px 20px;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      color: var(--slate);
+      transition: all 0.15s ease;
+      margin-bottom: 3px;
+    }
+    .nav-item:hover {
+      background: var(--bg-paper);
+      border-color: var(--border-soft);
+    }
+    .nav-item.active {
+      background: var(--crimson-soft);
+      border-color: rgba(158, 36, 36, 0.34);
+    }
+
+    .nav-num {
+      flex-shrink: 0;
+      width: 26px;
+      height: 24px;
+      border-radius: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-paper);
+      color: var(--slate-muted);
+      border: 1px solid var(--border-soft);
+      margin-top: 1px;
+    }
+    .nav-item.active .nav-num {
+      background: var(--crimson);
+      color: #FFFFFF;
+      border-color: var(--crimson);
+    }
+
+    .nav-label {
+      flex: 1;
+      min-width: 0;
+    }
+    .nav-label-title {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--slate);
+    }
+    .nav-item.active .nav-label-title {
+      color: var(--crimson-dark);
+    }
+    .nav-label-sub {
+      display: block;
+      font-size: 0.67rem;
+      color: var(--slate-muted);
+      margin-top: 1px;
+    }
+
+    .nav-check {
+      flex-shrink: 0;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.64rem;
+      color: transparent;
+      margin-top: 2px;
+      transition: all 0.16s ease;
+    }
+    .nav-check.done {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .part-group {
+      margin-top: 13px;
+    }
+    .part-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 8px 6px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--slate-muted);
+    }
+    .part-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border-soft);
+      background: #F4EFE3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.69rem;
+      color: var(--slate-muted);
+    }
+    .reset-btn {
+      background: transparent;
+      border: none;
+      color: var(--crimson);
+      font-weight: 600;
+      font-size: 0.69rem;
+      text-decoration: underline;
+    }
+
+    /* =========================================================================
+       CONTEÚDO PRINCIPAL
+       ========================================================================= */
+    .main-area {
+      flex: 1;
+      min-width: 0;
+      padding: 32px 38px 64px;
+    }
+
+    .page-container {
+      max-width: 990px;
+      margin: 0 auto;
+      animation: fadeUp 0.26s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 0.72; }
+      50% { opacity: 1; }
+    }
+
+    /* Cabeçalho de Capítulo */
+    .chapter-header {
+      margin-bottom: 22px;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .part-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border-radius: 999px;
+      color: #FFFFFF;
+    }
+
+    .study-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.79rem;
+      font-weight: 600;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--slate);
+      transition: all 0.16s ease;
+    }
+    .study-btn:hover {
+      border-color: var(--olive);
+      color: var(--olive);
+    }
+    .study-btn.studied {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .chapter-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.7rem, 3vw, 2.38rem);
+      font-weight: 700;
+      line-height: 1.17;
+      color: var(--slate);
+    }
+
+    .chapter-subtitle {
+      font-size: 0.96rem;
+      color: var(--slate-muted);
+      margin-top: 7px;
+      max-width: 820px;
+    }
+
+    .editorial-stripe {
+      height: 5px;
+      width: 100%;
+      margin: 18px 0 22px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--crimson) 0%, var(--crimson) 38%, var(--slate) 38%, var(--slate) 76%, var(--ochre) 76%, var(--ochre) 100%);
+    }
+
+    /* Blocos Editoriais */
+    .synthesis-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-left: 5px solid var(--crimson);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+    .synthesis-text {
+      font-size: 0.94rem;
+      color: var(--slate);
+      line-height: 1.68;
+    }
+
+    .formula-pill {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: var(--slate);
+      color: #FBF3E3;
+      margin-top: 10px;
+      letter-spacing: 0.03em;
+    }
+
+    /* Infográfico Container */
+    .infographic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 28px;
+    }
+
+    .kicker {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--crimson);
+      margin-bottom: 5px;
+    }
+
+    .section-heading {
+      font-family: var(--font-serif);
+      font-size: 1.42rem;
+      font-weight: 700;
+      color: var(--slate);
+      line-height: 1.24;
+      margin-bottom: 6px;
+    }
+
+    .section-lead {
+      font-size: 0.87rem;
+      color: var(--slate-muted);
+      margin-bottom: 18px;
+      max-width: 790px;
+    }
+
+    /* Controles Interativos */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .ctrl-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-paper);
+      color: var(--slate);
+      font-size: 0.79rem;
+      font-weight: 600;
+      transition: all 0.16s ease;
+    }
+    .ctrl-btn:hover {
+      border-color: var(--crimson);
+      background: var(--crimson-soft);
+    }
+    .ctrl-btn.active-crimson {
+      background: var(--crimson);
+      color: #FFFFFF;
+      border-color: var(--crimson);
+      box-shadow: 0 2px 8px rgba(158, 36, 36, 0.25);
+    }
+    .ctrl-btn.active-slate {
+      background: var(--slate);
+      color: #FFFFFF;
+      border-color: var(--slate);
+    }
+    .ctrl-btn.active-petrol {
+      background: var(--petrol);
+      color: #FFFFFF;
+      border-color: var(--petrol);
+    }
+    .ctrl-btn.active-ochre {
+      background: var(--ochre);
+      color: #FFFFFF;
+      border-color: var(--ochre);
+    }
+    .ctrl-btn.active-olive {
+      background: var(--olive);
+      color: #FFFFFF;
+      border-color: var(--olive);
+    }
+
+    .panel-soft {
+      background: #F6F2E8;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .svg-stage {
+      width: 100%;
+      background: #FAF7F0;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .svg-stage svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Sliders */
+    input[type="range"].atlas-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--border-soft);
+      outline: none;
+    }
+    input[type="range"].atlas-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--crimson);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(158, 36, 36, 0.35);
+      cursor: pointer;
+    }
+    input[type="range"].atlas-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--crimson);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(158, 36, 36, 0.35);
+      cursor: pointer;
+    }
+
+    /* Grids utilitários */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    /* Medidores */
+    .meter-item {
+      margin-bottom: 12px;
+    }
+    .meter-item:last-child {
+      margin-bottom: 0;
+    }
+    .meter-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .meter-head span:last-child {
+      font-family: var(--font-mono);
+    }
+    .meter-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--slate);
+    }
+    .chip-crimson { background: var(--crimson-soft); border-color: rgba(158,36,36,0.32); color: var(--crimson-dark); }
+    .chip-petrol { background: var(--petrol-soft); border-color: rgba(43,91,108,0.32); color: var(--petrol); }
+    .chip-ochre { background: var(--ochre-soft); border-color: rgba(201,138,44,0.36); color: #8A5B14; }
+    .chip-olive { background: var(--olive-soft); border-color: rgba(61,107,89,0.32); color: var(--olive); }
+
+    /* Cartões de Conceitos-Chave Clicáveis / Expansíveis */
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+      margin-bottom: 26px;
+    }
+
+    .concept-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .concept-card:hover {
+      border-color: var(--crimson);
+      transform: translateY(-2px);
+    }
+    .concept-card.expanded {
+      border-color: var(--crimson);
+      background: #FFFBF8;
+      box-shadow: var(--shadow-md);
+    }
+    .concept-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      width: 100%;
+    }
+    .concept-tag {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--crimson);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .concept-toggle-icon {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--crimson);
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--crimson-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .concept-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1.03rem;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .concept-def {
+      font-size: 0.83rem;
+      color: var(--slate-muted);
+      line-height: 1.54;
+    }
+    .concept-extra {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-strong);
+      font-size: 0.79rem;
+      color: var(--slate);
+      line-height: 1.5;
+    }
+    .concept-extra strong {
+      color: var(--petrol);
+    }
+
+    /* Citação Editorial */
+    .quote-card {
+      background: var(--crimson-soft);
+      border-left: 4px solid var(--crimson);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 18px 22px;
+      margin: 22px 0;
+    }
+    .quote-card p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.06rem;
+      color: var(--slate);
+      line-height: 1.55;
+    }
+    .quote-card footer {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--crimson-dark);
+    }
+
+    /* Rodapé de Navegação */
+    .chapter-footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .step-btn {
+      flex: 1;
+      min-width: 220px;
+      max-width: 390px;
+      padding: 13px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--slate);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      transition: all 0.16s ease;
+    }
+    .step-btn:hover {
+      border-color: var(--crimson);
+      background: var(--crimson-soft);
+    }
+    .step-btn.next {
+      margin-left: auto;
+      justify-content: flex-end;
+      text-align: right;
+      background: var(--slate);
+      border-color: var(--slate);
+      color: #FFFFFF;
+    }
+    .step-btn.next:hover {
+      background: var(--crimson-dark);
+      border-color: var(--crimson-dark);
+    }
+    .step-meta {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
+    }
+    .step-title {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 90;
+      background: var(--slate);
+      color: #F7F4EC;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.24);
+      border: 1px solid rgba(201, 138, 44, 0.5);
+      display: none;
+      align-items: center;
+      gap: 9px;
+    }
+    .toast.show {
+      display: flex;
+    }
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ochre);
+    }
+
+    /* Responsividade */
+    @media (max-width: 960px) {
+      .mobile-topbar {
+        display: flex;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .close-drawer-btn {
+        display: inline-flex;
+      }
+      .main-area {
+        padding: 20px 16px 52px;
+      }
+      .infographic-card, .synthesis-card {
+        padding: 18px;
+      }
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Mobile -->
+  <header class="mobile-topbar">
+    <button id="open-drawer-btn" class="icon-btn" type="button" aria-label="Abrir sumário">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <div class="mobile-brand">
+      <strong>Por uma Geografia do Poder</strong>
+      <span>Claude Raffestin • Atlas Conceitual</span>
+    </div>
+    <div id="mobile-progress-pill" class="mobile-progress-pill">0/11</div>
+  </header>
+
+  <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <!-- Barra Lateral Fixa -->
+    <aside id="sidebar" class="sidebar" aria-label="Sumário da obra">
+      <div class="sidebar-header">
+        <button id="close-drawer-btn" class="close-drawer-btn" type="button" aria-label="Fechar menu">✕</button>
+        <span class="edition-badge">Editora Ática • Série Temas Vol. 29</span>
+        <h1 class="sidebar-title">Por uma Geografia do Poder</h1>
+        <p class="sidebar-author">Claude Raffestin • Atlas Conceitual</p>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span>Progresso de Estudo</span>
+            <strong id="sidebar-progress-text">0/11 estudados</strong>
+          </div>
+          <div class="progress-track">
+            <div id="sidebar-progress-fill" class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Busca Instantânea -->
+      <div class="search-box">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/>
+          </svg>
+          <input id="search-input" class="search-input" type="text" placeholder="Buscar conceito (ex: TDR, malha, Foucault)..." autocomplete="off">
+          <button id="search-clear" class="search-clear" type="button" aria-label="Limpar busca">✕</button>
+        </div>
+      </div>
+
+      <!-- Navegação -->
+      <nav id="sidebar-nav" class="sidebar-nav"></nav>
+
+      <div class="sidebar-footer">
+        <span>Trad. Maria Cecília França</span>
+        <button id="reset-progress-btn" class="reset-btn" type="button">Reiniciar</button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-area">
+      <div id="main-content" class="page-container"></div>
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span id="toast-msg"></span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       BASE CONCEITUAL — POR UMA GEOGRAFIA DO PODER (CLAUDE RAFFESTIN, ÁTICA)
+       12 seções navegáveis: Visão Geral + 10 Capítulos Teóricos + Conclusão
+       ========================================================================= */
+
+    const STORAGE_KEY = 'raffestin_geografia_poder_atlas_v1';
+
+    const PARTS = {
+      p1: { id: 'p1', roman: 'Parte I', title: 'A Problemática do Poder', color: '#9E2424', soft: '#F9EBEB' },
+      p2: { id: 'p2', roman: 'Parte II', title: 'A População e o Poder', color: '#2B5B6C', soft: '#E8F1F4' },
+      p3: { id: 'p3', roman: 'Parte III', title: 'O Território e o Poder', color: '#3D6B59', soft: '#E8F2EE' },
+      p4: { id: 'p4', roman: 'Parte IV', title: 'Os Recursos e o Poder', color: '#C98A2C', soft: '#FBF3E3' },
+      end: { id: 'end', roman: 'Síntese Final', title: 'Conclusão', color: '#1B2635', soft: '#EAECEF' }
+    };
+
+    const SECTIONS = [
+      {
+        id: 1,
+        numLabel: '1',
+        part: 'p1',
+        title: 'Da Geografia Política Clássica à Geografia do Poder',
+        subtitle: 'Crítica à geografia unidimensional do Estado (Ratzel) e passagem à problemática relacional.',
+        synthesis: 'Desde Friedrich Ratzel (1897), a geografia política clássica confundiu o fato político com o Estado-nação, reduzindo-se a uma "geografia do Estado" unidimensional, descritiva e morfofuncional. Raffestin propõe uma ruptura epistemológica: em vez de partir do objeto-Estado como fonte única e transcendente, deve-se adotar uma problemática relacional multidimensional, capaz de apreender o poder em todas as escalas e organizações sociais.',
+        formula: 'Geografia do Estado (Unidimensional) ➔ Geografia do Poder (Relacional / Multidimensional)',
+        quote: 'A geografia política clássica é na verdade uma geografia do Estado, o que seria necessário ultrapassar propondo uma problemática relacional, na qual o poder é a chave.',
+        quoteRef: 'Notas Prévias & Parte I, Cap. I',
+        keywords: ['Ratzel', 'geografia política clássica', 'Estado', 'unidimensional', 'multidimensional', 'problemática relacional', 'morfofuncional', 'códigos sintáticos', 'códigos semânticos', 'geopolítica'],
+        concepts: [
+          {
+            tag: 'Crítica Epistemológica',
+            name: 'Geografia Unidimensional do Estado',
+            def: 'Abordagem herdada de Ratzel e da geopolítica que equivale Estado = Poder, reconhecendo apenas a escala estatal e tratando formas espaciais (fronteiras, capitais) como dados estáticos.',
+            rel: 'Opõe-se à Geografia Multidimensional do Poder, que analisa sindicatos, empresas, igrejas, comunidades e indivíduos.'
+          },
+          {
+            tag: 'Semiologia Espacial',
+            name: 'Códigos Sintáticos vs. Semânticos',
+            def: 'Na linguagem estatal, códigos sintáticos (dimensão, forma, posição) revelam estratégias abertas; códigos semânticos ("Estado marítimo e compacto") congelam resultados e ocultam relações de força.',
+            rel: 'Conecta-se à ideia de que o estrategista age sobre representações (mapas), e não diretamente sobre o terreno bruto.'
+          },
+          {
+            tag: 'Novo Método',
+            name: 'Problemática Relacional',
+            def: 'Mais do que um objeto fixo, é um projeto de inteligibilidade que investiga os princípios de simetria e dissimetria nas relações entre atores antes de descrever as morfologias espaciais.',
+            rel: 'Substitui o triângulo passivo (querer/saber/poder ver) pelo triângulo existencial (querer/saber/poder existir).'
+          },
+          {
+            tag: 'Atores Coletivos',
+            name: 'Atores Sintagmáticos vs. Paradigmáticos',
+            def: 'Atores sintagmáticos (Estado, empresas, partidos) realizam programas articulados; atores paradigmáticos (população classificada) não têm programa próprio e tornam-se trunfos disputados.',
+            rel: 'Em momentos de revolta ou organização coletiva, atores paradigmáticos podem converter-se em sintagmáticos.'
+          }
+        ]
+      },
+      {
+        id: 2,
+        numLabel: '2',
+        part: 'p1',
+        title: 'O que é o Poder? (Poder "P" vs. poder "p", Relação, Energia e Informação)',
+        subtitle: 'Imanência relacional, a equação do trabalho (energia informada) e a emergência da resistência.',
+        synthesis: 'Apoiado em Michel Foucault, Raffestin distingue o Poder com "P" maiúsculo (aparelho estatal visível, forma terminal de dominação) do poder com "p" minúsculo (relacional, capilar, imanente a toda interação humana). O poder não se possui nem se adquire: ele se exerce em um campo relacional mediante a manipulação combinada de dois fluxos fundamentais — Energia (E) e Informação (I) — enraizados no trabalho humano.',
+        formula: 'Trabalho (Poder Original) = Energia (E) + Informação (I)  |  Onde há poder, há resistência',
+        quote: 'O poder não é nem adquirido nem possuído, mas exercido a partir de inumeráveis pontos. Onde há poder há resistência, e esta jamais está em posição de exterioridade em relação ao poder.',
+        quoteRef: 'Parte I, Cap. III — O Poder (em diálogo com Foucault)',
+        keywords: ['Poder', 'poder', 'Foucault', 'energia', 'informação', 'trabalho', 'resistência', 'simetria', 'dissimetria', 'campo de poder', 'trunfos', 'alienação'],
+        concepts: [
+          {
+            tag: 'Distinção Central',
+            name: 'Poder ("P") vs. poder ("p")',
+            def: 'O "Poder" (maiúsculo) é o aparato institucional visível e concentrado; o "poder" (minúsculo) é relacional, difuso, onipresente e escondido em toda interação cotidiana.',
+            rel: 'Esconder o poder "p" atrás do Poder "P" impede perceber a dominação nas relações de trabalho, consumo e comunicação.'
+          },
+          {
+            tag: 'Fundamento',
+            name: 'Trabalho = Energia Informada (E + I)',
+            def: 'O poder original nasce da capacidade humana de transformar o meio e a sociedade combinando força física/material (Energia) dirigida por saber/ordem (Informação).',
+            rel: 'A alienação ocorre quando organizações separam E de I (trabalho manual vs. intelectual), expropriando a autonomia.'
+          },
+          {
+            tag: 'Cinemática Relacional',
+            name: 'Simetria, Dissimetria e Resistência',
+            def: 'Relações simétricas equilibram ganhos e custos (reconhecendo o valor de uso); relações dissimétricas impõem equivalências forçadas (valor de troca), gerando sempre resistência e contrapoder.',
+            rel: 'Determina o "orçamento relacional" (ganhos/custos) que define se um ator é dominante ou dominado.'
+          },
+          {
+            tag: 'Três Trunfos',
+            name: 'Os Trunfos do Poder (Enjeux)',
+            def: 'Todo poder visa controlar, dominar ou neutralizar três trunfos articulados: População (fonte), Território (cena) e Recursos (horizonte de ação).',
+            rel: 'Quanto mais o poder joga apenas com símbolos dos trunfos (distância crítica), mais vulnerável e cego se torna.'
+          }
+        ]
+      },
+      {
+        id: 3,
+        numLabel: '3',
+        part: 'p1',
+        title: 'A Comunicação, a Língua e o Poder',
+        subtitle: 'Sistemas sêmicos, funções tetraglóssicas da linguagem, mais-valia linguística e opressão simbólica.',
+        synthesis: 'Toda relação de poder se exerce em um campo de comunicação. A língua não é um instrumento neutro: é trabalho humano cristalizado (capital constante) ativado pelos falantes (capital variável) em um "mercado linguístico". Ao impor uma língua única ou controlar os códigos (homogeneização), o centro extrai uma mais-valia simbólica, contrai o espaço-tempo das línguas locais e amplia seu poder de controle — pois o poder se nutre de isotropia.',
+        formula: 'Capital Linguístico (C) = c (língua) + v (falantes)  |  P · C = Constante (Schaeffer)',
+        quote: 'Todo poder que se estabelece unifica, centraliza, concentra, homogeneíza, comprime, de maneira a só trabalhar com uma massa isotrópica. O poder se nutre de isotropia; a anisotropia oferece resistências.',
+        quoteRef: 'Parte II, Cap. II — Língua e Poder',
+        keywords: ['língua', 'comunicação', 'códigos', 'vernáculo', 'veicular', 'referencial', 'mítica', 'Gobard', 'isotropia', 'anisotropia', 'mais-valia linguística', 'Schaeffer', 'esquizoglossia'],
+        concepts: [
+          {
+            tag: 'Análise Tetraglóssica',
+            name: 'As 4 Funções da Linguagem (Gobard)',
+            def: 'Vernacular (local, comunhão), Veicular (circulação, comércio, troca), Referencial (tradição, cultura escrita) e Mítica (sagrado, magia verbal, ideologia).',
+            rel: 'Quando uma língua dominante monopoliza as 4 funções (ex.: inglês global), ela subordina e contrai os idiomas locais.'
+          },
+          {
+            tag: 'Economia Sêmica',
+            name: 'Comunhão (Valor de Uso) vs. Comunicação (Valor de Troca)',
+            def: 'A expansão do mercado e da cidade sobre o campo impõe a língua veicular (valor de troca) sobre a língua vernacular (comunhão/valor de uso), gerando dupla alienação.',
+            rel: 'Conecta-se à extração de "mais-valia linguística" quando o tempo de fala migra para o código dominante.'
+          },
+          {
+            tag: 'Relação Inversa',
+            name: 'Constante de Schaeffer (P · C = k)',
+            def: 'Visualização conceitual de que um poder centralizado extremo (P) reduz a diversidade qualitativa da comunicação (C), enquanto comunicação plural e anisotrópica limita o poder absoluto.',
+            rel: 'Explica por que movimentos regionalistas reivindicam a língua como instrumento de autonomia política.'
+          },
+          {
+            tag: 'Geografia do Poder',
+            name: 'Isotropia vs. Anisotropia Cultural',
+            def: 'A isotropia (uniformidade) barateia o gasto energético de vigilância e comando central; a anisotropia (diferença) cria atrito e serve de ponto de apoio às resistências.',
+            rel: 'Mesma lógica aplicada por Raffestin às religiões (sagrado/profano) e às minorias étnicas.'
+          }
+        ]
+      },
+      {
+        id: 4,
+        numLabel: '4',
+        part: 'p2',
+        title: 'A População como Base Energética, Informacional e Objeto de Controle',
+        subtitle: 'Por que a população precede o território: recenseamento, "homem estatístico" e gestão de fluxos.',
+        synthesis: 'Rompendo a tradição clássica, Raffestin analisa a população antes do território, pois ela é a fonte primeira de todo poder — portadora de energia de trabalho e capacidade de inovação (informação). Por isso mesmo, o primeiro gesto de domínio do Estado e das organizações é representá-la numericamente pelo recenseamento, transformando sujeitos concretos em "homem estatístico" mensurável para gerir impostos, recrutamento, natalidade e mortalidade.',
+        formula: 'Recenseamento = Energia gasta para obter Informação sobre um Estoque Humano',
+        quote: 'Por que a população em primeiro lugar? Porque é a fonte de poder, o próprio fundamento do poder, por sua capacidade de inovação ligada a seu potencial de trabalho.',
+        quoteRef: 'Notas Prévias & Parte II, Cap. I — Recenseamento e Poder',
+        keywords: ['população', 'recenseamento', 'homem estatístico', 'estoque humano', 'fluxos naturais', 'natalismo', 'malthusianismo', 'biopolítica', 'coisificação', 'arborescência', 'fichário'],
+        concepts: [
+          {
+            tag: 'Primeiro Domínio',
+            name: 'Recenseamento e "Homem Estatístico"',
+            def: 'Contar, classificar e fichar a população produz uma representação abstrata que coisifica o ser humano em unidade de cálculo (contribuinte, soldado, produtor, consumidor).',
+            rel: 'Informação que se degrada com o tempo, exigindo censos periódicos e custos energéticos contínuos.'
+          },
+          {
+            tag: 'Grafos de Controle',
+            name: 'Arborescência e Ruptura de Comunicação',
+            def: 'Na hierarquia censitária (Estado → província → município → população), a resistência pode ser técnica (repertórios não secantes) ou política (recusa em devolver informação ao topo).',
+            rel: 'Quando não há retorno de baixo para cima, o sistema vira arborescência sem circuito e o poder se degrada.'
+          },
+          {
+            tag: 'Gestão da Vida',
+            name: 'Políticas Natalistas vs. Malthusianas',
+            def: 'O Estado intervém na esfera íntima (relação triangular Estado–casal) por incentivos ou coerções para maximizar efetivos (poderio) ou contê-los (população ótima/mínima).',
+            rel: 'Mostra a convergência ou divergência estratégica entre o ator-Estado e o ator-casal.'
+          },
+          {
+            tag: 'Ambivalência',
+            name: 'População: Ator e Trunfo Simultaneamente',
+            def: 'A população é o recurso essencial disputado pelas organizações, mas também a origem de todas as resistências, revoltas e inovações que desestabilizam o controle.',
+            rel: 'Espelha a metáfora do quadro de Goya (Don Manuel Osorio) citada nas Notas Prévias.'
+          }
+        ]
+      },
+      {
+        id: 5,
+        numLabel: '5',
+        part: 'p2',
+        title: 'Estrutura da População e Trunfos do Poder',
+        subtitle: 'Pirâmide demográfica, mobilidade autônoma/heteronômica, diferenças culturais e discriminação.',
+        synthesis: 'Além da quantidade, o poder manipula a qualidade e a estrutura interna da população: sua pirâmide etária, seus deslocamentos espaciais (migrações autônomas ou coagidas), sua urbanização e suas diferenças linguísticas, religiosas e étnico-raciais. Enquanto a diversidade humana é garantia biológica e cultural de autonomia da espécie, o poder frequentemente transforma a diferença relativa em hierarquia absoluta — por meio da discriminação espacial, salarial e informacional.',
+        formula: 'Diferença (Anisotropia / Autonomia)  ⇄  Discriminação / Homogeneização (Dissimetria)',
+        quote: 'Toda tentativa de reduzir essas diferenças, toda tentativa de impor um modelo único é uma forma de genocídio que enfraquece a autonomia da espécie no seu conjunto.',
+        quoteRef: 'Parte II, Caps. I, III e IV — Fluxos, Religião, Raças e Etnias',
+        keywords: ['estrutura demográfica', 'pirâmide', 'migrações', 'mobilidade autônoma', 'heteronômica', 'desterritorialização', 'religião', 'raça', 'etnia', 'discriminação espacial', 'gueto', 'mundialismo'],
+        concepts: [
+          {
+            tag: 'Dinâmica Espacial',
+            name: 'Mobilidade Autônoma vs. Heteronômica',
+            def: 'A mobilidade autônoma decorre de decisão própria (ainda que sob pressão econômica); a heteronômica resulta de coerção direta. Empresas "nômades" chocam-se com populações territorializadas.',
+            rel: 'Expõe o conflito entre tempo curto/espaço abstrato das empresas e tempo longo/espaço vivido dos trabalhadores.'
+          },
+          {
+            tag: 'Sagrado e Profano',
+            name: 'Religião como Sistema Sêmico de Poder',
+            def: 'Administração do sagrado que mobiliza forte componente informacional. Pode legitimar o Estado (teocracia, religião oficial) ou servir de alavanca de resistência anticolonial.',
+            rel: 'Opera com a mesma equação de capital constante (dogmas/ritos) + capital variável (comunidade de fiéis).'
+          },
+          {
+            tag: 'Segregação',
+            name: 'Discriminação Espacial, Energética e Informacional',
+            def: 'Confinamento de minorias em reservas ou guetos (fronteiras invisíveis), desvalorização do seu tempo de trabalho (salários desiguais) e bloqueio ao acesso à educação/informação.',
+            rel: 'Gera superpovoamento, desperdício de recursos humanos e tensões que retornam contra o grupo dominante.'
+          },
+          {
+            tag: 'Paradoxo Global',
+            name: 'Mundialismo Unitário vs. Mundialismo Pluralista',
+            def: 'O mundialismo unitário impõe um único modelo e acelera a entropia; o mundialismo pluralista preserva diferenças genéticas e culturais como reserva de informação para o futuro.',
+            rel: 'Fundamenta a crítica de Raffestin à perda de autonomia nas sociedades homogeneizadas.'
+          }
+        ]
+      },
+      {
+        id: 6,
+        numLabel: '6',
+        part: 'p3',
+        title: 'Do Espaço ao Território (A "Prisão Original" vs. a "Prisão Construída")',
+        subtitle: 'A distinção fundadora entre espaço e território, a representação cartográfica e o ciclo TDR.',
+        synthesis: 'Espaço e território não são sinônimos. O espaço é anterior: matéria-prima bruta, realidade preexistente a qualquer ação humana ("prisão original"). O território é uma produção a partir do espaço realizada por um ator sintagmático que projeta trabalho (energia + informação) e apropriação concreta ou simbólica (representação/mapa). Assim, o território é "a prisão que os homens constroem para si", permanentemente recriado no ciclo Territorialização–Desterritorialização–Reterritorialização (TDR).',
+        formula: 'T ➔ A · r (A · α · E)   |   Espaço (Dado) ➔ Trabalho (E+I) + Representação ➔ Território',
+        quote: 'O espaço é a "prisão original", o território é a prisão que os homens constroem para si. Produzir uma representação do espaço já é uma apropriação, uma empresa, um controle.',
+        quoteRef: 'Parte III, Cap. I — O que é o Território? (pp. 143–149)',
+        keywords: ['espaço', 'território', 'prisão original', 'prisão construída', 'territorialização', 'desterritorialização', 'reterritorialização', 'TDR', 'representação', 'cartografia', 'axiomática euclidiana'],
+        concepts: [
+          {
+            tag: 'Distinção Fundadora',
+            name: 'Espaço ("Prisão Original") vs. Território ("Prisão Construída")',
+            def: 'O espaço é o dado preexistente com valor de uso e campo de possibilidades; o território é o espaço apropriado e transformado pelo trabalho (E+I) e pelas relações de poder.',
+            rel: 'Supera a confusão clássica da geografia que usava "espaço" e "território" de maneira indistinta.'
+          },
+          {
+            tag: 'Apropriação Simbólica',
+            name: 'Representação e Sintaxe Euclidiana',
+            def: 'Mapas, planos e croquis não são neutros: ao reduzir o espaço a superfícies, pontos e linhas, a cartografia moderna (desde a Renascença) tornou-se instrumento privilegiado do poder.',
+            rel: 'Liga-se à frase de Wittgenstein citada por Raffestin: "os limites da minha língua são os limites do meu mundo".'
+          },
+          {
+            tag: 'Dinâmica Contínua',
+            name: 'Ciclo TDR (Territorialização–Desterritorialização–Reterritorialização)',
+            def: 'Nenhum território é definitivo: a ação humana constrói territórios (T), forças econômicas ou políticas rompem tramas antigas (D) e novos arranjos espaciais são recompostos (R).',
+            rel: 'Explica crises regionais, migrações forçadas e recomposições de fronteiras.'
+          },
+          {
+            tag: 'Produção & Consumo',
+            name: 'Território Produzido vs. Território Consumido',
+            def: 'O território é produzido por atores sintagmáticos (Estado, empresas) e "consumido" ou vivenciado no cotidiano por populações que nem sempre participaram de sua elaboração.',
+            rel: 'Abre caminho direto para o conceito de Territorialidade (Cap. 8).'
+          }
+        ]
+      },
+      {
+        id: 7,
+        numLabel: '7',
+        part: 'p3',
+        title: 'O Sistema Territorial: Malhas (Tessituras), Nós e Redes',
+        subtitle: 'As três invariáveis geométricas do poder no espaço: limites, centralidades e mobilidade.',
+        synthesis: 'Toda prática espacial de um ator sintagmático cristaliza-se em três invariáveis estruturais — a geometria do poder: (1) Malhas ou Tessituras (superfícies delimitadas por fronteiras e circunscrições para enquadrar e controlar); (2) Nós ou Nodosidades (pontos de concentração, cidades e capitais que fundam centralidades e, por oposição, marginalidades); e (3) Redes (linhas de circulação material e comunicação informacional que gerenciam distâncias, liberam ou aprisionam).',
+        formula: 'Sistema Territorial = Tessituras (Superfícies) + Nós (Pontos) + Redes (Linhas)',
+        quote: 'Com as tessituras, os nós e as redes, temos três subconjuntos estruturais que sustentam a prática espacial. A rede faz e desfaz as prisões do espaço tornado território: tanto libera como aprisiona.',
+        quoteRef: 'Parte III, Caps. I, II, III e IV — Sistema Territorial, Quadrículas, Nós e Redes',
+        keywords: ['sistema territorial', 'malha', 'tessitura', 'fronteira', 'limite', 'nó', 'nodosidade', 'centralidade', 'marginalidade', 'rede', 'circulação', 'comunicação', 'região'],
+        concepts: [
+          {
+            tag: 'Invariável 1 — Superfícies',
+            name: 'Malhas / Tessituras e Fronteiras',
+            def: 'Divisões territoriais (comunas, províncias, fronteiras legais, fiscais e de controle) que operam a oposição continuidade/descontinuidade. Podem ser "desejadas" (otimizam a ação) ou "suportadas" (maximizam o controle).',
+            rel: 'Mudanças de regime ou de modo de produção tendem a alterar as tessituras, mas heranças históricas resistem.'
+          },
+          {
+            tag: 'Invariável 2 — Pontos',
+            name: 'Nodosidade, Centralidade e Marginalidade',
+            def: 'Nodosidades (condensações humanas) geram centralidade (topos + tensão) e, simultaneamente, marginalidade. Centralidade e marginalidade são relacionais — não apenas geométricas.',
+            rel: 'Capitais multifuncionais extraem mais-valia espaço-temporal das periferias ao impor seus códigos.'
+          },
+          {
+            tag: 'Invariável 3 — Linhas',
+            name: 'Redes de Circulação vs. Redes de Comunicação',
+            def: 'A circulação (seres e bens) é visível e transparente; a comunicação (informação) tende à opacidade e ao segredo ("ver sem ser visto"). A tecnologia moderna dissociou suas velocidades.',
+            rel: 'O poder contemporâneo desloca-se para o controle invisível das redes de comunicação e financeiras.'
+          },
+          {
+            tag: 'Innis & Escala',
+            name: 'Domínio do Espaço vs. Domínio do Tempo',
+            def: 'Apoiado em H. Innis, Raffestin nota que meios leves/rápidos (papel, telemática, satélites) dominam grandes espaços em tempo curto, enquanto meios duráveis (pedra, tradição) atravessam o tempo longo.',
+            rel: 'Ilustra a tensão entre estratégias imperiais horizontais e estratégias culturais verticais.'
+          }
+        ]
+      },
+      {
+        id: 8,
+        numLabel: '8',
+        part: 'p3',
+        title: 'A Territorialidade e os Mediadores',
+        subtitle: 'A face vivida do poder: o sistema tridimensional Sociedade–Espaço–Tempo e a mediação com a alteridade.',
+        synthesis: 'Superando a etologia animal (defesa instintiva de área), Raffestin define a territorialidade humana como o conjunto multidimensional de relações que os sujeitos, inseridos em uma coletividade, mantêm com a exterioridade (meio físico/institucional) e com a alteridade (os outros) por meio de mediadores (técnicas, instrumentos, representações, instituições). É a "face vivida" da "face agida" do poder — buscando a maior autonomia possível compatível com os recursos do sistema.',
+        formula: 'Territorialidade: T ➔ Σ (H · r · E)  [Sujeito — Relação/Mediadores — Exterioridade/Alteridade]',
+        quote: 'A territorialidade se manifesta em todas as escalas espaciais e sociais; ela é consubstancial a todas as relações e seria possível dizer que, de certa forma, é a "face vivida" da "face agida" do poder.',
+        quoteRef: 'Parte III, Cap. I, item III — A Territorialidade (pp. 158–163)',
+        keywords: ['territorialidade', 'mediadores', 'alteridade', 'exterioridade', 'relação triangular', 'simétrica', 'dissimétrica', 'autonomia', 'alienação', 'face vivida', 'Soja', 'Girard'],
+        concepts: [
+          {
+            tag: 'Definição Relacional',
+            name: 'Territorialidade (T ➔ Σ H r E)',
+            def: 'Totalidade dinâmica de relações existenciais e produtivistas mantidas por sujeitos (H) com a exterioridade (E — lugares físicos e sistemas institucionais) em um quadro sociedade–espaço–tempo.',
+            rel: 'Rompe com o determinismo biológico da territorialidade animal e com a dicotomia estática homem–meio.'
+          },
+          {
+            tag: 'Triangulação',
+            name: 'Relação com o Território Mediatiza a Alteridade',
+            def: 'Inspirado em René Girard, Raffestin mostra que cercar, delimitar ou usar um território nunca é relação isolada com a terra: é uma relação triangular que regula o encontro com o Outro.',
+            rel: 'Define inclusões, exclusões, vizinhanças e distanciamentos sociais.'
+          },
+          {
+            tag: 'Instrumentos',
+            name: 'Os Mediadores (Técnicos, Simbólicos, Institucionais)',
+            def: 'Toda relação territorial passa por mediadores (ferramentas, linguagem, moeda, leis, mapas). Se os mediadores são apropriados por um poder externo, a territorialidade se aliena.',
+            rel: 'Conecta a territorialidade diretamente à tecnicidade (Cap. 9).'
+          },
+          {
+            tag: 'Estabilidade',
+            name: 'Territorialidade Estável vs. Instável / Autônoma vs. Alienada',
+            def: 'Quando ganhos e custos se equilibram (simetria), há territorialidade autônoma; quando relações externas impõem desestruturação e códigos estranhos (dissimetria), instala-se a crise territorial.',
+            rel: 'Alimenta movimentos de defesa do "local" e da região vivida contra o espaço abstrato.'
+          }
+        ]
+      },
+      {
+        id: 9,
+        numLabel: '9',
+        part: 'p4',
+        title: 'Matéria vs. Recurso (A Invenção Social dos Recursos)',
+        subtitle: '"Não há recursos naturais, só matérias naturais": tecnicidade, entropia e mobilização.',
+        synthesis: 'Em perfeita simetria com a distinção Espaço → Território → Territorialidade, Raffestin estabelece a tríade Matéria → Recurso → Tecnicidade. A matéria é um dado bruto e inerte da natureza; ela só se converte em recurso quando um ator (A) lhe aplica trabalho e técnica (r), inventando propriedades úteis segundo objetivos históricos. Por isso, "os recursos não são naturais": aparecem, evoluem e desaparecem conforme mudam as práticas técnicas e as relações de poder.',
+        formula: 'A · r · M ➔ P (Recurso)   |   Espaço : Território : Territorialidade :: Matéria : Recurso : Tecnicidade',
+        quote: 'Um recurso é o produto de uma relação. A partir daí, não há recursos naturais, só matérias naturais. É efetivamente o homem quem, por seu trabalho (energia informada), "inventa" as propriedades da matéria.',
+        quoteRef: 'Parte IV, Cap. I — O que são Recursos? (pp. 223–236)',
+        keywords: ['matéria', 'recurso', 'tecnicidade', 'propriedades', 'renováveis', 'não-renováveis', 'entropia', 'bioeconomia', 'exploracionismo', 'preservacionismo', 'conservacionismo', 'informação funcional', 'informação reguladora'],
+        concepts: [
+          {
+            tag: 'Tese Central',
+            name: 'Matéria (Dado) vs. Recurso (Relação A · r · M ➔ P)',
+            def: 'Sem prática técnica e conhecimento, o carvão ou o sílex são apenas matérias inertes. O recurso nasce da relação política e técnica que extrai propriedades correlatas a utilidades sociais.',
+            rel: 'Um recurso pode voltar a ser mera matéria obsoleta se a prática técnica que o valorizava desaparecer.'
+          },
+          {
+            tag: 'Subconjunto da Territorialidade',
+            name: 'Tecnicidade Simétrica vs. Dissimétrica',
+            def: 'Conjunto de relações que um grupo mantém com as matérias acessíveis. A tecnicidade simétrica não destrói o meio material; a dissimétrica esgota jazidas e obriga a substituições forçadas.',
+            rel: 'Apoia-se em Georgescu-Roegen (bioeconomia e instrumentos exossomáticos consumidores de baixa entropia).'
+          },
+          {
+            tag: 'Limites Físicos',
+            name: 'Renováveis (Ecossistema) vs. Não-Renováveis (Norma)',
+            def: 'Recursos renováveis dependem da fotossíntese, do solo e da água (regulação ecológica); não-renováveis (petróleo, minérios) não se recompõem na escala humana e exigem regulação normativa.',
+            rel: 'Evidencia o paradoxo da agricultura moderna: alto rendimento econômico às custas de queda no rendimento energético.'
+          },
+          {
+            tag: 'Três Comportamentos',
+            name: 'Exploracionismo, Preservacionismo e Conservacionismo',
+            def: 'Exploracionismo privilegia informação funcional (lucro imediato/presente); Preservacionismo privilegia informação reguladora (poupar/estagnação); Conservacionismo busca otimizar presente e futuro.',
+            rel: 'A crise ecológica expressa o desequilíbrio estrutural a favor da informação funcional sobre a reguladora.'
+          }
+        ]
+      },
+      {
+        id: 10,
+        numLabel: '10',
+        part: 'p4',
+        title: 'Os Recursos como Trunfos (Enjeux) e Estratégias do Poder',
+        subtitle: 'Os 4 tipos de atores (A, Ar, AM, ArM), transferência tecnológica e recursos como "armas políticas".',
+        synthesis: 'Os recursos condicionam o horizonte da ação e tornam-se trunfos estratégicos ("armas políticas") em um mercado que é, antes de tudo, uma relação de poder. Raffestin classifica os atores segundo o controle da técnica (r) e da matéria (M): A (sem ambos), AM (só matéria, preso à localização mas livre no tempo), Ar (só técnica, móvel no espaço mas pressionado pela obsolescência) e ArM (ambos). Hoje, a disputa central opõe atores Ar (multinacionais com monopólio do saber-fazer) a atores AM (países produtores).',
+        formula: 'Atores: A (Dependente) | AM (Matéria: prisão espacial, liberdade temporal) | Ar (Técnica: mobilidade espacial) | ArM (Hegemônico)',
+        quote: 'Não existem mais bens livres. Só há bens "políticos". Todo mercado é, além de um lugar ou de uma relação de troca, uma relação de poder no sentido mais puro.',
+        quoteRef: 'Parte IV, Caps. II e III — Os Atores, Estratégias e Armas Políticas (pp. 237–265)',
+        keywords: ['trunfos', 'enjeux', 'armas políticas', 'A', 'Ar', 'AM', 'ArM', 'transferência tecnológica', 'saber-fazer', 'saber-manejar', 'tecnologia intermediária', 'tecnologia combinada', 'substituição', 'OPEP'],
+        concepts: [
+          {
+            tag: 'Tipologia Estratégica',
+            name: 'Os Quatro Atores (A, Ar, AM, ArM)',
+            def: 'A é demandador vulnerável; AM detém matéria (sofre coerção espacial, mas joga com o tempo de extração); Ar detém técnica (difunde-se no espaço, mas sofre coerção da obsolescência); ArM otimiza espaço-tempo.',
+            rel: 'A vantagem estrutural tende a favorecer Ar, que controla o know-how, as finanças e a comercialização.'
+          },
+          {
+            tag: 'Assimetria do Saber',
+            name: '"Saber-Manejar" vs. "Saber-Fazer"',
+            def: 'Na transferência tecnológica das multinacionais, divulga-se externamente apenas o saber-manejar (usar o produto), mantendo o saber-fazer (inovação e P&D) privado na rede interna da matriz.',
+            rel: 'Diferencia tecnologia alienada (secreta), socializada (livre) e encarnada (assimilada pela população).'
+          },
+          {
+            tag: 'Alternativas Técnicas',
+            name: 'Tecnologia Intermediária & Tecnologia Combinada',
+            def: 'A tecnologia intermediária (Schumacher) poupa capital e energia fóssil, mas gera desconfiança política; a tecnologia combinada abre o "pacote tecnológico" separando núcleo e periferia.',
+            rel: 'Revela que a escolha técnica é, em última análise, uma escolha política de poder.'
+          },
+          {
+            tag: 'Armas Políticas',
+            name: 'Rarefação Artificial e Contramedidas',
+            def: 'Alimentos (ex.: cereais), energia (ex.: petróleo) e minerais funcionam como armas indiretas de pressão. Atores pressionados reagem por diversificação, estocagem, acordos ou bens de substituição.',
+            rel: 'A eficácia de um cartel (AM) depende de concentração, coesão política e ausência de substitutos rápidos.'
+          }
+        ]
+      },
+      {
+        id: 11,
+        numLabel: '§',
+        part: 'end',
+        title: 'Conclusão — Por uma Geografia da Autonomia',
+        subtitle: 'O objeto da geografia humana, a "geografia imediata" e o horizonte da simetria relacional.',
+        synthesis: 'Nas Observações Finais, Raffestin recusa "fechar" o ensaio, entregando-o ao leitor. Reafirma que o objeto da geografia humana não é o espaço em si, mas a prática e o conhecimento que os homens têm do espaço — razão pela qual toda geografia humana é intrinsecamente política. Contra o totalitarismo de uma geografia unidimensional e contra a coisificação do ser humano, propõe uma "geografia imediata" e uma "geografia da autonomia" comprometida com relações simétricas e com a preservação das diferenças.',
+        formula: 'Objeto da Geografia = Conhecimento + Prática Espacial  ➔  Geografia da Autonomia',
+        quote: 'O trunfo da geografia política é o homem, na sua qualidade de membro de uma coletividade, na sua existência cotidiana. É portanto uma "geografia da autonomia" que está em causa.',
+        quoteRef: 'Observações Finais (pp. 266–269)',
+        keywords: ['conclusão', 'autonomia', 'geografia imediata', 'simetria', 'dissimetria', 'coisificação', 'instância de recursos', 'diferença', 'cotidiano'],
+        concepts: [
+          {
+            tag: 'Epistemologia',
+            name: 'Objeto da Geografia Humana',
+            def: 'Não é o espaço abstrato, mas a explicitação da consciência do conhecimento e da prática que os homens mantêm com a realidade espacial (inspiração em Luis Prieto).',
+            rel: 'Torna toda geografia humana uma geografia política, pois conhecimento e prática implicam relações de poder.'
+          },
+          {
+            tag: 'Papel Social',
+            name: 'O Geógrafo como "Instância de Recursos"',
+            def: 'Sem agir como juiz ou censor normativo, o geógrafo deve desnudar a naturalização metonímica do poder e fornecer instrumentos teóricos para avaliar simetrias e dissimetrias.',
+            rel: 'Rompe com a postura de mera "testemunha" passiva diante da destruição de territórios.'
+          },
+          {
+            tag: 'Prática Viva',
+            name: 'Geografia Imediata e Cotidiano',
+            def: 'O fato banal, quando se repete com frequência, revela estruturas de poder ("a repetição impõe sua ordem, mesmo a ordem do intolerável"). A ciência viva nasce do retorno constante ao cotidiano.',
+            rel: 'Une conhecimento vivido e conhecimento científico em um processo contínuo de verificação.'
+          },
+          {
+            tag: 'Horizonte Ético-Político',
+            name: 'Geografia da Autonomia',
+            def: 'Projeto voltado a preservar a identidade, a diferença e a duração do sistema população–território–recursos, contrapondo a lógica da autonomia à lógica da dominação.',
+            rel: 'Sintetiza os 4 eixos da obra em torno da dignidade e da não-coisificação das coletividades.'
+          }
+        ]
+      }
+    ];
+
+    /* =========================================================================
+       ESTADO GLOBAL & ESTADO INTERATIVO DOS 12 INFOGRÁFICOS
+       ========================================================================= */
+
+    let currentView = 'overview'; // 'overview' ou 1..11
+    let searchQuery = '';
+    let studiedMap = loadStudied();
+    let expandedConcepts = {}; // chave: `${secId}-${idx}`
+
+    const ui = {
+      // 0. Mapa Geral
+      ovCompare: 'multi', // 'uni' | 'multi'
+      // 1. Cap 1: Prisma da Geografia
+      c1Mode: 'relacional', // 'classica' | 'relacional'
+      // 2. Cap 2: Equação E + I
+      c2PowerType: 'p', // 'P' | 'p'
+      c2E: 42,
+      c2I: 78,
+      // 3. Cap 3: Comunicação & Tetraglossia
+      c3Lang: 'veicular', // 'vernacular' | 'veicular' | 'referencial' | 'mitica'
+      c3Noise: true,
+      // 4. Cap 4: Lente Censitária
+      c4Filter: 'nenhum', // 'nenhum' | 'censo' | 'produtiva' | 'biopolitica' | 'fiscal'
+      // 5. Cap 5: Estrutura da População
+      c5Dim: 'piramide', // 'piramide' | 'mobilidade' | 'diversidade' | 'urbanizacao'
+      c5Tension: 68, // 0 (Coesão) .. 100 (Fragmentação/Conflito)
+      // 6. Cap 6: Espaço -> Território + TDR
+      c6Step: 3, // 0 (Espaço), 1 (Trabalho E+I), 2 (Representação), 3 (Território)
+      c6Tdr: 'T', // 'T' | 'D' | 'R'
+      // 7. Cap 7: Malhas, Nós e Redes
+      c7Layers: { malhas: true, nos: true, redes: true },
+      c7NetType: 'hierarquica', // 'hierarquica' | 'polinucleada'
+      c7Selected: 'no_central',
+      // 8. Cap 8: Territorialidade e Mediadores
+      c8Mode: 'autonoma', // 'autonoma' | 'alienada'
+      c8Med: 'tecnicas', // 'tecnicas' | 'representacoes' | 'instituicoes'
+      // 9. Cap 9: Matéria -> Recurso
+      c9Gear: { tech: true, energy: true, power: true },
+      // 10. Cap 10: Ciclo de Vida & Trunfos
+      c10Phase: 1, // 0..3
+      c10Strat: 'acesso', // 'acesso' | 'estocagem' | 'substituicao' | 'preco'
+      // 11. Conclusão: Bússola da Geografia do Poder
+      c11Logic: 'autonomia', // 'dominacao' | 'autonomia'
+      c11Axis: 'territorio' // 'poder' | 'populacao' | 'territorio' | 'recursos'
+    };
+
+    /* =========================================================================
+       PERSISTÊNCIA E UTILITÁRIOS
+       ========================================================================= */
+
+    function loadStudied() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveStudied() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(studiedMap));
+      } catch (e) { /* ambiente sem localStorage */ }
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      const txt = document.getElementById('toast-msg');
+      if (!el || !txt) return;
+      txt.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    function norm(s) {
+      return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function toggleStudied(id, evt) {
+      if (evt) evt.stopPropagation();
+      studiedMap[id] = !studiedMap[id];
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      const label = id === 11 ? 'Conclusão' : `Capítulo ${id}`;
+      showToast(studiedMap[id] ? `${label} marcado como estudado.` : `${label} desmarcado.`);
+    }
+
+    function resetProgress() {
+      studiedMap = {};
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      showToast('Progresso de leitura reiniciado.');
+    }
+
+    function toggleConcept(secId, idx) {
+      const key = `${secId}-${idx}`;
+      expandedConcepts[key] = !expandedConcepts[key];
+      renderMain();
+    }
+
+    function navigateTo(view) {
+      currentView = view;
+      renderSidebar();
+      renderMain();
+      closeDrawer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openDrawer() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.add('open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('open');
+    }
+
+    /* =========================================================================
+       RENDERIZAÇÃO DA SIDEBAR
+       ========================================================================= */
+
+    function renderSidebar() {
+      const nav = document.getElementById('sidebar-nav');
+      const q = norm(searchQuery.trim());
+
+      const done = SECTIONS.filter(s => studiedMap[s.id]).length;
+      const pct = Math.round((done / SECTIONS.length) * 100);
+      document.getElementById('sidebar-progress-text').textContent = `${done}/${SECTIONS.length} (${pct}%)`;
+      document.getElementById('sidebar-progress-fill').style.width = `${pct}%`;
+      document.getElementById('mobile-progress-pill').textContent = `${done}/${SECTIONS.length}`;
+
+      let html = '';
+      const showOv = !q || norm('mapa geral visao panoramica triade populacao territorio recursos poder').includes(q);
+      if (showOv) {
+        html += `
+          <button type="button" class="nav-item ${currentView === 'overview' ? 'active' : ''}" onclick="navigateTo('overview')">
+            <span class="nav-num">§0</span>
+            <span class="nav-label">
+              <span class="nav-label-title">Mapa Geral da Obra</span>
+              <span class="nav-label-sub">Visão Panorâmica &amp; Tríade do Poder</span>
+            </span>
+          </button>
+        `;
+      }
+
+      let matches = showOv ? 1 : 0;
+
+      Object.values(PARTS).forEach(part => {
+        const list = SECTIONS.filter(sec => {
+          if (sec.part !== part.id) return false;
+          if (!q) return true;
+          const hay = norm(`${sec.id} ${sec.title} ${sec.subtitle} ${part.roman} ${part.title} ${sec.keywords.join(' ')}`);
+          return hay.includes(q);
+        });
+        if (!list.length) return;
+        matches += list.length;
+
+        html += `
+          <div class="part-group">
+            <div class="part-header">
+              <span class="part-dot" style="background:${part.color}"></span>
+              <span>${part.roman} — ${part.title}</span>
+            </div>
+        `;
+
+        list.forEach(sec => {
+          const isAct = currentView === sec.id;
+          const isDone = !!studiedMap[sec.id];
+          html += `
+            <button type="button" class="nav-item ${isAct ? 'active' : ''}" onclick="navigateTo(${sec.id})">
+              <span class="nav-num" style="${isAct ? `background:${part.color};border-color:${part.color};color:#fff;` : `border-left:3px solid ${part.color};`}">${sec.numLabel}</span>
+              <span class="nav-label">
+                <span class="nav-label-title">${sec.title}</span>
+              </span>
+              <span class="nav-check ${isDone ? 'done' : ''}" title="${isDone ? 'Estudado' : 'Marcar como estudado'}" onclick="toggleStudied(${sec.id}, event)">✓</span>
+            </button>
+          `;
+        });
+
+        html += `</div>`;
+      });
+
+      if (!matches) {
+        html = `<div style="padding:18px;font-size:0.79rem;color:var(--slate-muted);text-align:center;">Nenhum capítulo ou conceito encontrado para "<strong>${searchQuery}</strong>".</div>`;
+      }
+
+      nav.innerHTML = html;
+    }
+
+    /* =========================================================================
+       0. MAPA GERAL DA OBRA
+       ========================================================================= */
+
+    function renderOverview() {
+      const isMulti = ui.ovCompare === 'multi';
+
+      return `
+        <header class="chapter-header">
+          <div class="meta-row">
+            <span class="part-pill" style="background:var(--crimson);">Visão Panorâmica • Mapa Arquitetônico</span>
+            <span class="chip chip-ochre">4 Partes • 10 Capítulos + Conclusão • Ática (Série Temas 29)</span>
+          </div>
+          <h2 class="chapter-title">Por uma Geografia do Poder: O Fio de Ariadne Relacional</h2>
+          <p class="chapter-subtitle">
+            Publicado originalmente em 1980 (<em>Pour une géographie du pouvoir</em>), o ensaio de <strong>Claude Raffestin</strong> propõe o <em>poder</em> como fio condutor para superar o estatocentrismo clássico e revelar como relações assimétricas de Energia e Informação produzem a população, o território e os recursos.
+          </p>
+          <div class="editorial-stripe"></div>
+        </header>
+
+        <!-- Grande Esquema SVG Interativo da Tríade -->
+        <section class="infographic-card">
+          <span class="kicker">Infográfico 0.1 • Arquitetura Relacional da Obra</span>
+          <h3 class="section-heading">O Campo Relacional do Poder e os Três Pilares (Trunfos)</h3>
+          <p class="section-lead">Clique diretamente no núcleo central ou em qualquer um dos três pilares (População, Território, Recursos) e seus capítulos para abrir o respectivo infográfico conceitual.</p>
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 860 365" role="img" aria-label="Mapa arquitetônico da obra: Campo do Poder irradiando para População, Território e Recursos">
+              <defs>
+                <marker id="arrCrimson" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#9E2424"/>
+                </marker>
+                <marker id="arrOchre" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#C98A2C"/>
+                </marker>
+              </defs>
+
+              <!-- Linhas de conexão triangulares entre os 3 pilares -->
+              <polygon points="430,52 165,280 695,280" fill="none" stroke="#DDD5C7" stroke-width="2" stroke-dasharray="6 4"/>
+
+              <!-- Vetores de Energia + Informação saindo do núcleo central -->
+              <line x1="430" y1="145" x2="430" y2="92" stroke="#9E2424" stroke-width="3" marker-end="url(#arrCrimson)"/>
+              <line x1="365" y1="205" x2="232" y2="262" stroke="#9E2424" stroke-width="3" marker-end="url(#arrCrimson)"/>
+              <line x1="495" y1="205" x2="628" y2="262" stroke="#9E2424" stroke-width="3" marker-end="url(#arrCrimson)"/>
+
+              <!-- Rótulos dos vetores -->
+              <rect x="372" y="106" width="116" height="20" rx="10" fill="#FBF3E3" stroke="#C98A2C"/>
+              <text x="430" y="120" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#8A5B14">ENERGIA + INFO</text>
+
+              <rect x="242" y="216" width="94" height="20" rx="10" fill="#FBF3E3" stroke="#C98A2C"/>
+              <text x="289" y="230" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#8A5B14">TRABALHO (E+I)</text>
+
+              <rect x="524" y="216" width="94" height="20" rx="10" fill="#FBF3E3" stroke="#C98A2C"/>
+              <text x="571" y="230" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#8A5B14">PRÁTICA (A·r·M)</text>
+
+              <!-- Pilar 1 (Topo): Parte II — População -->
+              <g onclick="navigateTo(4)" style="cursor:pointer;">
+                <rect x="280" y="14" width="300" height="72" rx="14" fill="#E8F1F4" stroke="#2B5B6C" stroke-width="2.2"/>
+                <text x="430" y="34" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#2B5B6C">PARTE II • FONTE DO PODER</text>
+                <text x="430" y="55" text-anchor="middle" font-family="Georgia, serif" font-size="15.5" font-weight="700" fill="#1B2635">A População e o Poder</text>
+                <text x="430" y="74" text-anchor="middle" font-family="sans-serif" font-size="10.5" fill="#4A5564">Caps. 4 e 5 • Censo, Fluxos, Diferenças</text>
+              </g>
+
+              <!-- Pilar 2 (Inferior Esquerdo): Parte III — Território -->
+              <g onclick="navigateTo(6)" style="cursor:pointer;">
+                <rect x="28" y="256" width="275" height="84" rx="14" fill="#E8F2EE" stroke="#3D6B59" stroke-width="2.2"/>
+                <text x="165" y="278" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#3D6B59">PARTE III • CENA DO PODER</text>
+                <text x="165" y="299" text-anchor="middle" font-family="Georgia, serif" font-size="15.5" font-weight="700" fill="#1B2635">O Território e o Poder</text>
+                <text x="165" y="318" text-anchor="middle" font-family="sans-serif" font-size="10.5" fill="#4A5564">Caps. 6, 7 e 8 • Espaço, Malhas, Nós, Redes</text>
+                <text x="165" y="331" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#3D6B59">Territorialidade &amp; Mediadores</text>
+              </g>
+
+              <!-- Pilar 3 (Inferior Direito): Parte IV — Recursos -->
+              <g onclick="navigateTo(9)" style="cursor:pointer;">
+                <rect x="557" y="256" width="275" height="84" rx="14" fill="#FBF3E3" stroke="#C98A2C" stroke-width="2.2"/>
+                <text x="695" y="278" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8A5B14">PARTE IV • HORIZONTE DA AÇÃO</text>
+                <text x="695" y="299" text-anchor="middle" font-family="Georgia, serif" font-size="15.5" font-weight="700" fill="#1B2635">Os Recursos e o Poder</text>
+                <text x="695" y="318" text-anchor="middle" font-family="sans-serif" font-size="10.5" fill="#4A5564">Caps. 9 e 10 • Matéria ➔ Recurso</text>
+                <text x="695" y="331" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#8A5B14">Trunfos (Enjeux) &amp; Estratégias</text>
+              </g>
+
+              <!-- Núcleo Central: Parte I — Campo Relacional do Poder -->
+              <g onclick="navigateTo(2)" style="cursor:pointer;">
+                <circle cx="430" cy="186" r="64" fill="#9E2424" stroke="#731818" stroke-width="3.5"/>
+                <circle cx="430" cy="186" r="56" fill="none" stroke="rgba(255,253,248,0.35)" stroke-width="1.2" stroke-dasharray="4 3"/>
+                <text x="430" y="168" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#FBF3E3">PARTE I • CAPS. 1–3</text>
+                <text x="430" y="187" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#FFFFFF">CAMPO DO</text>
+                <text x="430" y="204" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#FFFFFF">PODER</text>
+                <text x="430" y="222" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#F7D8A0">Relação • E + I</text>
+              </g>
+
+              <!-- Faixa Inferior: Conclusão -->
+              <g onclick="navigateTo(11)" style="cursor:pointer;">
+                <rect x="315" y="318" width="230" height="36" rx="18" fill="#1B2635"/>
+                <text x="430" y="340" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#FBF3E3">CONCLUSÃO ➔ AUTONOMIA</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Comparador: Unidimensional vs. Multidimensional -->
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;">
+            <div>
+              <span class="kicker" style="margin-bottom:2px;">Ruptura Epistemológica Central</span>
+              <strong style="font-family:var(--font-serif);font-size:1.12rem;">Geografia Unidimensional vs. Geografia Multidimensional</strong>
+            </div>
+            <div class="btn-row" style="margin-bottom:0;">
+              <button type="button" class="ctrl-btn ${!isMulti ? 'active-slate' : ''}" onclick="ui.ovCompare='uni'; renderMain();">Unidimensional (Estado)</button>
+              <button type="button" class="ctrl-btn ${isMulti ? 'active-crimson' : ''}" onclick="ui.ovCompare='multi'; renderMain();">Multidimensional (Relações de Poder)</button>
+            </div>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${isMulti ? 'var(--crimson)' : 'var(--slate)'};">
+            <div class="grid-3">
+              ${(isMulti ? [
+                { t: 'Escalas Múltiplas', d: 'Apreende o poder do indivíduo e do cotidiano até as grandes organizações, empresas multinacionais e Estados.' },
+                { t: 'Objeto Relacional', d: 'Estuda os fluxos de Energia e Informação, os mediadores e o caráter simétrico ou dissimétrico das relações.' },
+                { t: 'Prioridade à População', d: 'Analisa a população antes do território porque ela é o fundamento de todo poder e sede da inovação.' }
+              ] : [
+                { t: 'Escala Única (Estado)', d: 'Reconhece apenas o Estado-nação como fonte legítima de poder político, apagando conflitos internos.' },
+                { t: 'Objeto Morfofuncional', d: 'Descreve fronteiras, capitais e core areas como formas fixas, ocultando as relações de força que as produziram.' },
+                { t: 'Prioridade ao Território', d: 'Trata a população como simples "recurso" ou número a serviço da potência territorial do Estado.' }
+              ]).map(b => `
+                <div style="background:var(--bg-card);border:1px solid var(--border-soft);border-radius:10px;padding:12px 14px;">
+                  <strong style="font-family:var(--font-serif);font-size:0.95rem;color:${isMulti ? 'var(--crimson-dark)' : 'var(--slate)'};display:block;margin-bottom:4px;">${b.t}</strong>
+                  <p style="font-size:0.8rem;color:var(--slate-muted);">${b.d}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </section>
+
+        <blockquote class="quote-card">
+          <p>“A obra de Goya (<em>Don Manuel Osorio de Zuniga</em>) é uma fascinante metáfora pictural de um sistema de poder... As relações de poder se inscrevem numa cinemática complexa, um equilíbrio entre uma infinidade de desequilíbrios possíveis.”</p>
+          <footer>— Claude Raffestin, Notas Prévias (pp. 6–7)</footer>
+        </blockquote>
+
+        <div class="chapter-footer">
+          <div></div>
+          <button type="button" class="step-btn next" onclick="navigateTo(1)">
+            <div>
+              <span class="step-meta">Começar Percurso Teórico</span>
+              <span class="step-title">Cap. 1 — Da Geografia Política Clássica à Geografia do Poder</span>
+            </div>
+            <span style="font-size:1.15rem;">→</span>
+          </button>
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       INFOGRÁFICOS INTERATIVOS EXCLUSIVOS (CAPÍTULOS 1 A 10 + CONCLUSÃO)
+       ========================================================================= */
+
+    function renderInfographic(id) {
+      switch (id) {
+        case 1: return renderCap1();
+        case 2: return renderCap2();
+        case 3: return renderCap3();
+        case 4: return renderCap4();
+        case 5: return renderCap5();
+        case 6: return renderCap6();
+        case 7: return renderCap7();
+        case 8: return renderCap8();
+        case 9: return renderCap9();
+        case 10: return renderCap10();
+        case 11: return renderCap11();
+        default: return '';
+      }
+    }
+
+    /* --- CAP 1: O Prisma da Geografia --- */
+    function renderCap1() {
+      const isRel = ui.c1Mode === 'relacional';
+
+      return `
+        <span class="kicker">Infográfico Interativo • Cap. 1</span>
+        <h3 class="section-heading">O Prisma da Geografia: Unidimensional vs. Multidimensional</h3>
+        <p class="section-lead">Acione o alternador para passar a realidade geopolítica pelo <strong>Prisma Relacional de Raffestin</strong> e decompor o monólito estatal clássico na trama real de múltiplos atores.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${!isRel ? 'active-slate' : ''}" onclick="ui.c1Mode='classica'; renderMain();">Visão Clássica / Unidimensional (Ratzel)</button>
+          <button type="button" class="ctrl-btn ${isRel ? 'active-crimson' : ''}" onclick="ui.c1Mode='relacional'; renderMain();">Visão Relacional / Multidimensional (Raffestin)</button>
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 275" role="img" aria-label="Ilustração do Prisma da Geografia comparando visão clássica e relacional">
+            ${!isRel ? `
+              <!-- Cena Clássica: Monólito Estatal -->
+              <rect x="20" y="220" width="780" height="36" rx="8" fill="#E8E2D4" stroke="#C5BAA6"/>
+              <text x="410" y="242" text-anchor="middle" font-family="monospace" font-size="11" fill="#4A5564">SOLO / TERRITÓRIO PASSIVO (ESCALA ÚNICA DELIMITADA POR FRONTEIRAS)</text>
+
+              <!-- Monólito do Estado -->
+              <polygon points="410,24 525,220 295,220" fill="#1B2635" stroke="#9E2424" stroke-width="2.5"/>
+              <text x="410" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="22" font-weight="700" fill="#FFFFFF">ESTADO</text>
+              <text x="410" y="152" text-anchor="middle" font-family="monospace" font-size="11" fill="#E7BE79">ÚNICA FONTE DE PODER</text>
+              <text x="410" y="176" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#DDD5C7">Visão de cima para baixo</text>
+
+              <!-- Setas descendentes únicas -->
+              <line x1="340" y1="120" x2="210" y2="212" stroke="#4A5564" stroke-width="2" stroke-dasharray="5 4"/>
+              <line x1="480" y1="120" x2="610" y2="212" stroke="#4A5564" stroke-width="2" stroke-dasharray="5 4"/>
+              <text x="165" y="155" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4A5564">Outros atores</text>
+              <text x="165" y="170" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4A5564">invisibilizados</text>
+              <text x="655" y="155" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4A5564">Conflitos internos</text>
+              <text x="655" y="170" text-anchor="middle" font-family="sans-serif" font-size="11" fill="#4A5564">apagados</text>
+            ` : `
+              <!-- Cena Relacional: Prisma decompondo o poder -->
+              <!-- Raio incidente -->
+              <line x1="25" y1="138" x2="210" y2="138" stroke="#1B2635" stroke-width="6"/>
+              <text x="108" y="124" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="#1B2635">FATO POLÍTICO</text>
+
+              <!-- Prisma Central -->
+              <polygon points="245,56 320,210 170,210" fill="rgba(158,36,36,0.12)" stroke="#9E2424" stroke-width="3"/>
+              <text x="245" y="152" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#9E2424">PRISMA</text>
+              <text x="245" y="169" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#731818">RELACIONAL</text>
+
+              <!-- Raios decompostos em múltiplos atores -->
+              <line x1="275" y1="112" x2="475" y2="42" stroke="#1B2635" stroke-width="2.6"/>
+              <line x1="286" y1="126" x2="655" y2="68" stroke="#9E2424" stroke-width="2.6"/>
+              <line x1="292" y1="142" x2="495" y2="136" stroke="#2B5B6C" stroke-width="2.2"/>
+              <line x1="296" y1="158" x2="665" y2="162" stroke="#C98A2C" stroke-width="2.2"/>
+              <line x1="302" y1="175" x2="480" y2="225" stroke="#3D6B59" stroke-width="2.2"/>
+              <line x1="308" y1="190" x2="670" y2="235" stroke="#731818" stroke-width="2.2"/>
+
+              <!-- Conexões assimétricas entre os atores -->
+              <line x1="535" y1="50" x2="655" y2="68" stroke="#9E2424" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <line x1="535" y1="138" x2="665" y2="162" stroke="#2B5B6C" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <line x1="535" y1="225" x2="670" y2="235" stroke="#3D6B59" stroke-width="1.5" stroke-dasharray="4 3"/>
+              <line x1="495" y1="62" x2="495" y2="116" stroke="#4A5564" stroke-width="1.4"/>
+              <line x1="495" y1="156" x2="495" y2="206" stroke="#4A5564" stroke-width="1.4"/>
+
+              <!-- Atores -->
+              ${[
+                { x: 475, y: 24, w: 120, t: 'Estado', c: '#1B2635' },
+                { x: 655, y: 50, w: 135, t: 'Empresas / Capital', c: '#9E2424' },
+                { x: 475, y: 118, w: 120, t: 'Sindicatos', c: '#2B5B6C' },
+                { x: 655, y: 144, w: 135, t: 'Mídia / Códigos', c: '#C98A2C' },
+                { x: 475, y: 207, w: 120, t: 'Cidadãos / Base', c: '#3D6B59' },
+                { x: 655, y: 217, w: 135, t: 'Igrejas / Grupos', c: '#731818' }
+              ].map(a => `
+                <rect x="${a.x}" y="${a.y}" width="${a.w}" height="34" rx="10" fill="${a.c}"/>
+                <text x="${a.x + a.w/2}" y="${a.y + 21}" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="700" fill="#FFFFFF">${a.t}</text>
+              `).join('')}
+            `}
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${isRel ? 'var(--crimson)' : 'var(--slate)'};">
+          <p style="font-size:0.84rem;color:var(--slate);">
+            ${isRel
+              ? '<strong>Leitura Multidimensional (Raffestin):</strong> O Estado continua sendo uma organização de peso enorme, mas deixa de ser a única. Empresas, sindicatos, igrejas, mídia e cidadãos exercem poderes em múltiplas escalas, gerando relações simétricas e dissimétricas.'
+              : '<strong>Leitura Clássica (Ratzel / Geopolítica):</strong> Reduz toda a política ao Estado-nação (discurso metonímico). Produz uma geografia do "concebido" em detrimento do "vivido" e privilegia apenas a guerra entre Estados.'}
+          </p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 2: A Equação do Trabalho e do Poder (E + I) --- */
+    function renderCap2() {
+      const isBigP = ui.c2PowerType === 'P';
+      const E = ui.c2E;
+      const I = ui.c2I;
+
+      const totalForce = Math.round((E * 0.45) + (I * 0.55));
+      const asymmetry = Math.min(100, Math.round(Math.abs(E - 50) * 0.4 + totalForce * 0.75));
+      const resistance = Math.min(100, Math.round(18 + asymmetry * 0.72));
+
+      let regime = '';
+      if (E >= 65 && I < 40) {
+        regime = 'Força Bruta Ineficiente (Alta Energia + Baixa Informação): poder coercitivo pesado, alto desgaste energético, vigilância grosseira e forte resistência explosiva.';
+      } else if (I >= 65 && E < 45) {
+        regime = 'Controle Sutil / Cibernético (Pouca Energia + Alta Informação): poder normativo e simbólico altamente eficaz, econômico em energia, que opera pelos códigos e pela persuasão.';
+      } else if (E >= 65 && I >= 65) {
+        regime = 'Poder Combinado de Alta Intensidade (Alta E + Alta I): capacidade máxima de dominação estrutural e tecnológica; exige forte contrapoder organizado para reequilibrar a relação.';
+      } else {
+        regime = 'Campo de Baixa Dissimetria / Equilíbrio Relativo: trocas mais próximas da simetria, com menor capacidade de imposição unilateral de um ator sobre o outro.';
+      }
+
+      // Posição visual do vetor de força
+      const arrowLen = Math.round(90 + (totalForce / 100) * 190);
+      const resLen = Math.round(45 + (resistance / 100) * 120);
+
+      return `
+        <span class="kicker">Infográfico Interativo • Cap. 2</span>
+        <h3 class="section-heading">Simulador: A Equação do Poder (Energia + Informação)</h3>
+        <p class="section-lead">Alterne entre <strong>Poder ("P")</strong> e <strong>poder ("p")</strong> e ajuste os fluxos de <strong>Energia (E)</strong> e <strong>Informação (I)</strong> para observar o campo de forças e a reação da <strong>Resistência</strong>.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${isBigP ? 'active-slate' : ''}" onclick="ui.c2PowerType='P'; renderMain();">Poder com "P" Maiúsculo (Aparelho Visível)</button>
+          <button type="button" class="ctrl-btn ${!isBigP ? 'active-crimson' : ''}" onclick="ui.c2PowerType='p'; renderMain();">poder com "p" Minúsculo (Relacional / Capilar)</button>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="panel-soft">
+            <div class="meter-item">
+              <div class="meter-head"><span style="color:var(--crimson);">Energia (E) — Força, Recursos, Coerção</span><span>${E}%</span></div>
+              <input type="range" class="atlas-slider" min="5" max="100" value="${E}" oninput="ui.c2E=Number(this.value); renderMain();" aria-label="Ajustar Energia">
+            </div>
+            <div class="meter-item" style="margin-top:14px;">
+              <div class="meter-head"><span style="color:var(--petrol);">Informação (I) — Saber, Códigos, Norma</span><span>${I}%</span></div>
+              <input type="range" class="atlas-slider" min="5" max="100" value="${I}" oninput="ui.c2I=Number(this.value); renderMain();" aria-label="Ajustar Informação">
+            </div>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${isBigP ? 'var(--slate)' : 'var(--crimson)'};">
+            <span class="chip ${isBigP ? 'chip-petrol' : 'chip-crimson'}" style="margin-bottom:6px;">
+              ${isBigP ? 'Forma Terminal / Soberania Estatal' : 'Imanência Foucaultiana / Cotidiano'}
+            </span>
+            <p style="font-size:0.82rem;color:var(--slate);">
+              ${isBigP
+                ? '<strong>Poder ("P"):</strong> Manifesta-se em instituições visíveis (Estado, lei, exército). É temido por ser identificável, mas frequentemente mascara o poder que circula abaixo dele.'
+                : '<strong>poder ("p"):</strong> Circula em toda relação (trabalho, família, mercado, comunicação). Não é possuído por um centro único, mas exercido em inumeráveis pontos.'}
+            </p>
+          </div>
+        </div>
+
+        <!-- Campo de Forças SVG -->
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 215" role="img" aria-label="Diagrama animado de campo de forças entre Ator A e Ator B">
+            <defs>
+              <marker id="arrA" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#9E2424"/>
+              </marker>
+              <marker id="arrB" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#3D6B59"/>
+              </marker>
+            </defs>
+
+            <!-- Linhas de campo magnético estilizadas -->
+            <ellipse cx="410" cy="108" rx="280" ry="74" fill="none" stroke="#DDD5C7" stroke-width="1.4" stroke-dasharray="6 4"/>
+            <ellipse cx="410" cy="108" rx="220" ry="48" fill="none" stroke="#DDD5C7" stroke-width="1.2" stroke-dasharray="4 4"/>
+
+            <!-- Ator A -->
+            <circle cx="115" cy="108" r="${34 + Math.round(totalForce * 0.14)}" fill="${isBigP ? '#1B2635' : '#9E2424'}" opacity="0.92"/>
+            <text x="115" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#FFFFFF">ATOR A</text>
+            <text x="115" y="121" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#FBF3E3">E:${E} | I:${I}</text>
+
+            <!-- Ator B -->
+            <circle cx="705" cy="108" r="38" fill="#3D6B59"/>
+            <text x="705" y="104" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#FFFFFF">ATOR B</text>
+            <text x="705" y="121" text-anchor="middle" font-family="monospace" font-size="9" fill="#E8F2EE">Resistência</text>
+
+            <!-- Vetor A -> B (Exercício de Poder) -->
+            <line x1="175" y1="86" x2="${175 + arrowLen}" y2="86" stroke="#9E2424" stroke-width="${(2.5 + E * 0.04).toFixed(1)}" marker-end="url(#arrA)"/>
+            <text x="410" y="72" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="#9E2424">FLUXO DE PODER (E + I = ${totalForce}%)</text>
+
+            <!-- Vetor B -> A (Resistência / Contrapoder) -->
+            <line x1="650" y1="132" x2="${650 - resLen}" y2="132" stroke="#3D6B59" stroke-width="3" stroke-dasharray="6 3" marker-end="url(#arrB)"/>
+            <text x="410" y="154" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="#3D6B59">RESISTÊNCIA IMANENTE (${resistance}%)</text>
+
+            <!-- Vetor Resultante (Mini Plano Cartesiano no centro) -->
+            <text x="410" y="198" text-anchor="middle" font-family="monospace" font-size="10" fill="#4A5564">Dissimetria Relacional Estimada: ${asymmetry}%</text>
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--ochre);">
+          <strong style="font-size:0.84rem;color:var(--slate);">Diagnóstico da Combinação (E=${E}% • I=${I}%):</strong>
+          <p style="font-size:0.84rem;color:var(--slate);margin-top:4px;">${regime}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 3: Circuito da Comunicação e 4 Funções Tetraglóssicas --- */
+    function renderCap3() {
+      const langs = {
+        vernacular: {
+          name: 'Língua Vernacular (Comunhão Local)',
+          scope: 'Comunidade / Cotidiano / Valor de Uso',
+          color: '#3D6B59',
+          reach: 32,
+          code: 'Dialeto local, fala espontânea',
+          effect: 'Voltada à comunhão e identidade afetiva. Elevada riqueza existencial, mas área de circulação contraída sob pressão do poder central.'
+        },
+        veicular: {
+          name: 'Língua Veicular (Circulação & Mercado)',
+          scope: 'Cidades / Comércio / Valor de Troca',
+          color: '#2B5B6C',
+          reach: 78,
+          code: 'Língua oficial nacional ou global (ex.: inglês)',
+          effect: 'Aprendida por necessidade para trocas econômicas e administrativas. Extrai mais-valia linguística das línguas locais e amplia o alcance do poder central.'
+        },
+        referencial: {
+          name: 'Língua Referencial (Tradição & Cultura)',
+          scope: 'Educação / Obras do Passado / Norma Culta',
+          color: '#C98A2C',
+          reach: 62,
+          code: 'Cânone literário, jurídico ou científico',
+          effect: 'Assegura a continuidade dos valores e legitima quem domina o código culto — operando seleção social nos postos-chave das instituições.'
+        },
+        mitica: {
+          name: 'Língua Mítica (Sagrado & Ideologia)',
+          scope: 'Ritual / Último Recurso / Autoridade Simbólica',
+          color: '#9E2424',
+          reach: 90,
+          code: 'Magia verbal, jargão hermético ou sagrado',
+          effect: 'Funciona como último recurso: sua incompreensibilidade parcial torna-se prova de autoridade, gerando máxima dissimetria simbólica.'
+        }
+      };
+      const cur = langs[ui.c3Lang];
+
+      return `
+        <span class="kicker">Infográfico Interativo • Cap. 3</span>
+        <h3 class="section-heading">O Circuito da Comunicação e os Códigos de Poder</h3>
+        <p class="section-lead">Selecione uma das <strong>4 funções da linguagem (Gobard / Raffestin)</strong> e ative ou desative o <strong>Filtro Ideológico / Ruído</strong> para ver como o código modula a inclusão e a exclusão simbólica.</p>
+
+        <div class="btn-row">
+          ${[
+            ['vernacular', '1. Vernacular'],
+            ['veicular', '2. Veicular'],
+            ['referencial', '3. Referencial'],
+            ['mitica', '4. Mítica']
+          ].map(([k, l]) => `
+            <button type="button" class="ctrl-btn ${ui.c3Lang===k ? 'active-crimson' : ''}" onclick="ui.c3Lang='${k}'; renderMain();">${l}</button>
+          `).join('')}
+          <button type="button" class="ctrl-btn ${ui.c3Noise ? 'active-ochre' : ''}" onclick="ui.c3Noise=!ui.c3Noise; renderMain();">
+            ${ui.c3Noise ? '✓' : '+'} Ruído / Filtro Ideológico
+          </button>
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 210" role="img" aria-label="Circuito da comunicação: Emissor, Codificação, Canal com filtro, Decodificação e Receptor">
+            <!-- Blocos do Circuito -->
+            <rect x="18" y="64" width="115" height="64" rx="12" fill="#1B2635"/>
+            <text x="75" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#fff">EMISSOR</text>
+            <text x="75" y="110" text-anchor="middle" font-family="monospace" font-size="9" fill="#E7BE79">Ator / Centro</text>
+
+            <rect x="165" y="64" width="120" height="64" rx="12" fill="${cur.color}"/>
+            <text x="225" y="92" text-anchor="middle" font-family="sans-serif" font-size="11.5" font-weight="700" fill="#fff">CODIFICAÇÃO</text>
+            <text x="225" y="109" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#F7F4EC">${ui.c3Lang.toUpperCase()}</text>
+
+            <!-- Canal com Filtro Ideológico -->
+            <rect x="320" y="42" width="175" height="108" rx="12" fill="${ui.c3Noise ? '#F9EBEB' : '#E8F2EE'}" stroke="${ui.c3Noise ? '#9E2424' : '#3D6B59'}" stroke-width="2" stroke-dasharray="5 3"/>
+            <text x="407" y="68" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${ui.c3Noise ? '#9E2424' : '#3D6B59'}">CANAL RELACIONAL</text>
+            <text x="407" y="92" text-anchor="middle" font-family="sans-serif" font-size="10.5" font-weight="700" fill="#1B2635">${ui.c3Noise ? 'Filtro Ideológico / Ruído' : 'Repertórios Secantes'}</text>
+            <text x="407" y="110" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#4A5564">${ui.c3Noise ? 'Exclusão de quem não' : 'Comunicação mais'}</text>
+            <text x="407" y="124" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#4A5564">${ui.c3Noise ? 'domina o código oficial' : 'simétrica e inteligível'}</text>
+
+            <rect x="530" y="64" width="125" height="64" rx="12" fill="${cur.color}" opacity="${ui.c3Noise ? '0.68' : '1'}"/>
+            <text x="592" y="92" text-anchor="middle" font-family="sans-serif" font-size="11.5" font-weight="700" fill="#fff">DECODIFICAÇÃO</text>
+            <text x="592" y="109" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#F7F4EC">${ui.c3Noise ? 'Parcial / Assimétrica' : 'Plena'}</text>
+
+            <rect x="687" y="64" width="115" height="64" rx="12" fill="#2B5B6C"/>
+            <text x="744" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#fff">RECEPTOR</text>
+            <text x="744" y="110" text-anchor="middle" font-family="monospace" font-size="9" fill="#E8F1F4">Comunidade</text>
+
+            <!-- Setas conectoras -->
+            <line x1="133" y1="96" x2="165" y2="96" stroke="#1B2635" stroke-width="2.5"/>
+            <line x1="285" y1="96" x2="320" y2="96" stroke="#1B2635" stroke-width="2.5"/>
+            <line x1="495" y1="96" x2="530" y2="96" stroke="#1B2635" stroke-width="2.5"/>
+            <line x1="655" y1="96" x2="687" y2="96" stroke="#1B2635" stroke-width="2.5"/>
+
+            <!-- Barra de alcance espacial do poder -->
+            <text x="18" y="182" font-family="monospace" font-size="10" font-weight="700" fill="#4A5564">ALCANCE DO PODER PELO CÓDIGO (${cur.reach}%):</text>
+            <rect x="295" y="170" width="505" height="14" rx="7" fill="#E6DFD2"/>
+            <rect x="295" y="170" width="${Math.round(505 * cur.reach / 100)}" height="14" rx="7" fill="${cur.color}"/>
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${cur.color};">
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-bottom:6px;">
+            <strong style="font-family:var(--font-serif);font-size:1.05rem;color:${cur.color};">${cur.name}</strong>
+            <span class="chip" style="border-color:${cur.color};color:${cur.color};">${cur.scope}</span>
+          </div>
+          <p style="font-size:0.84rem;color:var(--slate);">${cur.effect}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 4: A Lente Censitária e Classificatória --- */
+    function renderCap4() {
+      const f = ui.c4Filter;
+      const filters = {
+        nenhum: { title: 'Multidão Heterogênea (Sem Filtro Estatal)', desc: 'Indivíduos concretos em suas relações cotidianas livres. Para a organização central, essa massa ainda é ilegível e difícil de calcular estrategicamente.' },
+        censo: { title: 'Filtro 1: Recenseamento (Homem Estatístico)', desc: 'Cada indivíduo é convertido em número, ficha e registro nominativo. A massa heterogênea vira um "estoque humano" mensurável em grade estatística.' },
+        produtiva: { title: 'Filtro 2: Classificação Produtiva (Energia de Trabalho)', desc: 'A população é segmentada em ativos, inativos, qualificados e reserva de mão-de-obra — energia humana pronta a ser mobilizada por empresas e Estado.' },
+        biopolitica: { title: 'Filtro 3: Controle Sanitário / Biopolítico', desc: 'Regulação de fluxos naturais (natalidade, mortalidade, fecundidade, saúde) por meio de políticas natalistas ou malthusianas na esfera privada.' },
+        fiscal: { title: 'Filtro 4: Fiscalização & Conscrição', desc: 'Identificação direta de contribuintes (extração de energia simbólica/impostos) e recrutáveis (força militar) — motivações históricas dos censos modernos.' }
+      };
+      const cur = filters[f];
+
+      // 18 silhuetas estilizadas que se reorganizam em grade quando há filtro
+      const people = [
+        { id: '01', rx: 78, ry: 68, grp: 0 }, { id: '02', rx: 145, ry: 122, grp: 1 }, { id: '03', rx: 205, ry: 58, grp: 2 },
+        { id: '04', rx: 270, ry: 148, grp: 0 }, { id: '05', rx: 332, ry: 85, grp: 1 }, { id: '06', rx: 390, ry: 138, grp: 2 },
+        { id: '07', rx: 455, ry: 62, grp: 0 }, { id: '08', rx: 520, ry: 118, grp: 1 }, { id: '09', rx: 590, ry: 74, grp: 2 },
+        { id: '10', rx: 655, ry: 142, grp: 0 }, { id: '11', rx: 722, ry: 82, grp: 1 }, { id: '12', rx: 112, ry: 168, grp: 2 },
+        { id: '13', rx: 235, ry: 102, grp: 0 }, { id: '14', rx: 365, ry: 48, grp: 1 }, { id: '15', rx: 495, ry: 164, grp: 2 },
+        { id: '16', rx: 625, ry: 104, grp: 0 }, { id: '17', rx: 745, ry: 158, grp: 1 }, { id: '18', rx: 175, ry: 156, grp: 2 }
+      ];
+
+      const groupColors = {
+        nenhum: ['#4A5564', '#2B5B6C', '#3D6B59'],
+        censo: ['#1B2635', '#1B2635', '#1B2635'],
+        produtiva: ['#9E2424', '#2B5B6C', '#C98A2C'],
+        biopolitica: ['#3D6B59', '#C98A2C', '#9E2424'],
+        fiscal: ['#1B2635', '#9E2424', '#4A5564']
+      };
+      const cols = groupColors[f];
+
+      return `
+        <span class="kicker" style="color:var(--petrol);">Infográfico Interativo • Cap. 4</span>
+        <h3 class="section-heading">A Lente Censitária e Classificatória</h3>
+        <p class="section-lead">Ative os filtros de poder sobre a multidão para observar como o recenseamento transforma indivíduos singulares em <strong>"população" legível, numerada e governável</strong>.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${f==='nenhum' ? 'active-olive' : ''}" onclick="ui.c4Filter='nenhum'; renderMain();">Sem Filtro (Multidão)</button>
+          <button type="button" class="ctrl-btn ${f==='censo' ? 'active-slate' : ''}" onclick="ui.c4Filter='censo'; renderMain();">1. Recenseamento</button>
+          <button type="button" class="ctrl-btn ${f==='produtiva' ? 'active-crimson' : ''}" onclick="ui.c4Filter='produtiva'; renderMain();">2. Classif. Produtiva</button>
+          <button type="button" class="ctrl-btn ${f==='biopolitica' ? 'active-petrol' : ''}" onclick="ui.c4Filter='biopolitica'; renderMain();">3. Biopolítica</button>
+          <button type="button" class="ctrl-btn ${f==='fiscal' ? 'active-ochre' : ''}" onclick="ui.c4Filter='fiscal'; renderMain();">4. Fiscalização</button>
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 220" role="img" aria-label="Multidão sendo enquadrada em grade estatística pelos filtros de poder">
+            <!-- Grade Estatística visível quando há filtro -->
+            ${f !== 'nenhum' ? `
+              <rect x="42" y="18" width="736" height="184" rx="10" fill="#F1ECE0" stroke="#9E2424" stroke-width="1.6" stroke-dasharray="5 3"/>
+              ${[164, 286, 408, 530, 652].map(gx => `<line x1="${gx}" y1="18" x2="${gx}" y2="202" stroke="#DDD5C7" stroke-width="1.2"/>`).join('')}
+              ${[80, 142].map(gy => `<line x1="42" y1="${gy}" x2="778" y2="${gy}" stroke="#DDD5C7" stroke-width="1.2"/>`).join('')}
+            ` : ''}
+
+            <!-- Silhuetas Geométricas -->
+            ${people.map((p, idx) => {
+              const col = idx % 6;
+              const row = Math.floor(idx / 6);
+              const x = f === 'nenhum' ? p.rx : (103 + col * 122);
+              const y = f === 'nenhum' ? p.ry : (49 + row * 61);
+              const fill = cols[p.grp];
+              const badge = f === 'censo' ? `#${p.id}` : f === 'produtiva' ? (p.grp===0?'ATV':p.grp===1?'RES':'INA') : f === 'biopolitica' ? (p.grp===0?'NAT':p.grp===1?'FEC':'MOR') : f === 'fiscal' ? (p.grp===0?'IMP':p.grp===1?'MIL':'ISE') : '';
+              return `
+                <g>
+                  <circle cx="${x}" cy="${y - 9}" r="7.5" fill="${fill}"/>
+                  <path d="M ${x - 11} ${y + 12} Q ${x} ${y - 1} ${x + 11} ${y + 12} Z" fill="${fill}"/>
+                  ${badge ? `<text x="${x}" y="${y + 23}" text-anchor="middle" font-family="monospace" font-size="8.5" font-weight="700" fill="${fill}">${badge}</text>` : ''}
+                </g>
+              `;
+            }).join('')}
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--petrol);">
+          <strong style="font-family:var(--font-serif);font-size:1.04rem;color:var(--slate);">${cur.title}</strong>
+          <p style="font-size:0.84rem;color:var(--slate);margin-top:4px;">${cur.desc}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 5: A População como Trunfo (Enjeu) --- */
+    function renderCap5() {
+      const dims = {
+        piramide: {
+          name: 'Composição / Pirâmide Etária',
+          cohesion: 'Equilíbrio intergeracional, renovação estável da força de trabalho e estratégias de "futuro aberto".',
+          conflict: 'Envelhecimento ("futuro fechado") ou explosão jovem sem integração econômica, agravando tensões sociais.'
+        },
+        mobilidade: {
+          name: 'Mobilidade / Fluxos Migratórios',
+          cohesion: 'Deslocamentos autônomos integrados com respeito à territorialidade e à estabilidade regional.',
+          conflict: 'Empresas "nômades" impondo desterritorialização, greves e políticas restritivas de cotas/expulsão.'
+        },
+        diversidade: {
+          name: 'Diversidade Linguístico-Religiosa & Étnica',
+          cohesion: 'Mundialismo pluralista: respeito às diferenças como reserva de informação e autonomia coletiva.',
+          conflict: 'Homogeneização forçada, discriminação espacial (guetos/reservas) e guerras identitárias.'
+        },
+        urbanizacao: {
+          name: 'Urbanização & Concentração',
+          cohesion: 'Redes urbanas equilibradas, acessibilidade distribuída e participação cívica cotidiana.',
+          conflict: 'Hipertrofia concentradora, marginalização socioespacial e controle panóptico das massas urbanas.'
+        }
+      };
+      const d = dims[ui.c5Dim];
+      const t = ui.c5Tension; // 0 = Coesão, 100 = Conflito
+
+      return `
+        <span class="kicker" style="color:var(--petrol);">Infográfico Interativo • Cap. 5</span>
+        <h3 class="section-heading">Simulador Esquemático: A População como Trunfo (<em>Enjeu</em>)</h3>
+        <p class="section-lead">Escolha uma das <strong>4 dimensões estruturais</strong> da população e deslize o controle entre <strong>Coesão / Integração</strong> e <strong>Fragmentação / Conflito</strong>.</p>
+
+        <div class="btn-row">
+          ${[
+            ['piramide', '1. Pirâmide / Idades'],
+            ['mobilidade', '2. Mobilidade / Fluxos'],
+            ['diversidade', '3. Diversidade Cultural'],
+            ['urbanizacao', '4. Urbanização']
+          ].map(([k, l]) => `
+            <button type="button" class="ctrl-btn ${ui.c5Dim===k ? 'active-petrol' : ''}" onclick="ui.c5Dim='${k}'; renderMain();">${l}</button>
+          `).join('')}
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:16px;">
+          <div class="meter-head">
+            <span style="color:var(--olive);">← Coesão / Integração (${100 - t}%)</span>
+            <span style="color:var(--crimson);">Fragmentação / Conflito (${t}%) →</span>
+          </div>
+          <input type="range" class="atlas-slider" min="0" max="100" value="${t}" oninput="ui.c5Tension=Number(this.value); renderMain();" aria-label="Tensão entre coesão e conflito">
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 190" role="img" aria-label="Diagrama de tensão estrutural da população como trunfo">
+            <!-- Esquerda: Polo Coesão -->
+            <rect x="20" y="34" width="210" height="120" rx="14" fill="#E8F2EE" stroke="#3D6B59" stroke-width="${t < 50 ? 3 : 1.5}"/>
+            <text x="125" y="64" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#3D6B59">INTEGRAÇÃO SIMÉTRICA</text>
+            <text x="125" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1B2635">Autonomia &amp; Pluralismo</text>
+            <text x="125" y="118" text-anchor="middle" font-family="monospace" font-size="11" fill="#3D6B59">${100 - t}%</text>
+
+            <!-- Direita: Polo Conflito -->
+            <rect x="590" y="34" width="210" height="120" rx="14" fill="#F9EBEB" stroke="#9E2424" stroke-width="${t >= 50 ? 3 : 1.5}"/>
+            <text x="695" y="64" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#9E2424">DISSIMETRIA / CONFLITO</text>
+            <text x="695" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1B2635">Segregação / Coação</text>
+            <text x="695" y="118" text-anchor="middle" font-family="monospace" font-size="11" fill="#9E2424">${t}%</text>
+
+            <!-- Eixo de tensão e indicador móvel -->
+            <line x1="230" y1="94" x2="590" y2="94" stroke="#1B2635" stroke-width="3"/>
+            <circle cx="${250 + Math.round((t / 100) * 320)}" cy="94" r="24" fill="${t >= 50 ? '#9E2424' : '#3D6B59'}" stroke="#FFFDF8" stroke-width="3"/>
+            <text x="${250 + Math.round((t / 100) * 320)}" y="98" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#FFFFFF">ENJEU</text>
+            <text x="410" y="168" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#1B2635">${d.name}</text>
+          </svg>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel-soft" style="border-left:4px solid var(--olive);opacity:${t < 65 ? 1 : 0.6};">
+            <span class="chip chip-olive" style="margin-bottom:6px;">Horizonte de Coesão</span>
+            <p style="font-size:0.82rem;color:var(--slate);">${d.cohesion}</p>
+          </div>
+          <div class="panel-soft" style="border-left:4px solid var(--crimson);opacity:${t >= 35 ? 1 : 0.6};">
+            <span class="chip chip-crimson" style="margin-bottom:6px;">Cenário de Conflito / Manipulação</span>
+            <p style="font-size:0.82rem;color:var(--slate);">${d.conflict}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAP 6: Do Espaço ao Território + Ciclo TDR --- */
+    function renderCap6() {
+      const s = ui.c6Step;
+      const tdr = ui.c6Tdr;
+
+      const stepInfo = [
+        { k: 'Etapa 0 — Espaço ("Prisão Original")', d: 'Superfície material dada, anterior a qualquer ação humana. Possui apenas valor de uso latente e constitui um campo aberto de possibilidades.' },
+        { k: 'Etapa 1 — Projeção de Trabalho (Energia + Informação)', d: 'Um ator sintagmático aplica trabalho (energia informada) sobre o espaço, modificando o meio e iniciando a produção territorial.' },
+        { k: 'Etapa 2 — Representação / Imagem / Mapa', d: 'Apropriação simbólica por códigos e sintaxe euclidiana (pontos, linhas, superfícies). Representar já é controlar e orientar a ação estratégica.' },
+        { k: 'Etapa 3 — Território ("Prisão Construída")', d: 'Relações de poder cristalizadas em limites, redes e centralidades. O território é produzido a partir do espaço e passa a condicionar a vida social.' }
+      ][s];
+
+      const tdrInfo = {
+        T: { title: 'Territorialização (T)', color: '#3D6B59', desc: 'Apropriação concreta e simbólica do espaço por atores sintagmáticos mediante trabalho, códigos, delimitação e construção de tramas.' },
+        D: { title: 'Desterritorialização (D)', color: '#9E2424', desc: 'Ruptura de laços, limites e referências territoriais (ex.: deslocamento de indústrias, migrações forçadas, dissolução de comunidades locais).' },
+        R: { title: 'Reterritorialização (R)', color: '#C98A2C', desc: 'Recomposição de novas malhas, identidades e estratégias de apropriação sobre novos suportes ou sob novas relações de poder.' }
+      }[tdr];
+
+      return `
+        <span class="kicker" style="color:var(--olive);">Infográfico Interativo • Cap. 6</span>
+        <h3 class="section-heading">Laboratório Visual: Da "Prisão Original" à "Prisão Construída" + Ciclo TDR</h3>
+        <p class="section-lead">Acione passo a passo as camadas de produção territorial sobre o espaço bruto e explore o ciclo dinâmico <strong>T–D–R</strong>.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${s===0 ? 'active-slate' : ''}" onclick="ui.c6Step=0; renderMain();">0. Espaço Bruto</button>
+          <button type="button" class="ctrl-btn ${s===1 ? 'active-ochre' : ''}" onclick="ui.c6Step=1; renderMain();">1. + Trabalho (E+I)</button>
+          <button type="button" class="ctrl-btn ${s===2 ? 'active-petrol' : ''}" onclick="ui.c6Step=2; renderMain();">2. + Representação / Mapa</button>
+          <button type="button" class="ctrl-btn ${s===3 ? 'active-olive' : ''}" onclick="ui.c6Step=3; renderMain();">3. ➔ Território</button>
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 225" role="img" aria-label="Camadas transformando o Espaço em Território">
+            <!-- Camada 0: Espaço Bruto (sempre visível) -->
+            <rect x="28" y="24" width="764" height="176" rx="14" fill="#EFE9DB" stroke="#C5BAA6" stroke-width="2"/>
+            <!-- Relevo natural abstrato -->
+            <path d="M 28 158 Q 180 95 340 142 T 660 112 T 792 146 L 792 200 L 28 200 Z" fill="#DFE5D9"/>
+            <path d="M 110 24 Q 170 115 240 200" fill="none" stroke="#99B8C2" stroke-width="6" opacity="0.7"/>
+            <text x="48" y="48" font-family="monospace" font-size="10" font-weight="700" fill="#4A5564">ESPAÇO (DADO ANTERIOR • PRISÃO ORIGINAL)</text>
+
+            <!-- Camada 1: Trabalho (Energia + Informação) -->
+            ${s >= 1 ? `
+              <g>
+                <circle cx="290" cy="115" r="24" fill="rgba(201,138,44,0.22)" stroke="#C98A2C" stroke-width="2"/>
+                <circle cx="530" cy="108" r="28" fill="rgba(201,138,44,0.22)" stroke="#C98A2C" stroke-width="2"/>
+                <text x="290" y="119" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8A5B14">E + I</text>
+                <text x="530" y="112" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8A5B14">E + I</text>
+              </g>
+            ` : ''}
+
+            <!-- Camada 2: Grade Cartográfica / Representação Euclidiana -->
+            ${s >= 2 ? `
+              <g stroke="#2B5B6C" stroke-width="1.2" stroke-dasharray="5 4" opacity="0.75">
+                <line x1="180" y1="24" x2="180" y2="200"/>
+                <line x1="360" y1="24" x2="360" y2="200"/>
+                <line x1="540" y1="24" x2="540" y2="200"/>
+                <line x1="28" y1="88" x2="792" y2="88"/>
+                <line x1="28" y1="145" x2="792" y2="145"/>
+              </g>
+              <rect x="575" y="32" width="200" height="24" rx="12" fill="#2B5B6C"/>
+              <text x="675" y="48" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#fff">REPRESENTAÇÃO (A·α·E)</text>
+            ` : ''}
+
+            <!-- Camada 3: Território (Demarcação, Nós e Redes de Poder) -->
+            ${s >= 3 ? `
+              <polygon points="150,55 445,48 640,90 595,182 225,180" fill="rgba(158,36,36,0.1)" stroke="#9E2424" stroke-width="3"/>
+              <line x1="290" y1="115" x2="530" y2="108" stroke="#9E2424" stroke-width="3"/>
+              <line x1="290" y1="115" x2="390" y2="162" stroke="#3D6B59" stroke-width="2.2"/>
+              <circle cx="290" cy="115" r="10" fill="#9E2424"/>
+              <circle cx="530" cy="108" r="12" fill="#1B2635"/>
+              <circle cx="390" cy="162" r="8" fill="#3D6B59"/>
+              <rect x="512" y="168" width="265" height="24" rx="12" fill="#9E2424"/>
+              <text x="644" y="184" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#fff">TERRITÓRIO • PRISÃO CONSTRUÍDA</text>
+            ` : ''}
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--olive);margin-bottom:18px;">
+          <strong style="font-family:var(--font-serif);font-size:1.03rem;color:var(--slate);">${stepInfo.k}</strong>
+          <p style="font-size:0.84rem;color:var(--slate);margin-top:4px;">${stepInfo.d}</p>
+        </div>
+
+        <!-- Ciclo TDR -->
+        <span class="kicker" style="color:var(--crimson);">Dinâmica Permanente: Ciclo T–D–R</span>
+        <div class="btn-row" style="margin-top:6px;">
+          <button type="button" class="ctrl-btn ${tdr==='T' ? 'active-olive' : ''}" onclick="ui.c6Tdr='T'; renderMain();">T — Territorialização</button>
+          <button type="button" class="ctrl-btn ${tdr==='D' ? 'active-crimson' : ''}" onclick="ui.c6Tdr='D'; renderMain();">D — Desterritorialização</button>
+          <button type="button" class="ctrl-btn ${tdr==='R' ? 'active-ochre' : ''}" onclick="ui.c6Tdr='R'; renderMain();">R — Reterritorialização</button>
+        </div>
+        <div class="panel-soft" style="border-left:4px solid ${tdrInfo.color};">
+          <strong style="font-family:var(--font-serif);color:${tdrInfo.color};">${tdrInfo.title}</strong>
+          <p style="font-size:0.83rem;color:var(--slate);margin-top:3px;">${tdrInfo.desc}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 7: Construtor Cartográfico (Malhas, Nós e Redes) --- */
+    function renderCap7() {
+      const L = ui.c7Layers;
+      const isHier = ui.c7NetType === 'hierarquica';
+
+      const infoMap = {
+        malha: { t: 'Malha / Tessitura (Superfície)', c: '#3D6B59', d: 'Recorte poligonal que delimita áreas de soberania, jurisdição ou gestão. Opera a oposição continuidade/descontinuidade para enquadrar e tornar o espaço legível.' },
+        no_central: { t: 'Nó Central (Capital / Centralidade)', c: '#9E2424', d: 'Ponto de condensação máxima de decisões, informação e serviços. Impõe seus códigos e extrai mais-valia espaço-temporal dos nós periféricos.' },
+        no_perif: { t: 'Nó Periférico (Marginalidade)', c: '#2B5B6C', d: 'Ponto subordinado na rede; sua posição relativa depende da distância funcional e da conectividade em relação aos centros decisórios.' },
+        rede: { t: isHier ? 'Rede Hierárquica / Centralizada ("Roda")' : 'Rede Polinucleada / Horizontal', c: '#C98A2C', d: isHier ? 'Todos os fluxos convergem para um único nó central (índice máximo de centralidade). Facilita o controle estatal, mas cria vulnerabilidade e marginalidade periférica.' : 'Múltiplas conexões diretas entre os nós reduzem o periferismo, favorecem relações horizontais e aumentam a autonomia regional.' }
+      };
+      const sel = infoMap[ui.c7Selected];
+
+      return `
+        <span class="kicker" style="color:var(--olive);">Infográfico Interativo • Cap. 7</span>
+        <h3 class="section-heading">Construtor Cartográfico: A Geometria do Poder</h3>
+        <p class="section-lead">Ligue ou desligue as <strong>3 camadas do sistema territorial</strong>, clique nos elementos do mapa e alterne a topologia da rede para testar seus efeitos sobre o poder.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${L.malhas ? 'active-olive' : ''}" onclick="ui.c7Layers.malhas=!ui.c7Layers.malhas; ui.c7Selected='malha'; renderMain();">${L.malhas?'✓':'+'} Camada: Malhas / Tessituras</button>
+          <button type="button" class="ctrl-btn ${L.nos ? 'active-crimson' : ''}" onclick="ui.c7Layers.nos=!ui.c7Layers.nos; ui.c7Selected='no_central'; renderMain();">${L.nos?'✓':'+'} Camada: Nós</button>
+          <button type="button" class="ctrl-btn ${L.redes ? 'active-ochre' : ''}" onclick="ui.c7Layers.redes=!ui.c7Layers.redes; ui.c7Selected='rede'; renderMain();">${L.redes?'✓':'+'} Camada: Redes</button>
+          <button type="button" class="ctrl-btn ${isHier ? 'active-slate' : 'active-petrol'}" onclick="ui.c7NetType=ui.c7NetType==='hierarquica'?'polinucleada':'hierarquica'; ui.c7Selected='rede'; renderMain();">
+            Topologia: ${isHier ? 'Hierárquica (Centralizada)' : 'Polinucleada (Horizontal)'}
+          </button>
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 245" role="img" aria-label="Mapa abstrato interativo de Malhas, Nós e Redes">
+            <!-- Camada 1: Malhas / Tessituras -->
+            <g opacity="${L.malhas ? 1 : 0.08}" onclick="ui.c7Selected='malha'; renderMain();" style="cursor:pointer;">
+              <polygon points="40,22 270,22 300,122 180,220 40,220" fill="#E8F2EE" stroke="#3D6B59" stroke-width="2"/>
+              <polygon points="270,22 550,22 520,122 300,122" fill="#F1ECE0" stroke="#3D6B59" stroke-width="2"/>
+              <polygon points="550,22 780,22 780,220 620,220 520,122" fill="#E8F1F4" stroke="#3D6B59" stroke-width="2"/>
+              <polygon points="300,122 520,122 620,220 180,220" fill="#F9EBEB" stroke="#3D6B59" stroke-width="2"/>
+              <text x="64" y="46" font-family="monospace" font-size="9.5" fill="#3D6B59">MALHA A</text>
+              <text x="580" y="46" font-family="monospace" font-size="9.5" fill="#3D6B59">MALHA B</text>
+            </g>
+
+            <!-- Camada 3: Redes -->
+            <g opacity="${L.redes ? 1 : 0.08}" onclick="ui.c7Selected='rede'; renderMain();" style="cursor:pointer;">
+              <!-- Conexões radiais (sempre presentes) -->
+              <line x1="410" y1="122" x2="155" y2="75" stroke="#C98A2C" stroke-width="3"/>
+              <line x1="410" y1="122" x2="665" y2="75" stroke="#C98A2C" stroke-width="3"/>
+              <line x1="410" y1="122" x2="175" y2="185" stroke="#C98A2C" stroke-width="3"/>
+              <line x1="410" y1="122" x2="645" y2="185" stroke="#C98A2C" stroke-width="3"/>
+              <!-- Conexões horizontais (apenas no modo Polinucleada) -->
+              ${!isHier ? `
+                <line x1="155" y1="75" x2="665" y2="75" stroke="#2B5B6C" stroke-width="2.5" stroke-dasharray="6 3"/>
+                <line x1="155" y1="75" x2="175" y2="185" stroke="#2B5B6C" stroke-width="2.5" stroke-dasharray="6 3"/>
+                <line x1="665" y1="75" x2="645" y2="185" stroke="#2B5B6C" stroke-width="2.5" stroke-dasharray="6 3"/>
+                <line x1="175" y1="185" x2="645" y2="185" stroke="#2B5B6C" stroke-width="2.5" stroke-dasharray="6 3"/>
+              ` : ''}
+            </g>
+
+            <!-- Camada 2: Nós -->
+            <g opacity="${L.nos ? 1 : 0.1}">
+              <!-- Nó Central -->
+              <g onclick="ui.c7Selected='no_central'; renderMain();" style="cursor:pointer;">
+                <circle cx="410" cy="122" r="${isHier ? 26 : 19}" fill="#9E2424" stroke="#FFFDF8" stroke-width="3"/>
+                <text x="410" y="126" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#fff">NÓ 0</text>
+              </g>
+              <!-- Nós Periféricos -->
+              ${[
+                { x: 155, y: 75, l: 'N1' },
+                { x: 665, y: 75, l: 'N2' },
+                { x: 175, y: 185, l: 'N3' },
+                { x: 645, y: 185, l: 'N4' }
+              ].map(n => `
+                <g onclick="ui.c7Selected='no_perif'; renderMain();" style="cursor:pointer;">
+                  <circle cx="${n.x}" cy="${n.y}" r="${isHier ? 13 : 17}" fill="#2B5B6C" stroke="#FFFDF8" stroke-width="2.5"/>
+                  <text x="${n.x}" y="${n.y + 4}" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#fff">${n.l}</text>
+                </g>
+              `).join('')}
+            </g>
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${sel.c};">
+          <strong style="font-family:var(--font-serif);font-size:1.05rem;color:${sel.c};">${sel.t}</strong>
+          <p style="font-size:0.84rem;color:var(--slate);margin-top:4px;">${sel.d}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 8: A Territorialidade e os Mediadores --- */
+    function renderCap8() {
+      const isAut = ui.c8Mode === 'autonoma';
+      const medDetails = {
+        tecnicas: 'Técnicas e Instrumentos: mediatizam a transformação da matéria e do espaço. Se controlados pela coletividade, ampliam a autonomia; se monopolizados externamente, geram dependência.',
+        representacoes: 'Representações, Língua e Mapas: moldam a forma como o sujeito percebe e nomeia o lugar. A imposição de códigos externos desconecta o vivido do concebido.',
+        instituicoes: 'Instituições, Leis e Normas: regulam o acesso aos lugares e as relações com a alteridade. Podem proteger relações simétricas ou institucionalizar dissimetrias.'
+      };
+
+      return `
+        <span class="kicker" style="color:var(--olive);">Infográfico Interativo • Cap. 8</span>
+        <h3 class="section-heading">A Relação Territorial: Sujeito — Mediadores — Alteridade / Exterioridade</h3>
+        <p class="section-lead">Alterne entre <strong>Territorialidade Autônoma</strong> e <strong>Territorialidade Alienada</strong> e inspecione os três tipos de mediadores.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${isAut ? 'active-olive' : ''}" onclick="ui.c8Mode='autonoma'; renderMain();">Territorialidade Autônoma (Simétrica)</button>
+          <button type="button" class="ctrl-btn ${!isAut ? 'active-crimson' : ''}" onclick="ui.c8Mode='alienada'; renderMain();">Territorialidade Alienada (Dissimétrica)</button>
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 225" role="img" aria-label="Esquema triangular de Territorialidade: Sujeito, Mediadores, Exterioridade e Alteridade">
+            <!-- Exterioridade (Esquerda) -->
+            <rect x="24" y="68" width="180" height="88" rx="14" fill="#E8F2EE" stroke="#3D6B59" stroke-width="2"/>
+            <text x="114" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1B2635">EXTERIORIDADE</text>
+            <text x="114" y="122" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#3D6B59">Meio Físico / Lugares</text>
+
+            <!-- Alteridade (Direita) -->
+            <rect x="616" y="68" width="180" height="88" rx="14" fill="#E8F1F4" stroke="#2B5B6C" stroke-width="2"/>
+            <text x="706" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1B2635">ALTERIDADE</text>
+            <text x="706" y="122" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#2B5B6C">Os Outros / Coletividade</text>
+
+            <!-- Mediadores (Anel / Ponte Superior) -->
+            <rect x="275" y="18" width="270" height="44" rx="22" fill="${isAut ? '#FBF3E3' : '#9E2424'}" stroke="${isAut ? '#C98A2C' : '#731818'}" stroke-width="2.2"/>
+            <text x="410" y="44" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="${isAut ? '#8A5B14' : '#FFFFFF'}">
+              ${isAut ? 'MEDIADORES TRANSPARENTES' : 'MEDIADORES CAPTURADOS (EXTERNO)'}
+            </text>
+
+            <!-- Conexões -->
+            <line x1="204" y1="112" x2="346" y2="112" stroke="${isAut ? '#3D6B59' : '#9E2424'}" stroke-width="${isAut ? 3 : 2}" stroke-dasharray="${isAut ? 'none' : '6 4'}"/>
+            <line x1="474" y1="112" x2="616" y2="112" stroke="${isAut ? '#2B5B6C' : '#9E2424'}" stroke-width="${isAut ? 3 : 2}" stroke-dasharray="${isAut ? 'none' : '6 4'}"/>
+            <line x1="410" y1="62" x2="410" y2="82" stroke="${isAut ? '#C98A2C' : '#9E2424'}" stroke-width="2.5"/>
+
+            <!-- Sujeito / Grupo (Centro) -->
+            <circle cx="410" cy="134" r="52" fill="${isAut ? '#3D6B59' : '#1B2635'}" stroke="#FFFDF8" stroke-width="3"/>
+            <text x="410" y="130" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#FFFFFF">SUJEITO /</text>
+            <text x="410" y="148" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#FFFFFF">GRUPO (H)</text>
+
+            <text x="410" y="210" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="${isAut ? '#3D6B59' : '#9E2424'}">
+              ${isAut ? 'GANHOS ≅ CUSTOS (RELAÇÕES SIMÉTRICAS • AUTONOMIA)' : 'CUSTOS > GANHOS (RELAÇÕES DISSIMÉTRICAS • ALIENAÇÃO)'}
+            </text>
+          </svg>
+        </div>
+
+        <div class="btn-row" style="margin-bottom:10px;">
+          <button type="button" class="ctrl-btn ${ui.c8Med==='tecnicas' ? 'active-ochre' : ''}" onclick="ui.c8Med='tecnicas'; renderMain();">Mediador: Técnicas</button>
+          <button type="button" class="ctrl-btn ${ui.c8Med==='representacoes' ? 'active-petrol' : ''}" onclick="ui.c8Med='representacoes'; renderMain();">Mediador: Representações</button>
+          <button type="button" class="ctrl-btn ${ui.c8Med==='instituicoes' ? 'active-slate' : ''}" onclick="ui.c8Med='instituicoes'; renderMain();">Mediador: Instituições</button>
+        </div>
+        <div class="panel-soft">
+          <p style="font-size:0.83rem;color:var(--slate);">${medDetails[ui.c8Med]}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 9: Laboratório Matéria -> Recurso --- */
+    function renderCap9() {
+      const G = ui.c9Gear;
+      const count = [G.tech, G.energy, G.power].filter(Boolean).length;
+      const isResource = count === 3;
+
+      return `
+        <span class="kicker" style="color:var(--ochre);">Infográfico Interativo • Cap. 9</span>
+        <h3 class="section-heading">A Alquimia Relacional: Matéria (M) ➔ Recurso (P)</h3>
+        <p class="section-lead">Ative ou desative as <strong>3 engrenagens sociais e técnicas</strong> para verificar a tese central de Raffestin: sem prática técnica, energia e demanda social, a matéria volta a ser inerte.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${G.tech ? 'active-petrol' : ''}" onclick="ui.c9Gear.tech=!ui.c9Gear.tech; renderMain();">${G.tech?'✓':'○'} 1. Técnica / Conhecimento (I)</button>
+          <button type="button" class="ctrl-btn ${G.energy ? 'active-ochre' : ''}" onclick="ui.c9Gear.energy=!ui.c9Gear.energy; renderMain();">${G.energy?'✓':'○'} 2. Acessibilidade / Energia (E)</button>
+          <button type="button" class="ctrl-btn ${G.power ? 'active-crimson' : ''}" onclick="ui.c9Gear.power=!ui.c9Gear.power; renderMain();">${G.power?'✓':'○'} 3. Demanda / Relação de Poder</button>
+        </div>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 205" role="img" aria-label="Bancada relacional transformando Matéria Bruta em Recurso">
+            <!-- Entrada: Matéria Bruta -->
+            <rect x="20" y="56" width="148" height="88" rx="14" fill="#E6DFD2" stroke="#8C8375" stroke-width="2"/>
+            <text x="94" y="92" text-anchor="middle" font-family="Georgia, serif" font-size="14" font-weight="700" fill="#1B2635">MATÉRIA (M)</text>
+            <text x="94" y="114" text-anchor="middle" font-family="monospace" font-size="9" fill="#4A5564">Dado bruto / Inerte</text>
+
+            <!-- 3 Engrenagens / Filtros -->
+            <circle cx="278" cy="100" r="44" fill="${G.tech ? '#E8F1F4' : '#F4F1EA'}" stroke="${G.tech ? '#2B5B6C' : '#C5BAA6'}" stroke-width="3" stroke-dasharray="${G.tech ? '8 4' : 'none'}"/>
+            <text x="278" y="96" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${G.tech ? '#2B5B6C' : '#8C8375'}">TÉCNICA</text>
+            <text x="278" y="111" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#4A5564">${G.tech ? 'Ativa (r)' : 'Ausente'}</text>
+
+            <circle cx="404" cy="100" r="44" fill="${G.energy ? '#FBF3E3' : '#F4F1EA'}" stroke="${G.energy ? '#C98A2C' : '#C5BAA6'}" stroke-width="3" stroke-dasharray="${G.energy ? '8 4' : 'none'}"/>
+            <text x="404" y="96" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${G.energy ? '#8A5B14' : '#8C8375'}">ENERGIA</text>
+            <text x="404" y="111" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#4A5564">${G.energy ? 'Acessível' : 'Bloqueada'}</text>
+
+            <circle cx="530" cy="100" r="44" fill="${G.power ? '#F9EBEB' : '#F4F1EA'}" stroke="${G.power ? '#9E2424' : '#C5BAA6'}" stroke-width="3" stroke-dasharray="${G.power ? '8 4' : 'none'}"/>
+            <text x="530" y="96" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${G.power ? '#9E2424' : '#8C8375'}">PODER</text>
+            <text x="530" y="111" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#4A5564">${G.power ? 'Utilidade' : 'Sem demanda'}</text>
+
+            <!-- Fluxo -->
+            <line x1="168" y1="100" x2="232" y2="100" stroke="#1B2635" stroke-width="2.5"/>
+            <line x1="576" y1="100" x2="634" y2="100" stroke="${isResource ? '#3D6B59' : '#8C8375'}" stroke-width="3"/>
+
+            <!-- Saída: Recurso ou Matéria Obsoleta -->
+            <rect x="636" y="48" width="164" height="104" rx="14" fill="${isResource ? '#3D6B59' : '#DDD5C7'}" stroke="${isResource ? '#274A3D' : '#8C8375'}" stroke-width="2.5"/>
+            <text x="718" y="88" text-anchor="middle" font-family="Georgia, serif" font-size="14.5" font-weight="700" fill="${isResource ? '#FFFFFF' : '#4A5564'}">${isResource ? 'RECURSO (P)' : 'MERA MATÉRIA'}</text>
+            <text x="718" y="110" text-anchor="middle" font-family="monospace" font-size="9.5" fill="${isResource ? '#E8F2EE' : '#4A5564'}">${isResource ? 'A · r · M ➔ P' : `${count}/3 condições`}</text>
+            <text x="718" y="128" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="${isResource ? '#FBF3E3' : '#4A5564'}">${isResource ? 'Propriedades inventadas' : 'Propriedades latentes'}</text>
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${isResource ? 'var(--olive)' : 'var(--ochre)'};">
+          <p style="font-size:0.84rem;color:var(--slate);">
+            ${isResource
+              ? '<strong>Recurso Produzido (A·r·M ➔ P):</strong> Todas as condições relacionais estão ativas. A prática humana extraiu propriedades úteis da matéria — como o carvão que passou de pedra curiosa a combustível e matéria-prima química.'
+              : '<strong>Matéria Inerte ou Obsoleta:</strong> Faltando técnica, energia/acesso ou demanda social, a substância permanece (ou volta a ser, como o sílex) apenas matéria bruta sem valor de recurso.'}
+          </p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 10: Ciclo de Vida do Recurso & Estratégias --- */
+    function renderCap10() {
+      const phases = [
+        { n: '1. Invenção / Descoberta', y: 155, d: 'Uma prática técnica nova identifica propriedades úteis em uma matéria. O saber (I) abre o horizonte de utilização.' },
+        { n: '2. Monopólio / Trunfo Estratégico', y: 55, d: 'Atores ArM ou AM/Ar concentram o acesso e o know-how, convertendo o recurso em arma política e fonte de relações dissimétricas.' },
+        { n: '3. Disputa / Dependência', y: 78, d: 'Países produtores (AM) formam cartéis (ex.: OPEP) e jogam com o tempo; potências tecnológicas (Ar) retêm o saber-fazer e buscam diversificação.' },
+        { n: '4. Substituição / Obsolescência', y: 162, d: 'A pressão dos preços ou o esgotamento induz atores Ar a inventar bens de substituição, esvaziando o antigo trunfo.' }
+      ];
+      const ph = phases[ui.c10Phase];
+
+      const strats = {
+        acesso: { t: 'Controle de Acesso (Espacial)', d: 'Domínio direto ou indireto das jazidas, rotas de circulação e contratos de concessão/associação para garantir fluxo contínuo.' },
+        estocagem: { t: 'Estocagem & Gestão do Tempo', d: 'Jogada típica dos atores AM (cotas de extração) ou de grandes consumidores (reservas estratégicas) para neutralizar pressões de curto prazo.' },
+        substituicao: { t: 'Substituição Tecnológica (Estratégia Ar)', d: 'Investimento intensivo em P&D (informação) para criar substitutos sintéticos ou energias alternativas, rompendo a dependência de AM.' },
+        preco: { t: 'Controle de Preço & Informação', d: 'Manipulação da rarefação relativa/artificial via preços e retenção do "saber-fazer" nas redes privadas das multinacionais.' }
+      };
+      const st = strats[ui.c10Strat];
+
+      return `
+        <span class="kicker" style="color:var(--ochre);">Infográfico Interativo • Cap. 10</span>
+        <h3 class="section-heading">O Tabuleiro dos Trunfos e o Ciclo de Vida do Recurso</h3>
+        <p class="section-lead">Clique nas <strong>4 fases da trajetória estratégica</strong> de um recurso no gráfico e compare as <strong>4 estratégias de poder</strong> no tabuleiro internacional.</p>
+
+        <div class="svg-stage">
+          <svg viewBox="0 0 820 215" role="img" aria-label="Curva do ciclo de vida estratégico de um recurso como arma política">
+            <!-- Eixos -->
+            <line x1="55" y1="185" x2="780" y2="185" stroke="#1B2635" stroke-width="2"/>
+            <line x1="55" y1="22" x2="55" y2="185" stroke="#1B2635" stroke-width="2"/>
+            <text x="64" y="34" font-family="monospace" font-size="9.5" font-weight="700" fill="#9E2424">VALOR COMO TRUNFO POLÍTICO</text>
+            <text x="776" y="202" text-anchor="end" font-family="monospace" font-size="9.5" fill="#4A5564">TEMPO / EVOLUÇÃO TÉCNICA →</text>
+
+            <!-- Curva do Ciclo -->
+            <path d="M 110 155 C 200 140 245 55 315 55 C 400 55 460 75 520 78 C 610 82 650 155 725 162" fill="none" stroke="#C98A2C" stroke-width="4"/>
+
+            <!-- 4 Nós Clicáveis -->
+            ${[
+              { i: 0, x: 110, y: 155, l: '1. Invenção' },
+              { i: 1, x: 315, y: 55, l: '2. Monopólio' },
+              { i: 2, x: 520, y: 78, l: '3. Disputa' },
+              { i: 3, x: 725, y: 162, l: '4. Substituição' }
+            ].map(pt => {
+              const act = ui.c10Phase === pt.i;
+              return `
+                <g onclick="ui.c10Phase=${pt.i}; renderMain();" style="cursor:pointer;">
+                  <circle cx="${pt.x}" cy="${pt.y}" r="${act ? 15 : 10}" fill="${act ? '#9E2424' : '#1B2635'}" stroke="#FFFDF8" stroke-width="3"/>
+                  <text x="${pt.x}" y="${pt.y - 20}" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="${act ? '#9E2424' : '#1B2635'}">${pt.l}</text>
+                </g>
+              `;
+            }).join('')}
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--crimson);margin-bottom:18px;">
+          <strong style="font-family:var(--font-serif);font-size:1.05rem;color:var(--crimson);">${ph.n}</strong>
+          <p style="font-size:0.84rem;color:var(--slate);margin-top:4px;">${ph.d}</p>
+        </div>
+
+        <span class="kicker">Estratégias de Poder no Tabuleiro dos Recursos</span>
+        <div class="btn-row" style="margin-top:6px;">
+          ${[
+            ['acesso', 'Controle de Acesso'],
+            ['estocagem', 'Estocagem / Tempo'],
+            ['substituicao', 'Substituição Técnica'],
+            ['preco', 'Preço & Saber-Fazer']
+          ].map(([k, l]) => `
+            <button type="button" class="ctrl-btn ${ui.c10Strat===k ? 'active-ochre' : ''}" onclick="ui.c10Strat='${k}'; renderMain();">${l}</button>
+          `).join('')}
+        </div>
+        <div class="panel-soft" style="border-left:4px solid var(--ochre);">
+          <strong style="font-family:var(--font-serif);font-size:1rem;">${st.t}</strong>
+          <p style="font-size:0.83rem;color:var(--slate);margin-top:4px;">${st.d}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAP 11 (CONCLUSÃO): A Bússola da Geografia do Poder --- */
+    function renderCap11() {
+      const isAut = ui.c11Logic === 'autonomia';
+      const axes = {
+        poder: {
+          title: 'Eixo I — Problemática do Poder',
+          dom: 'Poder unidimensional ("P"), centralização absoluta, separação entre Energia e Informação, coisificação das relações.',
+          aut: 'Compreensão relacional ("p"), reconhecimento da resistência e busca por relações simétricas (ganhos e custos equilibrados).'
+        },
+        populacao: {
+          title: 'Eixo II — População e Diferença',
+          dom: 'Redução ao "homem estatístico", homogeneização isotrópica, discriminação espacial e destruição de línguas e culturas.',
+          aut: 'População como fonte criadora de autonomia; preservação das diferenças genéticas, linguísticas e culturais.'
+        },
+        territorio: {
+          title: 'Eixo III — Território e Territorialidade',
+          dom: 'Malhas suportadas, centralidades hipertrofiadas, redes opacas de vigilância e territorialidade alienada.',
+          aut: 'Malhas concretas e vividas, redes horizontais, mediadores apropriados conscientemente e defesa do cotidiano.'
+        },
+        recursos: {
+          title: 'Eixo IV — Recursos e Tecnicidade',
+          dom: 'Exploracionismo predatório (informação funcional), monopólio do saber-fazer (Ar) e uso dos recursos como armas de estrangulamento.',
+          aut: 'Tecnicidade simétrica, equilíbrio com informação reguladora, cooperação bioeconômica e socialização do saber.'
+        }
+      };
+      const curAx = axes[ui.c11Axis];
+
+      return `
+        <span class="kicker" style="color:var(--slate);">Infográfico Síntese • Conclusão</span>
+        <h3 class="section-heading">A Bússola da Geografia do Poder: Dominação vs. Autonomia</h3>
+        <p class="section-lead">Alterne o polo orientador da bússola e clique em cada um dos <strong>4 eixos radiais</strong> para sintetizar toda a obra de Claude Raffestin.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${!isAut ? 'active-crimson' : ''}" onclick="ui.c11Logic='dominacao'; renderMain();">Lógica da Dominação (Dissimetria / Alienação)</button>
+          <button type="button" class="ctrl-btn ${isAut ? 'active-olive' : ''}" onclick="ui.c11Logic='autonomia'; renderMain();">Lógica da Autonomia (Simetria / Apropriação Consciente)</button>
+        </div>
+
+        <div class="grid-2" style="align-items:center;">
+          <div class="svg-stage" style="margin-bottom:0;">
+            <svg viewBox="0 0 380 280" role="img" aria-label="Bússola radial dos 4 eixos da Geografia do Poder">
+              <!-- Círculos da Bússola -->
+              <circle cx="190" cy="140" r="108" fill="none" stroke="#DDD5C7" stroke-width="2"/>
+              <circle cx="190" cy="140" r="76" fill="none" stroke="#DDD5C7" stroke-width="1.2" stroke-dasharray="4 4"/>
+              <line x1="190" y1="22" x2="190" y2="258" stroke="#C5BAA6" stroke-width="1.5"/>
+              <line x1="72" y1="140" x2="308" y2="140" stroke="#C5BAA6" stroke-width="1.5"/>
+
+              <!-- Agulha da Bússola -->
+              <polygon points="190,74 202,140 190,206 178,140" fill="${isAut ? '#3D6B59' : '#9E2424'}" opacity="0.22"/>
+              <circle cx="190" cy="140" r="34" fill="${isAut ? '#3D6B59' : '#9E2424'}"/>
+              <text x="190" y="137" text-anchor="middle" font-family="monospace" font-size="8.5" font-weight="700" fill="#fff">${isAut ? 'LÓGICA DA' : 'LÓGICA DA'}</text>
+              <text x="190" y="150" text-anchor="middle" font-family="Georgia, serif" font-size="10.5" font-weight="700" fill="#FBF3E3">${isAut ? 'AUTONOMIA' : 'DOMINAÇÃO'}</text>
+
+              <!-- 4 Eixos Clicáveis -->
+              ${[
+                { k: 'poder', x: 190, y: 34, l: 'PODER (E+I)' },
+                { k: 'populacao', x: 306, y: 140, l: 'POPULAÇÃO' },
+                { k: 'territorio', x: 190, y: 246, l: 'TERRITÓRIO' },
+                { k: 'recursos', x: 74, y: 140, l: 'RECURSOS' }
+              ].map(n => {
+                const act = ui.c11Axis === n.k;
+                return `
+                  <g onclick="ui.c11Axis='${n.k}'; renderMain();" style="cursor:pointer;">
+                    <rect x="${n.x - 54}" y="${n.y - 16}" width="108" height="32" rx="16"
+                      fill="${act ? '#1B2635' : '#FFFDF8'}" stroke="${act ? '#1B2635' : (isAut ? '#3D6B59' : '#9E2424')}" stroke-width="2"/>
+                    <text x="${n.x}" y="${n.y + 4}" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700"
+                      fill="${act ? '#FBF3E3' : '#1B2635'}">${n.l}</text>
+                  </g>
+                `;
+              }).join('')}
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${isAut ? 'var(--olive)' : 'var(--crimson)'};">
+            <span class="chip ${isAut ? 'chip-olive' : 'chip-crimson'}" style="margin-bottom:8px;">
+              ${isAut ? 'Horizonte da Autonomia' : 'Crítica à Dominação'}
+            </span>
+            <h4 style="font-family:var(--font-serif);font-size:1.15rem;color:var(--slate);margin-bottom:8px;">${curAx.title}</h4>
+            <p style="font-size:0.86rem;color:var(--slate);margin-bottom:14px;">${isAut ? curAx.aut : curAx.dom}</p>
+            <div style="padding-top:10px;border-top:1px dashed var(--border-strong);font-size:0.78rem;color:var(--slate-muted);">
+              <strong>Contraste imediato:</strong> ${isAut ? curAx.dom : curAx.aut}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       RENDERIZAÇÃO DE CAPÍTULO COMPLETO
+       ========================================================================= */
+
+    function renderSection(sec) {
+      const part = PARTS[sec.part];
+      const isDone = !!studiedMap[sec.id];
+
+      const prevTarget = sec.id === 1 ? 'overview' : sec.id - 1;
+      const prevTitle = sec.id === 1 ? 'Mapa Geral da Obra' : (SECTIONS[sec.id - 2].id === 11 ? 'Conclusão' : `Cap. ${SECTIONS[sec.id - 2].id} — ${SECTIONS[sec.id - 2].title}`);
+
+      const nextTarget = sec.id < 11 ? sec.id + 1 : 'overview';
+      const nextTitle = sec.id < 11 ? (SECTIONS[sec.id].id === 11 ? 'Conclusão — Por uma Geografia da Autonomia' : `Cap. ${SECTIONS[sec.id].id} — ${SECTIONS[sec.id].title}`) : 'Voltar ao Mapa Geral da Obra';
+
+      return `
+        <header class="chapter-header">
+          <div class="meta-row">
+            <span class="part-pill" style="background:${part.color};">${part.roman} • ${part.title}</span>
+            <button type="button" class="study-btn ${isDone ? 'studied' : ''}" onclick="toggleStudied(${sec.id})">
+              <span>${isDone ? '✓' : '○'}</span>
+              <span>${isDone ? 'Estudado' : 'Marcar como estudado'}</span>
+            </button>
+          </div>
+          <h2 class="chapter-title">${sec.id === 11 ? sec.title : `Capítulo ${sec.id} — ${sec.title}`}</h2>
+          <p class="chapter-subtitle">${sec.subtitle}</p>
+          <div class="editorial-stripe"></div>
+        </header>
+
+        <!-- Síntese Teórica -->
+        <section class="synthesis-card" style="border-left-color:${part.color};">
+          <span class="kicker" style="color:${part.color};">Síntese Teórica e Conceitual</span>
+          <p class="synthesis-text">${sec.synthesis}</p>
+          <div class="formula-pill">${sec.formula}</div>
+        </section>
+
+        <!-- Infográfico Interativo Exclusivo -->
+        <section class="infographic-card">
+          ${renderInfographic(sec.id)}
+        </section>
+
+        <!-- Cartões de Conceitos-Chave Clicáveis / Expansíveis -->
+        <section>
+          <span class="kicker" style="color:${part.color};">Glossário Relacional (Clique para expandir relações)</span>
+          <h3 class="section-heading">Conceitos-Chave do Capítulo</h3>
+          <div class="concepts-grid">
+            ${sec.concepts.map((c, idx) => {
+              const exp = !!expandedConcepts[`${sec.id}-${idx}`];
+              return `
+                <button type="button" class="concept-card ${exp ? 'expanded' : ''}" onclick="toggleConcept(${sec.id}, ${idx})">
+                  <div class="concept-top">
+                    <span class="concept-tag" style="color:${part.color};">${c.tag}</span>
+                    <span class="concept-toggle-icon" aria-hidden="true">${exp ? '−' : '+'}</span>
+                  </div>
+                  <h4>${c.name}</h4>
+                  <p class="concept-def">${c.def}</p>
+                  ${exp ? `
+                    <div class="concept-extra">
+                      <strong>Conexão conceitual:</strong> ${c.rel}
+                    </div>
+                  ` : ''}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </section>
+
+        <!-- Citação -->
+        <blockquote class="quote-card" style="background:${part.soft};border-left-color:${part.color};">
+          <p>“${sec.quote}”</p>
+          <footer style="color:${part.color};">— Claude Raffestin, ${sec.quoteRef} (Editora Ática)</footer>
+        </blockquote>
+
+        <!-- Rodapé de Navegação -->
+        <nav class="chapter-footer" aria-label="Navegação entre capítulos">
+          <button type="button" class="step-btn" onclick="navigateTo(${typeof prevTarget === 'string' ? `'${prevTarget}'` : prevTarget})">
+            <span style="font-size:1.15rem;color:var(--crimson);">←</span>
+            <div>
+              <span class="step-meta">Anterior</span>
+              <span class="step-title">${prevTitle}</span>
+            </div>
+          </button>
+
+          <button type="button" class="step-btn next" onclick="navigateTo(${typeof nextTarget === 'string' ? `'${nextTarget}'` : nextTarget})">
+            <div>
+              <span class="step-meta">${sec.id < 11 ? 'Próximo' : 'Concluir Percurso'}</span>
+              <span class="step-title">${nextTitle}</span>
+            </div>
+            <span style="font-size:1.15rem;">${sec.id < 11 ? '→' : '↺'}</span>
+          </button>
+        </nav>
+      `;
+    }
+
+    function renderMain() {
+      const el = document.getElementById('main-content');
+      if (!el) return;
+      if (currentView === 'overview') {
+        el.innerHTML = renderOverview();
+      } else {
+        const sec = SECTIONS.find(s => s.id === currentView);
+        el.innerHTML = sec ? renderSection(sec) : renderOverview();
+      }
+    }
+
+    /* =========================================================================
+       INICIALIZAÇÃO
+       ========================================================================= */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        document.getElementById('open-drawer-btn').addEventListener('click', openDrawer);
+        document.getElementById('close-drawer-btn').addEventListener('click', closeDrawer);
+        document.getElementById('sidebar-overlay').addEventListener('click', closeDrawer);
+        document.getElementById('reset-progress-btn').addEventListener('click', resetProgress);
+
+        const searchInput = document.getElementById('search-input');
+        const searchClear = document.getElementById('search-clear');
+
+        searchInput.addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          searchClear.classList.toggle('visible', searchQuery.length > 0);
+          renderSidebar();
+        });
+
+        searchClear.addEventListener('click', () => {
+          searchQuery = '';
+          searchInput.value = '';
+          searchClear.classList.remove('visible');
+          renderSidebar();
+          searchInput.focus();
+        });
+
+        renderSidebar();
+        renderMain();
+      } catch (err) {
+        console.error('Erro ao inicializar o Atlas de Raffestin:', err);
+      }
+    });
+  </script>
+</body>
+</html>
