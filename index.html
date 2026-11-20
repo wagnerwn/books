@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Capital — Resumos</title>
+  <style>
+    :root {
+      --bg: #f6f3ee;
+      --card: #fffdf9;
+      --ink: #1e1c1a;
+      --muted: #68625b;
+      --accent: #8c271e;
+      --border: #e3dcd0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      display: grid;
+      place-items: center;
+      padding: 2rem 1.25rem;
+    }
+
+    main {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.25rem;
+      box-shadow: 0 10px 30px rgba(30, 28, 26, 0.06);
+    }
+
+    .tag {
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-bottom: 0.4rem;
+    }
+
+    .autor {
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    ul {
+      list-style: none;
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    a {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      text-decoration: none;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    a:hover {
+      transform: translateX(4px);
+      border-color: var(--accent);
+      background: #ffffff;
+      color: var(--accent);
+    }
+
+    a::after {
+      content: "→";
+      font-size: 1.1rem;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="tag">Índice de Resumos</p>
+    <h1>O Capital</h1>
+    <p class="autor">Karl Marx</p>
+
+    <ul>
+      <li><a href="o_capital_livro_i_atlas_infogr_fico_interativo.html">Livro I</a></li>
+      <li><a href="o_capital_livro_ii_atlas_infogr_fico_interativo.html">Livro II</a></li>
+      <li><a href="o_capital_livro_iii_atlas_infogr_fico_interativo.html">Livro III</a></li>
+    </ul>
+  </main>
+</body>
+</html>
