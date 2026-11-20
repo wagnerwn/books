@@ -1,0 +1,3433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neil Brenner: Atlas Conceitual e Bibliográfico</title>
+  <!-- Google Fonts opcionais (Newsreader, Inter, JetBrains Mono) com fallbacks elegantes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS — ESTÉTICA EDITORIAL-CARTOGRÁFICA (BAUWELT / OUP / UTL)
+       ========================================================================== */
+    :root {
+      --bg-paper: #F7F6F2;
+      --bg-surface: #FFFFFF;
+      --bg-muted: #EFECE5;
+      --bg-subtle: #F3F1EB;
+      --ink-primary: #181B20;
+      --ink-secondary: #3E4550;
+      --ink-muted: #666F7A;
+      --border-thin: #E2E0D8;
+      --border-strong: #C9C5B8;
+
+      /* Paleta dos 4 Eixos Teóricos */
+      --axis-estado: #1D4ED8;
+      --axis-estado-soft: #EFF6FF;
+      --axis-estado-border: rgba(29, 78, 216, 0.25);
+
+      --axis-neolib: #C2410C;
+      --axis-neolib-soft: #FFF7ED;
+      --axis-neolib-border: rgba(194, 65, 12, 0.25);
+
+      --axis-planetaria: #047857;
+      --axis-planetaria-soft: #ECFDF5;
+      --axis-planetaria-border: rgba(4, 120, 87, 0.25);
+
+      --axis-critica: #7E22CE;
+      --axis-critica-soft: #FAF5FF;
+      --axis-critica-border: rgba(126, 34, 206, 0.25);
+
+      /* Tipografia */
+      --font-serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      /* Geometria e Elevação */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-sm: 0 2px 8px rgba(24, 27, 32, 0.05);
+      --shadow-md: 0 10px 28px rgba(24, 27, 32, 0.08);
+      --transition: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ==========================================================================
+       RESET E BASE
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(to right, rgba(24, 27, 32, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(24, 27, 32, 0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    button:focus-visible, [tabindex="0"]:focus-visible {
+      outline: 2px solid var(--axis-estado);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================================================
+       CABEÇALHO FIXO & NAVEGAÇÃO PRINCIPAL
+       ========================================================================== */
+    .atlas-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247, 246, 242, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.015em;
+    }
+
+    .brand-sub {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: var(--bg-muted);
+      padding: 0.3rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-thin);
+    }
+
+    .nav-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.52rem 1.05rem;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      color: var(--ink-primary);
+      background: rgba(255, 255, 255, 0.65);
+    }
+
+    .nav-tab.active {
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-badge {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      padding: 0.1rem 0.42rem;
+      border-radius: 999px;
+      background: rgba(24, 27, 32, 0.08);
+    }
+
+    .nav-tab.active .nav-badge {
+      background: rgba(247, 246, 242, 0.2);
+    }
+
+    /* ==========================================================================
+       CONTAINER PRINCIPAL E UTILITÁRIOS
+       ========================================================================== */
+    .atlas-main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .module-view {
+      display: none;
+      animation: fadeUp 280ms ease;
+    }
+
+    .module-view.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--ink-muted);
+    }
+
+    .serif-heading {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--ink-primary);
+    }
+
+    .axis-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.28rem 0.72rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .axis-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MÓDULO 1: REDE CONCEITUAL (MAPA TOPOLÓGICO EM SVG)
+       ========================================================================== */
+    .network-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .network-header h2 {
+      font-size: 2rem;
+      margin-top: 0.2rem;
+    }
+
+    .network-header p {
+      max-width: 700px;
+      color: var(--ink-secondary);
+      font-size: 0.92rem;
+      margin-top: 0.35rem;
+    }
+
+    .axis-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.42rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-thin);
+      color: var(--ink-secondary);
+      transition: all var(--transition);
+    }
+
+    .filter-btn:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .filter-btn.active {
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      border-color: var(--ink-primary);
+    }
+
+    .network-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+
+    .canvas-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 580px;
+    }
+
+    .canvas-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.15rem;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border-thin);
+      font-family: var(--font-mono);
+      font-size: 0.71rem;
+      color: var(--ink-muted);
+    }
+
+    .network-svg-wrap {
+      flex: 1;
+      width: 100%;
+      background-image:
+        radial-gradient(rgba(24, 27, 32, 0.06) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+
+    #network-svg {
+      width: 100%;
+      height: 100%;
+      min-height: 525px;
+      display: block;
+    }
+
+    .net-edge {
+      fill: none;
+      stroke: #94A3B8;
+      stroke-width: 1.6;
+      stroke-opacity: 0.4;
+      transition: stroke-opacity 220ms ease, stroke-width 220ms ease, stroke 220ms ease;
+    }
+
+    .net-edge.highlighted {
+      stroke-opacity: 0.92;
+      stroke-width: 2.8;
+    }
+
+    .net-edge.dimmed {
+      stroke-opacity: 0.08;
+    }
+
+    .net-node {
+      cursor: pointer;
+      transition: opacity 220ms ease;
+    }
+
+    .net-node.dimmed {
+      opacity: 0.2;
+    }
+
+    .net-node .node-circle {
+      transition: transform 220ms ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .net-node:hover .node-circle,
+    .net-node.selected .node-circle {
+      transform: scale(1.13);
+    }
+
+    .net-node-code {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      fill: #FFFFFF;
+      pointer-events: none;
+    }
+
+    .net-node-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 600;
+      fill: var(--ink-primary);
+      pointer-events: none;
+    }
+
+    /* Painel Lateral da Rede */
+    .inspector-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.1rem;
+    }
+
+    .inspector-title {
+      font-size: 1.65rem;
+      margin: 0.55rem 0 0.2rem;
+    }
+
+    .inspector-en {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .inspector-desc {
+      font-size: 0.89rem;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+      margin-bottom: 0.95rem;
+    }
+
+    .connections-label {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      padding-top: 0.85rem;
+      margin-bottom: 0.6rem;
+      border-top: 1px solid var(--border-thin);
+    }
+
+    .connection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      max-height: 245px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .conn-btn {
+      text-align: left;
+      padding: 0.65rem 0.8rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-paper);
+      border: 1px solid var(--border-thin);
+      transition: all var(--transition);
+    }
+
+    .conn-btn:hover {
+      background: var(--bg-muted);
+      border-color: var(--border-strong);
+      transform: translateX(2px);
+    }
+
+    .conn-btn strong {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.81rem;
+      color: var(--ink-primary);
+      margin-bottom: 2px;
+    }
+
+    .conn-btn span {
+      display: block;
+      font-size: 0.77rem;
+      color: var(--ink-secondary);
+      line-height: 1.45;
+    }
+
+    .btn-cta {
+      width: 100%;
+      padding: 0.82rem 1.1rem;
+      border-radius: var(--radius-md);
+      background: var(--ink-primary);
+      color: #FFFFFF;
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      transition: all var(--transition);
+    }
+
+    .btn-cta:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==========================================================================
+       LAYOUT EM 2 COLUNAS (MÓDULOS 2 E 3)
+       ========================================================================== */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 325px minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .sidebar-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      position: sticky;
+      top: 86px;
+    }
+
+    .sidebar-head {
+      padding: 1rem 1.15rem;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .sidebar-head h3 {
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .sidebar-scroll {
+      max-height: calc(100vh - 175px);
+      overflow-y: auto;
+    }
+
+    .sidebar-group-label {
+      padding: 0.55rem 1.1rem 0.35rem;
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: var(--bg-paper);
+      border-bottom: 1px solid var(--border-thin);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .sidebar-item {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.8rem 1.1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-thin);
+      border-left: 3px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .sidebar-item:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-paper);
+    }
+
+    .sidebar-item.active {
+      background: var(--item-soft, var(--bg-subtle));
+      border-left-color: var(--item-accent, var(--ink-primary));
+    }
+
+    .code-tag {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.16rem 0.42rem;
+      border-radius: 4px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-thin);
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .sidebar-item.active .code-tag {
+      background: var(--item-accent, var(--ink-primary));
+      color: #FFFFFF;
+      border-color: transparent;
+    }
+
+    .sidebar-item-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+      line-height: 1.3;
+    }
+
+    .sidebar-item-sub {
+      display: block;
+      font-size: 0.73rem;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    /* Palco de Detalhes (Direita) */
+    .detail-stage {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.65rem;
+    }
+
+    .detail-header {
+      border-bottom: 1px solid var(--border-thin);
+      padding-bottom: 1.2rem;
+    }
+
+    .detail-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .detail-title {
+      font-size: 2.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-en {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    .collab-bar {
+      margin-top: 0.75rem;
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.8rem;
+      color: var(--ink-secondary);
+      background: var(--bg-paper);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-thin);
+    }
+
+    .collab-bar strong {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--ink-muted);
+    }
+
+    .theory-text {
+      font-size: 0.96rem;
+      color: var(--ink-secondary);
+      line-height: 1.72;
+    }
+
+    .theory-text p + p {
+      margin-top: 0.85rem;
+    }
+
+    /* ==========================================================================
+       CAIXA DE DIAGRAMA SVG INTERATIVO (MÓDULO 2)
+       ========================================================================== */
+    .diagram-box {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .diagram-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.85rem 1.2rem;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border-thin);
+    }
+
+    .diagram-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-primary);
+    }
+
+    .diagram-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .diag-btn {
+      padding: 0.38rem 0.78rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-thin);
+      color: var(--ink-secondary);
+      transition: all var(--transition);
+    }
+
+    .diag-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--ink-primary);
+    }
+
+    .diag-btn.active {
+      background: var(--ink-primary);
+      color: #FFFFFF;
+      border-color: var(--ink-primary);
+    }
+
+    .diagram-canvas {
+      padding: 1.25rem;
+      background: #FCFBF9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .diagram-canvas svg {
+      width: 100%;
+      max-width: 780px;
+      height: auto;
+      display: block;
+    }
+
+    .diagram-caption {
+      padding: 1rem 1.25rem;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-thin);
+      font-size: 0.88rem;
+      color: var(--ink-secondary);
+      line-height: 1.58;
+    }
+
+    .diagram-caption strong {
+      color: var(--ink-primary);
+    }
+
+    /* Quadro Ruptura Epistemológica */
+    .rupture-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .rupture-col {
+      padding: 1.2rem 1.3rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-thin);
+    }
+
+    .rupture-col.conventional {
+      background: var(--bg-subtle);
+      border-left: 4px solid #78828E;
+    }
+
+    .rupture-col.brenner {
+      background: var(--accent-soft, #EFF6FF);
+      border-left: 4px solid var(--accent-color, var(--axis-estado));
+    }
+
+    .rupture-col h4 {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.6rem;
+      color: var(--ink-muted);
+    }
+
+    .rupture-col.brenner h4 {
+      color: var(--accent-color, var(--axis-estado));
+    }
+
+    .rupture-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.87rem;
+      color: var(--ink-secondary);
+    }
+
+    .rupture-col li {
+      position: relative;
+      padding-left: 1.1rem;
+    }
+
+    .rupture-col li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--ink-muted);
+    }
+
+    .rupture-col.brenner li::before {
+      content: "→";
+      color: var(--accent-color, var(--axis-estado));
+      font-weight: 700;
+    }
+
+    /* Chips Cruzados */
+    .crosslinks-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-thin);
+    }
+
+    .crosslink-box h4 {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 0.65rem;
+    }
+
+    .chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .chip-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.38rem;
+      padding: 0.38rem 0.72rem;
+      border-radius: 6px;
+      font-size: 0.77rem;
+      font-weight: 600;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-thin);
+      color: var(--ink-primary);
+      transition: all var(--transition);
+    }
+
+    .chip-btn:hover {
+      background: var(--ink-primary);
+      color: #FFFFFF;
+      border-color: var(--ink-primary);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       MÓDULO 3: OBRAS & LIVROS (ESQUEMA VISUAL ARQUITETÔNICO INTERATIVO)
+       ========================================================================== */
+    .book-spine {
+      width: 12px;
+      height: 40px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      box-shadow: inset -2px 0 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .book-meta-strip {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 0.85rem;
+      padding: 1rem 1.2rem;
+      background: var(--bg-paper);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-thin);
+    }
+
+    .meta-item span {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 2px;
+    }
+
+    .meta-item strong {
+      font-size: 0.86rem;
+      color: var(--ink-primary);
+      font-weight: 600;
+    }
+
+    .thesis-banner {
+      padding: 1.2rem 1.4rem;
+      background: var(--book-soft, var(--bg-subtle));
+      border-left: 4px solid var(--book-accent, var(--ink-primary));
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .thesis-banner h4 {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--book-accent, var(--ink-muted));
+      margin-bottom: 0.35rem;
+    }
+
+    .thesis-banner p {
+      font-size: 0.95rem;
+      color: var(--ink-primary);
+      line-height: 1.65;
+    }
+
+    /* Fluxo Arquitetônico do Livro */
+    .book-arch-wrapper {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-thin);
+      border-radius: var(--radius-md);
+      padding: 1.35rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .book-arch-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 0.75rem;
+    }
+
+    .arch-diagram-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      gap: 0.55rem;
+    }
+
+    .arch-node-wrap {
+      flex: 1 1 170px;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .arch-arrow {
+      color: var(--ink-muted);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    .arch-block-btn {
+      flex: 1;
+      height: 100%;
+      text-align: left;
+      padding: 0.9rem 1rem;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-thin);
+      border-top: 4px solid var(--book-accent, var(--ink-primary));
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.45rem;
+      transition: all var(--transition);
+    }
+
+    .arch-block-btn:hover {
+      border-color: var(--book-accent, var(--ink-primary));
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .arch-block-btn.selected {
+      background: var(--book-soft, var(--bg-subtle));
+      border-color: var(--book-accent, var(--ink-primary));
+      box-shadow: var(--shadow-md);
+    }
+
+    .arch-step {
+      font-family: var(--font-mono);
+      font-size: 0.67rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--book-accent, var(--ink-muted));
+    }
+
+    .arch-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--ink-primary);
+      line-height: 1.32;
+    }
+
+    .arch-hint {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      color: var(--ink-muted);
+    }
+
+    /* Painel de Detalhamento da Seção Selecionada */
+    .section-detail-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-thin);
+      border-left: 4px solid var(--book-accent, var(--ink-primary));
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.4rem;
+      animation: fadeUp 220ms ease;
+    }
+
+    .section-detail-panel h4 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      margin: 0.25rem 0 0.55rem;
+    }
+
+    .section-detail-panel p {
+      font-size: 0.91rem;
+      color: var(--ink-secondary);
+      line-height: 1.65;
+    }
+
+    .section-kpis {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.9rem;
+    }
+
+    .kw-pill {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-thin);
+      color: var(--ink-secondary);
+    }
+
+    /* ==========================================================================
+       RODAPÉ
+       ========================================================================== */
+    .atlas-footer {
+      max-width: 1440px;
+      margin: 2rem auto 0;
+      padding: 1.25rem 1.5rem 2.5rem;
+      border-top: 1px solid var(--border-thin);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.79rem;
+      color: var(--ink-muted);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE
+       ========================================================================== */
+    @media (max-width: 1080px) {
+      .network-grid,
+      .split-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar-panel {
+        position: static;
+      }
+      .sidebar-scroll {
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner {
+        padding: 0.75rem 1rem;
+      }
+      .atlas-main {
+        padding: 1rem;
+      }
+      .detail-stage {
+        padding: 1.25rem;
+      }
+      .detail-title {
+        font-size: 1.75rem;
+      }
+      .rupture-grid,
+      .crosslinks-grid {
+        grid-template-columns: 1fr;
+      }
+      .main-nav {
+        width: 100%;
+        justify-content: space-between;
+        overflow-x: auto;
+      }
+      .nav-tab {
+        padding: 0.48rem 0.72rem;
+        font-size: 0.77rem;
+      }
+      .arch-arrow {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================================================
+       CABEÇALHO FIXO & NAVEGAÇÃO PRINCIPAL
+       ======================================================================== -->
+  <header class="atlas-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <path d="M3 9h18M9 3v18M15 9v12M9 15h12" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="brand-title">Neil Brenner</h1>
+          <p class="brand-sub">Atlas Conceitual e Bibliográfico — Teoria Urbana Crítica, Escala e Urbanização Planetária</p>
+        </div>
+      </div>
+
+      <nav class="main-nav" role="tablist" aria-label="Módulos do Atlas">
+        <button class="nav-tab active" data-module="network" role="tab" aria-selected="true">
+          Rede Conceitual
+          <span class="nav-badge">Mapa</span>
+        </button>
+        <button class="nav-tab" data-module="concepts" role="tab" aria-selected="false">
+          Conceitos
+          <span class="nav-badge">10</span>
+        </button>
+        <button class="nav-tab" data-module="books" role="tab" aria-selected="false">
+          Obras &amp; Livros
+          <span class="nav-badge">8</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="atlas-main">
+    <!-- ======================================================================
+         MÓDULO 1: REDE CONCEITUAL (MAPA TOPOLÓGICO EM SVG)
+         ====================================================================== -->
+    <section id="module-network" class="module-view active" aria-label="Rede Conceitual">
+      <div class="network-header">
+        <div>
+          <span class="eyebrow">Módulo 01 • Cartografia Teórica</span>
+          <h2 class="serif-heading">Rede Conceitual de Neil Brenner</h2>
+          <p>
+            A obra de Neil Brenner (NYU, Harvard GSD / Urban Theory Lab, University of Chicago) articula o
+            reescalonamento do Estado capitalista, a neoliberalização variegada, a urbanização planetária e a
+            teoria urbana crítica. Explore as conexões entre os 10 conceitos no mapa abaixo.
+          </p>
+        </div>
+        <div class="axis-filters" id="axis-filters" aria-label="Filtrar por eixo teórico">
+          <button class="filter-btn active" data-axis="all">Todos</button>
+          <button class="filter-btn" data-axis="estado">
+            <span class="axis-dot" style="background: var(--axis-estado)"></span>Estado &amp; Escala
+          </button>
+          <button class="filter-btn" data-axis="neolib">
+            <span class="axis-dot" style="background: var(--axis-neolib)"></span>Neoliberalização
+          </button>
+          <button class="filter-btn" data-axis="planetaria">
+            <span class="axis-dot" style="background: var(--axis-planetaria)"></span>Urbanização Planetária
+          </button>
+          <button class="filter-btn" data-axis="critica">
+            <span class="axis-dot" style="background: var(--axis-critica)"></span>Teoria Crítica
+          </button>
+        </div>
+      </div>
+
+      <div class="network-grid">
+        <div class="canvas-card">
+          <div class="canvas-topbar">
+            <span>TOPOLOGIA CONCEITUAL • 10 NÓS • 4 EIXOS TEÓRICOS</span>
+            <span id="network-status">Passe o cursor ou clique em um nó</span>
+          </div>
+          <div class="network-svg-wrap">
+            <svg id="network-svg" viewBox="0 0 900 560" role="img" aria-label="Mapa topológico interativo dos 10 conceitos de Neil Brenner"></svg>
+          </div>
+        </div>
+
+        <aside class="inspector-card" id="network-inspector" aria-live="polite"></aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MÓDULO 2: CONCEITOS (10) COM DIAGRAMAS SVG EXCLUSIVOS
+         ====================================================================== -->
+    <section id="module-concepts" class="module-view" aria-label="Conceitos de Neil Brenner">
+      <div class="split-layout">
+        <aside class="sidebar-panel">
+          <div class="sidebar-head">
+            <span class="eyebrow">Módulo 02 • 4 Eixos Teóricos</span>
+            <h3>Conceitos Fundamentais (10)</h3>
+          </div>
+          <div class="sidebar-scroll" id="concepts-menu" role="listbox" aria-label="Lista de conceitos"></div>
+        </aside>
+
+        <article class="detail-stage" id="concept-detail" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MÓDULO 3: OBRAS & LIVROS (8) COM ESQUEMAS VISUAIS ARQUITETÔNICOS
+         ====================================================================== -->
+    <section id="module-books" class="module-view" aria-label="Obras e Livros de Neil Brenner">
+      <div class="split-layout">
+        <aside class="sidebar-panel">
+          <div class="sidebar-head">
+            <span class="eyebrow">Módulo 03 • Cronologia (2002–2025)</span>
+            <h3>Obras Principais (8)</h3>
+          </div>
+          <div class="sidebar-scroll" id="books-menu" role="listbox" aria-label="Lista de obras"></div>
+        </aside>
+
+        <article class="detail-stage" id="book-detail" aria-live="polite"></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="atlas-footer">
+    <div>
+      <strong>Neil Brenner: Atlas Conceitual e Bibliográfico</strong> — Síntese cartográfica inspirada em <em>Bauwelt Fundamente</em>, <em>Oxford University Press</em> e <em>Urban Theory Lab</em>.
+    </div>
+    <div style="font-family: var(--font-mono); font-size: 0.71rem;">
+      “The urban is not a bounded unit, but a multiscalar, planetary process.”
+    </div>
+  </footer>
+
+  <script>
+    /* ==========================================================================
+       CONFIGURAÇÃO DOS 4 EIXOS TEÓRICOS
+       ========================================================================== */
+    const AXES = {
+      estado: {
+        id: 'estado',
+        label: 'Eixo 1 • Estado & Escala',
+        short: 'Estado & Escala',
+        color: '#1D4ED8',
+        soft: '#EFF6FF',
+        border: 'rgba(29, 78, 216, 0.28)'
+      },
+      neolib: {
+        id: 'neolib',
+        label: 'Eixo 2 • Neoliberalização',
+        short: 'Neoliberalização',
+        color: '#C2410C',
+        soft: '#FFF7ED',
+        border: 'rgba(194, 65, 12, 0.28)'
+      },
+      planetaria: {
+        id: 'planetaria',
+        label: 'Eixo 3 • Urbanização Planetária',
+        short: 'Urbanização Planetária',
+        color: '#047857',
+        soft: '#ECFDF5',
+        border: 'rgba(4, 120, 87, 0.28)'
+      },
+      critica: {
+        id: 'critica',
+        label: 'Eixo 4 • Teoria Crítica & Práxis',
+        short: 'Teoria Crítica & Práxis',
+        color: '#7E22CE',
+        soft: '#FAF5FF',
+        border: 'rgba(126, 34, 206, 0.28)'
+      }
+    };
+
+    /* ==========================================================================
+       BANCO DE DADOS DOS 10 CONCEITOS FUNDAMENTAIS
+       ========================================================================== */
+    const CONCEPTS = [
+      {
+        id: 'reescalonamento-estado',
+        code: 'C01',
+        title: 'Reescalonamento do Estado',
+        en: 'State Rescaling & New State Spaces',
+        axis: 'estado',
+        collaborators: 'Autoria principal (em diálogo com Bob Jessop, Henri Lefebvre e Neil Smith)',
+        pos: { x: 170, y: 120 },
+        shortSummary: 'A globalização não provoca o “fim” ou o esvaziamento do Estado-nação, mas uma reconfiguração qualitativa de suas hierarquias escalares para cima (supranacional), para baixo (urbano/regional) e lateralmente.',
+        synthesis: [
+          'Em New State Spaces (2004), Neil Brenner refuta a narrativa mainstream dos anos 1990 segundo a qual a globalização estaria tornando o Estado-nação obsoleto. Em vez de desaparecimento, ocorre um profundo reescalonamento do Estado (state rescaling): as funções regulatórias e territoriais são redistribuídas entre escalas supranacionais, nacionais, regionais e metropolitanas.',
+          'Brenner demonstra a transição histórica na Europa Ocidental entre o Keynesianismo Espacial do pós-guerra (1950–1970s) — no qual o Estado nacional redistribuía investimentos para equilibrar regiões periféricas — e os Estados Glocalizadores (1980s+), que mobilizam políticas locacionais urbanas para concentrar recursos em cidades-região competitivas e integrá-las ao capital global.'
+        ],
+        conventional: [
+          'Globalização vista como jogo de soma zero: mais mercado global significaria menos Estado.',
+          'Escalas geográficas (local, nacional, global) tratadas como níveis fixos, naturais e pré-dados.',
+          'Governança urbana analisada isoladamente das transformações do Estado nacional.'
+        ],
+        brenner: [
+          'O Estado não desaparece: ele se reescalona qualitativamente, reorganizando suas geografias institucionais.',
+          'Escalas são produzidas historicamente e disputadas politicamente no capitalismo.',
+          'Regiões metropolitanas tornam-se arenas estratégicas deliberadamente promovidas por políticas locacionais estatais.'
+        ],
+        connections: [
+          { target: 'seletividade-espacial', reason: 'O reescalonamento opera concretamente por meio de projetos e estratégias de seletividade espacial do Estado.' },
+          { target: 'grade-tpsn', reason: 'A escala é uma das quatro dimensões polimórficas da espacialidade sócio-espacial na grade TPSN.' },
+          { target: 'neoliberalizacao-variegada', reason: 'O reescalonamento pró-competitividade é o motor institucional da neoliberalização variegada.' },
+          { target: 'neoliberalismo-realmente-existente', reason: 'Estados glocalizadores constroem ativamente mercados e disciplinas neoliberais nas cidades.' }
+        ],
+        books: ['new-state-spaces', 'state-space', 'new-urban-spaces']
+      },
+      {
+        id: 'seletividade-espacial',
+        code: 'C02',
+        title: 'Seletividade Espacial do Estado',
+        en: 'State Spatial Selectivity',
+        axis: 'estado',
+        collaborators: 'Inspirado em Bob Jessop (seletividade estratégica) e Nicos Poulantzas',
+        pos: { x: 350, y: 88 },
+        shortSummary: 'O Estado capitalista nunca intervém de forma neutra no território: ele privilegia seletivamente certos lugares, regiões e escalas por meio de Projetos Espaciais e Estratégias Espaciais.',
+        synthesis: [
+          'Adaptando a teoria da “seletividade estratégica” de Bob Jessop para a geografia política, Brenner formula o conceito de seletividade espacial do Estado (state spatial selectivity). O aparato estatal possui tendências estruturais a favorecer determinados territórios, setores econômicos e escalas em detrimento de outros.',
+          'Analiticamente, Brenner desdobra esse processo em dois vetores interligados: (1) Projetos Espaciais do Estado (que moldam a arquitetura interna do próprio Estado — jurisdições, federalismo, fusões metropolitanas) e (2) Estratégias Espaciais do Estado (que orientam a intervenção estatal sobre a acumulação de capital e a reprodução social no território). Ambos oscilam historicamente entre perfis uniformes/redistributivos e diferenciados/concentrados.'
+        ],
+        conventional: [
+          'Estado tratado como árbitro territorialmente neutro que aplica leis uniformes sobre um espaço homogêneo.',
+          'Políticas urbanas e regionais vistas como respostas técnicas a “falhas de mercado”.',
+          'Separação estanque entre reforma administrativa interna e política econômica territorial.'
+        ],
+        brenner: [
+          'Toda intervenção estatal é espacialmente seletiva, produzindo vencedores e perdedores territoriais.',
+          'Articulação analítica entre Projetos Espaciais (forma estatal) e Estratégias Espaciais (intervenção econômica).',
+          'Permite mapear historicamente a passagem da equalização keynesiana para a concentração competitiva neoliberal.'
+        ],
+        connections: [
+          { target: 'reescalonamento-estado', reason: 'Fornece o mecanismo analítico preciso para explicar como o reescalonamento do Estado ocorre.' },
+          { target: 'grade-tpsn', reason: 'A seletividade espacial do Estado atua simultaneamente sobre território, lugar, escala e rede.' },
+          { target: 'neoliberalismo-realmente-existente', reason: 'A seletividade pró-competitividade direciona infraestrutura e subsídios para polos urbanos financeirizados.' }
+        ],
+        books: ['new-state-spaces', 'state-space', 'new-urban-spaces']
+      },
+      {
+        id: 'grade-tpsn',
+        code: 'C03',
+        title: 'Grade TPSN (Território, Lugar, Escala, Rede)',
+        en: 'TPSN Framework — Territory, Place, Scale, Network',
+        axis: 'estado',
+        collaborators: 'Com Bob Jessop e Martin Jones (2008)',
+        pos: { x: 255, y: 245 },
+        shortSummary: 'Matriz polimórfica que combate o “unidimensionalismo espacial” ao demonstrar que Território (T), Lugar (P), Escala (S) e Rede (N) são dimensões mutuamente constitutivas das relações sócio-espaciais.',
+        synthesis: [
+          'Formulada em 2008 com Bob Jessop e Martin Jones no clássico ensaio “Theorizing Sociospatial Relations”, a grade TPSN surge como resposta crítica às sucessivas “viradas” teóricas na geografia (virada do território, do lugar, da escala e das redes) que tendiam a eleger uma única dimensão espacial como chave explicativa universal.',
+          'Para os autores, nenhuma forma espacial existe isoladamente: fronteiras territoriais (T), proximidades e identidades de lugar (P), hierarquias verticais de escala (S) e interconexões reticulares (N) estruturam-se reciprocamente. A matriz 4×4 permite investigar como um princípio estruturante (ex.: redes financeiras) opera sobre os demais campos (redefinindo territórios, lugares e escalas).'
+        ],
+        conventional: [
+          'Unidimensionalismo espacial: reduzir a análise apenas a “redes” (fluxos), apenas a “território” ou apenas a “escala”.',
+          'Oposições binárias estéreis (ex.: “espaço de fluxos” versus “espaço de lugares”).',
+          'Tratamento das categorias espaciais como conceitos autônomos e concorrentes.'
+        ],
+        brenner: [
+          'Geografia polimórfica: Território, Lugar, Escala e Rede operam sempre em combinações historicamente específicas.',
+          'Permite cruzar cada dimensão como “princípio estruturante” e como “campo estruturado”.',
+          'Evita tanto o territorialismo metodológico quanto o achatamento ontológico das teorias puramente reticulares.'
+        ],
+        connections: [
+          { target: 'reescalonamento-estado', reason: 'Situa a política da escala dentro de uma teoria mais ampla da espacialidade polimórfica.' },
+          { target: 'seletividade-espacial', reason: 'A seletividade espacial do Estado combina rearranjos de fronteiras (T), polos locais (P), escalas (S) e redes (N).' },
+          { target: 'urbanizacao-planetaria', reason: 'A urbanização planetária articula lugares densos, redes logísticas, escalas globais e territórios operacionais.' },
+          { target: 'teoria-urbana-critica', reason: 'Fornece rigor epistemológico contra ecletismos ou reducionismos espaciais.' }
+        ],
+        books: ['state-space', 'new-urban-spaces']
+      },
+      {
+        id: 'neoliberalismo-realmente-existente',
+        code: 'C04',
+        title: 'Neoliberalismo Realmente Existente',
+        en: 'Actually Existing Neoliberalism',
+        axis: 'neolib',
+        collaborators: 'Com Nik Theodore (2002)',
+        pos: { x: 460, y: 200 },
+        shortSummary: 'Diferencia a ideologia utópica do “livre mercado puro” da prática real da neoliberalização: um processo ativo de destruição criativa (roll-back e roll-out) sempre filtrado por legados institucionais locais.',
+        synthesis: [
+          'No influente ensaio “Cities and the Geographies of ‘Actually Existing Neoliberalism’” (2002), Neil Brenner e Nik Theodore demonstram o abismo entre a doutrina neoliberal pura (que promete mercados autorregulados e Estado mínimo) e sua implementação concreta no mundo real.',
+          'O neoliberalismo realmente existente não elimina o Estado — ele o mobiliza intensivamente em uma dialética de Destruição Criativa composta por dois momentos entrelaçados: o momento destrutivo (roll-back), que desmantela proteções sociais e instituições keynesianas, e o momento criativo (roll-out), que constrói novas instituições pró-mercado, parcerias público-privadas, regimes de policiamento e governança empreendedora, sempre moldados pela dependência de trajetória (path-dependency) de cada cidade.'
+        ],
+        conventional: [
+          'Neoliberalismo compreendido como mera retirada do Estado (“desregulação” absoluta) e triunfo do livre mercado.',
+          'Aplicação concebida como um modelo idêntico e homogêneo replicado de cima para baixo.',
+          'Cidades tratadas como meras vítimas passivas de forças macroeconômicas abstratas.'
+        ],
+        brenner: [
+          'Neoliberalismo exige intensa re-regulação estatal ativa para criar e disciplinar mercados.',
+          'Opera pela dialética entre roll-back (destruição institucional) e roll-out (construção de novas arquiteturas de mercado).',
+          'As cidades são laboratórios estratégicos onde experimentos neoliberais são testados, contestados e reinventados.'
+        ],
+        connections: [
+          { target: 'neoliberalizacao-variegada', reason: 'A dependência de trajetória e a destruição criativa explicam por que a neoliberalização é sempre variegada.' },
+          { target: 'reescalonamento-estado', reason: 'As cidades e regiões urbanas tornam-se arenas centrais das políticas locacionais neoliberais.' },
+          { target: 'seletividade-espacial', reason: 'O momento roll-out redireciona a seletividade espacial do Estado para ativos imobiliários e financeiros.' },
+          { target: 'alter-urbanizacoes', reason: 'A crítica ao urbanismo neoliberal fundamenta a busca por alternativas pós-neoliberais.' }
+        ],
+        books: ['spaces-of-neoliberalism', 'critique-of-urbanization', 'cities-for-people']
+      },
+      {
+        id: 'neoliberalizacao-variegada',
+        code: 'C05',
+        title: 'Neoliberalização Variegada',
+        en: 'Variegated Neoliberalization',
+        axis: 'neolib',
+        collaborators: 'Com Jamie Peck e Nik Theodore (2010)',
+        pos: { x: 485, y: 360 },
+        shortSummary: 'A neoliberalização não é um estado final homogêneo, mas um processo sistemicamente desigual, híbrido e movido a crises, que sofre mutações ao combinar regimes globais com contextos regulatórios locais.',
+        synthesis: [
+          'Em colaboração com Jamie Peck e Nik Theodore (2010), Brenner aprofunda o debate com o conceito de neoliberalização variegada (variegated neoliberalization). O foco desloca-se do substantivo estático (“o neoliberalismo”) para o processo histórico-geográfico em curso (“neoliberalização”).',
+          'A variegação não é um defeito ou exceção local, mas a própria forma sistêmica de existência do projeto neoliberal: ela emerge da colisão entre regimes regulatórios transnacionais (regras de disciplina fiscal, financeirização, benchmarks) e paisagens institucionais herdadas. Além disso, a neoliberalização “falha para frente” (failing forward): cada crise que ela própria gera (anos 1970, 1980, 1990, 2008) desencadeia novas ondas de mutação e reestruturação regulatória.'
+        ],
+        conventional: [
+          'Visão monolítica: um rolo compressor global que apaga todas as diferenças locais (convergência pura).',
+          'Visão hiper-localista: cada cidade é um caso único sem conexão com estruturas capitalistas globais.',
+          'Expectativa de que crises financeiras (como 2008) causem o colapso automático do neoliberalismo.'
+        ],
+        brenner: [
+          'Produção sistêmica de diferenciação regulatória: o global e o local co-produzem híbridos institucionais.',
+          'Evolução por ondas induzidas por crises (proto-neoliberalismo → choque → roll-out → austeridade pós-2008).',
+          'Articula o desenvolvimento geográfico desigual com a circulação transnacional de políticas urbanas.'
+        ],
+        connections: [
+          { target: 'neoliberalismo-realmente-existente', reason: 'Expande a análise da destruição criativa para uma periodização multiescalar e sistêmica.' },
+          { target: 'reescalonamento-estado', reason: 'A variegação regulatória reconfigura continuamente as relações entre escalas nacionais e urbanas.' },
+          { target: 'alter-urbanizacoes', reason: 'Entender como o neoliberalismo muta nas crises é vital para construir políticas pós-neoliberais duradouras.' }
+        ],
+        books: ['spaces-of-neoliberalism', 'critique-of-urbanization', 'cities-for-people']
+      },
+      {
+        id: 'urbanizacao-planetaria',
+        code: 'C06',
+        title: 'Urbanização Planetária & Implosão-Explosão',
+        en: 'Planetary Urbanization & Implosion-Explosion',
+        axis: 'planetaria',
+        collaborators: 'Com Christian Schmid (ETH Zürich) e Urban Theory Lab',
+        pos: { x: 685, y: 120 },
+        shortSummary: 'Rompe com o “citadismo metodológico” e a falácia da “Era Urbana”: a urbanização não se restringe a cidades delimitadas, mas transforma o tecido socioespacial inteiro do planeta — uma urbanização sem “fora”.',
+        synthesis: [
+          'Desenvolvida em parceria com Christian Schmid a partir da hipótese de Henri Lefebvre sobre a “urbanização completa da sociedade”, a tese da urbanização planetária (planetary urbanization) desconstrói a narrativa dominante da “Era Urbana” (a ideia de que o mundo se tornou urbano porque mais de 50% da população vive em cidades).',
+          'Brenner e Schmid criticam o “citadismo metodológico” (methodological cityism), que trata a cidade como uma ilha discreta cercada por um “não-urbano” passivo. Por meio da dialética lefebvriana da implosão-explosão, mostram que a concentração extrema em aglomerações (implosão) só é possível mediante a operacionalização logística, extrativa e infraestrutural de florestas, oceanos, desertos, campos e atmosfera (explosão).'
+        ],
+        conventional: [
+          'Tese da “Era Urbana”: urbanização medida apenas pela porcentagem demográfica dentro de limites municipais.',
+          'Citadismo metodológico: foco exclusivo na cidade compacta, ignorando o que a sustenta materialmente.',
+          'Dicotomia rígida entre “Urbano” (cidade) e “Rural/Natural” (exterior intocado).'
+        ],
+        brenner: [
+          'O urbano é um processo multiescalar e planetário, não um tipo de assentamento delimitado.',
+          'Dialética da implosão-explosão: aglomerações densas e extensões territoriais são faces da mesma moeda.',
+          'Não existe mais um “fora” absoluto do urbano; até áreas desabitadas são integradas ao metabolismo capitalista.'
+        ],
+        connections: [
+          { target: 'tres-momentos-urbanizacao', reason: 'Especifica analiticamente os três processos que compõem a urbanização planetária.' },
+          { target: 'paisagens-operacionais', reason: 'Materializa o lado da “explosão”: os territórios produtivos e ecológicos que sustentam as aglomerações.' },
+          { target: 'grade-tpsn', reason: 'Exige superar o territorialismo da cidade-contêiner por meio de uma leitura polimórfica.' },
+          { target: 'teoria-urbana-critica', reason: 'Propõe uma nova epistemologia urbana capaz de decifrar o espaço do século XXI.' }
+        ],
+        books: ['implosions-explosions', 'critique-of-urbanization', 'new-urban-spaces', 'environments-planetary']
+      },
+      {
+        id: 'tres-momentos-urbanizacao',
+        code: 'C07',
+        title: 'Urbanização Concentrada, Estendida e Diferencial',
+        en: 'Concentrated, Extended and Differential Urbanization',
+        axis: 'planetaria',
+        collaborators: 'Com Christian Schmid (2015)',
+        pos: { x: 775, y: 265 },
+        shortSummary: 'Tríade dialética que substitui a oposição urbano/rural por três momentos simultâneos e mutuamente constitutivos da produção capitalista do espaço em escala planetária.',
+        synthesis: [
+          'Em “Towards a New Epistemology of the Urban?” (2015), Brenner e Schmid propõem abandonar a classificação estática de tipos de assentamento (cidade, subúrbio, rural) em favor de uma matriz processual composta por três momentos dialeticamente interligados.',
+          '(1) Urbanização Concentrada refere-se à aglomeração densa de pessoas, infraestruturas, capitais e indústrias em centros urbanos e regiões metropolitanas. (2) Urbanização Estendida abrange a operacionalização de vastas paisagens além das aglomerações (corredores logísticos, energia, extração, agricultura industrial) que viabilizam a vida urbana. (3) Urbanização Diferencial designa a perpétua destruição criativa e reconfiguração socioespacial dessas paisagens — abrindo fissuras para novos modos de habitar e disputar o espaço.'
+        ],
+        conventional: [
+          'Tipologias estáticas e descritivas: urbano, periurbano, suburbano e rural como zonas separadas.',
+          'Estudos urbanos restritos às áreas centrais de alta densidade demográfica.',
+          'Desconsideração dos processos contínuos de obsolescência e reestruturação territorial.'
+        ],
+        brenner: [
+          'Três momentos processuais e simultâneos, jamais territórios isolados entre si.',
+          'Conecta diretamente a densidade das metrópoles (concentrada) à transformação das hinterlândias (estendida).',
+          'A urbanização diferencial evidencia que o tecido urbano é instável, conflituoso e sujeito à apropriação política.'
+        ],
+        connections: [
+          { target: 'urbanizacao-planetaria', reason: 'Constitui o núcleo epistemológico e analítico da teoria da urbanização planetária.' },
+          { target: 'paisagens-operacionais', reason: 'As paisagens operacionais são a expressão territorial concreta da urbanização estendida.' },
+          { target: 'alter-urbanizacoes', reason: 'A urbanização diferencial abre brechas históricas para projetos alternativos de espaço.' }
+        ],
+        books: ['implosions-explosions', 'critique-of-urbanization', 'new-urban-spaces', 'environments-planetary']
+      },
+      {
+        id: 'paisagens-operacionais',
+        code: 'C08',
+        title: 'Paisagens Operacionais & Hinterlândia',
+        en: 'Operational Landscapes & Urbanized Hinterlands',
+        axis: 'planetaria',
+        collaborators: 'Com Nikos Katsikis e Swarnabh Ghosh (Urban Theory Lab)',
+        pos: { x: 695, y: 425 },
+        shortSummary: 'Vastas zonas de extração, agroindústria, logística, dados e absorção de resíduos que, embora de baixa densidade populacional, são desenhadas e mobilizadas para sustentar o metabolismo das aglomerações urbanas.',
+        synthesis: [
+          'Junto a Nikos Katsikis e pesquisadores do Urban Theory Lab (Harvard / Chicago), Brenner cunhou o conceito de paisagens operacionais (operational landscapes) para dar visibilidade cartográfica e política aos territórios usualmente ocultados sob o rótulo vago de “rural”, “selvagem” ou “hinterlândia”.',
+          'Mina a céu aberto nos Andes, monoculturas de soja no Cerrado, cabos submarinos de fibra óptica, corredores portuários transoceânicos, megabarragens hidrelétricas e a própria atmosfera usada como sumidouro de carbono não são exteriores à cidade: são engrenagens ativas do metabolismo urbano no Capitaloceno, cuja reestruturação gera graves conflitos socioecológicos.'
+        ],
+        conventional: [
+          '“Hinterlândia” vista como fundo passivo, natural ou periférico desconectado da dinâmica urbana.',
+          'Análises ambientais urbanas limitadas à reciclagem ou parques dentro do perímetro municipal.',
+          'Invisibilidade cartográfica das cadeias materiais que abastecem as metrópoles.'
+        ],
+        brenner: [
+          'A hinterlândia é ativamente urbanizada, industrializada e integrada em escala planetária.',
+          'Conecta a teoria urbana crítica à ecologia política e ao debate sobre o Capitaloceno.',
+          'Permite cartografar as geografias desiguais de extração, circulação e degradação ecológica.'
+        ],
+        connections: [
+          { target: 'urbanizacao-planetaria', reason: 'Demonstra empiricamente a tese de que a urbanização estende-se para além das aglomerações.' },
+          { target: 'tres-momentos-urbanizacao', reason: 'Operacionaliza o conceito de urbanização estendida em cinco camadas metabólicas concretas.' },
+          { target: 'teoria-urbana-critica', reason: 'Expande o horizonte da crítica urbana para a justiça socioecológica planetária.' }
+        ],
+        books: ['implosions-explosions', 'environments-planetary', 'critique-of-urbanization']
+      },
+      {
+        id: 'teoria-urbana-critica',
+        code: 'C09',
+        title: 'Teoria Urbana Crítica',
+        en: 'Critical Urban Theory',
+        axis: 'critica',
+        collaborators: 'Em diálogo com Escola de Frankfurt (Horkheimer, Marcuse), Lefebvre, Harvey e Castells',
+        pos: { x: 265, y: 420 },
+        shortSummary: 'Projeto intelectual reflexivo e politicamente engajado que rejeita a razão instrumental da “ciência urbana” mainstream, expondo as relações de poder que moldam as cidades e a disjunção entre o real e o possível.',
+        synthesis: [
+          'No ensaio programático “What is Critical Urban Theory?” (2009), Brenner sistematiza os fundamentos epistemológicos da tradição urbana crítica a partir da teoria crítica da Escola de Frankfurt (Max Horkheimer, Herbert Marcuse) e do pensamento de Henri Lefebvre.',
+          'Para Brenner, a teoria urbana crítica define-se por quatro proposições inseparáveis: (1) ela insiste que a teoria é indispensável (recusando o empirismo ingênuo); (2) é reflexiva (reconhece sua própria historicidade); (3) opõe-se à razão instrumental das consultorias pró-capital e da “ciência urbana” tecnocrática; e (4) foca na disjunção entre o real (o que existe sob o capitalismo) e o possível (formas urbanas democráticas e justas ainda bloqueadas).'
+        ],
+        conventional: [
+          '“Ciência urbana” positivista focada em eficiência gerencial, smart cities e otimização de mercados.',
+          'Neutralidade axiológica presumida: dados e modelos tratados como livres de ideologia.',
+          'Aceitação tácita do capitalismo neoliberal como horizonte imutável do planejamento.'
+        ],
+        brenner: [
+          'Crítica radical às estruturas de poder, desigualdade e mercantilização que produzem o espaço.',
+          'Recusa da razão instrumental em favor de uma razão emancipatória e reflexiva.',
+          'Busca identificar possibilidades transformadoras já latentes nas contradições urbanas reais.'
+        ],
+        connections: [
+          { target: 'alter-urbanizacoes', reason: 'A disjunção entre o real e o possível traduz-se politicamente na busca por alter-urbanizações.' },
+          { target: 'urbanizacao-planetaria', reason: 'Exige revisar constantemente as categorias da própria teoria crítica diante das mutações planetárias.' },
+          { target: 'grade-tpsn', reason: 'Combate dogmatismos teóricos por meio de uma epistemologia espacial reflexiva e multidimensional.' },
+          { target: 'paisagens-operacionais', reason: 'Amplia a crítica urbana para as ecologias políticas e o Capitaloceno.' }
+        ],
+        books: ['cities-for-people', 'critique-of-urbanization', 'new-urban-spaces']
+      },
+      {
+        id: 'alter-urbanizacoes',
+        code: 'C10',
+        title: 'Alter-Urbanizações & Direito à Cidade',
+        en: 'Alter-Urbanizations & Right to the City',
+        axis: 'critica',
+        collaborators: 'Com Peter Marcuse, Margit Mayer e diálogo com Henri Lefebvre',
+        pos: { x: 485, y: 495 },
+        shortSummary: 'Horizonte político pós-neoliberal que vai além das intervenções paliativas do “urbanismo tático” para propor o redesenho institucional multiescalar centrado no valor de uso e na democracia radical.',
+        synthesis: [
+          'Em Cities for People, Not for Profit (2012, com Peter Marcuse e Margit Mayer) e em seu célebre ensaio crítico sobre o “urbanismo tático” (2015), Brenner interroga como traduzir a crítica urbana em práxis transformadora. O lema “cidades para pessoas, não para o lucro” retoma o Direito à Cidade de Henri Lefebvre como luta pela primazia do valor de uso sobre o valor de troca.',
+          'Brenner alerta que o chamado “urbanismo tático” (intervenções temporárias, pop-up, acupuntura urbana) — embora criativo — muitas vezes coexiste harmonicamente com a austeridade neoliberal sem desafiar o poder imobiliário ou fiscal. Contra isso, ele propõe pensar “alter-urbanizações”: estratégias de redesenho institucional multiescalar capazes de democratizar o Estado, desmercantilizar o solo e reimaginar a justiça socioespacial.'
+        ],
+        conventional: [
+          'Urbanismo neoliberal: cidade governada como empresa voltada à atração de investimentos e valor de troca.',
+          'Urbanismo tático / paliativo: intervenções pontuais de baixo custo que contornam o Estado sem confrontar estruturas de poder.',
+          'Participação cidadã reduzida à consulta cosmética em projetos já definidos pelo mercado.'
+        ],
+        brenner: [
+          'Primazia radical do valor de uso, da habitação digna e dos bens comuns urbanos.',
+          'Articulação entre movimentos sociais locais e reformas institucionais em múltiplas escalas.',
+          'Alter-urbanizações: imaginação política de novas geometrias de solidariedade entre aglomerações e hinterlândias.'
+        ],
+        connections: [
+          { target: 'teoria-urbana-critica', reason: 'Representa a dimensão prática e emancipatória da teoria urbana crítica.' },
+          { target: 'neoliberalismo-realmente-existente', reason: 'Constrói alternativas diretas frente à destruição criativa do urbanismo neoliberal.' },
+          { target: 'neoliberalizacao-variegada', reason: 'Exige respostas políticas igualmente multiescalares para enfrentar a mutabilidade neoliberal.' },
+          { target: 'tres-momentos-urbanizacao', reason: 'Apoia-se nas brechas da urbanização diferencial para produzir espaços emancipatórios.' }
+        ],
+        books: ['cities-for-people', 'critique-of-urbanization', 'environments-planetary']
+      }
+    ];
+
+    /* ==========================================================================
+       BANCO DE DADOS DAS 8 OBRAS PRINCIPAIS (2002–2025)
+       ========================================================================== */
+    const BOOKS = [
+      {
+        id: 'spaces-of-neoliberalism',
+        year: '2002',
+        title: 'Spaces of Neoliberalism',
+        subtitle: 'Urban Restructuring in North America and Western Europe',
+        ptTitle: 'Espaços do Neoliberalismo (sem tradução integral em português)',
+        publisher: 'Blackwell Publishing',
+        coauthors: 'Org. com Nik Theodore',
+        axis: 'neolib',
+        thesis: 'O neoliberalismo não é uma força econômica abstrata pairando acima das cidades: ele é produzido, testado e contestado concretamente no espaço urbano por meio da dialética da destruição criativa (roll-back e roll-out) em trajetórias institucionais específicas na América do Norte e na Europa Ocidental.',
+        concepts: ['neoliberalismo-realmente-existente', 'neoliberalizacao-variegada', 'reescalonamento-estado'],
+        structure: [
+          {
+            step: 'Bloco 01',
+            title: 'Fundamentos do Neoliberalismo Realmente Existente',
+            summary: 'Reúne o ensaio seminal de Brenner e Theodore (“Cities and the Geographies of ‘Actually Existing Neoliberalism’”) e textos teóricos de Jamie Peck, Adam Tickell e Bob Jessop. Estabelece a distinção entre ideologia neoliberal e prática regulatória, introduzindo a destruição criativa, o path-dependency e os momentos roll-back e roll-out.',
+            keywords: ['Destruição criativa', 'Roll-back / Roll-out', 'Path-dependency', 'Regulação']
+          },
+          {
+            step: 'Bloco 02',
+            title: 'Neoliberalização Urbana na América do Norte',
+            summary: 'Estudos empíricos (incluindo contribuições de Neil Smith, Jason Hackworth, Rachel Weber e Helga Leitner) sobre gentrificação como estratégia urbana global, financeirização imobiliária, parcerias público-privadas, policiamento de tolerância zero e reestruturação do trabalho precário nas metrópoles norte-americanas.',
+            keywords: ['Gentrificação global', 'Financeirização', 'Trabalho precário', 'EUA / Canadá']
+          },
+          {
+            step: 'Bloco 03',
+            title: 'Reestruturação Urbana na Europa Ocidental',
+            summary: 'Análise comparativa das mutações urbanas no contexto europeu (Erik Swyngedouw, Frank Moulaert, Margit Mayer, entre outros): megaprojetos urbanos, erosão do Estado de bem-estar keynesiano, governança empreendedora e os novos conflitos enfrentados por movimentos sociais urbanos.',
+            keywords: ['Megaprojetos', 'Governança empreendedora', 'Europa Ocidental', 'Movimentos urbanos']
+          }
+        ]
+      },
+      {
+        id: 'state-space',
+        year: '2003',
+        title: 'State/Space: A Reader',
+        subtitle: 'Antologia fundamental sobre teoria espacial do Estado',
+        ptTitle: 'Estado/Espaço (sem tradução integral em português)',
+        publisher: 'Blackwell Publishing',
+        coauthors: 'Org. com Bob Jessop, Martin Jones e Gordon MacLeod',
+        axis: 'estado',
+        thesis: 'O Estado moderno é intrinsecamente uma instituição espacial: compreender suas transformações na era da globalização exige articular a teoria política crítica do Estado (Poulantzas, Jessop) com a teoria crítica do espaço (Lefebvre, geografia política), superando a “armadilha territorial” das ciências sociais.',
+        concepts: ['reescalonamento-estado', 'seletividade-espacial', 'grade-tpsn'],
+        structure: [
+          {
+            step: 'Parte I',
+            title: 'Fundamentos Teóricos (Lefebvre, Poulantzas, Jessop)',
+            summary: 'Recupera textos clássicos que fundam a leitura espacial do Estado capitalista: o “modo estatal de produção” de Henri Lefebvre, a matriz espaço-temporal do Estado em Nicos Poulantzas e a abordagem estratégico-relacional de Bob Jessop.',
+            keywords: ['Henri Lefebvre', 'Nicos Poulantzas', 'Bob Jessop', 'Modo estatal de produção']
+          },
+          {
+            step: 'Parte II',
+            title: 'Território e Fronteiras',
+            summary: 'Investiga a construção histórica da territorialidade estatal soberana, a crítica de John Agnew à “armadilha territorial” (territorial trap) e as transformações contemporâneas de fronteiras, cidadania e soberania.',
+            keywords: ['Territorialidade', 'Armadilha territorial', 'Fronteiras', 'Soberania']
+          },
+          {
+            step: 'Parte III',
+            title: 'Escala e Reescalonamento do Estado',
+            summary: 'Reúne os debates-chave sobre a produção social da escala geográfica e como as lutas políticas e reestruturações econômicas reorganizam as hierarquias entre local, regional, nacional e supranacional.',
+            keywords: ['Política da escala', 'Reescalonamento', 'Hierarquias institucionais']
+          },
+          {
+            step: 'Parte IV',
+            title: 'Espaços Urbanos, Regionais e Globais do Estado',
+            summary: 'Examina a emergência de novos espaços estatais além do modelo nacional-keynesiano: regiões transfronteiriças, redes de cidades globais, instituições supranacionais (como a União Europeia) e governança metropolitana.',
+            keywords: ['Governança metropolitana', 'Regiões globais', 'União Europeia', 'Novos espaços estatais']
+          }
+        ]
+      },
+      {
+        id: 'new-state-spaces',
+        year: '2004',
+        title: 'New State Spaces',
+        subtitle: 'Urban Governance and the Rescaling of Statehood',
+        ptTitle: 'Novos Espaços Estatais (sem tradução integral em português)',
+        publisher: 'Oxford University Press',
+        coauthors: 'Autoria individual',
+        axis: 'estado',
+        thesis: 'Na Europa Ocidental pós-1970, a globalização não enfraqueceu o Estado, mas desencadeou a transição do “Keynesianismo Espacial” redistributivo para “Estados Glocalizadores” que reescalonam a governança urbana para promover a competitividade de regiões metropolitanas estratégicas.',
+        concepts: ['reescalonamento-estado', 'seletividade-espacial', 'neoliberalismo-realmente-existente'],
+        structure: [
+          {
+            step: 'Cap. 1',
+            title: 'Introdução: A Explosão dos Espaços',
+            summary: 'Retoma a metáfora de Lefebvre para apresentar o enigma central do livro: por que cidades e regiões urbanas voltaram ao centro das estratégias econômicas e políticas dos Estados nacionais no capitalismo tardio?',
+            keywords: ['Explosão dos espaços', 'Governança urbana', 'Estado capitalista']
+          },
+          {
+            step: 'Cap. 2',
+            title: 'Debates da Globalização e a Questão do Estado',
+            summary: 'Crítica sistemática às abordagens estado-cêntricas tradicionais e às teses hiper-globalistas do “declínio do Estado”. Propõe ler a globalização como um processo de reterritorialização e reescalonamento.',
+            keywords: ['Crítica ao estado-centrismo', 'Reterritorialização', 'Globalização']
+          },
+          {
+            step: 'Cap. 3',
+            title: 'O Processo Espacial do Estado no Capitalismo',
+            summary: 'Núcleo teórico da obra: elabora o conceito de seletividade espacial do Estado e a matriz analítica que articula Projetos Espaciais do Estado e Estratégias Espaciais do Estado.',
+            keywords: ['Seletividade espacial', 'Projetos espaciais', 'Estratégias espaciais']
+          },
+          {
+            step: 'Cap. 4',
+            title: 'Keynesianismo Espacial e Nacionalização do Espaço (1950–1970s)',
+            summary: 'Reconstrução histórica do regime fordista-keynesiano na Europa Ocidental, caracterizado pela primazia da escala nacional, redistribuição fiscal compensatória e busca por desenvolvimento regional equilibrado.',
+            keywords: ['Keynesianismo espacial', 'Fordismo', 'Redistribuição regional']
+          },
+          {
+            step: 'Cap. 5',
+            title: 'Competição Interlocal e Políticas Locacionais Urbanas (1980s+)',
+            summary: 'Análise detalhada da ascensão dos Estados Glocalizadores: descentralização competitiva, reforma de governos metropolitanos e concentração de investimentos em polos urbanos globais, aprofundando desigualdades territoriais.',
+            keywords: ['Estados glocalizadores', 'Políticas locacionais', 'Competição interlocal']
+          },
+          {
+            step: 'Cap. 6',
+            title: 'Estratégias Alternativas de Reescalonamento',
+            summary: 'Explora as contradições e limites de crise das políticas locacionais neoliberais e discute possibilidades políticas de reescalonamento progressista, solidário e democraticamente controlado.',
+            keywords: ['Contradições de crise', 'Reescalonamento progressista', 'Política espacial']
+          }
+        ]
+      },
+      {
+        id: 'cities-for-people',
+        year: '2012',
+        title: 'Cities for People, Not for Profit',
+        subtitle: 'Critical Urban Theory and the Right to the City',
+        ptTitle: 'Cidades para Pessoas, Não para o Lucro (referência central no Brasil)',
+        publisher: 'Routledge',
+        coauthors: 'Org. com Peter Marcuse e Margit Mayer',
+        axis: 'critica',
+        thesis: 'Diante da crise estrutural do urbanismo neoliberal pós-2008, a teoria urbana crítica deve reconectar-se organicamente às lutas sociais pelo “Direito à Cidade”, recolocando o valor de uso, a justiça espacial e a democratização radical no centro da práxis urbana.',
+        concepts: ['teoria-urbana-critica', 'alter-urbanizacoes', 'neoliberalismo-realmente-existente'],
+        structure: [
+          {
+            step: 'Bloco 01',
+            title: 'Teoria Urbana Crítica Hoje',
+            summary: 'Abre com o ensaio fundamental de Brenner (“What is Critical Urban Theory?”) e intervenções de David Harvey, Peter Marcuse e Christian Schmid, delimitando a missão epistemológica e política dos estudos urbanos críticos frente à tecnocracia.',
+            keywords: ['Escola de Frankfurt', 'Crítica da razão instrumental', 'Epistemologia']
+          },
+          {
+            step: 'Bloco 02',
+            title: 'O Direito à Cidade (Lefebvre e Marcuse)',
+            summary: 'Retoma e atualiza o conceito de Direito à Cidade (Lefebvre): não apenas acesso individual a serviços urbanos, mas o direito coletivo de transformar a cidade segundo necessidades humanas (valor de uso) e superar o capital imobiliário.',
+            keywords: ['Direito à cidade', 'Valor de uso', 'Henri Lefebvre', 'Peter Marcuse']
+          },
+          {
+            step: 'Bloco 03',
+            title: 'Crise, Neoliberalismo e Movimentos Sociais',
+            summary: 'Examina como a crise financeira de 2008, a financeirização da moradia e a austeridade reconfiguraram os movimentos sociais urbanos na Europa, América do Norte e Sul Global (com análises de Margit Mayer, Kanishka Goonewardena e outros).',
+            keywords: ['Crise de 2008', 'Movimentos sociais', 'Austeridade', 'Lutas urbanas']
+          },
+          {
+            step: 'Bloco 04',
+            title: 'Alternativas e Práxis Urbana Pós-Neoliberal',
+            summary: 'Debate estratégias de planejamento insurgente, desmercantilização da habitação, bens comuns urbanos e alianças políticas necessárias para construir cidades orientadas às pessoas e não à acumulação.',
+            keywords: ['Práxis pós-neoliberal', 'Bens comuns', 'Habitação', 'Democracia urbana']
+          }
+        ]
+      },
+      {
+        id: 'implosions-explosions',
+        year: '2014',
+        title: 'Implosions/Explosions',
+        subtitle: 'Towards a Study of Planetary Urbanization',
+        ptTitle: 'Implosões/Explosões: Rumo a um Estudo da Urbanização Planetária',
+        publisher: 'Jovis Verlag (Berlim)',
+        coauthors: 'Organizador (com contribuições do Urban Theory Lab e ETH Zürich)',
+        axis: 'planetaria',
+        thesis: 'O urbano contemporâneo não pode mais ser apreendido por fronteiras municipais ou pela dicotomia urbano/rural: é necessário um novo programa de pesquisa e cartografia crítica dedicado às implosões (aglomerações) e explosões (paisagens operacionais) da urbanização planetária.',
+        concepts: ['urbanizacao-planetaria', 'tres-momentos-urbanizacao', 'paisagens-operacionais'],
+        structure: [
+          {
+            step: 'Parte I',
+            title: 'Legados Lefebvrianos e Novas Epistemologias',
+            summary: 'Resgata os textos visionários de Henri Lefebvre sobre a sociedade urbana e apresenta a crítica sistemática de Brenner e Christian Schmid à ideologia da “Era Urbana” e ao citadismo metodológico.',
+            keywords: ['Implosão-explosão', 'Crítica à Era Urbana', 'Citadismo metodológico']
+          },
+          {
+            step: 'Parte II',
+            title: 'Cartografias e Geografias da Urbanização Planetária',
+            summary: 'Reúne investigações empíricas e mapas experimentais que rastreiam corredores urbanos transnacionais, megalópoles, redes de transporte e a reconfiguração multiescalar do tecido urbano global.',
+            keywords: ['Cartografia crítica', 'Tecido urbano', 'Corredores transnacionais']
+          },
+          {
+            step: 'Parte III',
+            title: 'Paisagens Operacionais e Metabolismo',
+            summary: 'Volta o olhar para fora das aglomerações: Amazônia, Ártico, oceanos, desertos energéticos, zonas extrativas e infraestruturas logísticas revelados como engrenagens da urbanização estendida.',
+            keywords: ['Paisagens operacionais', 'Hinterlândia', 'Metabolismo urbano', 'Extrativismo']
+          },
+          {
+            step: 'Parte IV',
+            title: 'Contestações, Design e Futuros Urbanos',
+            summary: 'Discute as implicações da urbanização planetária para a arquitetura, o urbanismo, o design territorial e as lutas políticas contemporâneas por justiça socioespacial e ecológica.',
+            keywords: ['Design territorial', 'Contestações', 'Futuros planetários']
+          }
+        ]
+      },
+      {
+        id: 'critique-of-urbanization',
+        year: '2016/17',
+        title: 'Critique of Urbanization: Selected Essays',
+        subtitle: 'Bauwelt Fundamente (2016/17) • Ed. BR ampliada: Espaços da Urbanização (Letra Capital, 2018)',
+        ptTitle: 'Espaços da Urbanização: O Urbano a Partir da Teoria Crítica (Letra Capital, 2018)',
+        publisher: 'Birkhäuser / Bauwelt Fundamente (BR: Letra Capital / Observatório das Metrópoles)',
+        coauthors: 'Autoria individual (vários ensaios em coautoria)',
+        axis: 'critica',
+        thesis: 'Reunindo uma década de ensaios decisivos, a obra conecta a crítica epistemológica da teoria urbana, o desmonte das ideologias urbanas neoliberais (inclusive do “urbanismo tático”) e a formulação de novas geografias da urbanização planetária.',
+        concepts: ['teoria-urbana-critica', 'alter-urbanizacoes', 'urbanizacao-planetaria', 'neoliberalismo-realmente-existente', 'neoliberalizacao-variegada'],
+        structure: [
+          {
+            step: 'Seção 01',
+            title: 'Enquadramentos: O que é Teoria Urbana Crítica?',
+            summary: 'Estabelece os pressupostos conceituais e metodológicos da coletânea: a herança da teoria crítica frankfurtiana, a rejeição da razão instrumental no urbanismo e a centralidade do conceito de urbanização como processo histórico.',
+            keywords: ['Teoria urbana crítica', 'Enquadramentos', 'Reflexividade']
+          },
+          {
+            step: 'Seção 02',
+            title: 'Estratégias e Ideologias Urbanas',
+            summary: 'Desconstrói o arsenal ideológico do urbanismo contemporâneo: competitividade territorial, “boa governança”, neoliberalização variegada e a célebre crítica de Brenner ao “urbanismo tático” como solução paliativa incapaz de confrontar a austeridade estrutural.',
+            keywords: ['Competitividade territorial', 'Boa governança', 'Crítica ao urbanismo tático']
+          },
+          {
+            step: 'Seção 03',
+            title: 'Novas Geografias Urbanas',
+            summary: 'Sintetiza a agenda do Urban Theory Lab: urbanização planetária, a tríade concentrada/estendida/diferencial, hinterlândias urbanizadas e o debate crítico entre teoria urbana crítica e teorias do assemblage (com David Madden e David Wachsmuth).',
+            keywords: ['Urbanização planetária', 'Hinterlândia', 'Assemblage vs. Teoria Crítica', 'Urban Theory Lab']
+          }
+        ]
+      },
+      {
+        id: 'new-urban-spaces',
+        year: '2019',
+        title: 'New Urban Spaces',
+        subtitle: 'Urban Theory and the Scale Question',
+        ptTitle: 'Novos Espaços Urbanos (sem tradução integral em português)',
+        publisher: 'Oxford University Press',
+        coauthors: 'Autoria individual',
+        axis: 'estado',
+        thesis: 'A “questão urbana” no século XXI é inseparável da “questão escalar”: ao longo de dez capítulos, Brenner demonstra como o reescalonamento metropolitano, a formação de cidades-região competitivas e o desenvolvimento geográfico desigual desembocam nas mutações da urbanização planetária.',
+        concepts: ['reescalonamento-estado', 'seletividade-espacial', 'grade-tpsn', 'urbanizacao-planetaria', 'tres-momentos-urbanizacao'],
+        structure: [
+          {
+            step: 'Movimento 1 (Caps. 1–3)',
+            title: 'Abertura & Fundamentos Escalares',
+            summary: 'Cap. 1 (A Questão Urbana como Questão Escalar), Cap. 2 (Fixidez e Movimento na Produção do Espaço) e Cap. 3 (Revisitando a Política da Escala e a Grade TPSN). Estabelece o arcabouço teórico que une economia política escalar e teoria urbana.',
+            keywords: ['Questão escalar', 'Fixidez e movimento', 'Política da escala', 'TPSN']
+          },
+          {
+            step: 'Movimento 2 (Caps. 4–7)',
+            title: 'Reescalonamento Metropolitano e Cidades-Região',
+            summary: 'Cap. 4 (Cidades Globais e Reescalonamento Estatal), Cap. 5 (Nova Economia e Governança), Cap. 6 (A Cidade-Região Competitiva) e Cap. 7 (Máquinas de Crescimento em Múltiplas Escalas). Analisa como regiões metropolitanas são reestruturadas como plataformas competitivas.',
+            keywords: ['Cidades globais', 'Cidade-região', 'Máquinas de crescimento', 'Governança']
+          },
+          {
+            step: 'Movimento 3 (Caps. 8–10)',
+            title: 'Desenvolvimento Desigual & Urbanização Planetária',
+            summary: 'Cap. 8 (Mil Camadas de Desenvolvimento Desigual), Cap. 9 (Mutações Planetárias do Urbano) e Cap. 10 (Novos Espaços Urbanos e Agenda Futura). Conecta a teoria escalar do Estado à epistemologia da urbanização planetária.',
+            keywords: ['Mil camadas', 'Desenvolvimento desigual', 'Mutações planetárias']
+          }
+        ]
+      },
+      {
+        id: 'environments-planetary',
+        year: '2025',
+        title: 'Environments of Planetary Urbanization',
+        subtitle: 'Em diálogo com Is the World Urban? (2021) — Urban Theory Lab',
+        ptTitle: 'Ambientes da Urbanização Planetária (obra recente)',
+        publisher: 'Urban Theory Lab / Publicações Internacionais (2021–2025)',
+        coauthors: 'Com Swarnabh Ghosh e Nikos Katsikis',
+        axis: 'planetaria',
+        thesis: 'A crise ecológica do Capitaloceno exige superar definitivamente a ideologia geoespacial da “Era Urbana” e investigar os ambientes da urbanização planetária — cartografando como as paisagens operacionais da hinterlândia reconfiguram ecossistemas, energia, água, alimentos e clima em escala terrestre.',
+        concepts: ['paisagens-operacionais', 'urbanizacao-planetaria', 'tres-momentos-urbanizacao', 'alter-urbanizacoes'],
+        structure: [
+          {
+            step: 'Eixo 01',
+            title: 'Crítica à Ideologia Geoespacial (A Falácia da “Era Urbana”)',
+            summary: 'Aprofunda o argumento de “Is the World Urban?” (2021): demonstra como estatísticas demográficas e imagens de satélite convencionais naturalizam a divisão cidade/natureza e mascaram a verdadeira pegada territorial da urbanização capitalista.',
+            keywords: ['Ideologia geoespacial', 'Crítica à Era Urbana', 'Cartografia']
+          },
+          {
+            step: 'Eixo 02',
+            title: 'Ecologias Políticas da Hinterlândia',
+            summary: 'Propõe uma tipologia rigorosa das hinterlândias contemporâneas — zonas de produção primária, circulação, geração energética e descarte — evidenciando os conflitos sociais, indígenas, camponeses e trabalhistas que atravessam esses territórios.',
+            keywords: ['Ecologia política', 'Hinterlândia', 'Conflitos socioambientais']
+          },
+          {
+            step: 'Eixo 03',
+            title: 'Paisagens Operacionais no Capitaloceno',
+            summary: 'Análise sistêmica dos grandes complexos socioecológicos que sustentam as aglomerações: extração mineral e combustíveis fósseis, agroindústria monocultora, infraestrutura hídrica, cadeias logísticas globais e alterações climáticas.',
+            keywords: ['Capitaloceno', 'Energia & Mineração', 'Agroindústria', 'Água & Clima']
+          },
+          {
+            step: 'Eixo 04',
+            title: 'Reimaginação Socioecológica e Cartografias Críticas',
+            summary: 'Apresenta novas ferramentas visuais, mapas críticos e proposições políticas para rearticular aglomerações e hinterlândias sob princípios de justiça ecológica, descarbonização democrática e alter-urbanizações.',
+            keywords: ['Cartografias críticas', 'Justiça ecológica', 'Alter-urbanizações']
+          }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       ESTADO GLOBAL DA APLICAÇÃO
+       ========================================================================== */
+    const state = {
+      activeModule: 'network',
+      selectedNetworkNode: 'reescalonamento-estado',
+      networkFilter: 'all',
+      selectedConceptId: 'reescalonamento-estado',
+      selectedBookId: 'new-state-spaces',
+      selectedBookSectionIndex: 0,
+      diagrams: {} // Estado interativo individual de cada um dos 10 SVGs
+    };
+
+    const getConcept = (id) => CONCEPTS.find((c) => c.id === id) || CONCEPTS[0];
+    const getBook = (id) => BOOKS.find((b) => b.id === id) || BOOKS[0];
+
+    /* ==========================================================================
+       NAVEGAÇÃO GLOBAL ENTRE OS 3 MÓDULOS
+       ========================================================================== */
+    function switchModule(moduleName) {
+      state.activeModule = moduleName;
+      document.querySelectorAll('.nav-tab').forEach((tab) => {
+        const active = tab.dataset.module === moduleName;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', String(active));
+      });
+      document.querySelectorAll('.module-view').forEach((sec) => {
+        sec.classList.toggle('active', sec.id === `module-${moduleName}`);
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openConcept(conceptId) {
+      state.selectedConceptId = conceptId;
+      renderConceptsMenu();
+      renderConceptDetail(conceptId);
+      switchModule('concepts');
+    }
+
+    function openBook(bookId) {
+      state.selectedBookId = bookId;
+      state.selectedBookSectionIndex = 0;
+      renderBooksMenu();
+      renderBookDetail(bookId);
+      switchModule('books');
+    }
+
+    /* ==========================================================================
+       MÓDULO 1: REDE CONCEITUAL EM SVG
+       ========================================================================== */
+    function collectUniqueEdges() {
+      const seen = new Set();
+      const edges = [];
+      CONCEPTS.forEach((c) => {
+        c.connections.forEach((conn) => {
+          const key = [c.id, conn.target].sort().join('--');
+          if (!seen.has(key)) {
+            seen.add(key);
+            edges.push({ source: c.id, target: conn.target });
+          }
+        });
+      });
+      return edges;
+    }
+
+    function renderNetworkSVG() {
+      const svg = document.getElementById('network-svg');
+      const edges = collectUniqueEdges();
+      const activeId = state.selectedNetworkNode;
+      const filter = state.networkFilter;
+
+      const neighbors = new Set();
+      if (activeId) {
+        neighbors.add(activeId);
+        edges.forEach((e) => {
+          if (e.source === activeId) neighbors.add(e.target);
+          if (e.target === activeId) neighbors.add(e.source);
+        });
+      }
+
+      // Regiões cartográficas dos 4 eixos
+      const clustersSVG = `
+        <g aria-hidden="true">
+          <rect x="65" y="34" width="355" height="252" rx="22" fill="${AXES.estado.soft}" stroke="${AXES.estado.color}" stroke-opacity="0.22" stroke-dasharray="5 5" />
+          <text x="84" y="56" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600" fill="${AXES.estado.color}" letter-spacing="0.8">EIXO 1 • ESTADO &amp; ESCALA</text>
+
+          <rect x="408" y="148" width="160" height="256" rx="22" fill="${AXES.neolib.soft}" stroke="${AXES.neolib.color}" stroke-opacity="0.24" stroke-dasharray="5 5" />
+          <text x="488" y="169" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="600" fill="${AXES.neolib.color}" letter-spacing="0.6">EIXO 2 • NEOLIBERALIZAÇÃO</text>
+
+          <rect x="598" y="64" width="256" height="408" rx="22" fill="${AXES.planetaria.soft}" stroke="${AXES.planetaria.color}" stroke-opacity="0.24" stroke-dasharray="5 5" />
+          <text x="726" y="86" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="600" fill="${AXES.planetaria.color}" letter-spacing="0.6">EIXO 3 • URBANIZAÇÃO PLANETÁRIA</text>
+
+          <rect x="165" y="366" width="405" height="170" rx="22" fill="${AXES.critica.soft}" stroke="${AXES.critica.color}" stroke-opacity="0.24" stroke-dasharray="5 5" />
+          <text x="184" y="522" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="600" fill="${AXES.critica.color}" letter-spacing="0.6">EIXO 4 • TEORIA CRÍTICA &amp; PRÁXIS</text>
+        </g>
+      `;
+
+      // Arestas curvas
+      const edgesSVG = edges.map((e) => {
+        const s = getConcept(e.source);
+        const t = getConcept(e.target);
+        const mx = (s.pos.x + t.pos.x) / 2;
+        const my = (s.pos.y + t.pos.y) / 2;
+        const dx = t.pos.x - s.pos.x;
+        const dy = t.pos.y - s.pos.y;
+        const cx = mx - dy * 0.1;
+        const cy = my + dx * 0.1;
+
+        const isConnected = activeId && (e.source === activeId || e.target === activeId);
+        const matchesFilter = filter === 'all' || s.axis === filter || t.axis === filter;
+
+        let cls = 'net-edge';
+        let strokeColor = '#94A3B8';
+        if (filter !== 'all' && !matchesFilter) {
+          cls += ' dimmed';
+        } else if (activeId) {
+          if (isConnected) {
+            cls += ' highlighted';
+            strokeColor = AXES[getConcept(activeId).axis].color;
+          } else {
+            cls += ' dimmed';
+          }
+        }
+
+        return `<path class="${cls}" d="M ${s.pos.x} ${s.pos.y} Q ${cx} ${cy} ${t.pos.x} ${t.pos.y}" style="stroke:${strokeColor}" />`;
+      }).join('');
+
+      const shortLabels = {
+        'reescalonamento-estado': ['Reescalonamento', 'do Estado'],
+        'seletividade-espacial': ['Seletividade Espacial', 'do Estado'],
+        'grade-tpsn': ['Grade TPSN', '(T • P • S • N)'],
+        'neoliberalismo-realmente-existente': ['Neoliberalismo', 'Realmente Existente'],
+        'neoliberalizacao-variegada': ['Neoliberalização', 'Variegada'],
+        'urbanizacao-planetaria': ['Urbanização Planetária', '& Implosão-Explosão'],
+        'tres-momentos-urbanizacao': ['Concentrada, Estendida', '& Diferencial'],
+        'paisagens-operacionais': ['Paisagens Operacionais', '& Hinterlândia'],
+        'teoria-urbana-critica': ['Teoria Urbana', 'Crítica'],
+        'alter-urbanizacoes': ['Alter-Urbanizações &', 'Direito à Cidade']
+      };
+
+      // Nós
+      const nodesSVG = CONCEPTS.map((c) => {
+        const axis = AXES[c.axis];
+        const isSelected = activeId === c.id;
+        const isNeighbor = neighbors.has(c.id);
+        const matchesFilter = filter === 'all' || c.axis === filter;
+
+        let dimmed = false;
+        if (filter !== 'all' && !matchesFilter) dimmed = true;
+        else if (activeId && !isNeighbor) dimmed = true;
+
+        const lines = shortLabels[c.id] || [c.title];
+
+        return `
+          <g class="net-node ${isSelected ? 'selected' : ''} ${dimmed ? 'dimmed' : ''}"
+             data-node-id="${c.id}"
+             tabindex="0"
+             role="button"
+             aria-label="${c.title}">
+            ${isSelected ? `<circle cx="${c.pos.x}" cy="${c.pos.y}" r="29" fill="none" stroke="${axis.color}" stroke-width="2" stroke-dasharray="4 3" opacity="0.8" />` : ''}
+            <circle class="node-circle" cx="${c.pos.x}" cy="${c.pos.y}" r="21" fill="${axis.color}" stroke="#FFFFFF" stroke-width="3" />
+            <text class="net-node-code" x="${c.pos.x}" y="${c.pos.y + 3.5}" text-anchor="middle">${c.code}</text>
+            <g transform="translate(${c.pos.x}, ${c.pos.y + 35})">
+              <rect x="-74" y="-12" width="148" height="30" rx="5" fill="rgba(255,255,255,0.92)" stroke="rgba(24,27,32,0.06)" />
+              <text class="net-node-label" x="0" y="0" text-anchor="middle">${lines[0]}</text>
+              <text class="net-node-label" x="0" y="13" text-anchor="middle" style="font-weight:500; fill:#475569; font-size:10px;">${lines[1] || ''}</text>
+            </g>
+          </g>
+        `;
+      }).join('');
+
+      svg.innerHTML = `${clustersSVG}<g>${edgesSVG}</g><g>${nodesSVG}</g>`;
+
+      svg.querySelectorAll('.net-node').forEach((el) => {
+        const id = el.dataset.nodeId;
+        const activate = () => {
+          state.selectedNetworkNode = id;
+          renderNetworkSVG();
+          renderNetworkInspector(id);
+        };
+        el.addEventListener('click', activate);
+        el.addEventListener('mouseenter', () => {
+          if (state.selectedNetworkNode !== id) activate();
+        });
+        el.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') {
+            ev.preventDefault();
+            activate();
+          }
+        });
+      });
+    }
+
+    function renderNetworkInspector(conceptId) {
+      const panel = document.getElementById('network-inspector');
+      const status = document.getElementById('network-status');
+      const c = getConcept(conceptId);
+      const axis = AXES[c.axis];
+
+      status.textContent = `Nó ativo: ${c.code} • ${c.connections.length} conexões teóricas diretas`;
+
+      const connHTML = c.connections.map((conn) => {
+        const t = getConcept(conn.target);
+        const tAxis = AXES[t.axis];
+        return `
+          <button class="conn-btn" data-jump="${t.id}">
+            <strong>
+              <span class="axis-dot" style="background:${tAxis.color}"></span>
+              ${t.code} — ${t.title}
+            </strong>
+            <span>${conn.reason}</span>
+          </button>
+        `;
+      }).join('');
+
+      panel.innerHTML = `
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem;">
+            <span class="axis-pill" style="background:${axis.soft}; color:${axis.color}; border-color:${axis.border}">
+              <span class="axis-dot" style="background:${axis.color}"></span>
+              ${axis.short}
+            </span>
+            <span class="eyebrow">${c.code}</span>
+          </div>
+
+          <h3 class="serif-heading inspector-title">${c.title}</h3>
+          <div class="inspector-en">${c.en}</div>
+          <p class="inspector-desc">${c.shortSummary}</p>
+
+          <div class="connections-label">Conexões Teóricas Diretas (${c.connections.length})</div>
+          <div class="connection-list">${connHTML}</div>
+        </div>
+
+        <button class="btn-cta" id="btn-open-diagram" style="background:${axis.color}">
+          Abrir Diagrama Visual do Conceito →
+        </button>
+      `;
+
+      panel.querySelector('#btn-open-diagram').addEventListener('click', () => openConcept(c.id));
+      panel.querySelectorAll('[data-jump]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedNetworkNode = btn.dataset.jump;
+          renderNetworkSVG();
+          renderNetworkInspector(btn.dataset.jump);
+        });
+      });
+    }
+
+    /* ==========================================================================
+       MÓDULO 2: MENU DE CONCEITOS AGRUPADO POR EIXO & 10 DIAGRAMAS SVG
+       ========================================================================== */
+    function renderConceptsMenu() {
+      const container = document.getElementById('concepts-menu');
+      const axisOrder = ['estado', 'neolib', 'planetaria', 'critica'];
+
+      container.innerHTML = axisOrder.map((axisId) => {
+        const axis = AXES[axisId];
+        const items = CONCEPTS.filter((c) => c.axis === axisId);
+        return `
+          <div class="sidebar-group-label" style="color:${axis.color}">
+            <span class="axis-dot" style="background:${axis.color}"></span>
+            ${axis.label}
+          </div>
+          ${items.map((c) => {
+            const active = c.id === state.selectedConceptId;
+            return `
+              <button class="sidebar-item ${active ? 'active' : ''}"
+                      data-concept-id="${c.id}"
+                      style="--item-accent:${axis.color}; --item-soft:${axis.soft}"
+                      role="option"
+                      aria-selected="${active}">
+                <span class="code-tag">${c.code}</span>
+                <div>
+                  <div class="sidebar-item-title">${c.title}</div>
+                  <span class="sidebar-item-sub">${c.en}</span>
+                </div>
+              </button>
+            `;
+          }).join('')}
+        `;
+      }).join('');
+
+      container.querySelectorAll('.sidebar-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedConceptId = btn.dataset.conceptId;
+          renderConceptsMenu();
+          renderConceptDetail(btn.dataset.conceptId);
+        });
+      });
+    }
+
+    function renderConceptDetail(conceptId) {
+      const stage = document.getElementById('concept-detail');
+      const c = getConcept(conceptId);
+      const axis = AXES[c.axis];
+
+      const linkedConcepts = c.connections.map((conn) => {
+        const t = getConcept(conn.target);
+        return `
+          <button class="chip-btn" data-open-concept="${t.id}">
+            <span class="axis-dot" style="background:${AXES[t.axis].color}"></span>
+            ${t.code} • ${t.title}
+          </button>
+        `;
+      }).join('');
+
+      const linkedBooks = c.books.map((bookId) => {
+        const b = getBook(bookId);
+        return `
+          <button class="chip-btn" data-open-book="${b.id}">
+            <span style="font-family:var(--font-mono); font-size:0.69rem; opacity:0.75">${b.year}</span>
+            ${b.title}
+          </button>
+        `;
+      }).join('');
+
+      stage.innerHTML = `
+        <header class="detail-header">
+          <div class="detail-badges">
+            <span class="code-tag" style="background:${axis.color}; color:#FFF; border:none;">${c.code}</span>
+            <span class="axis-pill" style="background:${axis.soft}; color:${axis.color}; border-color:${axis.border}">
+              <span class="axis-dot" style="background:${axis.color}"></span>
+              ${axis.label}
+            </span>
+          </div>
+          <h2 class="serif-heading detail-title">${c.title}</h2>
+          <div class="detail-en">${c.en}</div>
+          <div class="collab-bar">
+            <strong>Colaboração / Diálogo:</strong>
+            <span>${c.collaborators}</span>
+          </div>
+        </header>
+
+        <div class="theory-text">
+          ${c.synthesis.map((p) => `<p>${p}</p>`).join('')}
+        </div>
+
+        <div class="diagram-box" id="concept-svg-slot"></div>
+
+        <section aria-label="Ruptura Epistemológica">
+          <div class="eyebrow" style="margin-bottom:0.65rem;">Ruptura Epistemológica</div>
+          <div class="rupture-grid">
+            <div class="rupture-col conventional">
+              <h4>Visão Convencional / Herdada</h4>
+              <ul>${c.conventional.map((item) => `<li>${item}</li>`).join('')}</ul>
+            </div>
+            <div class="rupture-col brenner" style="--accent-color:${axis.color}; --accent-soft:${axis.soft}">
+              <h4>Proposta de Neil Brenner</h4>
+              <ul>${c.brenner.map((item) => `<li>${item}</li>`).join('')}</ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="crosslinks-grid">
+          <div class="crosslink-box">
+            <h4>Conceitos Interligados</h4>
+            <div class="chip-list">${linkedConcepts}</div>
+          </div>
+          <div class="crosslink-box">
+            <h4>Obras Principais</h4>
+            <div class="chip-list">${linkedBooks}</div>
+          </div>
+        </section>
+      `;
+
+      renderConceptDiagram(conceptId);
+
+      stage.querySelectorAll('[data-open-concept]').forEach((btn) => {
+        btn.addEventListener('click', () => openConcept(btn.dataset.openConcept));
+      });
+      stage.querySelectorAll('[data-open-book]').forEach((btn) => {
+        btn.addEventListener('click', () => openBook(btn.dataset.openBook));
+      });
+    }
+
+    /* --------------------------------------------------------------------------
+       10 DIAGRAMAS SVG INTERATIVOS EXCLUSIVOS
+       -------------------------------------------------------------------------- */
+    function renderConceptDiagram(id) {
+      const slot = document.getElementById('concept-svg-slot');
+      if (!slot) return;
+      const map = {
+        'reescalonamento-estado': svgC01,
+        'seletividade-espacial': svgC02,
+        'grade-tpsn': svgC03,
+        'neoliberalismo-realmente-existente': svgC04,
+        'neoliberalizacao-variegada': svgC05,
+        'urbanizacao-planetaria': svgC06,
+        'tres-momentos-urbanizacao': svgC07,
+        'paisagens-operacionais': svgC08,
+        'teoria-urbana-critica': svgC09,
+        'alter-urbanizacoes': svgC10
+      };
+      if (map[id]) map[id](slot);
+    }
+
+    /* 1. Reescalonamento do Estado (Keynesianismo Espacial vs Estado Glocalizador) */
+    function svgC01(slot) {
+      const regime = state.diagrams.c01 || 'glocal';
+      const svg = regime === 'keynesian'
+        ? `
+          <svg viewBox="0 0 740 320" role="img" aria-label="Regime do Keynesianismo Espacial 1950-1970s">
+            <defs>
+              <marker id="m-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#1D4ED8" />
+              </marker>
+            </defs>
+            <text x="370" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#1D4ED8">KEYNESIANISMO ESPACIAL (1950–1970s) • PRIMAZIA DA ESCALA NACIONAL</text>
+            <!-- Supranacional discreto -->
+            <rect x="240" y="44" width="260" height="34" rx="8" fill="#F1F5F9" stroke="#94A3B8" stroke-dasharray="4 3" />
+            <text x="370" y="65" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#64748B">Bretton Woods / Acordos Interestatais</text>
+
+            <!-- Escala Nacional Dominante -->
+            <rect x="145" y="102" width="450" height="72" rx="12" fill="#1D4ED8" />
+            <text x="370" y="132" text-anchor="middle" font-family="Newsreader" font-size="20" font-weight="700" fill="#FFFFFF">ESTADO-NAÇÃO REDISTRIBUTIVO</text>
+            <text x="370" y="154" text-anchor="middle" font-family="Inter" font-size="11" fill="#DBEAFE">Planejamento nacional, fundos compensatórios e equalização territorial</text>
+
+            <!-- Fluxos redistributivos uniformes para baixo -->
+            <line x1="220" y1="174" x2="145" y2="228" stroke="#1D4ED8" stroke-width="2.6" marker-end="url(#m-blue)" />
+            <line x1="370" y1="174" x2="370" y2="228" stroke="#1D4ED8" stroke-width="2.6" marker-end="url(#m-blue)" />
+            <line x1="520" y1="174" x2="595" y2="228" stroke="#1D4ED8" stroke-width="2.6" marker-end="url(#m-blue)" />
+
+            <!-- Regiões equilibradas -->
+            <rect x="55" y="236" width="180" height="58" rx="10" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1.8" />
+            <text x="145" y="261" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#1E3A8A">Região Periférica</text>
+            <text x="145" y="279" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#475569">Subsídios &amp; infraestrutura</text>
+
+            <rect x="280" y="236" width="180" height="58" rx="10" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1.8" />
+            <text x="370" y="261" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#1E3A8A">Cidades Industriais</text>
+            <text x="370" y="279" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#475569">Consumo coletivo padrão</text>
+
+            <rect x="505" y="236" width="180" height="58" rx="10" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1.8" />
+            <text x="595" y="261" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#1E3A8A">Região Agrária</text>
+            <text x="595" y="279" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#475569">Integração nacional</text>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 740 320" role="img" aria-label="Estado Glocalizador e Políticas Locacionais 1980s+">
+            <defs>
+              <marker id="m-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#C2410C" />
+              </marker>
+              <marker id="m-bl2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#1D4ED8" />
+              </marker>
+            </defs>
+            <text x="370" y="26" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#C2410C">ESTADO GLOCALIZADOR (1980s+) • REESCALONAMENTO &amp; COMPETIÇÃO INTERLOCAL</text>
+
+            <!-- Supranacional fortalecido -->
+            <rect x="150" y="40" width="440" height="44" rx="10" fill="#1E293B" />
+            <text x="370" y="66" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#FFFFFF">BLOCOS SUPRANACIONAIS &amp; CAPITAL FINANCEIRO GLOBAL (UE, OMC, FMI)</text>
+
+            <!-- Setas de reescalonamento para cima e para baixo -->
+            <line x1="320" y1="112" x2="320" y2="88" stroke="#1D4ED8" stroke-width="2.6" marker-end="url(#m-bl2)" />
+            <line x1="420" y1="88" x2="420" y2="112" stroke="#C2410C" stroke-width="2.6" marker-end="url(#m-red)" />
+            <text x="260" y="104" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#1D4ED8">Para cima ↑</text>
+            <text x="480" y="104" text-anchor="start" font-family="JetBrains Mono" font-size="9" fill="#C2410C">Disciplina global ↓</text>
+
+            <!-- Estado Nacional reconfigurado -->
+            <rect x="210" y="118" width="320" height="54" rx="10" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2.2" />
+            <text x="370" y="141" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#1D4ED8">ESTADO NACIONAL GLOCALIZADOR</text>
+            <text x="370" y="159" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#475569">Foco em políticas locacionais seletivas</text>
+
+            <!-- Concentração desigual para baixo -->
+            <line x1="305" y1="172" x2="185" y2="220" stroke="#C2410C" stroke-width="3.2" marker-end="url(#m-red)" />
+            <line x1="435" y1="172" x2="555" y2="220" stroke="#94A3B8" stroke-width="1.6" stroke-dasharray="4 3" />
+
+            <!-- Cidade-região competitiva (privilegiada) -->
+            <rect x="48" y="226" width="275" height="72" rx="10" fill="#FFF7ED" stroke="#C2410C" stroke-width="2.5" />
+            <text x="185" y="251" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#C2410C">Cidades-Região Competitivas</text>
+            <text x="185" y="269" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#475569">Concentração de infraestrutura, P&amp;D e</text>
+            <text x="185" y="284" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#475569">conexão direta com circuitos globais</text>
+
+            <!-- Competição horizontal -->
+            <path d="M 326 262 L 424 262" stroke="#C2410C" stroke-width="2" stroke-dasharray="4 3" />
+            <text x="375" y="253" text-anchor="middle" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="#C2410C">COMPETIÇÃO</text>
+            <text x="375" y="276" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#64748B">INTERLOCAL</text>
+
+            <!-- Regiões periféricas (desinvestidas) -->
+            <rect x="430" y="226" width="260" height="72" rx="10" fill="#F8FAFC" stroke="#94A3B8" stroke-width="1.8" stroke-dasharray="5 3" />
+            <text x="560" y="252" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#475569">Regiões Periféricas / Antigas</text>
+            <text x="560" y="270" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#64748B">Cortes redistributivos, austeridade e</text>
+            <text x="560" y="285" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#64748B">disputa fiscal por investimentos</text>
+          </svg>
+        `;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Diagrama Comparativo • Regimes Históricos de Espacialidade Estatal</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${regime === 'keynesian' ? 'active' : ''}" data-c01="keynesian">Keynesianismo Espacial (1950–70s)</button>
+            <button class="diag-btn ${regime === 'glocal' ? 'active' : ''}" data-c01="glocal">Estado Glocalizador (1980s+)</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">${svg}</div>
+        <div class="diagram-caption">
+          ${regime === 'keynesian'
+            ? '<strong>Keynesianismo Espacial:</strong> O Estado nacional atua como contêiner dominante, redistribuindo recursos para atenuar desigualdades regionais e garantir padrões relativamente uniformes de infraestrutura e consumo coletivo.'
+            : '<strong>Estado Glocalizador:</strong> Em vez de desaparecer, o Estado reescalona poderes para blocos supranacionais e governos metropolitanos, priorizando a competitividade global de regiões urbanas selecionadas em detrimento da equalização territorial.'}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c01]').forEach((b) => {
+        b.addEventListener('click', () => {
+          state.diagrams.c01 = b.dataset.c01;
+          svgC01(slot);
+        });
+      });
+    }
+
+    /* 2. Seletividade Espacial do Estado (Matriz 2x2 clicável) */
+    function svgC02(slot) {
+      const quad = state.diagrams.c02 || 'q4';
+      const quads = {
+        q1: {
+          title: 'Projetos Espaciais Uniformes / Padronizados',
+          desc: 'Arquitetura institucional voltada à homogeneidade administrativa em todo o território nacional: regras fiscais comuns, jurisdições municipais padronizadas e centralização burocrática (típico do Estado nacional-keynesiano).'
+        },
+        q2: {
+          title: 'Projetos Espaciais Diferenciados / Customizados',
+          desc: 'Reorganização seletiva das instituições estatais para criar arranjos sob medida: autoridades metropolitanas especiais, zonas econômicas exclusivas, consórcios intermunicipais flexíveis e parcerias público-privadas locais.'
+        },
+        q3: {
+          title: 'Estratégias Espaciais Redistributivas / Compensatórias',
+          desc: 'Intervenções econômicas desenhadas para espalhar investimentos industriais e infraestrutura para regiões periféricas ou em declínio, buscando reduzir disparidades geográficas internas.'
+        },
+        q4: {
+          title: 'Estratégias Espaciais Concentradas / Competitivas',
+          desc: 'Políticas locacionais que canalizam fundos públicos, transporte de alta velocidade e incentivos para os polos urbanos já mais dinâmicos, apostando em “campeões territoriais” na economia global.'
+        }
+      };
+
+      const fillOf = (k) => (quad === k ? '#1D4ED8' : '#FFFFFF');
+      const textOf = (k) => (quad === k ? '#FFFFFF' : '#181B20');
+      const subOf = (k) => (quad === k ? '#DBEAFE' : '#64748B');
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Matriz 2×2 Interativa • Projetos Espaciais × Estratégias Espaciais</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${quad === 'q1' ? 'active' : ''}" data-c02="q1">Proj. Uniformes</button>
+            <button class="diag-btn ${quad === 'q2' ? 'active' : ''}" data-c02="q2">Proj. Diferenciados</button>
+            <button class="diag-btn ${quad === 'q3' ? 'active' : ''}" data-c02="q3">Estrat. Redistributivas</button>
+            <button class="diag-btn ${quad === 'q4' ? 'active' : ''}" data-c02="q4">Estrat. Concentradas</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 315" role="img" aria-label="Matriz 2 por 2 da seletividade espacial do Estado">
+            <!-- Cabeçalhos das Colunas -->
+            <text x="310" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" font-weight="600" fill="#1D4ED8">UNIFORME / REDISTRIBUTIVA</text>
+            <text x="580" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" font-weight="600" fill="#C2410C">DIFERENCIADA / CONCENTRADA</text>
+
+            <!-- Rótulos das Linhas -->
+            <g transform="translate(88, 108)">
+              <text x="0" y="-6" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#181B20">PROJETOS</text>
+              <text x="0" y="10" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#181B20">ESPACIAIS</text>
+              <text x="0" y="26" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#64748B">(Forma do Estado)</text>
+            </g>
+            <g transform="translate(88, 232)">
+              <text x="0" y="-6" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#181B20">ESTRATÉGIAS</text>
+              <text x="0" y="10" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#181B20">ESPACIAIS</text>
+              <text x="0" y="26" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#64748B">(Acumulação)</text>
+            </g>
+
+            <!-- Q1 -->
+            <g style="cursor:pointer" data-c02="q1">
+              <rect x="180" y="48" width="260" height="114" rx="12" fill="${fillOf('q1')}" stroke="#1D4ED8" stroke-width="${quad === 'q1' ? 3 : 1.5}" />
+              <text x="310" y="88" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="${textOf('q1')}">Administração Padronizada</text>
+              <text x="310" y="110" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${subOf('q1')}">Jurisdições uniformes e centralização</text>
+              <text x="310" y="132" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${subOf('q1')}">(Ex.: Estado-nação fordista)</text>
+            </g>
+
+            <!-- Q2 -->
+            <g style="cursor:pointer" data-c02="q2">
+              <rect x="454" y="48" width="260" height="114" rx="12" fill="${fillOf('q2')}" stroke="#C2410C" stroke-width="${quad === 'q2' ? 3 : 1.5}" />
+              <text x="584" y="88" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="${textOf('q2')}">Governança Customizada</text>
+              <text x="584" y="110" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${subOf('q2')}">Agências metropolitanas e zonas especiais</text>
+              <text x="584" y="132" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${subOf('q2')}">(Ex.: ZEEs, agências pró-mercado)</text>
+            </g>
+
+            <!-- Q3 -->
+            <g style="cursor:pointer" data-c02="q3">
+              <rect x="180" y="176" width="260" height="114" rx="12" fill="${fillOf('q3')}" stroke="#1D4ED8" stroke-width="${quad === 'q3' ? 3 : 1.5}" />
+              <text x="310" y="216" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="${textOf('q3')}">Equalização Territorial</text>
+              <text x="310" y="238" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${subOf('q3')}">Fundos regionais e redistribuição fiscal</text>
+              <text x="310" y="260" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${subOf('q3')}">(Ex.: Políticas regionais 1960s)</text>
+            </g>
+
+            <!-- Q4 -->
+            <g style="cursor:pointer" data-c02="q4">
+              <rect x="454" y="176" width="260" height="114" rx="12" fill="${fillOf('q4')}" stroke="#C2410C" stroke-width="${quad === 'q4' ? 3 : 1.5}" />
+              <text x="584" y="216" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="${textOf('q4')}">Políticas Locacionais</text>
+              <text x="584" y="238" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${subOf('q4')}">Aposta em polos urbanos competitivos</text>
+              <text x="584" y="260" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${subOf('q4')}">(Ex.: Cidades globais pós-1980)</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${quads[quad].title}:</strong> ${quads[quad].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c02]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c02 = el.dataset.c02;
+          svgC02(slot);
+        });
+      });
+    }
+
+    /* 3. Grade TPSN (Território, Lugar, Escala, Rede) */
+    function svgC03(slot) {
+      const dim = state.diagrams.c03 || 'T';
+      const dims = {
+        T: {
+          title: 'T — Território (Fronteiras, Recintos e Soberania)',
+          desc: 'Estrutura: delimita jurisdições sobre lugares (P), define compartimentos hierárquicos de escala (S) e regula/bloqueia fluxos em redes (N). É estruturado por: reescalonamento estatal (S) e redes transfronteiriças (N) que tornam fronteiras porosas.'
+        },
+        P: {
+          title: 'P — Lugar (Proximidade, Arealidade e Diferenciação Horizontal)',
+          desc: 'Estrutura: ancora identidades políticas dentro de territórios (T), serve de nó concreto para redes (N) e constitui arenas locais nas escalas (S). É estruturado por: fluxos reticulares globais (N) e seletividade escalar do Estado (S).'
+        },
+        S: {
+          title: 'S — Escala (Hierarquia e Diferenciação Vertical)',
+          desc: 'Estrutura: organiza níveis de autoridade territorial (T), posiciona lugares em rankings competitivos (P) e define o alcance vertical de redes (N). É estruturado por: lutas baseadas em lugares (P) e articulações reticulares que “saltam escalas” (N).'
+        },
+        N: {
+          title: 'N — Rede (Interconexão, Nódulos e Fluxos Transversais)',
+          desc: 'Estrutura: conecta lugares distantes (P), perfura fronteiras territoriais (T) e liga atores em múltiplas escalas (S). É estruturado por: infraestruturas fixas em lugares (P), regulações territoriais (T) e governança multiescalar (S).'
+        }
+      };
+
+      const isAct = (k) => dim === k;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Diagrama Polimórfico • Grade TPSN (Jessop, Brenner &amp; Jones)</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${isAct('T') ? 'active' : ''}" data-c03="T">T • Território</button>
+            <button class="diag-btn ${isAct('P') ? 'active' : ''}" data-c03="P">P • Lugar</button>
+            <button class="diag-btn ${isAct('S') ? 'active' : ''}" data-c03="S">S • Escala</button>
+            <button class="diag-btn ${isAct('N') ? 'active' : ''}" data-c03="N">N • Rede</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 320" role="img" aria-label="Diagrama polimórfico da Grade TPSN">
+            <!-- Conexões internas completas (grafo K4) -->
+            <line x1="210" y1="88" x2="530" y2="88" stroke="${isAct('T') || isAct('P') ? '#1D4ED8' : '#CBD5E1'}" stroke-width="${isAct('T') || isAct('P') ? 2.8 : 1.5}" />
+            <line x1="210" y1="232" x2="530" y2="232" stroke="${isAct('S') || isAct('N') ? '#1D4ED8' : '#CBD5E1'}" stroke-width="${isAct('S') || isAct('N') ? 2.8 : 1.5}" />
+            <line x1="210" y1="88" x2="210" y2="232" stroke="${isAct('T') || isAct('S') ? '#1D4ED8' : '#CBD5E1'}" stroke-width="${isAct('T') || isAct('S') ? 2.8 : 1.5}" />
+            <line x1="530" y1="88" x2="530" y2="232" stroke="${isAct('P') || isAct('N') ? '#1D4ED8' : '#CBD5E1'}" stroke-width="${isAct('P') || isAct('N') ? 2.8 : 1.5}" />
+            <line x1="210" y1="88" x2="530" y2="232" stroke="${isAct('T') || isAct('N') ? '#1D4ED8' : '#CBD5E1'}" stroke-width="${isAct('T') || isAct('N') ? 2.8 : 1.5}" stroke-dasharray="5 4" />
+            <line x1="530" y1="88" x2="210" y2="232" stroke="${isAct('P') || isAct('S') ? '#1D4ED8' : '#CBD5E1'}" stroke-width="${isAct('P') || isAct('S') ? 2.8 : 1.5}" stroke-dasharray="5 4" />
+
+            <!-- Núcleo central -->
+            <circle cx="370" cy="160" r="44" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="1.8" />
+            <text x="370" y="156" text-anchor="middle" font-family="Newsreader" font-size="14" font-weight="700" fill="#1D4ED8">Espaço</text>
+            <text x="370" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="9" font-weight="600" fill="#1E3A8A">POLIMÓRFICO</text>
+
+            <!-- T -->
+            <g style="cursor:pointer" data-c03="T">
+              <rect x="75" y="48" width="210" height="76" rx="12" fill="${isAct('T') ? '#1D4ED8' : '#FFFFFF'}" stroke="#1D4ED8" stroke-width="${isAct('T') ? 3 : 1.6}" />
+              <text x="180" y="74" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" font-weight="600" fill="${isAct('T') ? '#DBEAFE' : '#1D4ED8'}">T • TERRITÓRIO</text>
+              <text x="180" y="94" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${isAct('T') ? '#FFFFFF' : '#181B20'}">Fronteiras &amp; Recintos</text>
+              <text x="180" y="111" text-anchor="middle" font-family="Inter" font-size="10" fill="${isAct('T') ? '#DBEAFE' : '#64748B'}">Dentro / Fora • Soberania</text>
+            </g>
+
+            <!-- P -->
+            <g style="cursor:pointer" data-c03="P">
+              <rect x="455" y="48" width="210" height="76" rx="12" fill="${isAct('P') ? '#1D4ED8' : '#FFFFFF'}" stroke="#1D4ED8" stroke-width="${isAct('P') ? 3 : 1.6}" />
+              <text x="560" y="74" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" font-weight="600" fill="${isAct('P') ? '#DBEAFE' : '#1D4ED8'}">P • LUGAR (PLACE)</text>
+              <text x="560" y="94" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${isAct('P') ? '#FFFFFF' : '#181B20'}">Proximidade &amp; Arealidade</text>
+              <text x="560" y="111" text-anchor="middle" font-family="Inter" font-size="10" fill="${isAct('P') ? '#DBEAFE' : '#64748B'}">Co-presença • Enraizamento</text>
+            </g>
+
+            <!-- S -->
+            <g style="cursor:pointer" data-c03="S">
+              <rect x="75" y="196" width="210" height="76" rx="12" fill="${isAct('S') ? '#1D4ED8' : '#FFFFFF'}" stroke="#1D4ED8" stroke-width="${isAct('S') ? 3 : 1.6}" />
+              <text x="180" y="222" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" font-weight="600" fill="${isAct('S') ? '#DBEAFE' : '#1D4ED8'}">S • ESCALA (SCALE)</text>
+              <text x="180" y="242" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${isAct('S') ? '#FFFFFF' : '#181B20'}">Diferenciação Vertical</text>
+              <text x="180" y="259" text-anchor="middle" font-family="Inter" font-size="10" fill="${isAct('S') ? '#DBEAFE' : '#64748B'}">Local ↔ Nacional ↔ Global</text>
+            </g>
+
+            <!-- N -->
+            <g style="cursor:pointer" data-c03="N">
+              <rect x="455" y="196" width="210" height="76" rx="12" fill="${isAct('N') ? '#1D4ED8' : '#FFFFFF'}" stroke="#1D4ED8" stroke-width="${isAct('N') ? 3 : 1.6}" />
+              <text x="560" y="222" text-anchor="middle" font-family="JetBrains Mono" font-size="10.5" font-weight="600" fill="${isAct('N') ? '#DBEAFE' : '#1D4ED8'}">N • REDE (NETWORK)</text>
+              <text x="560" y="242" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${isAct('N') ? '#FFFFFF' : '#181B20'}">Interconexão &amp; Nódulos</text>
+              <text x="560" y="259" text-anchor="middle" font-family="Inter" font-size="10" fill="${isAct('N') ? '#DBEAFE' : '#64748B'}">Fluxos transversais • Cadeias</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${dims[dim].title}:</strong> ${dims[dim].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c03]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c03 = el.dataset.c03;
+          svgC03(slot);
+        });
+      });
+    }
+
+    /* 4. Neoliberalismo Realmente Existente (Roll-Back vs Roll-Out + Path-Dependency) */
+    function svgC04(slot) {
+      const mode = state.diagrams.c04 || 'both';
+      const op = (k) => (mode === 'both' || mode === k ? 1 : 0.25);
+
+      const captions = {
+        both: '<strong>Dialética da Destruição Criativa:</strong> O neoliberalismo urbano combina simultaneamente o desmantelamento de proteções herdadas (Roll-Back) e a construção ativa de novas instituições pró-mercado (Roll-Out), sempre filtrados pelo legado histórico local (path-dependency).',
+        rollback: '<strong>Momento Destrutivo (Roll-Back):</strong> Cortes de verbas sociais, privatização de empresas públicas e habitação social, flexibilização trabalhista e erosão da redistribuição keynesiana.',
+        rollout: '<strong>Momento Criativo (Roll-Out):</strong> Criação de parcerias público-privadas (PPPs), governança urbana empreendedora, agências de desenvolvimento pró-mercado, financeirização do solo e policiamento punitivo.'
+      };
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Dialética da Destruição Criativa • Brenner &amp; Theodore (2002)</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${mode === 'both' ? 'active' : ''}" data-c04="both">Dialética Completa</button>
+            <button class="diag-btn ${mode === 'rollback' ? 'active' : ''}" data-c04="rollback">Roll-Back (Destrutivo)</button>
+            <button class="diag-btn ${mode === 'rollout' ? 'active' : ''}" data-c04="rollout">Roll-Out (Criativo)</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 315" role="img" aria-label="Dialética do neoliberalismo realmente existente">
+            <!-- Filtro Path-Dependency no topo -->
+            <rect x="165" y="18" width="410" height="46" rx="10" fill="#F8FAFC" stroke="#64748B" stroke-width="1.6" stroke-dasharray="5 3" />
+            <text x="370" y="38" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#334155">FILTRO INSTITUCIONAL (PATH-DEPENDENCY)</text>
+            <text x="370" y="54" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#64748B">Legados regulatórios, lutas de classe e geografias herdadas de cada cidade</text>
+
+            <!-- Setas do filtro para os dois momentos -->
+            <line x1="270" y1="64" x2="210" y2="98" stroke="#C2410C" stroke-width="2" />
+            <line x1="470" y1="64" x2="530" y2="98" stroke="#C2410C" stroke-width="2" />
+
+            <!-- Momento Roll-Back -->
+            <g opacity="${op('rollback')}" style="cursor:pointer" data-c04="rollback">
+              <rect x="42" y="102" width="286" height="142" rx="12" fill="#FFF7ED" stroke="#C2410C" stroke-width="${mode === 'rollback' ? 3 : 2}" />
+              <text x="185" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#C2410C">MOMENTO DESTRUTIVO</text>
+              <text x="185" y="149" text-anchor="middle" font-family="Newsreader" font-size="20" font-weight="700" fill="#181B20">ROLL-BACK</text>
+              <text x="185" y="175" text-anchor="middle" font-family="Inter" font-size="11" fill="#475569">• Desmonte do bem-estar social</text>
+              <text x="185" y="195" text-anchor="middle" font-family="Inter" font-size="11" fill="#475569">• Cortes fiscais e austeridade</text>
+              <text x="185" y="215" text-anchor="middle" font-family="Inter" font-size="11" fill="#475569">• Desregulação &amp; privatizações</text>
+            </g>
+
+            <!-- Seta circular dialética central -->
+            <circle cx="370" cy="173" r="28" fill="#C2410C" />
+            <text x="370" y="170" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="700" fill="#FFF">CICLO</text>
+            <text x="370" y="183" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#FFF">⇄</text>
+
+            <!-- Momento Roll-Out -->
+            <g opacity="${op('rollout')}" style="cursor:pointer" data-c04="rollout">
+              <rect x="412" y="102" width="286" height="142" rx="12" fill="#FEF2F2" stroke="#9A3412" stroke-width="${mode === 'rollout' ? 3 : 2}" />
+              <text x="555" y="128" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#9A3412">MOMENTO CRIATIVO</text>
+              <text x="555" y="149" text-anchor="middle" font-family="Newsreader" font-size="20" font-weight="700" fill="#181B20">ROLL-OUT</text>
+              <text x="555" y="175" text-anchor="middle" font-family="Inter" font-size="11" fill="#475569">• Parcerias Público-Privadas (PPPs)</text>
+              <text x="555" y="195" text-anchor="middle" font-family="Inter" font-size="11" fill="#475569">• Governança empreendedora</text>
+              <text x="555" y="215" text-anchor="middle" font-family="Inter" font-size="11" fill="#475569">• Disciplina de mercado &amp; policiamento</text>
+            </g>
+
+            <!-- Base -->
+            <rect x="135" y="264" width="470" height="36" rx="8" fill="#181B20" />
+            <text x="370" y="286" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#F7F6F2">Resultado: Paisagens Urbanas Híbridas, Conflituosas e Instáveis</text>
+          </svg>
+        </div>
+        <div class="diagram-caption">${captions[mode]}</div>
+      `;
+
+      slot.querySelectorAll('[data-c04]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c04 = el.dataset.c04;
+          svgC04(slot);
+        });
+      });
+    }
+
+    /* 5. Neoliberalização Variegada (Ondas de mutação regulatória por crises) */
+    function svgC05(slot) {
+      const wave = state.diagrams.c05 || 'w4';
+      const waves = {
+        w1: {
+          title: '1970s — Proto-Neoliberalismo (Crise do Fordismo)',
+          desc: 'Experimentos iniciais localizados em resposta à estagflação e à crise fiscal urbana (como a crise de Nova York em 1975 e o laboratório autoritário no Chile), ainda sem regime regulatório global consolidado.'
+        },
+        w2: {
+          title: '1980s — Neoliberalismo de Choque (Roll-Back)',
+          desc: 'Ataque frontal ao Estado de bem-estar, sindicatos e governos locais progressistas (Thatcher, Reagan) somado a programas de ajuste estrutural (Consenso de Washington) no Sul Global.'
+        },
+        w3: {
+          title: '1990s — Roll-Out & Terceira Via (Hibridização)',
+          desc: 'Frente às falhas sociais da década anterior, o neoliberalismo muta para formas tecnocráticas e “socialmente temperadas”: governança por metas, microfinanças, PPPs e competitividade urbana.'
+        },
+        w4: {
+          title: '2008+ — Austeridade Pós-Crise Financeira (“Failing Forward”)',
+          desc: 'Mesmo após o colapso financeiro de 2008, a neoliberalização “falha para frente”: impõe regimes de austeridade fiscal sobre cidades e Estados, financeiriza ainda mais a moradia e radicaliza a variegação territorial.'
+        }
+      };
+
+      const act = (k) => wave === k;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Ondas de Mutação por Crises • Brenner, Peck &amp; Theodore (2010)</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${act('w1') ? 'active' : ''}" data-c05="w1">1970s Proto</button>
+            <button class="diag-btn ${act('w2') ? 'active' : ''}" data-c05="w2">1980s Choque</button>
+            <button class="diag-btn ${act('w3') ? 'active' : ''}" data-c05="w3">1990s Roll-Out</button>
+            <button class="diag-btn ${act('w4') ? 'active' : ''}" data-c05="w4">2008+ Austeridade</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 315" role="img" aria-label="Ondas históricas da neoliberalização variegada">
+            <!-- Faixa Superior: Regimes Regulatórios Globais -->
+            <rect x="40" y="22" width="660" height="36" rx="8" fill="#FFF7ED" stroke="#C2410C" stroke-dasharray="4 3" />
+            <text x="370" y="44" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#C2410C">REGIMES REGULATÓRIOS TRANSNACIONAIS (REGRAS, FINANÇAS, BENCHMARKS)</text>
+
+            <!-- Onda sinusoidal de mutação -->
+            <path d="M 65 155 Q 150 92, 235 155 T 405 155 T 575 155 T 695 145" fill="none" stroke="#C2410C" stroke-width="3.2" opacity="0.35" />
+
+            <!-- 4 Nós das Ondas -->
+            <g style="cursor:pointer" data-c05="w1">
+              <circle cx="115" cy="138" r="${act('w1') ? 26 : 20}" fill="${act('w1') ? '#C2410C' : '#FFFFFF'}" stroke="#C2410C" stroke-width="2.5" />
+              <text x="115" y="142" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="${act('w1') ? '#FFF' : '#C2410C'}">1970s</text>
+              <text x="115" y="182" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#181B20">Proto-</text>
+              <text x="115" y="196" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#475569">neoliberalismo</text>
+            </g>
+
+            <g style="cursor:pointer" data-c05="w2">
+              <circle cx="285" cy="168" r="${act('w2') ? 26 : 20}" fill="${act('w2') ? '#C2410C' : '#FFFFFF'}" stroke="#C2410C" stroke-width="2.5" />
+              <text x="285" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="${act('w2') ? '#FFF' : '#C2410C'}">1980s</text>
+              <text x="285" y="212" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#181B20">Choque</text>
+              <text x="285" y="226" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#475569">(Roll-back)</text>
+            </g>
+
+            <g style="cursor:pointer" data-c05="w3">
+              <circle cx="455" cy="138" r="${act('w3') ? 26 : 20}" fill="${act('w3') ? '#C2410C' : '#FFFFFF'}" stroke="#C2410C" stroke-width="2.5" />
+              <text x="455" y="142" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="${act('w3') ? '#FFF' : '#C2410C'}">1990s</text>
+              <text x="455" y="182" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#181B20">Roll-Out</text>
+              <text x="455" y="196" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#475569">&amp; Terceira Via</text>
+            </g>
+
+            <g style="cursor:pointer" data-c05="w4">
+              <circle cx="625" cy="164" r="${act('w4') ? 26 : 20}" fill="${act('w4') ? '#C2410C' : '#FFFFFF'}" stroke="#C2410C" stroke-width="2.5" />
+              <text x="625" y="168" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="700" fill="${act('w4') ? '#FFF' : '#C2410C'}">2008+</text>
+              <text x="625" y="208" text-anchor="middle" font-family="Inter" font-size="11" font-weight="700" fill="#181B20">Austeridade</text>
+              <text x="625" y="222" text-anchor="middle" font-family="Inter" font-size="10.5" fill="#475569">&amp; Pós-crise</text>
+            </g>
+
+            <!-- Faixa Inferior: Hibridização Territorial Desigual -->
+            <rect x="40" y="254" width="205" height="42" rx="8" fill="#F1F5F9" stroke="#64748B" />
+            <text x="142" y="279" text-anchor="middle" font-family="Inter" font-size="10.5" font-weight="600" fill="#334155">Híbrido Social-Democrata</text>
+
+            <rect x="267" y="254" width="205" height="42" rx="8" fill="#FEF2F2" stroke="#C2410C" />
+            <text x="370" y="279" text-anchor="middle" font-family="Inter" font-size="10.5" font-weight="600" fill="#9A3412">Híbrido Financeirizado</text>
+
+            <rect x="495" y="254" width="205" height="42" rx="8" fill="#ECFDF5" stroke="#047857" />
+            <text x="597" y="279" text-anchor="middle" font-family="Inter" font-size="10.5" font-weight="600" fill="#065F46">Híbrido Pós-Colonial / Sul</text>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${waves[wave].title}:</strong> ${waves[wave].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c05]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c05 = el.dataset.c05;
+          svgC05(slot);
+        });
+      });
+    }
+
+    /* 6. Urbanização Planetária & Implosão-Explosão */
+    function svgC06(slot) {
+      const view = state.diagrams.c06 || 'planetary';
+      const svg = view === 'cityism'
+        ? `
+          <svg viewBox="0 0 740 315" role="img" aria-label="Citadismo metodológico tradicional">
+            <rect x="20" y="18" width="700" height="278" rx="14" fill="#F1F5F9" stroke="#CBD5E1" />
+            <text x="370" y="46" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#64748B">CITADISMO METODOLÓGICO • “FUNDO NÃO-URBANO PASSIVO”</text>
+
+            <!-- Ilhas urbanas isoladas -->
+            <circle cx="175" cy="168" r="52" fill="#334155" stroke="#FFFFFF" stroke-width="4" />
+            <text x="175" y="165" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="#FFFFFF">Cidade A</text>
+            <text x="175" y="182" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#CBD5E1">Limite fixo</text>
+
+            <circle cx="385" cy="145" r="64" fill="#1E293B" stroke="#FFFFFF" stroke-width="4" />
+            <text x="385" y="142" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="#FFFFFF">Metrópole B</text>
+            <text x="385" y="159" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#CBD5E1">“Era Urbana &gt; 50%”</text>
+
+            <circle cx="585" cy="188" r="44" fill="#475569" stroke="#FFFFFF" stroke-width="4" />
+            <text x="585" y="185" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="700" fill="#FFFFFF">Cidade C</text>
+            <text x="585" y="201" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#CBD5E1">Ilha isolada</text>
+
+            <text x="370" y="274" text-anchor="middle" font-family="Inter" font-size="11.5" font-weight="600" fill="#64748B">“Rural / Natureza / Fora” — tratado como exterior intocado e irrelevante para a teoria urbana</text>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 740 315" role="img" aria-label="Implosão-explosão da urbanização planetária">
+            <rect x="20" y="18" width="700" height="278" rx="14" fill="#ECFDF5" stroke="#047857" stroke-width="1.8" />
+            <text x="370" y="44" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#047857">IMPLOSÃO-EXPLOSÃO PLANETÁRIA (BRENNER &amp; SCHMID) • URBANIZAÇÃO SEM “FORA”</text>
+
+            <!-- Malha contínua conectando todo o planeta -->
+            <path d="M 40 90 Q 210 155, 370 150 T 700 115" fill="none" stroke="#047857" stroke-width="2.4" />
+            <path d="M 40 225 Q 200 185, 370 150 T 700 235" fill="none" stroke="#047857" stroke-width="2.4" />
+            <path d="M 120 60 L 370 150 L 620 265" fill="none" stroke="#059669" stroke-width="1.8" stroke-dasharray="5 4" />
+            <path d="M 620 65 L 370 150 L 125 260" fill="none" stroke="#059669" stroke-width="1.8" stroke-dasharray="5 4" />
+
+            <!-- Zonas de Explosão (Operacionais) -->
+            <rect x="52" y="75" width="165" height="44" rx="8" fill="#FFFFFF" stroke="#047857" />
+            <text x="134" y="94" text-anchor="middle" font-family="Inter" font-size="10.5" font-weight="700" fill="#065F46">Extrativismo &amp; Energia</text>
+            <text x="134" y="109" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#475569">Explosão territorial</text>
+
+            <rect x="522" y="75" width="165" height="44" rx="8" fill="#FFFFFF" stroke="#047857" />
+            <text x="604" y="94" text-anchor="middle" font-family="Inter" font-size="10.5" font-weight="700" fill="#065F46">Corredores Logísticos</text>
+            <text x="604" y="109" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#475569">Portos, cabos &amp; rotas</text>
+
+            <rect x="52" y="218" width="165" height="44" rx="8" fill="#FFFFFF" stroke="#047857" />
+            <text x="134" y="237" text-anchor="middle" font-family="Inter" font-size="10.5" font-weight="700" fill="#065F46">Agroindústria Global</text>
+            <text x="134" y="252" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#475569">Monoculturas &amp; água</text>
+
+            <rect x="522" y="218" width="165" height="44" rx="8" fill="#FFFFFF" stroke="#047857" />
+            <text x="604" y="237" text-anchor="middle" font-family="Inter" font-size="10.5" font-weight="700" fill="#065F46">Sumidouros &amp; Clima</text>
+            <text x="604" y="252" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#475569">Oceanos &amp; atmosfera</text>
+
+            <!-- Núcleo de Implosão (Aglomeração) -->
+            <circle cx="370" cy="155" r="56" fill="rgba(4,120,87,0.16)" stroke="#047857" stroke-width="2" stroke-dasharray="4 3" />
+            <circle cx="370" cy="155" r="38" fill="#047857" />
+            <text x="370" y="151" text-anchor="middle" font-family="Newsreader" font-size="15" font-weight="700" fill="#FFFFFF">IMPLOSÃO</text>
+            <text x="370" y="167" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#D1FAE5">Aglomeração</text>
+
+            <text x="370" y="282" text-anchor="middle" font-family="Inter" font-size="11" font-weight="600" fill="#065F46">A densidade urbana só existe graças à operacionalização contínua do planeta inteiro</text>
+          </svg>
+        `;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Esquema Comparativo • Citadismo Metodológico vs. Urbanização Planetária</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${view === 'cityism' ? 'active' : ''}" data-c06="cityism">Citadismo Metodológico</button>
+            <button class="diag-btn ${view === 'planetary' ? 'active' : ''}" data-c06="planetary">Implosão-Explosão Planetária</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">${svg}</div>
+        <div class="diagram-caption">
+          ${view === 'cityism'
+            ? '<strong>Citadismo Metodológico:</strong> Reduz o urbano a ilhas demográficas delimitadas (“cidades”), ocultando os vastos territórios produtivos, energéticos e ecológicos indispensáveis à sua existência.'
+            : '<strong>Implosão-Explosão Planetária:</strong> A aglomeração (implosão) e a extensão infraestrutural/extrativa sobre florestas, campos, oceanos e atmosfera (explosão) formam um único tecido urbano planetário.'}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c06]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c06 = el.dataset.c06;
+          svgC06(slot);
+        });
+      });
+    }
+
+    /* 7. Urbanização Concentrada, Estendida e Diferencial (Tríade Dialética) */
+    function svgC07(slot) {
+      const m = state.diagrams.c07 || 'conc';
+      const moments = {
+        conc: {
+          title: '1. Urbanização Concentrada (Aglomeração)',
+          desc: 'Agrupamento denso de populações, infraestruturas, capitais, mercados de trabalho e instituições em cidades, metrópoles e corredores urbanos (ex.: Tóquio, São Paulo, Londres, Delta do Rio das Pérolas).'
+        },
+        ext: {
+          title: '2. Urbanização Estendida (Operacionalização Territorial)',
+          desc: 'Transformação e cercamento de territórios fora das aglomerações para suprir alimentos, energia, água, minérios, logística e absorção de resíduos (ex.: Amazônia extrativa, plataformas petrolíferas, cabos oceânicos).'
+        },
+        dif: {
+          title: '3. Urbanização Diferencial (Destruição Criativa & Potencial Político)',
+          desc: 'Reconfiguração contínua e conflituosa das paisagens urbanas existentes — gerando obsolescência, gentrificação e crises, mas também abrindo brechas para lutas sociais, apropriação criativa e novos modos de habitar.'
+        }
+      };
+
+      const act = (k) => m === k;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Circuito Dialético • Os Três Momentos da Urbanização (Brenner &amp; Schmid)</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${act('conc') ? 'active' : ''}" data-c07="conc">1. Concentrada</button>
+            <button class="diag-btn ${act('ext') ? 'active' : ''}" data-c07="ext">2. Estendida</button>
+            <button class="diag-btn ${act('dif') ? 'active' : ''}" data-c07="dif">3. Diferencial</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 330" role="img" aria-label="Diagrama triádico dos três momentos da urbanização">
+            <!-- Círculo dialético conectando os 3 momentos -->
+            <circle cx="370" cy="182" r="108" fill="none" stroke="#047857" stroke-width="2.4" stroke-dasharray="6 5" opacity="0.55" />
+            <polygon points="370,74 205,252 535,252" fill="rgba(4,120,87,0.06)" stroke="#047857" stroke-width="1.6" />
+
+            <!-- Centro -->
+            <circle cx="370" cy="185" r="44" fill="#065F46" />
+            <text x="370" y="181" text-anchor="middle" font-family="Newsreader" font-size="14" font-weight="700" fill="#FFFFFF">Tecido</text>
+            <text x="370" y="198" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#D1FAE5">PLANETÁRIO</text>
+
+            <!-- Vértice 1: Concentrada -->
+            <g style="cursor:pointer" data-c07="conc">
+              <rect x="245" y="20" width="250" height="72" rx="12" fill="${act('conc') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('conc') ? 3 : 1.8}" />
+              <text x="370" y="43" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="${act('conc') ? '#D1FAE5' : '#047857'}">MOMENTO 01</text>
+              <text x="370" y="63" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="${act('conc') ? '#FFFFFF' : '#181B20'}">Urbanização Concentrada</text>
+              <text x="370" y="80" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('conc') ? '#D1FAE5' : '#64748B'}">Aglomeração, densidade &amp; centralidade</text>
+            </g>
+
+            <!-- Vértice 2: Estendida -->
+            <g style="cursor:pointer" data-c07="ext">
+              <rect x="42" y="232" width="252" height="76" rx="12" fill="${act('ext') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('ext') ? 3 : 1.8}" />
+              <text x="168" y="255" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="${act('ext') ? '#D1FAE5' : '#047857'}">MOMENTO 02</text>
+              <text x="168" y="275" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="${act('ext') ? '#FFFFFF' : '#181B20'}">Urbanização Estendida</text>
+              <text x="168" y="292" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('ext') ? '#D1FAE5' : '#64748B'}">Operacionalização de hinterlândias</text>
+            </g>
+
+            <!-- Vértice 3: Diferencial -->
+            <g style="cursor:pointer" data-c07="dif">
+              <rect x="446" y="232" width="252" height="76" rx="12" fill="${act('dif') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('dif') ? 3 : 1.8}" />
+              <text x="572" y="255" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="${act('dif') ? '#D1FAE5' : '#047857'}">MOMENTO 03</text>
+              <text x="572" y="275" text-anchor="middle" font-family="Inter" font-size="13" font-weight="700" fill="${act('dif') ? '#FFFFFF' : '#181B20'}">Urbanização Diferencial</text>
+              <text x="572" y="292" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('dif') ? '#D1FAE5' : '#64748B'}">Destruição criativa &amp; disputa política</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${moments[m].title}:</strong> ${moments[m].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c07]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c07 = el.dataset.c07;
+          svgC07(slot);
+        });
+      });
+    }
+
+    /* 8. Paisagens Operacionais & Hinterlândia (5 camadas metabólicas clicáveis) */
+    function svgC08(slot) {
+      const layer = state.diagrams.c08 || 'extra';
+      const layers = {
+        extra: {
+          title: '1. Extrativismo Mineral e Energético',
+          desc: 'Minas a céu aberto, campos de petróleo/gás, megabarragens hidrelétricas e parques solares/eólicos industriais que fornecem a base material e energética para construir e operar metrópoles.'
+        },
+        agro: {
+          title: '2. Agroindústria Monocultora',
+          desc: 'Extensas fronteiras agrícolas mecanizadas (soja, milho, pecuária intensiva, celulose) estruturadas por cadeias globais de commodities que abastecem populações urbanas distantes.'
+        },
+        log: {
+          title: '3. Corredores Logísticos e Portos',
+          desc: 'Megaportos de contêineres, ferrovias de carga, canais interoceânicos, oleodutos e centros de distribuição que comprimem o tempo de circulação entre hinterlândias e aglomerações.'
+        },
+        dados: {
+          title: '4. Infraestruturas de Dados e Cabos Submarinos',
+          desc: 'Data centers de alto consumo energético/hídrico, fazendas de servidores, redes de satélites e cabos submarinos de fibra óptica que sustentam as finanças globais e a “cidade inteligente”.'
+        },
+        sumi: {
+          title: '5. Sumidouros Ecológicos e Atmosfera',
+          desc: 'Aterros, rios, oceanos e a própria atmosfera mobilizados como depósitos dos resíduos sólidos, efluentes e emissões de gases de efeito estufa gerados pelo metabolismo urbano-industrial.'
+        }
+      };
+
+      const act = (k) => layer === k;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Corte Metabólico-Territorial • 5 Camadas de Paisagens Operacionais</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${act('extra') ? 'active' : ''}" data-c08="extra">1. Extrativismo</button>
+            <button class="diag-btn ${act('agro') ? 'active' : ''}" data-c08="agro">2. Agroindústria</button>
+            <button class="diag-btn ${act('log') ? 'active' : ''}" data-c08="log">3. Logística</button>
+            <button class="diag-btn ${act('dados') ? 'active' : ''}" data-c08="dados">4. Dados/Cabos</button>
+            <button class="diag-btn ${act('sumi') ? 'active' : ''}" data-c08="sumi">5. Sumidouros</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 325" role="img" aria-label="Corte metabólico conectando aglomeração às cinco paisagens operacionais">
+            <!-- Fluxos metabólicos do centro às 5 camadas -->
+            <line x1="175" y1="162" x2="315" y2="50" stroke="${act('extra') ? '#047857' : '#CBD5E1'}" stroke-width="${act('extra') ? 3 : 1.5}" />
+            <line x1="175" y1="162" x2="315" y2="106" stroke="${act('agro') ? '#047857' : '#CBD5E1'}" stroke-width="${act('agro') ? 3 : 1.5}" />
+            <line x1="175" y1="162" x2="315" y2="162" stroke="${act('log') ? '#047857' : '#CBD5E1'}" stroke-width="${act('log') ? 3 : 1.5}" />
+            <line x1="175" y1="162" x2="315" y2="218" stroke="${act('dados') ? '#047857' : '#CBD5E1'}" stroke-width="${act('dados') ? 3 : 1.5}" />
+            <line x1="175" y1="162" x2="315" y2="274" stroke="${act('sumi') ? '#047857' : '#CBD5E1'}" stroke-width="${act('sumi') ? 3 : 1.5}" />
+
+            <!-- Centro: Zona de Aglomeração -->
+            <rect x="30" y="96" width="150" height="132" rx="14" fill="#181B20" />
+            <text x="105" y="142" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#A7F3D0">METABOLISMO</text>
+            <text x="105" y="164" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="#FFFFFF">Zona de</text>
+            <text x="105" y="184" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="#FFFFFF">Aglomeração</text>
+            <text x="105" y="206" text-anchor="middle" font-family="Inter" font-size="9.5" fill="#94A3B8">Consumo &amp; Comando</text>
+
+            <!-- 5 Camadas Operacionais -->
+            <g style="cursor:pointer" data-c08="extra">
+              <rect x="315" y="26" width="390" height="46" rx="8" fill="${act('extra') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('extra') ? 2.5 : 1.4}" />
+              <text x="335" y="54" font-family="Inter" font-size="12" font-weight="700" fill="${act('extra') ? '#FFFFFF' : '#181B20'}">01. Extrativismo Mineral &amp; Energético</text>
+              <text x="688" y="53" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="${act('extra') ? '#D1FAE5' : '#64748B'}">INSUMOS →</text>
+            </g>
+
+            <g style="cursor:pointer" data-c08="agro">
+              <rect x="315" y="82" width="390" height="46" rx="8" fill="${act('agro') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('agro') ? 2.5 : 1.4}" />
+              <text x="335" y="110" font-family="Inter" font-size="12" font-weight="700" fill="${act('agro') ? '#FFFFFF' : '#181B20'}">02. Agroindústria Monocultora</text>
+              <text x="688" y="109" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="${act('agro') ? '#D1FAE5' : '#64748B'}">ALIMENTOS →</text>
+            </g>
+
+            <g style="cursor:pointer" data-c08="log">
+              <rect x="315" y="138" width="390" height="46" rx="8" fill="${act('log') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('log') ? 2.5 : 1.4}" />
+              <text x="335" y="166" font-family="Inter" font-size="12" font-weight="700" fill="${act('log') ? '#FFFFFF' : '#181B20'}">03. Corredores Logísticos &amp; Portos</text>
+              <text x="688" y="165" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="${act('log') ? '#D1FAE5' : '#64748B'}">CIRCULAÇÃO ⇄</text>
+            </g>
+
+            <g style="cursor:pointer" data-c08="dados">
+              <rect x="315" y="194" width="390" height="46" rx="8" fill="${act('dados') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('dados') ? 2.5 : 1.4}" />
+              <text x="335" y="222" font-family="Inter" font-size="12" font-weight="700" fill="${act('dados') ? '#FFFFFF' : '#181B20'}">04. Infraestruturas de Dados &amp; Cabos Submarinos</text>
+              <text x="688" y="221" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="${act('dados') ? '#D1FAE5' : '#64748B'}">INFORMAÇÃO ⇄</text>
+            </g>
+
+            <g style="cursor:pointer" data-c08="sumi">
+              <rect x="315" y="250" width="390" height="46" rx="8" fill="${act('sumi') ? '#047857' : '#FFFFFF'}" stroke="#047857" stroke-width="${act('sumi') ? 2.5 : 1.4}" />
+              <text x="335" y="278" font-family="Inter" font-size="12" font-weight="700" fill="${act('sumi') ? '#FFFFFF' : '#181B20'}">05. Sumidouros Ecológicos &amp; Atmosfera</text>
+              <text x="688" y="277" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="${act('sumi') ? '#D1FAE5' : '#64748B'}">← RESÍDUOS/CO₂</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${layers[layer].title}:</strong> ${layers[layer].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c08]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c08 = el.dataset.c08;
+          svgC08(slot);
+        });
+      });
+    }
+
+    /* 9. Teoria Urbana Crítica (4 Pilares Arquitetônicos) */
+    function svgC09(slot) {
+      const p = state.diagrams.c09 || 'p4';
+      const pillars = {
+        p1: {
+          title: 'Pilar 1 — É Teoria (Recusa do Empirismo Ingênuo)',
+          desc: 'Contra a “ciência urbana” positivista que acumula dados sem questionar categorias, Brenner afirma que abstrações rigorosas são indispensáveis para revelar as relações capitalistas ocultas sob a aparência imediata das cidades.'
+        },
+        p2: {
+          title: 'Pilar 2 — É Reflexiva (Consciência Histórica)',
+          desc: 'Todo conhecimento urbano é produzido em contextos históricos e políticos concretos. A teoria crítica revisa continuamente seus próprios conceitos (como a passagem da cidade industrial para a urbanização planetária).'
+        },
+        p3: {
+          title: 'Pilar 3 — Crítica da Razão Instrumental',
+          desc: 'Recusa colocar o saber urbano a serviço da otimização de mercados, da competitividade imobiliária ou do controle tecnocrático. Expõe a ideologia embutida em receitas de “boas práticas” e “smart cities”.'
+        },
+        p4: {
+          title: 'Pilar 4 — Disjunção entre o Real e o Possível',
+          desc: 'Inspirada em Herbert Marcuse e Henri Lefebvre, a teoria urbana crítica escava as contradições do presente para revelar possibilidades emancipatórias reais que o capitalismo bloqueia, mas não consegue eliminar.'
+        }
+      };
+
+      const act = (k) => p === k;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Arquitetura Epistemológica • Os 4 Pilares da Teoria Urbana Crítica</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${act('p1') ? 'active' : ''}" data-c09="p1">1. É Teoria</button>
+            <button class="diag-btn ${act('p2') ? 'active' : ''}" data-c09="p2">2. Reflexiva</button>
+            <button class="diag-btn ${act('p3') ? 'active' : ''}" data-c09="p3">3. Anti-Instrumental</button>
+            <button class="diag-btn ${act('p4') ? 'active' : ''}" data-c09="p4">4. Real vs. Possível</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 315" role="img" aria-label="Os quatro pilares arquitetônicos da teoria urbana crítica">
+            <!-- Frontão Superior -->
+            <polygon points="370,18 680,74 60,74" fill="#FAF5FF" stroke="#7E22CE" stroke-width="2" />
+            <text x="370" y="58" text-anchor="middle" font-family="Newsreader" font-size="19" font-weight="700" fill="#7E22CE">TEORIA URBANA CRÍTICA (BRENNER)</text>
+
+            <!-- 4 Pilares -->
+            <g style="cursor:pointer" data-c09="p1">
+              <rect x="75" y="88" width="136" height="160" rx="8" fill="${act('p1') ? '#7E22CE' : '#FFFFFF'}" stroke="#7E22CE" stroke-width="${act('p1') ? 3 : 1.6}" />
+              <text x="143" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="${act('p1') ? '#E9D5FF' : '#7E22CE'}">PILAR 01</text>
+              <text x="143" y="152" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="700" fill="${act('p1') ? '#FFF' : '#181B20'}">É Teoria</text>
+              <text x="143" y="176" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('p1') ? '#F3E8FF' : '#64748B'}">Não mero</text>
+              <text x="143" y="191" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('p1') ? '#F3E8FF' : '#64748B'}">empirismo</text>
+            </g>
+
+            <g style="cursor:pointer" data-c09="p2">
+              <rect x="226" y="88" width="136" height="160" rx="8" fill="${act('p2') ? '#7E22CE' : '#FFFFFF'}" stroke="#7E22CE" stroke-width="${act('p2') ? 3 : 1.6}" />
+              <text x="294" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="${act('p2') ? '#E9D5FF' : '#7E22CE'}">PILAR 02</text>
+              <text x="294" y="152" text-anchor="middle" font-family="Inter" font-size="12.5" font-weight="700" fill="${act('p2') ? '#FFF' : '#181B20'}">Reflexiva</text>
+              <text x="294" y="176" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('p2') ? '#F3E8FF' : '#64748B'}">Situada na</text>
+              <text x="294" y="191" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('p2') ? '#F3E8FF' : '#64748B'}">história</text>
+            </g>
+
+            <g style="cursor:pointer" data-c09="p3">
+              <rect x="378" y="88" width="136" height="160" rx="8" fill="${act('p3') ? '#7E22CE' : '#FFFFFF'}" stroke="#7E22CE" stroke-width="${act('p3') ? 3 : 1.6}" />
+              <text x="446" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="${act('p3') ? '#E9D5FF' : '#7E22CE'}">PILAR 03</text>
+              <text x="446" y="146" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${act('p3') ? '#FFF' : '#181B20'}">Crítica da</text>
+              <text x="446" y="162" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${act('p3') ? '#FFF' : '#181B20'}">Razão</text>
+              <text x="446" y="182" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('p3') ? '#F3E8FF' : '#64748B'}">Instrumental</text>
+            </g>
+
+            <g style="cursor:pointer" data-c09="p4">
+              <rect x="529" y="88" width="136" height="160" rx="8" fill="${act('p4') ? '#7E22CE' : '#FFFFFF'}" stroke="#7E22CE" stroke-width="${act('p4') ? 3 : 1.6}" />
+              <text x="597" y="118" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="${act('p4') ? '#E9D5FF' : '#7E22CE'}">PILAR 04</text>
+              <text x="597" y="146" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${act('p4') ? '#FFF' : '#181B20'}">Real vs.</text>
+              <text x="597" y="162" text-anchor="middle" font-family="Inter" font-size="12" font-weight="700" fill="${act('p4') ? '#FFF' : '#181B20'}">Possível</text>
+              <text x="597" y="182" text-anchor="middle" font-family="Inter" font-size="10" fill="${act('p4') ? '#F3E8FF' : '#64748B'}">Emancipação</text>
+            </g>
+
+            <!-- Base -->
+            <rect x="60" y="262" width="620" height="34" rx="6" fill="#181B20" />
+            <text x="370" y="283" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#F3E8FF">FUNDAÇÃO: ESCOLA DE FRANKFURT (HORKHEIMER / MARCUSE) + HENRI LEFEBVRE</text>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${pillars[p].title}:</strong> ${pillars[p].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c09]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c09 = el.dataset.c09;
+          svgC09(slot);
+        });
+      });
+    }
+
+    /* 10. Alter-Urbanizações & Direito à Cidade (Espectro de 3 Horizontes Políticos) */
+    function svgC10(slot) {
+      const h = state.diagrams.c10 || 'alter';
+      const horizons = {
+        neolib: {
+          title: '1. Urbanismo Neoliberal (Hegemônico)',
+          desc: 'Subordina o espaço urbano ao valor de troca, à especulação imobiliária e à competição interurbana. Mobiliza o Estado para criar ativos financeiros e deslocar populações de baixa renda.'
+        },
+        tatico: {
+          title: '2. Urbanismo Tático (Paliativo / Ambivalente)',
+          desc: 'Intervenções pontuais, temporárias e de baixo custo (parklets, hortas pop-up, pintura viária). Brenner alerta que, sem confronto institucional, o urbanismo tático pode conviver pacificamente com a austeridade neoliberal.'
+        },
+        alter: {
+          title: '3. Alter-Urbanizações & Direito à Cidade (Emancipatório)',
+          desc: 'Projeto de redesenho institucional multiescalar: desmercantilização da moradia e da terra, democratização radical da governança urbana e solidariedade socioecológica entre aglomerações e hinterlândias.'
+        }
+      };
+
+      const act = (k) => h === k;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-title">Espectro Político • 3 Horizontes da Práxis Urbana</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${act('neolib') ? 'active' : ''}" data-c10="neolib">Urbanismo Neoliberal</button>
+            <button class="diag-btn ${act('tatico') ? 'active' : ''}" data-c10="tatico">Urbanismo Tático</button>
+            <button class="diag-btn ${act('alter') ? 'active' : ''}" data-c10="alter">Alter-Urbanizações</button>
+          </div>
+        </div>
+        <div class="diagram-canvas">
+          <svg viewBox="0 0 740 310" role="img" aria-label="Espectro comparativo de três horizontes políticos urbanos">
+            <!-- Barra de espectro -->
+            <defs>
+              <linearGradient id="spec-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#C2410C" />
+                <stop offset="50%" stop-color="#D97706" />
+                <stop offset="100%" stop-color="#7E22CE" />
+              </linearGradient>
+            </defs>
+            <rect x="60" y="34" width="620" height="10" rx="5" fill="url(#spec-grad)" />
+            <text x="60" y="25" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="#C2410C">VALOR DE TROCA / MERCADO</text>
+            <text x="680" y="25" text-anchor="end" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="#7E22CE">VALOR DE USO / DEMOCRACIA RADICAL</text>
+
+            <!-- Card 1: Neoliberal -->
+            <g style="cursor:pointer" data-c10="neolib">
+              <rect x="38" y="68" width="206" height="214" rx="12" fill="${act('neolib') ? '#C2410C' : '#FFFFFF'}" stroke="#C2410C" stroke-width="${act('neolib') ? 3 : 1.6}" />
+              <text x="141" y="96" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="${act('neolib') ? '#FFEDD5' : '#C2410C'}">HORIZONTE 01</text>
+              <text x="141" y="122" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="${act('neolib') ? '#FFF' : '#181B20'}">Urbanismo</text>
+              <text x="141" y="142" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="${act('neolib') ? '#FFF' : '#181B20'}">Neoliberal</text>
+              <text x="141" y="176" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('neolib') ? '#FFEDD5' : '#475569'}">• Competitividade</text>
+              <text x="141" y="198" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('neolib') ? '#FFEDD5' : '#475569'}">• Valor de troca</text>
+              <text x="141" y="220" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('neolib') ? '#FFEDD5' : '#475569'}">• Gentrificação</text>
+              <text x="141" y="256" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${act('neolib') ? '#FFF' : '#C2410C'}">Cidades para o Lucro</text>
+            </g>
+
+            <!-- Card 2: Tático -->
+            <g style="cursor:pointer" data-c10="tatico">
+              <rect x="267" y="68" width="206" height="214" rx="12" fill="${act('tatico') ? '#B45309' : '#FFFFFF'}" stroke="#D97706" stroke-width="${act('tatico') ? 3 : 1.6}" />
+              <text x="370" y="96" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="${act('tatico') ? '#FEF3C7' : '#B45309'}">HORIZONTE 02</text>
+              <text x="370" y="122" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="${act('tatico') ? '#FFF' : '#181B20'}">Urbanismo</text>
+              <text x="370" y="142" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="${act('tatico') ? '#FFF' : '#181B20'}">Tático</text>
+              <text x="370" y="176" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('tatico') ? '#FEF3C7' : '#475569'}">• Ações pontuais</text>
+              <text x="370" y="198" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('tatico') ? '#FEF3C7' : '#475569'}">• Acupuntura pop-up</text>
+              <text x="370" y="220" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('tatico') ? '#FEF3C7' : '#475569'}">• Coexiste c/ austeridade</text>
+              <text x="370" y="256" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${act('tatico') ? '#FFF' : '#B45309'}">Paliativo / Sem Escala</text>
+            </g>
+
+            <!-- Card 3: Alter-Urbanizações -->
+            <g style="cursor:pointer" data-c10="alter">
+              <rect x="496" y="68" width="206" height="214" rx="12" fill="${act('alter') ? '#7E22CE' : '#FFFFFF'}" stroke="#7E22CE" stroke-width="${act('alter') ? 3 : 1.6}" />
+              <text x="599" y="96" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="${act('alter') ? '#F3E8FF' : '#7E22CE'}">HORIZONTE 03</text>
+              <text x="599" y="122" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="${act('alter') ? '#FFF' : '#181B20'}">Alter-</text>
+              <text x="599" y="142" text-anchor="middle" font-family="Newsreader" font-size="18" font-weight="700" fill="${act('alter') ? '#FFF' : '#181B20'}">Urbanizações</text>
+              <text x="599" y="176" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('alter') ? '#F3E8FF' : '#475569'}">• Redesenho institucional</text>
+              <text x="599" y="198" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('alter') ? '#F3E8FF' : '#475569'}">• Ação multiescalar</text>
+              <text x="599" y="220" text-anchor="middle" font-family="Inter" font-size="10.5" fill="${act('alter') ? '#F3E8FF' : '#475569'}">• Direito à cidade</text>
+              <text x="599" y="256" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="${act('alter') ? '#FFF' : '#7E22CE'}">Cidades para Pessoas</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${horizons[h].title}:</strong> ${horizons[h].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c10]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagrams.c10 = el.dataset.c10;
+          svgC10(slot);
+        });
+      });
+    }
+
+    /* ==========================================================================
+       MÓDULO 3: OBRAS & LIVROS (8 LIVROS EM ORDEM CRONOLÓGICA)
+       ========================================================================== */
+    function renderBooksMenu() {
+      const container = document.getElementById('books-menu');
+      container.innerHTML = BOOKS.map((b) => {
+        const axis = AXES[b.axis];
+        const active = b.id === state.selectedBookId;
+        return `
+          <button class="sidebar-item ${active ? 'active' : ''}"
+                  data-book-id="${b.id}"
+                  style="--item-accent:${axis.color}; --item-soft:${axis.soft}"
+                  role="option"
+                  aria-selected="${active}">
+            <span class="book-spine" style="background:${axis.color}" aria-hidden="true"></span>
+            <div>
+              <div style="font-family:var(--font-mono); font-size:0.69rem; font-weight:600; color:${axis.color};">${b.year}</div>
+              <div class="sidebar-item-title">${b.title}</div>
+              <span class="sidebar-item-sub">${b.coauthors}</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.sidebar-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedBookId = btn.dataset.bookId;
+          state.selectedBookSectionIndex = 0;
+          renderBooksMenu();
+          renderBookDetail(btn.dataset.bookId);
+        });
+      });
+    }
+
+    function renderBookDetail(bookId) {
+      const stage = document.getElementById('book-detail');
+      const b = getBook(bookId);
+      const axis = AXES[b.axis];
+      const secIdx = Math.min(state.selectedBookSectionIndex, b.structure.length - 1);
+      const currentSec = b.structure[secIdx];
+
+      const blocksHTML = b.structure.map((part, idx) => {
+        const isSel = idx === secIdx;
+        return `
+          <div class="arch-node-wrap">
+            ${idx > 0 ? '<span class="arch-arrow" aria-hidden="true">→</span>' : ''}
+            <button class="arch-block-btn ${isSel ? 'selected' : ''}"
+                    data-sec-idx="${idx}"
+                    style="--book-accent:${axis.color}; --book-soft:${axis.soft}"
+                    aria-pressed="${isSel}">
+              <span class="arch-step">${part.step}</span>
+              <span class="arch-title">${part.title}</span>
+              <span class="arch-hint">${isSel ? '● Selecionado' : 'Clique p/ detalhar'}</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      const conceptChipsHTML = b.concepts.map((cid) => {
+        const c = getConcept(cid);
+        const cAxis = AXES[c.axis];
+        return `
+          <button class="chip-btn" data-open-concept="${c.id}">
+            <span class="axis-dot" style="background:${cAxis.color}"></span>
+            ${c.code} • ${c.title}
+          </button>
+        `;
+      }).join('');
+
+      stage.innerHTML = `
+        <header class="detail-header">
+          <div class="detail-badges">
+            <span class="code-tag" style="background:${axis.color}; color:#FFF; border:none;">${b.year}</span>
+            <span class="axis-pill" style="background:${axis.soft}; color:${axis.color}; border-color:${axis.border}">
+              <span class="axis-dot" style="background:${axis.color}"></span>
+              ${axis.label}
+            </span>
+          </div>
+          <h2 class="serif-heading detail-title">${b.title}</h2>
+          <div class="detail-en">${b.subtitle}</div>
+        </header>
+
+        <div class="book-meta-strip">
+          <div class="meta-item">
+            <span>Edição / Tradução BR</span>
+            <strong>${b.ptTitle}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Editora Original</span>
+            <strong>${b.publisher}</strong>
+          </div>
+          <div class="meta-item">
+            <span>Autoria / Organização</span>
+            <strong>${b.coauthors}</strong>
+          </div>
+        </div>
+
+        <div class="thesis-banner" style="--book-accent:${axis.color}; --book-soft:${axis.soft}">
+          <h4>Tese Central da Obra</h4>
+          <p>${b.thesis}</p>
+        </div>
+
+        <section class="book-arch-wrapper" aria-label="Esquema visual arquitetônico da obra">
+          <div class="book-arch-head">
+            <div>
+              <span class="eyebrow">Esquema Visual Arquitetônico • ${b.structure.length} Blocos Estruturais</span>
+              <h3 class="serif-heading" style="font-size:1.5rem; margin-top:2px;">Estrutura e Fluxo Argumentativo do Livro</h3>
+            </div>
+            <span class="eyebrow" style="color:${axis.color}">Clique em qualquer bloco abaixo</span>
+          </div>
+
+          <div class="arch-diagram-grid">
+            ${blocksHTML}
+          </div>
+
+          <div class="section-detail-panel" style="--book-accent:${axis.color}">
+            <span class="eyebrow" style="color:${axis.color}">${currentSec.step} • Detalhamento da Seção</span>
+            <h4>${currentSec.title}</h4>
+            <p>${currentSec.summary}</p>
+            <div class="section-kpis">
+              ${currentSec.keywords.map((kw) => `<span class="kw-pill">${kw}</span>`).join('')}
+            </div>
+          </div>
+        </section>
+
+        <section style="padding-top:1rem; border-top:1px solid var(--border-thin);">
+          <div class="eyebrow" style="margin-bottom:0.65rem;">Conceitos Trabalhados nesta Obra (Saltar para o Módulo 2)</div>
+          <div class="chip-list">${conceptChipsHTML}</div>
+        </section>
+      `;
+
+      stage.querySelectorAll('[data-sec-idx]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedBookSectionIndex = Number(btn.dataset.secIdx);
+          renderBookDetail(bookId);
+        });
+      });
+
+      stage.querySelectorAll('[data-open-concept]').forEach((btn) => {
+        btn.addEventListener('click', () => openConcept(btn.dataset.openConcept));
+      });
+    }
+
+    /* ==========================================================================
+       INICIALIZAÇÃO DA APLICAÇÃO
+       ========================================================================== */
+    function initAtlas() {
+      // Navegação superior
+      document.querySelectorAll('.nav-tab').forEach((tab) => {
+        tab.addEventListener('click', () => switchModule(tab.dataset.module));
+      });
+
+      // Filtros de eixo no Módulo 1
+      document.querySelectorAll('.filter-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.networkFilter = btn.dataset.axis;
+          document.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          if (state.networkFilter !== 'all') {
+            const first = CONCEPTS.find((c) => c.axis === state.networkFilter);
+            if (first) {
+              state.selectedNetworkNode = first.id;
+              renderNetworkInspector(first.id);
+            }
+          }
+          renderNetworkSVG();
+        });
+      });
+
+      // Renderização inicial
+      renderNetworkSVG();
+      renderNetworkInspector(state.selectedNetworkNode);
+
+      renderConceptsMenu();
+      renderConceptDetail(state.selectedConceptId);
+
+      renderBooksMenu();
+      renderBookDetail(state.selectedBookId);
+    }
+
+    document.addEventListener('DOMContentLoaded', initAtlas);
+  </script>
+</body>
+</html>
