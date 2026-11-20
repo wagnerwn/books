@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Espaço Dividido — Atlas Infográfico Interativo | Milton Santos</title>
+
+  <style>
+    /* =========================================================================
+       TOKENS DE DESIGN — PALETA EDITORIAL (COLEÇÃO MILTON SANTOS / EDUSP)
+       Contraste estrutural do "Espaço Dividido": Azul-Petróleo vs. Terracota
+       ========================================================================= */
+    :root {
+      --bg-paper: #F6F2E9;
+      --bg-card: #FFFDF8;
+      --border-soft: #E2D9C8;
+      --border-strong: #CBBFA9;
+
+      --text-main: #1C232B;
+      --text-muted: #4E5965;
+
+      /* Circuito Superior — Azul-Petróleo Profundo */
+      --sup: #1B4965;
+      --sup-light: #2C6E91;
+      --sup-soft: #E6F0F5;
+
+      /* Circuito Inferior — Terracota-Barro */
+      --inf: #C45B2C;
+      --inf-light: #DC7646;
+      --inf-soft: #FBECE5;
+
+      /* Destaque — Ocre / Dourado Editorial */
+      --ochre: #C88A2B;
+      --ochre-soft: #FBF3E1;
+
+      /* Apoio — Verde-Oliva Geográfico (Síntese / Território) */
+      --olive: #366858;
+      --olive-soft: #E7F2EE;
+
+      /* Tipografia 100% sistema (zero dependências externas) */
+      --font-serif: Georgia, 'Times New Roman', Cambria, serif;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      --sidebar-w: 290px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(27, 73, 101, 0.06);
+      --shadow-md: 0 10px 28px rgba(28, 35, 43, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(rgba(27, 73, 101, 0.045) 1px, transparent 0);
+      background-size: 24px 24px;
+      overflow-x: hidden;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================================================
+       ESTRUTURA PRINCIPAL E BARRA LATERAL
+       ========================================================================= */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Barra superior Mobile */
+    .mobile-header {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(246, 242, 233, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 12px 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--sup);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.16s ease;
+    }
+    .icon-btn:hover {
+      background: var(--sup-soft);
+      border-color: var(--sup);
+    }
+
+    .mobile-title-wrap {
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .mobile-title-wrap strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--sup);
+      line-height: 1.15;
+    }
+    .mobile-title-wrap span {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--inf);
+    }
+
+    .mobile-progress-badge {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--sup-soft);
+      color: var(--sup);
+      border: 1px solid rgba(27, 73, 101, 0.25);
+      white-space: nowrap;
+    }
+
+    /* Overlay do drawer mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28, 35, 43, 0.45);
+      z-index: 45;
+    }
+    .sidebar-overlay.open {
+      display: block;
+    }
+
+    /* Barra Lateral Fixa (290px) */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform 0.24s ease;
+    }
+
+    .sidebar-brand {
+      padding: 20px 18px 16px;
+      background: linear-gradient(148deg, var(--sup) 0%, #123347 68%, #2B3B45 100%);
+      color: #F6F2E9;
+      position: relative;
+      border-bottom: 3px solid var(--inf);
+    }
+
+    .brand-tag {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(200, 138, 43, 0.25);
+      border: 1px solid rgba(251, 243, 225, 0.28);
+      color: #FBF3E1;
+      margin-bottom: 8px;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.38rem;
+      font-weight: 700;
+      line-height: 1.15;
+      color: #FFFFFF;
+    }
+
+    .brand-author {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #F6D8A4;
+      margin-top: 5px;
+      letter-spacing: 0.04em;
+    }
+
+    .close-drawer-btn {
+      display: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* Progresso na Sidebar */
+    .progress-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      margin-bottom: 6px;
+      color: rgba(246, 242, 233, 0.9);
+    }
+    .progress-meta strong {
+      font-family: var(--font-mono);
+      color: #F6D8A4;
+    }
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--inf-light), var(--ochre));
+      transition: width 0.3s ease;
+    }
+
+    /* Campo de Busca */
+    .search-panel {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-soft);
+      background: #FAF6ED;
+    }
+    .search-field-wrap {
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 32px 9px 32px;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+    .search-input:focus {
+      border-color: var(--sup);
+      box-shadow: 0 0 0 3px rgba(27, 73, 101, 0.12);
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+    .search-clear.visible {
+      display: inline-flex;
+    }
+    .search-clear:hover {
+      background: var(--border-soft);
+      color: var(--text-main);
+    }
+
+    /* Lista de Navegação */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px 20px;
+    }
+
+    .nav-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      color: var(--text-main);
+      transition: all 0.15s ease;
+      margin-bottom: 3px;
+    }
+    .nav-btn:hover {
+      background: var(--bg-paper);
+      border-color: var(--border-soft);
+    }
+    .nav-btn.active {
+      background: var(--sup-soft);
+      border-color: rgba(27, 73, 101, 0.35);
+    }
+
+    .nav-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-paper);
+      color: var(--text-muted);
+      border: 1px solid var(--border-soft);
+      margin-top: 1px;
+    }
+    .nav-btn.active .nav-num {
+      background: var(--sup);
+      color: #FFFFFF;
+      border-color: var(--sup);
+    }
+
+    .nav-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .nav-title {
+      display: block;
+      font-size: 0.79rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-main);
+    }
+    .nav-btn.active .nav-title {
+      color: var(--sup);
+    }
+    .nav-sub {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .nav-check {
+      flex-shrink: 0;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: transparent;
+      margin-top: 2px;
+      transition: all 0.16s ease;
+    }
+    .nav-check.done {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .part-group {
+      margin-top: 13px;
+    }
+    .part-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 8px 6px;
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .part-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border-soft);
+      background: #FAF6ED;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .reset-link {
+      background: transparent;
+      border: none;
+      color: var(--inf);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* =========================================================================
+       ÁREA PRINCIPAL DE CONTEÚDO
+       ========================================================================= */
+    .main-area {
+      flex: 1;
+      min-width: 0;
+      padding: 32px 38px 64px;
+    }
+
+    .page-wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      animation: fadeSlide 0.25s ease-out;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(7px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cabeçalho de Capítulo */
+    .chapter-head {
+      margin-bottom: 24px;
+    }
+    .meta-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .part-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border-radius: 999px;
+      color: #FFFFFF;
+    }
+
+    .study-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--text-main);
+      transition: all 0.16s ease;
+    }
+    .study-btn:hover {
+      border-color: var(--olive);
+      color: var(--olive);
+    }
+    .study-btn.studied {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .chapter-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.7rem, 3vw, 2.38rem);
+      font-weight: 700;
+      line-height: 1.18;
+      color: var(--text-main);
+    }
+
+    .chapter-lead {
+      margin-top: 9px;
+      font-size: 0.96rem;
+      color: var(--text-muted);
+      max-width: 820px;
+      line-height: 1.65;
+    }
+
+    .editorial-rule {
+      height: 5px;
+      width: 100%;
+      margin: 18px 0 22px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--sup) 0%, var(--sup) 48%, var(--inf) 48%, var(--inf) 100%);
+      opacity: 0.85;
+    }
+
+    /* Citação / Ideia-Força */
+    .quote-box {
+      background: var(--sup-soft);
+      border-left: 4px solid var(--sup);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 18px 22px;
+      margin-bottom: 24px;
+    }
+    .quote-box p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.08rem;
+      color: var(--text-main);
+      line-height: 1.55;
+    }
+    .quote-box footer {
+      margin-top: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    /* Cartões e Infográfico */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 24px 26px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .infographic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 26px;
+      position: relative;
+    }
+
+    .kicker {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--sup);
+      margin-bottom: 5px;
+    }
+    .heading-md {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+    .sub-lead {
+      font-size: 0.87rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      max-width: 780px;
+    }
+
+    /* Grid de Ideias-Chave */
+    .ideas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+      margin-bottom: 26px;
+    }
+    .idea-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+    .idea-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+    .idea-tag {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 5px;
+    }
+    .idea-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1.03rem;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      line-height: 1.28;
+    }
+    .idea-card p {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.54;
+    }
+
+    /* Controles Interativos */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .ctrl-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-paper);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.16s ease;
+    }
+    .ctrl-btn:hover {
+      border-color: var(--sup);
+      background: var(--sup-soft);
+    }
+    .ctrl-btn.active-sup {
+      background: var(--sup);
+      color: #FFFFFF;
+      border-color: var(--sup);
+      box-shadow: 0 2px 8px rgba(27, 73, 101, 0.24);
+    }
+    .ctrl-btn.active-inf {
+      background: var(--inf);
+      color: #FFFFFF;
+      border-color: var(--inf);
+      box-shadow: 0 2px 8px rgba(196, 91, 44, 0.24);
+    }
+    .ctrl-btn.active-ochre {
+      background: var(--ochre);
+      color: #FFFFFF;
+      border-color: var(--ochre);
+    }
+    .ctrl-btn.active-olive {
+      background: var(--olive);
+      color: #FFFFFF;
+      border-color: var(--olive);
+    }
+
+    .panel-soft {
+      background: #FAF6ED;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .svg-box {
+      width: 100%;
+      background: #FAF6ED;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      overflow: hidden;
+    }
+    .svg-box svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Grids utilitários */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    /* Sliders */
+    input[type="range"].atlas-range {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--border-soft);
+      outline: none;
+    }
+    input[type="range"].atlas-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--sup);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(27, 73, 101, 0.35);
+      cursor: pointer;
+    }
+    input[type="range"].atlas-range::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--sup);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(27, 73, 101, 0.35);
+      cursor: pointer;
+    }
+
+    /* Barras de Medição / Dados */
+    .meter-item {
+      margin-bottom: 12px;
+    }
+    .meter-item:last-child {
+      margin-bottom: 0;
+    }
+    .meter-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.79rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .meter-head span:last-child {
+      font-family: var(--font-mono);
+    }
+    .meter-track {
+      width: 100%;
+      height: 11px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    /* Chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+    .chip-sup { background: var(--sup-soft); border-color: rgba(27,73,101,0.3); color: var(--sup); }
+    .chip-inf { background: var(--inf-soft); border-color: rgba(196,91,44,0.32); color: #9A411A; }
+    .chip-ochre { background: var(--ochre-soft); border-color: rgba(200,138,43,0.38); color: #8A5B14; }
+    .chip-olive { background: var(--olive-soft); border-color: rgba(54,104,88,0.3); color: var(--olive); }
+
+    /* Tabelas */
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      background: var(--bg-card);
+    }
+    .data-table th, .data-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-soft);
+      text-align: left;
+      vertical-align: top;
+    }
+    .data-table th {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: #FAF6ED;
+      color: var(--sup);
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Rodapé de Navegação */
+    .chapter-footer {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .footer-nav-btn {
+      flex: 1;
+      min-width: 220px;
+      max-width: 390px;
+      padding: 13px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      transition: all 0.16s ease;
+    }
+    .footer-nav-btn:hover {
+      border-color: var(--sup);
+      background: var(--sup-soft);
+    }
+    .footer-nav-btn.next {
+      margin-left: auto;
+      justify-content: flex-end;
+      text-align: right;
+      background: var(--sup);
+      border-color: var(--sup);
+      color: #FFFFFF;
+    }
+    .footer-nav-btn.next:hover {
+      background: #14374D;
+    }
+    .footer-nav-meta {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.75;
+    }
+    .footer-nav-title {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Toast (substitui alert/confirm) */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 90;
+      background: var(--text-main);
+      color: #F6F2E9;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(200, 138, 43, 0.45);
+      display: none;
+      align-items: center;
+      gap: 9px;
+    }
+    .toast.show {
+      display: flex;
+    }
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ochre);
+    }
+
+    /* Responsividade */
+    @media (max-width: 960px) {
+      .mobile-header {
+        display: flex;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .close-drawer-btn {
+        display: inline-flex;
+      }
+      .main-area {
+        padding: 20px 16px 52px;
+      }
+      .card, .infographic-card {
+        padding: 18px;
+      }
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho Mobile -->
+  <header class="mobile-header">
+    <button id="open-drawer-btn" class="icon-btn" type="button" aria-label="Abrir menu de capítulos">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <div class="mobile-title-wrap">
+      <strong>O Espaço Dividido</strong>
+      <span>Atlas Infográfico • Milton Santos</span>
+    </div>
+    <div id="mobile-progress-badge" class="mobile-progress-badge">0/11</div>
+  </header>
+
+  <!-- Overlay do Drawer -->
+  <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <!-- Barra Lateral Fixa -->
+    <aside id="sidebar" class="sidebar" aria-label="Sumário da obra">
+      <div class="sidebar-brand">
+        <button id="close-drawer-btn" class="close-drawer-btn" type="button" aria-label="Fechar menu">✕</button>
+        <span class="brand-tag">Coleção Milton Santos • Vol. 4</span>
+        <h1 class="brand-title">O Espaço Dividido</h1>
+        <p class="brand-author">Milton Santos (Edusp, 2ª ed., 2004)</p>
+
+        <div class="progress-box">
+          <div class="progress-meta">
+            <span>Progresso de Estudo</span>
+            <strong id="sidebar-progress-text">0/11 estudados</strong>
+          </div>
+          <div class="progress-track">
+            <div id="sidebar-progress-fill" class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Busca Instantânea -->
+      <div class="search-panel">
+        <div class="search-field-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/>
+          </svg>
+          <input id="search-input" class="search-input" type="text" placeholder="Buscar capítulo ou conceito..." autocomplete="off">
+          <button id="search-clear" class="search-clear" type="button" aria-label="Limpar busca">✕</button>
+        </div>
+      </div>
+
+      <!-- Navegação dos Capítulos -->
+      <nav id="sidebar-nav" class="sidebar-nav"></nav>
+
+      <div class="sidebar-footer">
+        <span>Trad. Myrna T. Rego Viana</span>
+        <button id="reset-progress-btn" class="reset-link" type="button">Reiniciar</button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-area">
+      <div id="main-content" class="page-wrap"></div>
+    </main>
+  </div>
+
+  <!-- Toast de Feedback -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span id="toast-msg"></span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       DADOS DA OBRA — O ESPAÇO DIVIDIDO (MILTON SANTOS, EDUSP, 2004)
+       ========================================================================= */
+
+    const STORAGE_KEY = 'espaco_dividido_atlas_studied_v1';
+
+    const PARTS = {
+      intro: {
+        id: 'intro',
+        label: 'Introdução',
+        title: 'Em Busca de um Novo Paradigma',
+        color: '#366858',
+        soft: '#E7F2EE'
+      },
+      p1: {
+        id: 'p1',
+        label: 'Parte I',
+        title: 'Os Dois Circuitos da Economia Urbana',
+        color: '#C88A2B',
+        soft: '#FBF3E1'
+      },
+      p2: {
+        id: 'p2',
+        label: 'Parte II',
+        title: 'O Circuito Superior',
+        color: '#1B4965',
+        soft: '#E6F0F5'
+      },
+      p3: {
+        id: 'p3',
+        label: 'Parte III',
+        title: 'O Circuito Inferior',
+        color: '#C45B2C',
+        soft: '#FBECE5'
+      },
+      p4: {
+        id: 'p4',
+        label: 'Parte IV',
+        title: 'O Espaço Dividido',
+        color: '#366858',
+        soft: '#E7F2EE'
+      }
+    };
+
+    const CHAPTERS = [
+      {
+        id: 1,
+        part: 'intro',
+        title: 'Introdução: Em Busca de um Novo Paradigma',
+        summary: 'Milton Santos critica o transplante etnocêntrico de teorias urbanas ocidentais ("abordagem adjetiva") para o Terceiro Mundo e propõe um novo paradigma substantivo baseado na dimensão histórica do subdesenvolvimento e na existência de dois circuitos na economia urbana.',
+        quote: 'A cidade, portanto, não pode mais ser estudada como uma máquina maciça. Criam-se dois circuitos econômicos, responsáveis não só pelo processo econômico mas também pelo processo de organização do espaço.',
+        quoteRef: 'Capítulo 1 — Introdução (pp. 21–22)',
+        keywords: ['paradigma', 'abordagem adjetiva', 'superurbanização', 'cidade parasitária', 'similar path', 'dimensão histórica', 'seletividade espacial', 'multipolarização', 'estatísticas', 'dois circuitos'],
+        keyIdeas: [
+          { tag: 'Crítica Teórica', title: 'Falência da Abordagem Adjetiva', desc: 'Rótulos importados como "superurbanização", "cidade pré-industrial" ou "cidade parasitária" apenas adjetivam a realidade do Terceiro Mundo a partir do espelho ocidental.' },
+          { tag: 'Método', title: 'Dimensão Histórica do Subdesenvolvimento', desc: 'Recusa os modelos de trajetória semelhante (similar path): o subdesenvolvimento não é uma etapa atrasada, mas uma estrutura dependente com leis próprias.' },
+          { tag: 'Espaço Periférico', title: 'Seletividade e Instabilidade Espacial', desc: 'O espaço do Terceiro Mundo organiza-se por interesses distantes, é descontínuo, multipolarizado e marcado por brutais disparidades de renda e consumo.' },
+          { tag: 'Lacuna Empírica', title: 'A Invisibilidade do Circuito Inferior', desc: 'As estatísticas oficiais, moldadas por padrões internacionais e pela ideologia do crescimento, ignoram o circuito inferior, comprometendo a planificação.' }
+        ]
+      },
+      {
+        id: 2,
+        part: 'p1',
+        title: 'Formação e Características',
+        summary: 'Analisa a sucessão de três grandes modernizações (comercial, industrial e tecnológica) e demonstra como a modernização tecnológica pós-Segunda Guerra — aliada à revolução da informação e do consumo — gera simultaneamente o circuito superior e o circuito inferior.',
+        quote: 'Não há dualismo: os dois circuitos têm a mesma origem, o mesmo conjunto de causas e são interligados. Contudo, o circuito inferior aparece como dependente do circuito superior.',
+        quoteRef: 'Capítulo 2 — Formação e Características (p. 56)',
+        keywords: ['modernizações', 'efeito-demonstração', 'circuito superior', 'circuito inferior', 'atividades puras', 'impuras', 'mistas', 'bipolarização', 'dualismo', 'continuum', 'crédito', '16 características'],
+        keyIdeas: [
+          { tag: 'Gênese Histórica', title: 'Modernização Tecnológica & Efeito-Demonstração', desc: 'A difusão da informação e de novos padrões de consumo sem aumento equivalente de emprego industrial capital-intensivo divide a sociedade urbana.' },
+          { tag: 'Anatomia', title: 'Oposição de Tecnologia e Organização', desc: 'O circuito superior é capital-intensivo, burocrático e voltado para fora; o circuito inferior é trabalho-intensivo, flexível, sem custos fixos e enraizado na região.' },
+          { tag: 'Refutação 1', title: 'Nem Circuito Intermediário, nem Continuum', desc: 'A classe média consome em ambos os circuitos conforme o acesso ao crédito, mas não cria um terceiro circuito. O salto tecnológico impede um continuum contínuo.' },
+          { tag: 'Refutação 2', title: 'Bipolarização, mas não Dualismo', desc: 'Diferente das teorias dualistas (Boeke, Lewis), os dois circuitos não são mundos isolados em conflito "moderno vs. tradicional", mas frutos do mesmo processo histórico.' }
+        ]
+      },
+      {
+        id: 3,
+        part: 'p1',
+        title: 'Especificidade do Fenômeno',
+        summary: 'Refuta três comparações enganosas muito difundidas na literatura: assimilar o Terceiro Mundo à Europa da Revolução Industrial, confundir o circuito inferior com o gueto dos países ricos e reduzir o circuito inferior ao espaço físico da favela.',
+        quote: 'Não há oposição entre favela e centro, mas oposição entre circuito inferior e circuito superior. A existência dos dois circuitos é um fenômeno atual, criação da modernização tecnológica.',
+        quoteRef: 'Capítulo 3 — Especificidade do Fenômeno (pp. 69 e 76)',
+        keywords: ['Europa', 'Revolução Industrial', 'terciário refúgio', 'gueto', 'pobreza com segurança', 'favela', 'ruralização urbana', 'migrações de pobreza', 'migrações tecnológicas', 'atualidade'],
+        keyIdeas: [
+          { tag: 'Erro 1', title: '≠ Europa da Revolução Industrial', desc: 'Na Europa do séc. XIX, a indústria absorvia mais mão-de-obra do que a cidade ofertava; no Terceiro Mundo, a indústria capital-intensiva gera precocemente um "terciário refúgio".' },
+          { tag: 'Erro 2', title: '≠ Gueto dos Países Desenvolvidos', desc: 'Nos países ricos há "pobreza com segurança" (seguro-desemprego e crédito burocrático); no Terceiro Mundo há "pobreza sem segurança", dependente da busca diária por ganho e crédito pessoal.' },
+          { tag: 'Erro 3', title: '≠ Favela ("Ruralização Urbana")', desc: 'A favela é um quadro material habitacional habitado por perfis diversos; o circuito inferior é um subsistema econômico amplo que abrange moradores fora e dentro das favelas.' },
+          { tag: 'Atualidade', title: 'Migrações de Pobreza vs. Tecnológicas', desc: 'Antes da 2ª Guerra, migrantes europeus traziam "capitais dos estrangeiros" e integravam-se; hoje, migrações tecnológicas representam corporações e capitais estrangeiros.' }
+        ]
+      },
+      {
+        id: 4,
+        part: 'p2',
+        title: 'O Circuito Superior',
+        summary: 'Examina os elementos puros, impuros e mistos do circuito moderno, o papel do banco como drenador de poupança, os impasses da substituição de importações, as novas indústrias de reexportação, os conglomerados multinacionais e o monopólio tecnológico dos países centrais.',
+        quote: 'Quanto mais "modernizados", mais dependentes eles são. Os países subdesenvolvidos são os multiplicadores de capitais que retornam revalorizados aos países do centro.',
+        quoteRef: 'Capítulo 4 — O Circuito Superior (pp. 112 e 119)',
+        keywords: ['comércio moderno', 'substituição de importações', 'indústrias de reexportação', 'circuito superior marginal', 'banco', 'perverse flow of credit', 'conglomerados', 'multinacionais', 'sangria de capitais', 'dependência tecnológica', 'UNESCO'],
+        keyIdeas: [
+          { tag: 'Estrutura', title: 'Circuito Superior Típico & Marginal', desc: 'Ao lado das grandes indústrias maduras e supermercados, subsiste um Circuito Superior Marginal (fábricas menos modernas) que sobrevive no mercado imperfeito.' },
+          { tag: 'Finanças', title: 'O Banco e o "Perverse Flow of Credit"', desc: 'Em vez de fomentar a economia local, a rede bancária coleta a poupança das pequenas cidades e a drena para as metrópoles e para o sistema financeiro internacional.' },
+          { tag: 'Indústria', title: 'Da Substituição de Importações à Reexportação', desc: 'Substituir bens de consumo exige importar bens de capital e tecnologia; na segunda fase, multinacionais usam mão-de-obra barata para "reexportação" sem integração local.' },
+          { tag: 'Dependência', title: 'Monopólio Científico e Sangria de Capitais', desc: 'Os países desenvolvidos detêm 95% da capacidade científica (UNESCO). Entre 1961 e 1968, a América Latina remeteu mais capitais e pagamentos de serviços do que recebeu.' }
+        ]
+      },
+      {
+        id: 5,
+        part: 'p2',
+        title: 'Os Monopólios',
+        summary: 'Demonstra que a industrialização tardia sob dependência tecnológica nasce já concentrada e monopolista, sem fase concorrencial prévia. Os monopólios administram preços, mantêm capacidade ociosa deliberada, autofinanciam-se e bloqueiam o crescimento econômico nacional.',
+        quote: 'Crescimento insuficiente da economia e não-emprego são um resultado direto das estruturas monopolísticas. A estreiteza do mercado pode ser um resultado do excesso de capacidade deliberadamente desejado.',
+        quoteRef: 'Capítulo 5 — Os Monopólios (pp. 143 e 150)',
+        keywords: ['monopólios', 'oligopólio', 'concentração', 'condições de entrada', 'destruição criativa', 'Schumpeter', 'capacidade ociosa', 'preços administrados', 'price leadership', 'publicidade', 'fundos de reserva'],
+        keyIdeas: [
+          { tag: 'Origem', title: 'Concentração sem Concorrência Prévia', desc: 'A indivisibilidade do capital e as barreiras tecnológicas (condições de entrada de Bain) instalam monopólios desde o primeiro dia, tornando obsoleta a "destruição criativa" de Schumpeter.' },
+          { tag: 'Estratégia', title: 'Capacidade Ociosa Deliberada', desc: 'As grandes firmas mantêm capacidade ociosa até o break-even point para bloquear novos concorrentes e compensam o volume menor elevando preços administrados.' },
+          { tag: 'Controle', title: 'Price Leadership e Publicidade', desc: 'Os preços sobem em direção única. A publicidade e a proliferação de marcas condicionam a demanda, destroem hábitos locais e sufocam o artesanato.' },
+          { tag: 'Autonomia', title: 'Autofinanciamento e Bloqueio Global', desc: 'Por meio de fundos de depreciação e reserva (até 90% dos novos investimentos), os conglomerados sugam a poupança coletiva e restringem a capitalização do Estado.' }
+        ]
+      },
+      {
+        id: 6,
+        part: 'p2',
+        title: 'O Estado e o Circuito Moderno',
+        summary: 'Revela a aliança estrutural entre o Estado nos países subdesenvolvidos e o circuito superior. Ao financiar infraestruturas caras (overhead capital), subsidiar grandes firmas e cobrar impostos indiretos da população, o Estado se endivida, empobrece a sociedade e torna-se "menos Estado".',
+        quote: 'O Estado seria menos Estado: incapaz de tomar decisões devido à sua dependência frente ao estrangeiro e a seu conluio com os monopólios, e reduzido em sua capacidade de investir.',
+        quoteRef: 'Capítulo 6 — O Estado e o Circuito Moderno (p. 177)',
+        keywords: ['Estado', 'políticas de desenvolvimento', 'estatuto de pioneiro', 'joint-venture', 'subimperialismo', 'overhead capital', 'infraestrutura', 'impostos indiretos', 'soft State', 'Estado é menos Estado'],
+        keyIdeas: [
+          { tag: 'Três Modelos', title: 'Políticas de Industrialização', desc: 'Dependência aceita do exterior; dominação planejada de dentro (ex.: Malásia, Birmânia, Brasil "subimperialista"); ou tentativas de caminho independente (ex.: Argélia, Peru).' },
+          { tag: 'Subsídio Indireto', title: 'Fornecedor de Overhead Capital', desc: 'O Estado arca com estradas, energia barata e indústrias de base (25% do orçamento nos países pobres vs. 6% nos ricos), reduzindo os custos das multinacionais.' },
+          { tag: 'Fiscalidade', title: 'Impostos Indiretos & Empobrecimento', desc: 'Enquanto a poupança das empresas dispara, a poupança pública cai e a conta da modernização é paga pela população pobre por meio de impostos indiretos regressivos.' },
+          { tag: 'Poder Político', title: 'O Estado é Menos Estado', desc: 'Refutando a ideia de "soft State" (Myrdal), Milton Santos mostra um Estado autoritário internamente contra adversários, mas fragilizado e subordinado diante das multinacionais.' }
+        ]
+      },
+      {
+        id: 7,
+        part: 'p3',
+        title: 'A Pobreza Urbana e o Circuito Inferior',
+        summary: 'Explica como a ação conjugada dos monopólios e do Estado concentra a renda, limita a criação de empregos industriais e transfere a pobreza do campo para a cidade, fazendo da pobreza urbana e do circuito inferior faces de uma mesma realidade estrutural.',
+        quote: 'Esses pobres não são economicamente marginais, mas explorados; não são politicamente marginais, mas oprimidos. Pobreza e circuito inferior aparecem com relações de causa e efeito inegáveis.',
+        quoteRef: 'Capítulo 7 — A Pobreza Urbana e o Circuito Inferior (p. 196)',
+        keywords: ['pobreza urbana', 'distribuição de renda', 'Salvador', 'Kinshasa', 'classe média', 'empregos no exterior', 'subemprego', 'terciarização', 'marginalidade', 'exército industrial de reserva'],
+        keyIdeas: [
+          { tag: 'Perfil Produtivo', title: 'Produção para a Elite e Exportação', desc: 'Indústrias dinâmicas (ex.: automóveis) crescem muito mais rápido que bens de consumo popular, aprofundando o círculo vicioso de concentração de renda.' },
+          { tag: 'Mercado de Trabalho', title: 'Empregos Exportados & Salários Desiguais', desc: 'A indústria moderna cria empregos qualificados no exterior (600 mil nos EUA via multinacionais) e deprime os salários não-qualificados localmente, gerando crescimento "oligárquico".' },
+          { tag: 'Unidade do Mercado', title: 'Não Há Dois Problemas de Emprego', desc: 'O desemprego e o subemprego não resultam de atraso do setor tradicional, mas são produzidos pela própria acumulação capitalista monopolista ("criação de empregos gera não-emprego").' },
+          { tag: 'Crítica', title: 'Superando o Mito da "Marginalidade"', desc: 'A massa pobre que habita favelas e trabalha no circuito inferior não é "peso morto" nem marginal ao sistema: é integrada de modo subordinado e explorado.' }
+        ]
+      },
+      {
+        id: 8,
+        part: 'p3',
+        title: 'O Circuito Inferior',
+        summary: 'Mergulha na lógica interna, complexidade e racionalidade do circuito inferior: facilidade de entrada, pequenas dimensões, trabalho familiar, reutilização de bens, dependência de atacadistas/transportadores, fome de dinheiro líquido, crédito pessoal/usura, margens altas por unidade e pechincha.',
+        quote: 'A melhor definição dessa racionalidade é o equilíbrio da miséria característica do circuito inferior. Se o circuito inferior tem dinâmica interna, sua função fundamental é perpetuar uma situação de pobreza.',
+        quoteRef: 'Capítulo 8 — O Circuito Inferior (pp. 259–260)',
+        keywords: ['pulverização', 'estoques reduzidos', 'trabalho familiar', 'autônomos', 'atacadistas', 'transportadores', 'dinheiro líquido', 'cash nexus', 'tontinas', 'crédito pessoal', 'usura', 'pechincha', 'haggling', 'auto-inflacionário'],
+        keyIdeas: [
+          { tag: 'Estrutura', title: 'Pequena Escala, Reutilização e Trabalho Familiar', desc: 'Opera sob a regra "nada se perde, tudo se transforma": baixíssimo capital, estoques renovados diariamente, trabalho em casa, autônomos e grande mobilidade ocupacional.' },
+          { tag: 'Intermediação', title: 'Dependência de Atacadistas e Caminhoneiros', desc: 'Sem acesso ao crédito bancário, pequenos comerciantes e artesãos dependem dos atacadistas (elo com o banco) e transportadores, multiplicando intermediários.' },
+          { tag: 'Finanças', title: 'Fome de Dinheiro Líquido, Crédito e Usura', desc: 'O cash atua como lubrificante para honrar parcelas e manter o crédito pessoal (fiado). Associações de ajuda mútua (tontinas, esusu, kye) surgem para escapar da usura.' },
+          { tag: 'Preços & Lucro', title: 'Margem Alta por Unidade e Pechincha', desc: 'O fracionamento encarece o produto final para o mais pobre (ex.: querosene em Bouaké). A pechincha (haggling) e a venda a "preço de ocasião" respondem à urgência do dinheiro líquido.' }
+        ]
+      },
+      {
+        id: 9,
+        part: 'p4',
+        title: 'O Estado, os Monopólios e a Macroestruturação do Espaço',
+        summary: 'Transpõe a teoria dos dois circuitos para a escala macroespacial: o Estado e os monopólios comandam a macroorganização do território, produzindo metrópoles completas e incompletas, curto-circuito da rede urbana, marginalização geográfica, disparidades regionais, migrações e macrocefalias.',
+        quote: 'As estruturas monopolísticas constituem um fator de concentração, a difusão da informação e do consumo desempenham um papel de dispersão, enquanto o Estado tem um papel misto.',
+        quoteRef: 'Capítulo 9 — Macroestruturação do Espaço (p. 281)',
+        keywords: ['macroestruturação', 'metrópole completa', 'metrópole incompleta', 'curto-circuito', 'periferia', 'acessibilidade', 'colonização interna', 'disparidades regionais', 'migrações', 'macrocefalia', 'cidades intermediárias', 'CSM'],
+        keyIdeas: [
+          { tag: 'Hierarquia', title: 'Metrópoles Completas e Incompletas', desc: 'Metrópoles completas (ex.: São Paulo, Buenos Aires, México) produzem bens de capital e tecnologia; metrópoles incompletas dependem delas ou do exterior para exercer comando.' },
+          { tag: 'Rede Urbana', title: 'Integração, Curto-Circuito e Cidades Intermediárias', desc: 'Rodovias modernas e indústrias concentradas permitem que cidades locais acessem direto a metrópole, esvaziando antigas cidades regionais — rebaixadas a "cidades intermediárias".' },
+          { tag: 'Periferia', title: 'Distância Socioeconômica & Desigualdades', desc: 'Estar distante no Terceiro Mundo é estar condenado à pobreza (venda barata, compra cara). O "colonialismo interno" deriva da dependência externa e produz acumulação circular.' },
+          { tag: 'Concentração', title: 'Migrações e Macrocefalia Cumulativa', desc: 'As migrações não são simples escolha individual, mas resposta espacial aos desequilíbrios da modernização, alimentando a macrocefalia (primate cities) nas metrópoles.' }
+        ]
+      },
+      {
+        id: 10,
+        part: 'p4',
+        title: 'Dois Processos de Industrialização e os Dois Subsistemas Urbanos',
+        summary: 'Distingue a industrialização voltada para o mercado interno (A) da voltada para a exportação (B), revelando dois subsistemas urbanos superpostos e os "dois urban fields" de cada cidade — o que exige revisar as teorias de Christaller (lugares centrais) e Perroux (pólos de crescimento).',
+        quote: 'Cada cidade tem, na realidade, duas áreas de mercado, correspondendo cada uma delas a um dos circuitos da economia urbana. A zona de influência do circuito superior é descontínua; a do circuito inferior é contínua.',
+        quoteRef: 'Capítulo 10 — Dois Processos e Dois Subsistemas (pp. 353 e 360)',
+        keywords: ['industrialização A', 'industrialização B', 'subsistema 1', 'subsistema 2', 'nation building', 'enclaves', 'urban fields', 'limiar', 'alcance', 'Christaller', 'Perroux', 'dialética espacial', 'mobilidade diferencial'],
+        keyIdeas: [
+          { tag: 'Dois Subsistemas', title: 'Subsistema 1 (Nation Building) vs. Subsistema 2 (Enclaves)', desc: 'A industrialização A (mercado interno) concentra-se nas metrópoles e estrutura o país; a industrialização B (exportação/enclaves) tem localização "livre" e efeito multiplicador externo.' },
+          { tag: 'Mobilidade', title: 'Mobilidade Diferencial na Rede Urbana', desc: 'A rede urbana não tem o mesmo significado para todas as classes: ricos deslocam-se para comprar mais barato na metrópole; pobres ficam prisioneiros do mercado local.' },
+          { tag: 'Dois Campos', title: 'Os Dois Urban Fields (Limiar e Alcance)', desc: 'Na metrópole, o circuito inferior confina-se à cidade e o superior alcança o país; na cidade local, o circuito superior é hipotético e o inferior comanda a região próxima.' },
+          { tag: 'Revisão Teórica', title: 'Crítica a Christaller e Perroux', desc: 'Não existe um único limiar ou hexágono homogêneo (Christaller), nem polos de crescimento que difundam desenvolvimento automaticamente (Perroux) sem considerar o circuito inferior.' }
+        ]
+      },
+      {
+        id: 11,
+        part: 'p4',
+        title: 'Conclusão',
+        summary: 'Sintetiza o duplo mecanismo de espoliação (econômico e geográfico) que perpetua a pobreza e propõe uma ruptura política na planificação: substituir a produtividade econômica pela produtividade social, transformar o Estado e regular a dialética entre os dois circuitos.',
+        quote: 'Para que a produção possa se colocar a serviço da população, é necessário, antes de tudo, que a idéia de produtividade econômica ceda lugar à idéia de produtividade social. O Estado tornar-se-ia mais Estado.',
+        quoteRef: 'Capítulo 11 — Conclusão (pp. 372 e 374)',
+        keywords: ['conclusão', 'ilusão estatística', 'drenagem da poupança', 'produtividade social', 'planificação', 'Estado mais Estado', 'modernização regionalizada', 'justiça social'],
+        keyIdeas: [
+          { tag: 'Diagnóstico', title: 'Crescimento do PIB como Ilusão Contábil', desc: 'A planificação reduzida à modernização aumenta índices globais enquanto agrava a pobreza: o circuito inferior aspira a poupança popular e a canaliza para o circuito superior.' },
+          { tag: 'Dupla Espoliação', title: 'Mecanismo Econômico + Geográfico', desc: 'A pobreza resulta da soma entre confisco monopolista da renda e disparidades espaciais. As migrações são os pobres "correndo atrás da mais-valia que lhes foi extraída".' },
+          { tag: 'Virada Política', title: 'Da Produtividade Econômica à Social', desc: 'O problema não é técnico (nem resolvido por "tecnologias intermediárias"), mas político: subordinar os setores dinâmicos às necessidades populares e ao consumo coletivo.' },
+          { tag: 'Novo Espaço', title: 'Modernização Nacional Regionalizada', desc: 'Atenuando monopólios e fortalecendo o Estado ("mais Estado"), as cidades intermediárias voltam a ser cidades regionais, reduzindo a macrocefalia e integrando os dois circuitos.' }
+        ]
+      }
+    ];
+
+    /* =========================================================================
+       ESTADO GLOBAL DA APLICAÇÃO E DOS 12 INFOGRÁFICOS INTERATIVOS
+       ========================================================================= */
+
+    let currentView = 'overview'; // 'overview' ou 1..11
+    let searchQuery = '';
+    let studiedMap = loadStudied();
+
+    const ui = {
+      // Mapa Geral (Fig. 1)
+      fig1Node: 'atacadistas',
+      // Cap 1
+      c1Mode: 'substantivo', // 'adjetivo' | 'substantivo'
+      c1Spec: 0,
+      // Cap 2
+      c2Mod: 2, // 0, 1, 2
+      c2Cat: 'todas', // 'todas' | 'prod' | 'fin' | 'mercado' | 'estado'
+      c2Profile: 'A', // 'A' | 'B' | 'C'
+      c2Refute: 'bipolar', // 'bipolar' | 'continuum'
+      // Cap 3
+      c3Tab: 'europa', // 'europa' | 'gueto' | 'favela'
+      c3Mig: 'tecnologica', // 'pobreza' | 'tecnologica'
+      // Cap 4
+      c4Comp: 'banco', // 'puras' | 'impuras' | 'mistas' | 'marginal' | 'banco'
+      c4Chart: 'ciencia', // 'ciencia' | 'conglomerados' | 'sangria'
+      // Cap 5
+      c5Conc: 80,
+      c5Idle: 45,
+      c5Price: 85,
+      c5DataTab: 'quadro1', // 'quadro1' | 'sp'
+      // Cap 6
+      c6Alloc: 78, // % destinado ao Circuito Superior / Infraestrutura
+      // Cap 7
+      c7City: 'salvador', // 'salvador' | 'kinshasa'
+      c7Step: 0, // 0..4
+      // Cap 8
+      c8Stage: 0, // 0..4
+      c8Balance: 'forcas', // 'forcas' | 'fraquezas'
+      // Cap 9
+      c9Node: 'completa', // 'completa' | 'incompleta' | 'intermediaria' | 'periferia'
+      c9Layer: 'drenagem', // 'migracao' | 'drenagem' | 'estado'
+      // Cap 10
+      c10Field: 'ambos', // 'superior' | 'inferior' | 'ambos'
+      c10Sub: 's1', // 's1' | 's2'
+      // Cap 11
+      c11Pillar: 0 // 0..3
+    };
+
+    /* =========================================================================
+       PERSISTÊNCIA (localStorage) E HELPERS
+       ========================================================================= */
+
+    function loadStudied() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveStudied() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(studiedMap));
+      } catch (e) {
+        // Silencioso caso bloqueado
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(text) {
+      const el = document.getElementById('toast');
+      const msg = document.getElementById('toast-msg');
+      if (!el || !msg) return;
+      msg.textContent = text;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+    }
+
+    function norm(str) {
+      return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function toggleStudied(id, evt) {
+      if (evt) evt.stopPropagation();
+      studiedMap[id] = !studiedMap[id];
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      showToast(studiedMap[id] ? `Capítulo ${id} marcado como estudado.` : `Capítulo ${id} desmarcado.`);
+    }
+
+    function resetProgress() {
+      studiedMap = {};
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      showToast('Progresso de estudo reiniciado.');
+    }
+
+    function navigateTo(target) {
+      currentView = target;
+      renderSidebar();
+      renderMain();
+      closeDrawer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openDrawer() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.add('open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('open');
+    }
+
+    /* =========================================================================
+       RENDERIZAÇÃO DA SIDEBAR
+       ========================================================================= */
+
+    function renderSidebar() {
+      const nav = document.getElementById('sidebar-nav');
+      const q = norm(searchQuery.trim());
+
+      const done = CHAPTERS.filter(c => studiedMap[c.id]).length;
+      const pct = Math.round((done / CHAPTERS.length) * 100);
+      document.getElementById('sidebar-progress-text').textContent = `${done}/11 estudados (${pct}%)`;
+      document.getElementById('sidebar-progress-fill').style.width = `${pct}%`;
+      document.getElementById('mobile-progress-badge').textContent = `${done}/11`;
+
+      let html = '';
+      const showOverview = !q || norm('mapa geral prefacio figura 1 elementos dois circuitos').includes(q);
+
+      if (showOverview) {
+        html += `
+          <button type="button" class="nav-btn ${currentView === 'overview' ? 'active' : ''}" onclick="navigateTo('overview')">
+            <span class="nav-num">§0</span>
+            <span class="nav-text">
+              <span class="nav-title">Mapa Geral da Obra</span>
+              <span class="nav-sub">Arquitetura, Prefácio &amp; Figura 1</span>
+            </span>
+          </button>
+        `;
+      }
+
+      let found = showOverview ? 1 : 0;
+
+      Object.values(PARTS).forEach(part => {
+        const list = CHAPTERS.filter(ch => {
+          if (ch.part !== part.id) return false;
+          if (!q) return true;
+          const hay = norm(`${ch.id} ${ch.title} ${part.label} ${part.title} ${ch.keywords.join(' ')}`);
+          return hay.includes(q);
+        });
+        if (!list.length) return;
+        found += list.length;
+
+        html += `
+          <div class="part-group">
+            <div class="part-header">
+              <span class="part-dot" style="background:${part.color}"></span>
+              <span>${part.label} — ${part.title}</span>
+            </div>
+        `;
+
+        list.forEach(ch => {
+          const active = currentView === ch.id;
+          const isDone = !!studiedMap[ch.id];
+          html += `
+            <button type="button" class="nav-btn ${active ? 'active' : ''}" onclick="navigateTo(${ch.id})">
+              <span class="nav-num" style="${active ? `background:${part.color};border-color:${part.color};color:#fff;` : `border-left:3px solid ${part.color};`}">${ch.id}</span>
+              <span class="nav-text">
+                <span class="nav-title">${ch.title}</span>
+              </span>
+              <span class="nav-check ${isDone ? 'done' : ''}" title="${isDone ? 'Estudado' : 'Marcar como estudado'}" onclick="toggleStudied(${ch.id}, event)">✓</span>
+            </button>
+          `;
+        });
+
+        html += `</div>`;
+      });
+
+      if (!found) {
+        html = `<div style="padding:18px;font-size:0.8rem;color:var(--text-muted);text-align:center;">Nenhum resultado encontrado para "<strong>${searchQuery}</strong>".</div>`;
+      }
+
+      nav.innerHTML = html;
+    }
+
+    /* =========================================================================
+       0. MAPA GERAL DA OBRA (ARQUITETURA + FIGURA 1 INTERATIVA + PREFÁCIO)
+       ========================================================================= */
+
+    const FIG1_NODES = {
+      extraregional: {
+        name: 'Circuito Moderno Extra-Regional',
+        circuit: 'Escala Nacional / Exterior',
+        color: '#1B4965',
+        rel: 'Relações hierárquicas sobre o Banco, Indústria Urbana, Exportação, Atacadistas e Transportadores.',
+        desc: 'Centro decisório situado nas metrópoles maiores ou no exterior. Comanda a tecnologia, os investimentos e a lógica das atividades do Circuito Superior.'
+      },
+      banco: {
+        name: 'Banco',
+        circuit: 'Traço de União (Circuito Superior)',
+        color: '#1B4965',
+        rel: 'Complementaridade recíproca com o circuito extra-regional; relação hierárquica sobre atividades modernas e atacadistas.',
+        desc: 'Liga a economia urbana local ao escalão nacional e internacional. Concede crédito burocrático às atividades modernas e drena a poupança regional para fora.'
+      },
+      exportacao: {
+        name: 'Comércio & Indústria de Exportação',
+        circuit: 'Atividades "Impuras" do Circuito Superior',
+        color: '#2C6E91',
+        rel: 'Relações hierárquicas vindas de fora; liga-se às Atividades Regionais para coleta/transformação e envia outputs ao exterior.',
+        desc: 'Instalam-se na cidade pelas vantagens locacionais, mas o essencial de seus interesses e lucros é manipulado fora da cidade e do país.'
+      },
+      industria: {
+        name: 'Indústria Urbana Moderna',
+        circuit: 'Atividade "Pura" do Circuito Superior',
+        color: '#1B4965',
+        rel: 'Complementaridade com Comércio Moderno e Serviços; relação hierárquica sobre a Fabricação Não-Capitalista.',
+        desc: 'Específica da cidade e capital-intensiva; produz para o mercado doméstico moderno, mas depende de tecnologia e bens de capital externos.'
+      },
+      comercio_mod: {
+        name: 'Comércio Moderno',
+        circuit: 'Atividade "Pura" do Circuito Superior',
+        color: '#2C6E91',
+        rel: 'Complementaridade com Indústria Urbana e Serviços; fornece inputs à Fabricação Não-Capitalista.',
+        desc: 'Supermercados, grandes lojas e boutiques especializadas; opera com preços fixos, publicidade, relações impessoais e crédito bancário.'
+      },
+      servicos: {
+        name: 'Serviços',
+        circuit: 'Fronteira dos Dois Circuitos',
+        color: '#366858',
+        rel: 'Complementaridade recíproca com Atividades Regionais, Comércio Moderno, Indústria, Fabricação Não-Capitalista e Comércio Não-Moderno.',
+        desc: 'Compreende tanto serviços modernos (puros do Circuito Superior) quanto serviços pessoais fornecidos "a varejo" no Circuito Inferior.'
+      },
+      transportadores: {
+        name: 'Transportadores',
+        circuit: 'Atividade "Mista" (Ponte entre Circuitos)',
+        color: '#C88A2B',
+        rel: 'Liga os dois circuitos nos dois sentidos — na cidade, entre cidades e entre cidade e campo.',
+        desc: 'O motorista de caminhão pode transportar mercadorias para atacadistas ou atuar diretamente como comerciante, integrando os dois subsistemas.'
+      },
+      atacadistas: {
+        name: 'Atacadistas',
+        circuit: 'Atividade "Mista" (Topo do Circuito Inferior)',
+        color: '#C88A2B',
+        rel: 'Recebe crédito bancário (Circuito Superior) e exerce relação hierárquica sobre o Comércio Não-Moderno e a Fabricação Não-Capitalista.',
+        desc: 'Elemento integrante do Circuito Superior e, ao mesmo tempo, o cume e "banqueiro" do Circuito Inferior, fornecendo mercadorias a crédito a uma cadeia decrescente de intermediários.'
+      },
+      fabricacao: {
+        name: 'Fabricação Não-Capitalista',
+        circuit: 'Circuito Inferior',
+        color: '#C45B2C',
+        rel: 'Subordinada a Atacadistas e Indústria Urbana; complementaridade com Comércio Não-Moderno e Serviços.',
+        desc: 'Artesanato, pequenas oficinas de conserto e fabricação trabalho-intensiva com baixo capital, sem padronização rígida e forte criatividade local.'
+      },
+      comercio_nmod: {
+        name: 'Comércio Não-Moderno',
+        circuit: 'Circuito Inferior',
+        color: '#C45B2C',
+        rel: 'Dependente de Atacadistas e Transportadores; relação direta com Atividades Regionais e população pobre.',
+        desc: 'Pequenas vendas, feirantes e ambulantes: estoques mínimos, fracionamento extremo, preços por pechincha e crédito pessoal (fiado).'
+      },
+      regionais: {
+        name: 'Atividades Regionais',
+        circuit: 'Espaço Circundante / Hinterlândia',
+        color: '#366858',
+        rel: 'Relações diretas e privilegiadas com o Circuito Inferior, Serviços e Transportadores; relação hierárquica com Exportação.',
+        desc: 'Produção agrícola e rural do entorno. Enquanto o Circuito Superior articula-se fora da região, o Circuito Inferior encontra aqui sua integração.'
+      }
+    };
+
+    function renderOverview() {
+      const selNode = FIG1_NODES[ui.fig1Node];
+
+      return `
+        <header class="chapter-head">
+          <div class="meta-bar">
+            <span class="part-pill" style="background:var(--sup);">Mapa Geral da Obra • Prefácio &amp; Arquitetura</span>
+            <span class="chip chip-ochre">4 Partes • 11 Capítulos • Edusp (2004)</span>
+          </div>
+          <h2 class="chapter-title">O Espaço Dividido: Os Dois Circuitos da Economia Urbana</h2>
+          <p class="chapter-lead">
+            Redigido entre Paris (1970) e Toronto (1973) e publicado originalmente como <em>L’espace partagé</em>, este clássico de <strong>Milton Santos</strong> propõe uma teoria original da urbanização e do espaço nos países subdesenvolvidos a partir da dialética entre o <strong>Circuito Superior</strong> e o <strong>Circuito Inferior</strong>.
+          </p>
+          <div class="editorial-rule"></div>
+        </header>
+
+        <!-- Diagrama Arquitetônico das 4 Partes e 11 Capítulos -->
+        <section class="infographic-card">
+          <span class="kicker">Infográfico 0.1 • Arquitetura da Obra</span>
+          <h3 class="heading-md">Mapa Interativo das 4 Partes e 11 Capítulos</h3>
+          <p class="sub-lead">Clique em qualquer capítulo no diagrama abaixo para navegar diretamente até sua síntese e infográfico exclusivo.</p>
+
+          <div class="svg-box" style="margin-bottom:16px;">
+            <svg viewBox="0 0 880 235" role="img" aria-label="Diagrama arquitetônico das partes e capítulos de O Espaço Dividido">
+              <!-- Intro -->
+              <rect x="14" y="18" width="132" height="198" rx="12" fill="#E7F2EE" stroke="#366858" stroke-width="1.8"/>
+              <text x="80" y="40" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#366858">INTRODUÇÃO</text>
+              <g onclick="navigateTo(1)" style="cursor:pointer;">
+                <rect x="24" y="54" width="112" height="58" rx="8" fill="#FFFDF8" stroke="#366858"/>
+                <text x="80" y="75" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#366858">CAP. 1</text>
+                <text x="80" y="92" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">Novo Paradigma</text>
+              </g>
+
+              <!-- Parte I -->
+              <rect x="160" y="18" width="160" height="198" rx="12" fill="#FBF3E1" stroke="#C88A2B" stroke-width="1.8"/>
+              <text x="240" y="40" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8A5B14">PARTE I • 2 CIRCUITOS</text>
+              <g onclick="navigateTo(2)" style="cursor:pointer;">
+                <rect x="172" y="54" width="136" height="62" rx="8" fill="#FFFDF8" stroke="#C88A2B"/>
+                <text x="240" y="74" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8A5B14">CAP. 2</text>
+                <text x="240" y="92" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">Formação e</text>
+                <text x="240" y="105" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">Características</text>
+              </g>
+              <g onclick="navigateTo(3)" style="cursor:pointer;">
+                <rect x="172" y="128" width="136" height="62" rx="8" fill="#FFFDF8" stroke="#C88A2B"/>
+                <text x="240" y="148" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8A5B14">CAP. 3</text>
+                <text x="240" y="166" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">Especificidade</text>
+                <text x="240" y="179" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">do Fenômeno</text>
+              </g>
+
+              <!-- Parte II -->
+              <rect x="334" y="18" width="168" height="198" rx="12" fill="#E6F0F5" stroke="#1B4965" stroke-width="1.8"/>
+              <text x="418" y="40" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#1B4965">PARTE II • C. SUPERIOR</text>
+              ${[
+                { id: 4, y: 52, l: 'O Circuito Superior' },
+                { id: 5, y: 105, l: 'Os Monopólios' },
+                { id: 6, y: 158, l: 'O Estado e o C. Moderno' }
+              ].map(b => `
+                <g onclick="navigateTo(${b.id})" style="cursor:pointer;">
+                  <rect x="346" y="${b.y}" width="144" height="44" rx="8" fill="#FFFDF8" stroke="#1B4965"/>
+                  <text x="418" y="${b.y + 17}" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#1B4965">CAP. ${b.id}</text>
+                  <text x="418" y="${b.y + 33}" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">${b.l}</text>
+                </g>
+              `).join('')}
+
+              <!-- Parte III -->
+              <rect x="516" y="18" width="166" height="198" rx="12" fill="#FBECE5" stroke="#C45B2C" stroke-width="1.8"/>
+              <text x="599" y="40" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#9A411A">PARTE III • C. INFERIOR</text>
+              <g onclick="navigateTo(7)" style="cursor:pointer;">
+                <rect x="528" y="54" width="142" height="62" rx="8" fill="#FFFDF8" stroke="#C45B2C"/>
+                <text x="599" y="74" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#C45B2C">CAP. 7</text>
+                <text x="599" y="92" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">Pobreza Urbana e</text>
+                <text x="599" y="105" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">Circuito Inferior</text>
+              </g>
+              <g onclick="navigateTo(8)" style="cursor:pointer;">
+                <rect x="528" y="128" width="142" height="62" rx="8" fill="#FFFDF8" stroke="#C45B2C"/>
+                <text x="599" y="148" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#C45B2C">CAP. 8</text>
+                <text x="599" y="166" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">O Circuito Inferior</text>
+                <text x="599" y="179" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">(Lógica Interna)</text>
+              </g>
+
+              <!-- Parte IV -->
+              <rect x="696" y="18" width="170" height="198" rx="12" fill="#E7F2EE" stroke="#366858" stroke-width="1.8"/>
+              <text x="781" y="40" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#366858">PARTE IV • O ESPAÇO</text>
+              ${[
+                { id: 9, y: 52, l: 'Macroestruturação' },
+                { id: 10, y: 105, l: '2 Subsistemas Urbanos' },
+                { id: 11, y: 158, l: 'Conclusão' }
+              ].map(b => `
+                <g onclick="navigateTo(${b.id})" style="cursor:pointer;">
+                  <rect x="708" y="${b.y}" width="146" height="44" rx="8" fill="#FFFDF8" stroke="#366858"/>
+                  <text x="781" y="${b.y + 17}" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#366858">CAP. ${b.id}</text>
+                  <text x="781" y="${b.y + 33}" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#1C232B">${b.l}</text>
+                </g>
+              `).join('')}
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid var(--ochre);">
+            <span class="chip chip-ochre" style="margin-bottom:6px;">Prefácio à Edição Francesa (Paris 1970 / Toronto 1973)</span>
+            <p style="font-size:0.84rem;color:var(--text-main);">
+              Milton Santos explica que a obra aprofunda o último capítulo de <em>Les Villes du Tiers Monde</em> (1971), buscando uma compreensão global do subdesenvolvimento a partir de sua base econômica, política e espacial. A pesquisa dialogou com escolas da Europa, América Latina e América do Norte (Sorbonne, Harvard, MIT, Toronto, Toulouse, Bordeaux e IEDES), destacando trocas com T. G. McGee, Bernard Kayser, Guy Lasserre e D. F. Maza Zavala.
+            </p>
+          </div>
+        </section>
+
+        <!-- Recriação Interativa da Figura 1 do Livro -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--inf);">Infográfico 0.2 • Recriação Interativa da Figura 1 (p. 40)</span>
+          <h3 class="heading-md">Os Elementos dos Dois Circuitos e Suas Conexões</h3>
+          <p class="sub-lead">Clique em qualquer bloco do diagrama original de Milton Santos para destacar seu circuito, suas relações (hierárquicas, complementaridade simples ou recíproca) e seu papel funcional.</p>
+
+          <div class="svg-box" style="margin-bottom:14px;">
+            <svg viewBox="0 0 820 330" role="img" aria-label="Figura 1 — Os elementos dos dois circuitos da economia urbana">
+              <!-- Faixas de fundo -->
+              <rect x="10" y="64" width="675" height="122" rx="10" fill="#E6F0F5" opacity="0.65" stroke="#1B4965" stroke-dasharray="6 4"/>
+              <text x="22" y="82" font-family="monospace" font-size="10" font-weight="700" fill="#1B4965">CIRCUITO SUPERIOR</text>
+
+              <rect x="10" y="196" width="675" height="122" rx="10" fill="#FBECE5" opacity="0.72" stroke="#C45B2C" stroke-dasharray="6 4"/>
+              <text x="22" y="308" font-family="monospace" font-size="10" font-weight="700" fill="#C45B2C">CIRCUITO INFERIOR</text>
+
+              <!-- Linhas conectoras (Hierárquicas = tracejado; Complementares = sólido) -->
+              <line x1="250" y1="42" x2="250" y2="115" stroke="#1B4965" stroke-width="1.6" stroke-dasharray="4 3"/>
+              <line x1="410" y1="42" x2="410" y2="115" stroke="#1B4965" stroke-width="1.6" stroke-dasharray="4 3"/>
+              <line x1="560" y1="42" x2="560" y2="95" stroke="#1B4965" stroke-width="1.6" stroke-dasharray="4 3"/>
+              <line x1="88" y1="210" x2="88" y2="262" stroke="#C88A2B" stroke-width="2"/>
+              <line x1="175" y1="220" x2="175" y2="262" stroke="#C88A2B" stroke-width="2" stroke-dasharray="4 3"/>
+              <line x1="215" y1="215" x2="320" y2="225" stroke="#C45B2C" stroke-width="1.8" stroke-dasharray="4 3"/>
+              <line x1="410" y1="158" x2="410" y2="205" stroke="#1B4965" stroke-width="1.6" stroke-dasharray="4 3"/>
+              <line x1="410" y1="248" x2="410" y2="268" stroke="#C45B2C" stroke-width="1.8"/>
+              <line x1="565" y1="190" x2="700" y2="190" stroke="#366858" stroke-width="2"/>
+              <line x1="600" y1="286" x2="700" y2="286" stroke="#366858" stroke-width="2"/>
+
+              <!-- Blocos clicáveis -->
+              ${[
+                { k: 'extraregional', x: 140, y: 10, w: 460, h: 32, t: 'Circuito Moderno Extra-Regional', c: '#1B4965' },
+                { k: 'banco', x: 185, y: 50, w: 370, h: 28, t: 'Banco (Traço de União)', c: '#1B4965' },
+                { k: 'exportacao', x: 505, y: 92, w: 165, h: 42, t: 'Comércio & Indústria\nde Exportação', c: '#2C6E91' },
+                { k: 'comercio_mod', x: 245, y: 108, w: 112, h: 48, t: 'Comércio\nModerno', c: '#2C6E91' },
+                { k: 'industria', x: 370, y: 108, w: 112, h: 48, t: 'Indústria\nUrbana', c: '#1B4965' },
+                { k: 'servicos', x: 505, y: 164, w: 165, h: 44, t: 'Serviços\n(Sup. & Inf.)', c: '#366858' },
+                { k: 'transportadores', x: 38, y: 136, w: 86, h: 98, t: 'Transpor-\ntadores', c: '#C88A2B' },
+                { k: 'atacadistas', x: 136, y: 146, w: 86, h: 88, t: 'Ataca-\ndistas', c: '#C88A2B' },
+                { k: 'fabricacao', x: 325, y: 206, w: 165, h: 42, t: 'Fabricação\nNão-Capitalista', c: '#C45B2C' },
+                { k: 'comercio_nmod', x: 75, y: 264, w: 515, h: 34, t: 'Comércio Não-Moderno (Feirantes, Pequenas Vendas, Ambulantes)', c: '#C45B2C' },
+                { k: 'regionais', x: 702, y: 64, w: 106, h: 254, t: 'Atividades\nRegionais', c: '#366858' }
+              ].map(n => {
+                const active = ui.fig1Node === n.k;
+                const lines = n.t.split('\n');
+                return `
+                  <g onclick="ui.fig1Node='${n.k}'; renderMain();" style="cursor:pointer;">
+                    <rect x="${n.x}" y="${n.y}" width="${n.w}" height="${n.h}" rx="8"
+                      fill="${active ? n.c : '#FFFDF8'}" stroke="${n.c}" stroke-width="${active ? 2.8 : 1.6}"/>
+                    ${lines.map((ln, idx) => `
+                      <text x="${n.x + n.w/2}" y="${n.y + (n.h/2) + (lines.length===1 ? 4 : (idx===0 ? -3 : 11))}"
+                        text-anchor="middle" font-family="sans-serif" font-size="10.5" font-weight="700"
+                        fill="${active ? '#FFFFFF' : '#1C232B'}">${ln}</text>
+                    `).join('')}
+                  </g>
+                `;
+              }).join('')}
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${selNode.color};">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;">
+              <h4 style="font-family:var(--font-serif);font-size:1.1rem;color:${selNode.color};">${selNode.name}</h4>
+              <span class="chip" style="border-color:${selNode.color};color:${selNode.color};">${selNode.circuit}</span>
+            </div>
+            <p style="font-size:0.84rem;color:var(--text-main);margin-bottom:6px;">${selNode.desc}</p>
+            <p style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-muted);"><strong>Conexões (Fig. 1):</strong> ${selNode.rel}</p>
+          </div>
+        </section>
+
+        <div class="chapter-footer">
+          <div></div>
+          <button type="button" class="footer-nav-btn next" onclick="navigateTo(1)">
+            <div>
+              <span class="footer-nav-meta">Iniciar Atlas</span>
+              <span class="footer-nav-title">Cap. 1 — Introdução: Em Busca de um Novo Paradigma</span>
+            </div>
+            <span style="font-size:1.15rem;">→</span>
+          </button>
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       INFOGRÁFICOS INTERATIVOS DOS CAPÍTULOS 1 A 11
+       ========================================================================= */
+
+    function renderChapterInfographic(id) {
+      switch (id) {
+        case 1: return renderInfoCap1();
+        case 2: return renderInfoCap2();
+        case 3: return renderInfoCap3();
+        case 4: return renderInfoCap4();
+        case 5: return renderInfoCap5();
+        case 6: return renderInfoCap6();
+        case 7: return renderInfoCap7();
+        case 8: return renderInfoCap8();
+        case 9: return renderInfoCap9();
+        case 10: return renderInfoCap10();
+        case 11: return renderInfoCap11();
+        default: return '';
+      }
+    }
+
+    /* --- CAPÍTULO 1 --- */
+    function renderInfoCap1() {
+      const isSub = ui.c1Mode === 'substantivo';
+      const specs = [
+        {
+          t: '1. Interesses Distantes e Seletivos',
+          impact: 'O espaço organiza-se em função de decisões globais. As modernizações atingem pontos localizados, encontram forte inércia à difusão e conquistam frações seletivas do espaço neutro.'
+        },
+        {
+          t: '2. Espaço Descontínuo e Instável',
+          impact: 'As variáveis modernas não chegam juntas nem na mesma direção. Cada impacto provoca repetidos desequilíbrios e ajustamentos, gerando forte instabilidade territorial.'
+        },
+        {
+          t: '3. Multipolarização e Decomposição do Tempo',
+          impact: 'Um mesmo lugar sofre pressões simultâneas de vários níveis de decisão (mundial, nacional, regional), produzindo uma decomposição do tempo na escala local.'
+        },
+        {
+          t: '4. Disparidades de Renda e Seletividade de Consumo',
+          impact: 'Enquanto a produção moderna tende a se concentrar, o consumo tende a se dispersar — mas freado pela desigualdade de renda. Essa tensão gera dois circuitos de produção, distribuição e consumo.'
+        }
+      ];
+      const sp = specs[ui.c1Spec];
+
+      return `
+        <span class="kicker" style="color:var(--olive);">Infográfico Exclusivo • Cap. 1</span>
+        <h3 class="heading-md">Abordagem Adjetiva vs. Novo Paradigma &amp; Especificidades do Espaço</h3>
+        <p class="sub-lead">Compare os paradigmas de análise urbana e selecione as 4 especificidades estruturais do espaço no Terceiro Mundo.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${!isSub ? 'active-inf' : ''}" onclick="ui.c1Mode='adjetivo'; renderMain();">Abordagem Adjetiva Ocidental (Criticada)</button>
+          <button type="button" class="ctrl-btn ${isSub ? 'active-olive' : ''}" onclick="ui.c1Mode='substantivo'; renderMain();">Novo Paradigma Substantivo (Milton Santos)</button>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${isSub ? 'var(--olive)' : 'var(--inf)'};margin-bottom:20px;">
+          <h4 style="font-family:var(--font-serif);font-size:1.08rem;color:${isSub ? 'var(--olive)' : 'var(--inf)'};margin-bottom:8px;">
+            ${isSub ? 'Abordagem Substantiva — Teoria dos Dois Circuitos' : 'Abordagem Adjetiva — Espelho Ocidental'}
+          </h4>
+          <div class="grid-3">
+            ${(isSub ? [
+              { h: 'Base Histórica', p: 'Estuda o subdesenvolvimento com base na própria história dos países periféricos, recusando o similar path.' },
+              { h: 'Objeto Real', p: 'Analisa a cidade como dois subsistemas articulados (Circuito Superior + Circuito Inferior), com duas zonas de influência.' },
+              { h: 'Planificação', p: 'Propõe regular a dialética entre os dois circuitos, elevando a produtividade do circuito inferior sem destruir empregos.' }
+            ] : [
+              { h: 'Fórmulas Adjetivas', p: 'Rotula cidades como "superurbanizadas", "hiperurbanizadas", "pré-industriais" ou "parasitárias" (Hoselitz, Davis, Sjoberg).' },
+              { h: 'Viés Etnocêntrico', p: 'Aplica modelos matemáticos e teorias (Christaller, Perroux) tirados de economias autocentradas do mundo desenvolvido.' },
+              { h: 'Erro de Planificação', p: 'Confunde o setor moderno com a cidade inteira e trata pobreza e migrações apenas como focos de instabilidade política.' }
+            ]).map(b => `
+              <div style="background:var(--bg-card);border:1px solid var(--border-soft);border-radius:10px;padding:12px;">
+                <strong style="font-size:0.82rem;display:block;margin-bottom:4px;">${b.h}</strong>
+                <p style="font-size:0.79rem;color:var(--text-muted);">${b.p}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <span class="kicker">As 4 Especificidades do Espaço no Terceiro Mundo</span>
+        <div class="grid-4" style="margin-top:6px;margin-bottom:12px;">
+          ${specs.map((item, i) => `
+            <button type="button" class="ctrl-btn ${ui.c1Spec===i ? 'active-sup' : ''}" style="text-align:left;padding:10px 12px;" onclick="ui.c1Spec=${i}; renderMain();">
+              ${item.t}
+            </button>
+          `).join('')}
+        </div>
+        <div class="panel-soft">
+          <strong style="font-size:0.86rem;color:var(--sup);">${sp.t}</strong>
+          <p style="font-size:0.84rem;color:var(--text-main);margin-top:4px;">${sp.impact}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 2 --- */
+    const CAP2_TABLE = [
+      { k: 'Tecnologia', s: 'Capital intensivo (importada)', i: 'Trabalho intensivo (local/adaptada)', cat: 'prod' },
+      { k: 'Organização', s: 'Burocrática', i: 'Primitiva / flexível', cat: 'prod' },
+      { k: 'Capitais', s: 'Importantes / volumosos', i: 'Reduzidos', cat: 'fin' },
+      { k: 'Emprego', s: 'Reduzido (em relação ao volume)', i: 'Volumoso (abrigo de migrantes)', cat: 'prod' },
+      { k: 'Assalariado', s: 'Dominante', i: 'Não-obrigatório (familiar/autônomo)', cat: 'prod' },
+      { k: 'Estoques', s: 'Grande quantidade e/ou alta qualidade', i: 'Pequena quantidade, qualidade inferior', cat: 'mercado' },
+      { k: 'Preços', s: 'Fixos (em geral)', i: 'Submetidos à discussão (haggling / pechincha)', cat: 'mercado' },
+      { k: 'Crédito', s: 'Bancário institucional', i: 'Pessoal não-institucional (fiado/usura)', cat: 'fin' },
+      { k: 'Margem de lucro', s: 'Reduzida por unidade, alta pelo volume', i: 'Elevada por unidade, pequena no volume total', cat: 'fin' },
+      { k: 'Relações com a clientela', s: 'Impessoais e/ou com papéis', i: 'Diretas, personalizadas', cat: 'mercado' },
+      { k: 'Custos fixos', s: 'Importantes', i: 'Desprezíveis', cat: 'fin' },
+      { k: 'Publicidade', s: 'Necessária (cria demanda)', i: 'Nula', cat: 'mercado' },
+      { k: 'Reutilização dos bens', s: 'Nula', i: 'Freqüente (consertos e reciclagem)', cat: 'prod' },
+      { k: 'Overhead capital', s: 'Indispensável', i: 'Dispensável', cat: 'estado' },
+      { k: 'Ajuda governamental', s: 'Importante', i: 'Nula ou quase nula (às vezes perseguido)', cat: 'estado' },
+      { k: 'Dependência do exterior', s: 'Grande, voltada para o exterior', i: 'Reduzida ou nula (integração local)', cat: 'estado' }
+    ];
+
+    function renderInfoCap2() {
+      const mods = [
+        { era: '1. Modernização Comercial (Séc. XV – XVIII)', rev: 'Revolução dos transportes marítimos', desc: 'Saque sistemático das colônias sob legislação metropolitana. Cidade administrativa e comercial; consumo limitado a dois níveis estreitos.' },
+        { era: '2. Modernização Industrial (Séc. XVIII – 1945)', rev: 'Revolução Industrial (especialmente pós-1870)', desc: 'Pacto colonial reforçado: portos, ferrovias e exportação de matérias-primas (café, cacau, minérios) para os centros industriais.' },
+        { era: '3. Modernização Tecnológica (Pós-2ª Guerra)', rev: 'Revolução Tecnológica, da Informação e do Consumo', desc: 'Difusão generalizada da informação e do efeito-demonstração associada a indústrias capital-intensivas. Cria simultaneamente o Circuito Superior e o Circuito Inferior.' }
+      ];
+      const curMod = mods[ui.c2Mod];
+
+      const filteredRows = ui.c2Cat === 'todas' ? CAP2_TABLE : CAP2_TABLE.filter(r => r.cat === ui.c2Cat);
+
+      const profiles = {
+        A: { label: 'Perfil A — País Muito Pobre / Alta Concentração', supPct: 22, infPct: 78, curve: 'M 25 18 C 55 24 80 75 110 112 C 135 125 165 130 195 132', note: 'Grande massa de famílias abaixo do limiar do crédito bancário: o Circuito Inferior domina amplamente a economia urbana.' },
+        B: { label: 'Perfil B — País Intermediário / Industrialização Parcial', supPct: 45, infPct: 55, curve: 'M 25 46 C 65 72 95 92 125 104 C 155 112 175 115 195 116', note: 'Expansão parcial das classes médias e assalariados amplia o Circuito Moderno, mas mais da metade ainda depende do Circuito Inferior.' },
+        C: { label: 'Perfil C — País Subdesenvolvido Industrializado', supPct: 72, infPct: 28, curve: 'M 25 74 C 70 88 110 95 145 98 C 170 100 185 101 195 102', note: 'Circuito Moderno mais volumoso em valor, porém o Circuito Inferior persiste como estrutura permanente ligada à desigualdade.' }
+      };
+      const pr = profiles[ui.c2Profile];
+
+      return `
+        <span class="kicker" style="color:var(--ochre);">Infográfico Exclusivo • Cap. 2</span>
+        <h3 class="heading-md">3 Modernizações, Matriz das 16 Características &amp; Figura 3</h3>
+        <p class="sub-lead">Explore a cronologia das modernizações, filtre a tabela oficial dos dois circuitos (p. 44) e simule o perfil de renda da Figura 3 (p. 50).</p>
+
+        <!-- 1. Linha do Tempo das 3 Modernizações -->
+        <div class="btn-row">
+          ${mods.map((m, i) => `
+            <button type="button" class="ctrl-btn ${ui.c2Mod===i ? 'active-ochre' : ''}" onclick="ui.c2Mod=${i}; renderMain();">${m.era.split('(')[0]}</button>
+          `).join('')}
+        </div>
+        <div class="panel-soft" style="border-left:4px solid var(--ochre);margin-bottom:20px;">
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-bottom:4px;">
+            <strong style="font-family:var(--font-serif);font-size:1.02rem;">${curMod.era}</strong>
+            <span class="chip chip-ochre">${curMod.rev}</span>
+          </div>
+          <p style="font-size:0.83rem;color:var(--text-main);">${curMod.desc}</p>
+        </div>
+
+        <!-- 2. Matriz das 16 Características -->
+        <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
+          <span class="kicker" style="margin-bottom:0;">Tabela Oficial das 16 Características (p. 44)</span>
+          <div class="btn-row" style="margin-bottom:0;">
+            ${[
+              ['todas', 'Todas (16)'],
+              ['prod', 'Produção & Trabalho'],
+              ['fin', 'Finanças & Lucro'],
+              ['mercado', 'Mercado & Preços'],
+              ['estado', 'Estado & Exterior']
+            ].map(([k, lbl]) => `
+              <button type="button" class="ctrl-btn ${ui.c2Cat===k ? 'active-sup' : ''}" style="padding:5px 10px;font-size:0.74rem;" onclick="ui.c2Cat='${k}'; renderMain();">${lbl}</button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="table-scroll" style="margin-bottom:22px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Característica</th>
+                <th style="background:var(--sup-soft);color:var(--sup);">Circuito Superior</th>
+                <th style="background:var(--inf-soft);color:var(--inf);">Circuito Inferior</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${filteredRows.map(r => `
+                <tr>
+                  <td><strong>${r.k}</strong></td>
+                  <td>${r.s}</td>
+                  <td>${r.i}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 3. Simulador Figura 3 + Refutações -->
+        <div class="grid-2">
+          <div class="panel-soft">
+            <span class="kicker" style="color:var(--sup);">Simulador — Figura 3: Perfil da Renda (p. 50)</span>
+            <div class="btn-row" style="margin-top:6px;">
+              ${['A', 'B', 'C'].map(p => `
+                <button type="button" class="ctrl-btn ${ui.c2Profile===p ? 'active-sup' : ''}" onclick="ui.c2Profile='${p}'; renderMain();">Perfil ${p}</button>
+              `).join('')}
+            </div>
+
+            <div class="svg-box" style="padding:10px;margin-bottom:10px;">
+              <svg viewBox="0 0 220 155" role="img" aria-label="Curva de renda da Figura 3">
+                <line x1="25" y1="12" x2="25" y2="136" stroke="#1C232B" stroke-width="1.5"/>
+                <line x1="25" y1="136" x2="205" y2="136" stroke="#1C232B" stroke-width="1.5"/>
+                <line x1="100" y1="16" x2="100" y2="136" stroke="#C45B2C" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <rect x="26" y="45" width="74" height="90" fill="#FBECE5" opacity="0.65"/>
+                <path d="${pr.curve}" fill="none" stroke="#1B4965" stroke-width="2.5"/>
+                <text x="62" y="128" text-anchor="middle" font-family="monospace" font-size="7.5" fill="#9A411A">Sem crédito bancário</text>
+                <text x="154" y="28" text-anchor="middle" font-family="monospace" font-size="8" font-weight="700" fill="#1B4965">PERFIL ${ui.c2Profile}</text>
+                <text x="195" y="149" text-anchor="end" font-family="monospace" font-size="8" fill="#4E5965">Renda →</text>
+              </svg>
+            </div>
+
+            <div style="display:flex;height:24px;border-radius:8px;overflow:hidden;border:1px solid var(--border-soft);margin-bottom:8px;font-family:var(--font-mono);font-size:0.7rem;font-weight:700;color:#fff;">
+              <div style="width:${pr.supPct}%;background:var(--sup);display:flex;align-items:center;justify-content:center;">Sup. ${pr.supPct}%</div>
+              <div style="width:${pr.infPct}%;background:var(--inf);display:flex;align-items:center;justify-content:center;">Inf. ${pr.infPct}%</div>
+            </div>
+            <p style="font-size:0.78rem;color:var(--text-muted);">${pr.note}</p>
+          </div>
+
+          <div class="panel-soft">
+            <span class="kicker" style="color:var(--inf);">Precisões Conceituais do Capítulo 2</span>
+            <div class="btn-row" style="margin-top:6px;">
+              <button type="button" class="ctrl-btn ${ui.c2Refute==='bipolar' ? 'active-inf' : ''}" onclick="ui.c2Refute='bipolar'; renderMain();">Bipolarização ≠ Dualismo</button>
+              <button type="button" class="ctrl-btn ${ui.c2Refute==='continuum' ? 'active-olive' : ''}" onclick="ui.c2Refute='continuum'; renderMain();">Nem 3º Circuito, nem Continuum</button>
+            </div>
+            ${ui.c2Refute === 'bipolar' ? `
+              <h4 style="font-family:var(--font-serif);font-size:1rem;color:var(--inf);margin-bottom:6px;">Bipolarização, mas não Dualismo</h4>
+              <p style="font-size:0.82rem;color:var(--text-main);">
+                O dualismo clássico trata "moderno" e "tradicional" como mundos separados em conflito, levando a soluções parciais (como "só construir casas populares"). Milton Santos demonstra que os dois circuitos são <strong>dois polos da mesma sociedade</strong>, originados pela mesma modernização tecnológica — onde o circuito inferior é dependente do circuito superior.
+              </p>
+            ` : `
+              <h4 style="font-family:var(--font-serif);font-size:1rem;color:var(--olive);margin-bottom:6px;">Nem Circuito Intermediário, nem Continuum</h4>
+              <p style="font-size:0.82rem;color:var(--text-main);">
+                Embora a sociedade urbana seja tripolarizada (ricos, classe média, pobres), a classe média <strong>não cria um terceiro circuito</strong>: usa o circuito superior para bens de prestígio e o circuito inferior (fiado) para consumos correntes. Tampouco há um <em>continuum</em> evolutivo, pois o salto tecnológico e de escala separa os dois subsistemas.
+              </p>
+            `}
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 3 --- */
+    function renderInfoCap3() {
+      const myths = {
+        europa: {
+          myth: 'Erro 1: "O Terceiro Mundo repete a Europa da Revolução Industrial"',
+          leftH: 'Europa (Séc. XVIII–XIX)',
+          leftP: 'A industrialização criava mais empregos do que a população urbana conseguia preencher, absorvendo o êxodo rural. A expansão do terciário foi tardia e a produtividade entre setores era comparável.',
+          rightH: 'Terceiro Mundo (Pós-1945)',
+          rightP: 'A industrialização capital-intensiva atrai migrantes, mas cria poucos empregos. Desde o início surge um "terciário primitivo" ou "terciário refúgio", com abismo de produtividade entre os dois circuitos.'
+        },
+        gueto: {
+          myth: 'Erro 2: "O Gueto dos países ricos equivale ao Circuito Inferior"',
+          leftH: 'Gueto (EUA / Europa)',
+          leftP: 'Pobres são minoria relativa; contam com "pobreza com segurança" (seguro-desemprego), acesso ao crédito burocrático e penetração de supermercados. Menor mobilidade ocupacional local.',
+          rightH: 'Circuito Inferior (Terceiro Mundo)',
+          rightP: 'Massa majoritária em "pobreza sem segurança", obrigada à busca diária por ganho. Acesso apenas ao crédito pessoal usurário, mas com grande capacidade auto-inflacionária e flexibilidade de ofícios.'
+        },
+        favela: {
+          myth: 'Erro 3: "A Favela é sinônimo de Circuito Inferior (ou ruralização urbana)"',
+          leftH: 'Favela (Quadro Habitacional)',
+          leftP: 'É uma realidade física multiforme: abriga desde biscateiros até operários assalariados do circuito superior. Muitos moram em barracos para liberar dinheiro líquido para consumos modernos (ex.: TV).',
+          rightH: 'Circuito Inferior (Subsistema Econômico)',
+          rightP: 'Não é delimitado geograficamente à favela nem é "aldeia rural na cidade". Abrange agentes em toda a cidade e cria atividades próprias além da simples oferta de mão-de-obra ao centro.'
+        }
+      };
+      const m = myths[ui.c3Tab];
+      const isTec = ui.c3Mig === 'tecnologica';
+
+      return `
+        <span class="kicker" style="color:var(--ochre);">Infográfico Exclusivo • Cap. 3</span>
+        <h3 class="heading-md">Desmistificador: 3 Erros Clássicos &amp; Dois Tipos de Migração</h3>
+        <p class="sub-lead">Selecione cada comparação abusiva criticada por Milton Santos para ver por que o fenômeno dos dois circuitos é específico e contemporâneo.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${ui.c3Tab==='europa' ? 'active-sup' : ''}" onclick="ui.c3Tab='europa'; renderMain();">1. Europa Rev. Industrial</button>
+          <button type="button" class="ctrl-btn ${ui.c3Tab==='gueto' ? 'active-inf' : ''}" onclick="ui.c3Tab='gueto'; renderMain();">2. Gueto vs. Circuito Inferior</button>
+          <button type="button" class="ctrl-btn ${ui.c3Tab==='favela' ? 'active-olive' : ''}" onclick="ui.c3Tab='favela'; renderMain();">3. Favela vs. Circuito Inferior</button>
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:18px;">
+          <strong style="font-family:var(--font-serif);font-size:1.05rem;color:var(--inf);display:block;margin-bottom:12px;">✕ ${m.myth}</strong>
+          <div class="grid-2">
+            <div style="background:var(--bg-card);border:1px solid var(--border-soft);border-radius:10px;padding:14px;">
+              <span class="chip chip-sup" style="margin-bottom:6px;">${m.leftH}</span>
+              <p style="font-size:0.82rem;color:var(--text-main);">${m.leftP}</p>
+            </div>
+            <div style="background:var(--bg-card);border:1px solid var(--border-soft);border-radius:10px;padding:14px;">
+              <span class="chip chip-inf" style="margin-bottom:6px;">${m.rightH}</span>
+              <p style="font-size:0.82rem;color:var(--text-main);">${m.rightP}</p>
+            </div>
+          </div>
+        </div>
+
+        <span class="kicker">Atualidade do Fenômeno: Migrações de Pobreza vs. Migrações Tecnológicas</span>
+        <div class="btn-row" style="margin-top:6px;">
+          <button type="button" class="ctrl-btn ${!isTec ? 'active-ochre' : ''}" onclick="ui.c3Mig='pobreza'; renderMain();">Migrações de Pobreza (Pré-2ª Guerra)</button>
+          <button type="button" class="ctrl-btn ${isTec ? 'active-sup' : ''}" onclick="ui.c3Mig='tecnologica'; renderMain();">Migrações Tecnológicas (Pós-2ª Guerra)</button>
+        </div>
+        <div class="panel-soft" style="border-left:4px solid ${isTec ? 'var(--sup)' : 'var(--ochre)'};">
+          <p style="font-size:0.84rem;color:var(--text-main);">
+            ${isTec
+              ? '<strong>Migrações Tecnológicas (Atuais):</strong> O agente estrangeiro não vem a título pessoal, mas como representante de corporações, técnicas e capitais importados. Não há integração local, mas controle externo e drenagem de excedentes.'
+              : '<strong>Migrações de Pobreza (Fase Anterior):</strong> Imigrantes europeus ameaçados de marginalização traziam habilidades e "capitais dos estrangeiros", integrando-se ao país receptor numa fase de tecnologia menos concentrada e maior criação de empregos.'}
+          </p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 4 --- */
+    function renderInfoCap4() {
+      const comps = {
+        puras: { title: 'Atividades Puras (Indústria Urbana & Comércio Moderno)', desc: 'Específicas da cidade e do circuito superior: supermercados, lojas especializadas e fábricas voltadas ao consumo doméstico moderno. Exigem importação contínua de bens de capital e know-how.' },
+        impuras: { title: 'Atividades Impuras (Comércio & Indústria de Exportação / Reexportação)', desc: 'Usam a cidade como base locacional (mão-de-obra barata, portos, isenções fiscais), mas seus outputs e lucros destinam-se aos países ricos (ex.: Formosa, Coreia, peças montadas para os EUA).' },
+        mistas: { title: 'Atividades Mistas (Atacadistas & Transportadores)', desc: 'Operam na dobradiça entre os dois circuitos: acessam o crédito bancário no circuito superior e abastecem a crédito os pequenos comerciantes e artesãos do circuito inferior.' },
+        marginal: { title: 'Circuito Superior Marginal (CSM)', desc: 'Apenas na fabricação: indústrias menos modernas (residuais ou emergentes) que coexistem com oligopólios sob preços elevados, pagando salários menores e sem gastos pesados em publicidade.' },
+        banco: { title: 'O Banco — "Perverse Flow of Credit"', desc: 'Traço de união assimétrico controlado pelo sistema bancário internacional. Coleta a poupança das pequenas e médias cidades e a drena para as metrópoles e o exterior — gerando o fluxo perverso de crédito.' }
+      };
+      const cp = comps[ui.c4Comp];
+
+      return `
+        <span class="kicker" style="color:var(--sup);">Infográfico Exclusivo • Cap. 4</span>
+        <h3 class="heading-md">Anatomia do Circuito Superior &amp; Dados Empíricos da Dependência</h3>
+        <p class="sub-lead">Inspecione os cinco componentes do circuito moderno e explore os dados reais reunidos por Milton Santos sobre ciência, conglomerados e sangria de capitais.</p>
+
+        <div class="btn-row">
+          ${[
+            ['puras', 'Puras'],
+            ['impuras', 'Impuras (Export.)'],
+            ['mistas', 'Mistas'],
+            ['marginal', 'C. S. Marginal'],
+            ['banco', 'O Banco (Fluxo Perverso)']
+          ].map(([k, l]) => `
+            <button type="button" class="ctrl-btn ${ui.c4Comp===k ? 'active-sup' : ''}" onclick="ui.c4Comp='${k}'; renderMain();">${l}</button>
+          `).join('')}
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--sup);margin-bottom:20px;">
+          <h4 style="font-family:var(--font-serif);font-size:1.05rem;color:var(--sup);margin-bottom:5px;">${cp.title}</h4>
+          <p style="font-size:0.84rem;color:var(--text-main);">${cp.desc}</p>
+        </div>
+
+        <span class="kicker" style="color:var(--inf);">Painel Empírico do Livro (pp. 115–121)</span>
+        <div class="btn-row" style="margin-top:6px;">
+          <button type="button" class="ctrl-btn ${ui.c4Chart==='ciencia' ? 'active-inf' : ''}" onclick="ui.c4Chart='ciencia'; renderMain();">Monopólio Científico (UNESCO)</button>
+          <button type="button" class="ctrl-btn ${ui.c4Chart==='conglomerados' ? 'active-inf' : ''}" onclick="ui.c4Chart='conglomerados'; renderMain();">187 Conglomerados (Am. Latina)</button>
+          <button type="button" class="ctrl-btn ${ui.c4Chart==='sangria' ? 'active-inf' : ''}" onclick="ui.c4Chart='sangria'; renderMain();">Sangria de Capitais (1961–68)</button>
+        </div>
+
+        <div class="panel-soft">
+          ${ui.c4Chart === 'ciencia' ? `
+            <div class="meter-item">
+              <div class="meter-head"><span>Países Desenvolvidos (Capacidade Científica Global — UNESCO)</span><span style="color:var(--sup);">95%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:95%;background:var(--sup);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Países Subdesenvolvidos (Capacidade Científica Global)</span><span style="color:var(--inf);">5%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:5%;background:var(--inf);"></div></div>
+            </div>
+            <p style="font-size:0.79rem;color:var(--text-muted);margin-top:10px;">Os EUA recebiam 57% das somas mundiais de pagamentos tecnológicos (1964), enquanto todos os países subdesenvolvidos juntos recebiam 1% e pagavam 8%.</p>
+          ` : ui.c4Chart === 'conglomerados' ? `
+            <div class="meter-item">
+              <div class="meter-head"><span>1945 — Filiais de 187 Conglomerados dos EUA na América Latina</span><span>452 filiais</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:23.5%;background:var(--sup-light);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>1967 — Filiais dos mesmos 187 Conglomerados (+325%)</span><span style="color:var(--inf);">1.924 filiais</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:100%;background:var(--inf);"></div></div>
+            </div>
+            <p style="font-size:0.79rem;color:var(--text-muted);margin-top:10px;">Fonte: Vaupel &amp; Curhan (1969), p. 115. No Brasil (1969), 8 das 10 maiores empresas privadas já pertenciam a capitais estrangeiros.</p>
+          ` : `
+            <div class="meter-item">
+              <div class="meter-head"><span>Entrada de Capitais na América Latina (1961–1968)</span><span style="color:var(--olive);">US$ 11,49 bi</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:30%;background:var(--olive);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Saída de Capitais (Transferência Líquida Negativa de US$ 3,25 bi)</span><span style="color:var(--inf);">US$ 14,74 bi</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:39%;background:var(--inf);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Pagamento de Serviços ao Exterior no mesmo período (BID/FMI)</span><span style="color:var(--sup);">+ US$ 23,00 bi</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:61%;background:var(--sup);"></div></div>
+            </div>
+            <p style="font-size:0.79rem;color:var(--text-muted);margin-top:10px;">Na Colômbia (1968), para cada US$ 1 investido, US$ 4 retornavam ao país de origem. No Peru, para cada US$ 30 investidos, US$ 100 saíam em lucros, royalties e dívida.</p>
+          `}
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 5 --- */
+    function renderInfoCap5() {
+      const conc = ui.c5Conc;
+      const idle = ui.c5Idle;
+      const price = ui.c5Price;
+
+      const barriers = Math.min(100, Math.round(conc * 0.55 + idle * 0.45));
+      const reserves = Math.min(100, Math.round(price * 0.65 + conc * 0.35));
+      const marketShrink = Math.min(100, Math.round(idle * 0.5 + price * 0.5));
+      const artisanDecline = Math.min(100, Math.round(conc * 0.45 + price * 0.55));
+
+      const q1Data = [
+        { ramo: 'Alimentação — El Salvador', f: '3,4%', p: 65.0 },
+        { ramo: 'Química — Colômbia', f: '8,6%', p: 55.7 },
+        { ramo: 'Metais Básicos — Colômbia', f: '12,9%', p: 79.8 },
+        { ramo: 'Metais Básicos — El Salvador', f: '33,3%', p: 90.7 },
+        { ramo: 'Máquinas — Colômbia', f: '3,4%', p: 56.5 },
+        { ramo: 'Equip. Transporte — El Salvador', f: '2,0%', p: 57.2 }
+      ];
+
+      const spData = [
+        { ramo: 'Elevadores (6 empresas)', p: 99 },
+        { ramo: 'Instrumentos Agrícolas (9 empresas)', p: 97 },
+        { ramo: 'Refrigeradores (8 empresas)', p: 91 },
+        { ramo: 'Motores Elétricos (9 empresas)', p: 86 },
+        { ramo: 'Máquinas de Lavar (6 empresas)', p: 82 },
+        { ramo: 'Armações Metálicas (8 empresas)', p: 76 }
+      ];
+
+      return `
+        <span class="kicker" style="color:var(--sup);">Infográfico Exclusivo • Cap. 5</span>
+        <h3 class="heading-md">Simulador da Engrenagem Monopolista &amp; Dados de Concentração</h3>
+        <p class="sub-lead">Ajuste os três controles da conduta monopolista para visualizar seus efeitos estruturais sobre o mercado interno e compare os dados reais do Quadro 1 (p. 137) e de São Paulo (p. 154).</p>
+
+        <div class="grid-2" style="margin-bottom:20px;">
+          <div class="panel-soft">
+            <span class="kicker">Controles do Monopólio</span>
+            <div class="meter-item" style="margin-top:8px;">
+              <div class="meter-head"><span>Grau de Concentração Tecnológica</span><span>${conc}%</span></div>
+              <input type="range" class="atlas-range" min="20" max="100" value="${conc}" oninput="ui.c5Conc=Number(this.value); renderMain();">
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Capacidade Ociosa Deliberada</span><span>${idle}%</span></div>
+              <input type="range" class="atlas-range" min="10" max="80" value="${idle}" oninput="ui.c5Idle=Number(this.value); renderMain();">
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Preços Administrados &amp; Publicidade</span><span>${price}%</span></div>
+              <input type="range" class="atlas-range" min="20" max="100" value="${price}" oninput="ui.c5Price=Number(this.value); renderMain();">
+            </div>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid var(--sup);">
+            <span class="kicker" style="color:var(--inf);">Consequências Estruturais em Tempo Real</span>
+            <div class="meter-item" style="margin-top:8px;">
+              <div class="meter-head"><span>Barreiras de Entrada (Bloqueio à "Destruição Criativa")</span><span>${barriers}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${barriers}%;background:var(--sup);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Fundos de Reserva / Autofinanciamento da Firma</span><span>${reserves}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${reserves}%;background:var(--ochre);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Estreitamento do Mercado Interno</span><span>${marketShrink}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${marketShrink}%;background:var(--inf);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Regressão do Artesanato &amp; Pequenas Indústrias</span><span>${artisanDecline}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${artisanDecline}%;background:#8B3A1E;"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${ui.c5DataTab==='quadro1' ? 'active-sup' : ''}" onclick="ui.c5DataTab='quadro1'; renderMain();">Quadro 1 (p. 137) — % Firmas vs. % Produção</button>
+          <button type="button" class="ctrl-btn ${ui.c5DataTab==='sp' ? 'active-inf' : ''}" onclick="ui.c5DataTab='sp'; renderMain();">Metalurgia de São Paulo (p. 154) — Top 3 Empresas</button>
+        </div>
+
+        <div class="panel-soft">
+          ${ui.c5DataTab === 'quadro1' ? q1Data.map(d => `
+            <div class="meter-item">
+              <div class="meter-head"><span>${d.ramo} <small style="color:var(--text-muted);font-weight:400;">(${d.f} das firmas)</small></span><span>${d.p}% da produção</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${d.p}%;background:var(--sup);"></div></div>
+            </div>
+          `).join('') : spData.map(d => `
+            <div class="meter-item">
+              <div class="meter-head"><span>${d.ramo}</span><span>${d.p}% nas 3 maiores</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${d.p}%;background:var(--inf);"></div></div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 6 --- */
+    function renderInfoCap6() {
+      const supAlloc = ui.c6Alloc;
+      const socAlloc = 100 - supAlloc;
+      const indirectTax = Math.min(92, Math.round(32 + supAlloc * 0.6));
+      const autonomy = Math.max(8, Math.round(100 - supAlloc * 0.88));
+
+      const diag = supAlloc >= 65
+        ? 'Cenário Típico do Subdesenvolvimento: o Estado drena o orçamento para overhead capital, energia barata e subsídios às multinacionais, agrava impostos indiretos sobre os pobres e torna-se "menos Estado".'
+        : supAlloc >= 40
+        ? 'Cenário Intermediário: tensão fiscal entre infraestrutura exigida pelo setor moderno e demandas sociais da população.'
+        : 'Cenário Alternativo (Reorientação Estatal): o Estado prioriza serviços sociais, economia doméstica e mercado popular, recuperando autonomia decisória ("mais Estado").';
+
+      return `
+        <span class="kicker" style="color:var(--sup);">Infográfico Exclusivo • Cap. 6</span>
+        <h3 class="heading-md">Simulador da Alocação Estatal no Subdesenvolvimento</h3>
+        <p class="sub-lead">Deslize o direcionamento do orçamento público ou escolha um cenário para observar a cadeia causal que transforma o Estado em <strong>"menos Estado"</strong>.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${supAlloc===82 ? 'active-sup' : ''}" onclick="ui.c6Alloc=82; renderMain();">Modelo Subdesenvolvido Típico (82% C. Superior)</button>
+          <button type="button" class="ctrl-btn ${supAlloc===50 ? 'active-ochre' : ''}" onclick="ui.c6Alloc=50; renderMain();">Equilíbrio Tenso (50% / 50%)</button>
+          <button type="button" class="ctrl-btn ${supAlloc===22 ? 'active-olive' : ''}" onclick="ui.c6Alloc=22; renderMain();">Reorientação Social (78% Social/Doméstico)</button>
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:16px;">
+          <div class="meter-head">
+            <span style="color:var(--sup);">Overhead Capital &amp; Subsídios às Grandes Firmas: ${supAlloc}%</span>
+            <span style="color:var(--olive);">Economia Doméstica &amp; Social: ${socAlloc}%</span>
+          </div>
+          <input type="range" class="atlas-range" min="15" max="90" value="${supAlloc}" oninput="ui.c6Alloc=Number(this.value); renderMain();" aria-label="Alocação do orçamento estatal">
+        </div>
+
+        <!-- Fluxograma SVG da Cadeia Causal -->
+        <div class="svg-box" style="margin-bottom:14px;">
+          <svg viewBox="0 0 820 135" role="img" aria-label="Cadeia causal do empobrecimento do Estado">
+            ${[
+              { x: 10, t1: '1. Estado Financia', t2: `Circuito Superior (${supAlloc}%)`, c: '#1B4965' },
+              { x: 215, t1: '2. Dívida & Impostos', t2: `Indiretos (${indirectTax}%)`, c: '#C88A2B' },
+              { x: 420, t1: '3. Empobrecimento', t2: 'População & E. Doméstica', c: '#C45B2C' },
+              { x: 625, t1: '4. Perda de Autonomia', t2: `Autonomia: ${autonomy}%`, c: autonomy < 35 ? '#C45B2C' : '#366858' }
+            ].map((b, i) => `
+              <g>
+                <rect x="${b.x}" y="26" width="185" height="78" rx="12" fill="#FFFDF8" stroke="${b.c}" stroke-width="2.2"/>
+                <text x="${b.x + 92}" y="58" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="${b.c}">${b.t1}</text>
+                <text x="${b.x + 92}" y="80" text-anchor="middle" font-family="monospace" font-size="10.5" fill="#1C232B">${b.t2}</text>
+                ${i < 3 ? `<line x1="${b.x + 186}" y1="65" x2="${b.x + 213}" y2="65" stroke="#4E5965" stroke-width="2"/>` : ''}
+              </g>
+            `).join('')}
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${supAlloc >= 65 ? 'var(--inf)' : 'var(--olive)'};">
+          <p style="font-size:0.84rem;color:var(--text-main);"><strong>Diagnóstico:</strong> ${diag}</p>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;"><em>Dado do livro (p. 180–182):</em> Nos países subdesenvolvidos, em média 25% do orçamento vai para infraestrutura (vs. 6% nos desenvolvidos), e na América Latina 53% da arrecadação vinha de impostos indiretos (vs. 36% na Inglaterra).</p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 7 --- */
+    function renderInfoCap7() {
+      const steps = [
+        { k: '1. Industrialização Capital-Intensiva', d: 'Tecnologias importadas concebidas para economias onde a mão-de-obra é escassa geram produção concentrada para elites e exportação.' },
+        { k: '2. Pouco Emprego Direto Local', d: 'Empregos indiretos e qualificados são criados no exterior (600 mil nos EUA via multinacionais); localmente, o emprego industrial é rígido.' },
+        { k: '3. Êxodo Rural Contínuo', d: 'Desnível salarial campo-cidade (ex.: México, +454%) e modernização ou atraso agrário transferem a pobreza rural para as cidades.' },
+        { k: '4. Subemprego e "Terciário Refúgio"', d: 'A superpopulação relativa gerada pela própria acumulação capitalista busca abrigo em pequenos serviços e ofícios ocasionais.' },
+        { k: '5. Expansão do Circuito Inferior', d: 'A massa pobre sem acesso ao crédito bancário e aos bens modernos cria e sustenta a demanda e a oferta do Circuito Inferior.' }
+      ];
+      const curSt = steps[ui.c7Step];
+
+      return `
+        <span class="kicker" style="color:var(--inf);">Infográfico Exclusivo • Cap. 7</span>
+        <h3 class="heading-md">Distribuição de Renda (Dados Reais) &amp; Cadeia Causal da Pobreza Urbana</h3>
+        <p class="sub-lead">Compare os dados empíricos de desigualdade citados por Milton Santos (p. 58) e percorra a cadeia causal que conecta modernização e expansão do Circuito Inferior.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${ui.c7City==='salvador' ? 'active-inf' : ''}" onclick="ui.c7City='salvador'; renderMain();">Salvador (1966 — BNB)</button>
+          <button type="button" class="ctrl-btn ${ui.c7City==='kinshasa' ? 'active-inf' : ''}" onclick="ui.c7City='kinshasa'; renderMain();">Kinshasa (1970 — M’Buy)</button>
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:20px;">
+          ${ui.c7City === 'salvador' ? `
+            <strong style="font-size:0.86rem;display:block;margin-bottom:10px;">Salvador (Bahia, 1966) — População vs. Participação na Renda:</strong>
+            <div class="meter-item">
+              <div class="meter-head"><span>46,1% mais pobres da população</span><span style="color:var(--inf);">apenas 15,5% da renda</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:15.5%;background:var(--inf);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>47,5% intermediários (faixas médias)</span><span style="color:var(--ochre);">60,0% da renda</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:60%;background:var(--ochre);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>6,4% mais ricos (topo da pirâmide)</span><span style="color:var(--sup);">24,5% da renda</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:24.5%;background:var(--sup);"></div></div>
+            </div>
+          ` : `
+            <strong style="font-size:0.86rem;display:block;margin-bottom:10px;">Kinshasa (Zaire, 1970) — Estrutura da População Ativa Empregada:</strong>
+            <div class="meter-item">
+              <div class="meter-head"><span>Salário no limite do mínimo vital (excluindo sem emprego permanente)</span><span style="color:var(--inf);">81,7%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:81.7%;background:var(--inf);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Pessoas abastadas (camadas médias/superiores)</span><span style="color:var(--ochre);">14,1%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:14.1%;background:var(--ochre);"></div></div>
+            </div>
+            <div class="meter-item">
+              <div class="meter-head"><span>Economicamente fortes (elite urbana)</span><span style="color:var(--sup);">4,2%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:4.2%;background:var(--sup);"></div></div>
+            </div>
+          `}
+        </div>
+
+        <span class="kicker">Diagrama Causal Interativo (Clique nas 5 etapas)</span>
+        <div class="btn-row" style="margin-top:6px;">
+          ${steps.map((s, i) => `
+            <button type="button" class="ctrl-btn ${ui.c7Step===i ? 'active-inf' : ''}" onclick="ui.c7Step=${i}; renderMain();">${s.k}</button>
+          `).join('')}
+        </div>
+        <div class="panel-soft" style="border-left:4px solid var(--inf);">
+          <h4 style="font-family:var(--font-serif);font-size:1.05rem;color:var(--inf);margin-bottom:5px;">${curSt.k}</h4>
+          <p style="font-size:0.84rem;color:var(--text-main);">${curSt.d}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 8 --- */
+    function renderInfoCap8() {
+      const stages = [
+        { n: '1. Entrada Fácil & Pequena Dimensão', d: 'Exige muito trabalho e mínimo capital (em Serra Leoa, 5 a 10 leones bastam para um pequeno vendedor vs. milhões para atacadistas). Trabalho em casa, familiar e sem custos fixos.' },
+        { n: '2. Dependência de Atacadistas & Transportadores', d: 'Sem acesso ao banco e sem estoque para comprar na fonte, o pequeno agente depende de atacadistas e caminhoneiros, multiplicando os elos de intermediação.' },
+        { n: '3. Fome de Dinheiro Líquido (Cash Nexus)', d: 'A liquidez é o "lubrificante" do sistema: é preciso vender todos os dias (mesmo com prejuízo momentâneo) para pagar parcelas da dívida e renovar o estoque.' },
+        { n: '4. Crédito Pessoal, Endividamento & Usura', d: 'O crédito pessoal (fiado) permite ao pobre consumir sem renda fixa, mas taxas usurárias (até 15–25% ao mês) e dívidas permanentes drenam a poupança popular. Associações como tontinas tentam escapar da usura.' },
+        { n: '5. Margem Alta/Unidade & Pechincha (Haggling)', d: 'O fracionamento encarece o produto final (ex.: querosene em Bouaké sobe de 28 para 45 francos/litro). O lucro total é pequeno, voltado à sobrevivência, e o preço ajusta-se na pechincha.' }
+      ];
+      const st = stages[ui.c8Stage];
+      const isForcas = ui.c8Balance === 'forcas';
+
+      return `
+        <span class="kicker" style="color:var(--inf);">Infográfico Exclusivo • Cap. 8</span>
+        <h3 class="heading-md">Ciclo Financeiro e Operacional &amp; Forças vs. Fraquezas</h3>
+        <p class="sub-lead">Percorra as 5 engrenagens que conferem racionalidade própria ("equilíbrio da miséria") ao Circuito Inferior e compare suas forças e fragilidades.</p>
+
+        <div class="btn-row">
+          ${stages.map((s, i) => `
+            <button type="button" class="ctrl-btn ${ui.c8Stage===i ? 'active-inf' : ''}" onclick="ui.c8Stage=${i}; renderMain();">Etapa ${i + 1}</button>
+          `).join('')}
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--inf);margin-bottom:20px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:6px;">
+            <h4 style="font-family:var(--font-serif);font-size:1.08rem;color:var(--inf);">${st.n}</h4>
+            <div style="display:flex;gap:6px;">
+              <button type="button" class="ctrl-btn" style="padding:4px 10px;" onclick="ui.c8Stage=Math.max(0,ui.c8Stage-1); renderMain();" ${ui.c8Stage===0?'disabled':''}>←</button>
+              <button type="button" class="ctrl-btn" style="padding:4px 10px;" onclick="ui.c8Stage=Math.min(4,ui.c8Stage+1); renderMain();" ${ui.c8Stage===4?'disabled':''}>→</button>
+            </div>
+          </div>
+          <p style="font-size:0.84rem;color:var(--text-main);">${st.d}</p>
+        </div>
+
+        <span class="kicker">Balanço Estrutural do Circuito Inferior</span>
+        <div class="btn-row" style="margin-top:6px;">
+          <button type="button" class="ctrl-btn ${isForcas ? 'active-olive' : ''}" onclick="ui.c8Balance='forcas'; renderMain();">Forças do Circuito Inferior</button>
+          <button type="button" class="ctrl-btn ${!isForcas ? 'active-inf' : ''}" onclick="ui.c8Balance='fraquezas'; renderMain();">Fraquezas &amp; Subordinação</button>
+        </div>
+        <div class="grid-3">
+          ${(isForcas ? [
+            { h: 'Auto-Inflacionário em Emprego', p: 'Absorve continuamente migrantes e mão-de-obra sem qualificação; quanto mais pessoas entram, mais tarefas se pulverizam.' },
+            { h: 'Flexibilidade & Adaptação', p: 'Ajusta-se rapidamente às oscilações conjunturais, reaproveita bens (oficinas de reparo) e cria soluções financeiras locais (tontinas).' },
+            { h: 'Enraizamento Regional', p: 'Mantém integração horizontal na cidade e com o campo próximo, atendendo às necessidades cotidianas da massa urbana.' }
+          ] : [
+            { h: 'Impossibilidade de Acumulação', p: 'O capital circula rápido, mas quase não acumula: o ganho vai para a subsistência diária e para saldar dívidas.' },
+            { h: 'Canal de Drenagem', p: 'Por meio de atacadistas, bancos e consumo moderno, aspira a poupança popular e a transfere para cima, engordando o Circuito Superior.' },
+            { h: 'Perpetuação da Pobreza', p: 'Seu dinamismo é apenas relativo quando visto no sistema urbano global: sua função estrutural acaba sendo reproduzir a pobreza.' }
+          ]).map(item => `
+            <div class="panel-soft" style="border-top:3px solid ${isForcas ? 'var(--olive)' : 'var(--inf)'};">
+              <strong style="font-family:var(--font-serif);font-size:0.95rem;display:block;margin-bottom:5px;">${item.h}</strong>
+              <p style="font-size:0.8rem;color:var(--text-muted);">${item.p}</p>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 9 --- */
+    function renderInfoCap9() {
+      const nodes = {
+        completa: { title: 'Metrópole Completa (ex.: São Paulo, Buenos Aires, México)', desc: 'Capaz de produzir bens de capital e tecnologia nacionalmente. Concentra economias externas, serviços superiores e sedes de monopólios, comandando toda a rede urbana e gerando macrocefalia.' },
+        incompleta: { title: 'Metrópole Incompleta (ex.: Salvador, Guadalajara, Abidjan)', desc: 'Irradia-se sobre vasto território, mas depende de uma metrópole completa nacional ou do exterior (Paris, Londres) para exercer a totalidade das funções superiores.' },
+        intermediaria: { title: 'Cidades Intermediárias (antigas Cidades Regionais)', desc: 'Perdem autonomia com as rodovias modernas e tornam-se "relés" da metrópole. Sofrem curto-circuito e abrigam atividades do Circuito Superior Marginal em competição com o centro.' },
+        periferia: { title: 'Cidades Locais & Regiões Periféricas', desc: 'Sofrem "marginalização geográfica": pouca acessibilidade, crédito restrito, produtos agrícolas vendidos baratos e manufaturados comprados caros. Financiam o crescimento do centro.' }
+      };
+      const nd = nodes[ui.c9Node];
+
+      const layers = {
+        drenagem: { label: 'Drenagem de Excedentes & Macrocefalia', color: '#C45B2C', text: 'As regiões periféricas enviam capitais, matérias-primas e rendas para a metrópole (acumulação circular / "colonialismo interno"), reforçando a concentração cumulativa.' },
+        migracao: { label: 'Fluxos Migratórios (Ascendentes & Descendentes)', color: '#C88A2B', text: 'Migrações ascendentes levam pobres direto do campo às metrópoles (sem parar em cascata); migrações descendentes levam quadros técnicos do centro para regiões inferiores.' },
+        estado: { label: 'Infraestrutura Seletiva do Estado', color: '#1B4965', text: 'Rodovias dendríticas e investimentos públicos concentram-se nos eixos da economia moderna, permitindo que a metrópole faça "curto-circuito" sobre as cidades intermediárias.' }
+      };
+      const ly = layers[ui.c9Layer];
+
+      return `
+        <span class="kicker" style="color:var(--olive);">Infográfico Exclusivo • Cap. 9</span>
+        <h3 class="heading-md">Mapa Esquemático da Hierarquia Espacial Subdesenvolvida</h3>
+        <p class="sub-lead">Clique nos 4 nós territoriais e alterne as camadas de fluxos para observar como o Estado e os monopólios macroestruturam o espaço.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${ui.c9Layer==='drenagem' ? 'active-inf' : ''}" onclick="ui.c9Layer='drenagem'; renderMain();">Camada: Drenagem &amp; Macrocefalia</button>
+          <button type="button" class="ctrl-btn ${ui.c9Layer==='migracao' ? 'active-ochre' : ''}" onclick="ui.c9Layer='migracao'; renderMain();">Camada: Fluxos Migratórios</button>
+          <button type="button" class="ctrl-btn ${ui.c9Layer==='estado' ? 'active-sup' : ''}" onclick="ui.c9Layer='estado'; renderMain();">Camada: Infraestrutura do Estado</button>
+        </div>
+
+        <div class="svg-box" style="margin-bottom:14px;">
+          <svg viewBox="0 0 800 220" role="img" aria-label="Hierarquia espacial de metrópoles, cidades intermediárias e periferias">
+            <!-- Fluxos da camada selecionada -->
+            <path d="M 680 120 Q 400 20 120 110" fill="none" stroke="${ly.color}" stroke-width="3" stroke-dasharray="${ui.c9Layer==='estado' ? 'none' : '7 4'}"/>
+            <line x1="120" y1="115" x2="310" y2="115" stroke="${ly.color}" stroke-width="2.5"/>
+            <line x1="310" y1="115" x2="500" y2="115" stroke="${ly.color}" stroke-width="2"/>
+            <line x1="500" y1="115" x2="680" y2="115" stroke="${ly.color}" stroke-width="1.8"/>
+            <text x="400" y="34" text-anchor="middle" font-family="monospace" font-size="10.5" font-weight="700" fill="${ly.color}">CURTO-CIRCUITO / ${ly.label.toUpperCase()}</text>
+
+            <!-- 4 Nós clicáveis -->
+            ${[
+              { k: 'completa', x: 120, r: 44, t1: 'Metrópole', t2: 'Completa', c: '#1B4965' },
+              { k: 'incompleta', x: 310, r: 36, t1: 'Metrópole', t2: 'Incompleta', c: '#2C6E91' },
+              { k: 'intermediaria', x: 500, r: 30, t1: 'Cidade', t2: 'Intermediária', c: '#C88A2B' },
+              { k: 'periferia', x: 680, r: 26, t1: 'Local /', t2: 'Periferia', c: '#C45B2C' }
+            ].map(n => {
+              const active = ui.c9Node === n.k;
+              return `
+                <g onclick="ui.c9Node='${n.k}'; renderMain();" style="cursor:pointer;">
+                  <circle cx="${n.x}" cy="115" r="${n.r}" fill="${active ? n.c : '#FFFDF8'}" stroke="${n.c}" stroke-width="${active ? 3.5 : 2}"/>
+                  <text x="${n.x}" y="112" text-anchor="middle" font-family="sans-serif" font-size="10.5" font-weight="700" fill="${active ? '#fff' : '#1C232B'}">${n.t1}</text>
+                  <text x="${n.x}" y="126" text-anchor="middle" font-family="sans-serif" font-size="10" fill="${active ? '#F6F2E9' : '#4E5965'}">${n.t2}</text>
+                </g>
+              `;
+            }).join('')}
+
+            <text x="400" y="196" text-anchor="middle" font-family="monospace" font-size="10" fill="#4E5965">Acessibilidade &amp; Poder de Comando diminuem → | Vulnerabilidade &amp; Preços sobem →</text>
+          </svg>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel-soft" style="border-left:4px solid var(--sup);">
+            <span class="chip chip-sup" style="margin-bottom:6px;">Nó Selecionado</span>
+            <h4 style="font-family:var(--font-serif);font-size:1.02rem;margin-bottom:4px;">${nd.title}</h4>
+            <p style="font-size:0.82rem;color:var(--text-main);">${nd.desc}</p>
+          </div>
+          <div class="panel-soft" style="border-left:4px solid ${ly.color};">
+            <span class="chip" style="border-color:${ly.color};color:${ly.color};margin-bottom:6px;">Camada Ativa</span>
+            <h4 style="font-family:var(--font-serif);font-size:1.02rem;margin-bottom:4px;">${ly.label}</h4>
+            <p style="font-size:0.82rem;color:var(--text-main);">${ly.text}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 10 --- */
+    function renderInfoCap10() {
+      const f = ui.c10Field;
+      const showSup = f === 'superior' || f === 'ambos';
+      const showInf = f === 'inferior' || f === 'ambos';
+      const isS1 = ui.c10Sub === 's1';
+
+      return `
+        <span class="kicker" style="color:var(--olive);">Infográfico Exclusivo • Cap. 10</span>
+        <h3 class="heading-md">Simulador dos Dois <em>Urban Fields</em> &amp; Dois Subsistemas Urbanos</h3>
+        <p class="sub-lead">Alterne ou sobreponha as duas zonas de influência de uma mesma cidade (Fig. 14–17 do livro) e compare os dois subsistemas de industrialização.</p>
+
+        <div class="btn-row">
+          <button type="button" class="ctrl-btn ${f==='superior' ? 'active-sup' : ''}" onclick="ui.c10Field='superior'; renderMain();">Urban Field: Circuito Superior (Descontínuo)</button>
+          <button type="button" class="ctrl-btn ${f==='inferior' ? 'active-inf' : ''}" onclick="ui.c10Field='inferior'; renderMain();">Urban Field: Circuito Inferior (Contínuo)</button>
+          <button type="button" class="ctrl-btn ${f==='ambos' ? 'active-olive' : ''}" onclick="ui.c10Field='ambos'; renderMain();">Dialética Espacial (Sobreposição)</button>
+        </div>
+
+        <div class="svg-box" style="margin-bottom:16px;">
+          <svg viewBox="0 0 800 225" role="img" aria-label="Simulador dos dois urban fields e hexágono de Christaller modificado">
+            <!-- Campo Contínuo do Circuito Inferior -->
+            <g opacity="${showInf ? 1 : 0.14}">
+              <polygon points="210,32 315,72 315,152 210,192 105,152 105,72" fill="#FBECE5" stroke="#C45B2C" stroke-width="2.2"/>
+              <text x="210" y="176" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#9A411A">URBAN FIELD CONTÍNUO (C. INFERIOR)</text>
+              <text x="210" y="54" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#9A411A">Bacia local / Mercados periódicos</text>
+            </g>
+
+            <!-- Campo Descontínuo do Circuito Superior -->
+            <g opacity="${showSup ? 1 : 0.14}">
+              <line x1="210" y1="112" x2="520" y2="62" stroke="#1B4965" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <line x1="210" y1="112" x2="675" y2="112" stroke="#1B4965" stroke-width="2.8"/>
+              <line x1="210" y1="112" x2="530" y2="174" stroke="#1B4965" stroke-width="2.5" stroke-dasharray="6 4"/>
+
+              <circle cx="520" cy="62" r="24" fill="#E6F0F5" stroke="#1B4965" stroke-width="2"/>
+              <text x="520" y="65" text-anchor="middle" font-family="monospace" font-size="8.5" font-weight="700" fill="#1B4965">Nó Regional</text>
+
+              <circle cx="675" cy="112" r="34" fill="#1B4965"/>
+              <text x="675" y="109" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#fff">Metrópole /</text>
+              <text x="675" y="122" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#F6D8A4">Exterior</text>
+
+              <circle cx="530" cy="174" r="24" fill="#E6F0F5" stroke="#1B4965" stroke-width="2"/>
+              <text x="530" y="177" text-anchor="middle" font-family="monospace" font-size="8.5" font-weight="700" fill="#1B4965">Enclave</text>
+
+              <text x="550" y="26" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#1B4965">URBAN FIELD DESCONTÍNUO (C. SUPERIOR)</text>
+            </g>
+
+            <!-- Cidade Central -->
+            <circle cx="210" cy="112" r="26" fill="#366858" stroke="#FFFDF8" stroke-width="3"/>
+            <text x="210" y="116" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="700" fill="#FFFFFF">CIDADE</text>
+          </svg>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel-soft">
+            <span class="kicker" style="color:var(--olive);">Revisão de Christaller &amp; Perroux</span>
+            <p style="font-size:0.82rem;color:var(--text-main);">
+              <strong>Christaller (Lugares Centrais):</strong> Não existe um único limiar nem hexágonos uniformes; a mobilidade diferencial das classes e a existência de dois circuitos deformam o princípio do mercado.<br><br>
+              <strong>Perroux (Pólos de Crescimento):</strong> O circuito moderno cria crescimento concentrado, mas sem efeito multiplicador regional quando voltado para fora — ignorando o papel regional do circuito inferior.
+            </p>
+          </div>
+
+          <div class="panel-soft">
+            <span class="kicker" style="color:var(--sup);">Dois Subsistemas de Industrialização</span>
+            <div class="btn-row" style="margin-top:6px;margin-bottom:10px;">
+              <button type="button" class="ctrl-btn ${isS1 ? 'active-sup' : ''}" onclick="ui.c10Sub='s1'; renderMain();">Subsistema 1 (Ind. A + B)</button>
+              <button type="button" class="ctrl-btn ${!isS1 ? 'active-inf' : ''}" onclick="ui.c10Sub='s2'; renderMain();">Subsistema 2 (Apenas Ind. B)</button>
+            </div>
+            <p style="font-size:0.82rem;color:var(--text-main);">
+              ${isS1
+                ? '<strong>Subsistema 1 (Nation Building):</strong> Voltado sobretudo para o mercado interno (Industrialização A). Concentra-se nas metrópoles, gera complementaridade interna e estrutura a rede nacional (metrópole, intermediária, local).'
+                : '<strong>Subsistema 2 (Espoliador / Enclaves):</strong> Voltado para exportação/reexportação (Industrialização B). Instala-se em zonas industriais ou cidades monofuncionais, importa insumos, internaliza economias externas e drena efeitos multiplicadores para o exterior.'}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 11 --- */
+    function renderInfoCap11() {
+      const pillars = [
+        {
+          n: '1. Superação dos Modelos Importados',
+          tag: 'Ruptura Paradigmática',
+          c: '#1B4965',
+          d: 'Abandonar a "ilusão contábil" do crescimento do PIB baseado em parâmetros estrangeiros e tecnologias intermediárias isoladas. Substituir a produtividade econômica pela produtividade social, colocando a produção a serviço das necessidades coletivas.'
+        },
+        {
+          n: '2. Regulação da Dialética dos Dois Circuitos',
+          tag: 'Comunicação sem Dominação',
+          c: '#C88A2B',
+          d: 'Subordinar a expansão dos setores "dinâmicos" às demandas dos setores populares. Ao alterar os fins do aparelho produtivo, o crescimento do circuito moderno passa a se transmitir ao circuito inferior, reduzindo o fosso entre ambos.'
+        },
+        {
+          n: '3. Produtividade do Circuito Inferior + Emprego',
+          tag: 'Justiça Social & Absorção',
+          c: '#C45B2C',
+          d: 'Reconhecer o papel do circuito inferior na transição sem perpetuá-lo como máquina de pobreza: ampliar o crédito adaptado, apoiar técnicas locais e indústrias trabalho-intensivas para elevar a renda per capita preservando o emprego.'
+        },
+        {
+          n: '4. Reforma das Estatísticas & Estado "Mais Estado"',
+          tag: 'Planificação Regionalizada',
+          c: '#366858',
+          d: 'Criar estatísticas que capturem o circuito inferior e recompor o poder regulador do Estado frente aos monopólios. Promover uma modernização nacional regionalizada, devolvendo às cidades intermediárias seu papel regional e reduzindo a macrocefalia.'
+        }
+      ];
+      const p = pillars[ui.c11Pillar];
+
+      return `
+        <span class="kicker" style="color:var(--olive);">Infográfico Exclusivo • Cap. 11</span>
+        <h3 class="heading-md">Síntese &amp; Agenda de Planificação do Espaço Dividido</h3>
+        <p class="sub-lead">Clique nos 4 pilares estratégicos propostos por Milton Santos na Conclusão e revise o quadro comparativo final da transformação proposta.</p>
+
+        <div class="grid-4" style="margin-bottom:14px;">
+          ${pillars.map((item, i) => `
+            <button type="button" class="ctrl-btn ${ui.c11Pillar===i ? 'active-olive' : ''}" style="text-align:left;padding:11px 12px;" onclick="ui.c11Pillar=${i}; renderMain();">
+              ${item.n}
+            </button>
+          `).join('')}
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${p.c};margin-bottom:20px;">
+          <span class="chip" style="border-color:${p.c};color:${p.c};margin-bottom:6px;">${p.tag}</span>
+          <h4 style="font-family:var(--font-serif);font-size:1.1rem;color:${p.c};margin-bottom:5px;">${p.n}</h4>
+          <p style="font-size:0.85rem;color:var(--text-main);">${p.d}</p>
+        </div>
+
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Dimensão</th>
+                <th style="background:var(--inf-soft);color:var(--inf);">Espaço Dividido Atual (Liberal / Monopolista)</th>
+                <th style="background:var(--olive-soft);color:var(--olive);">Horizonte Proposto (Produtividade Social)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Objetivo da Produção</strong></td>
+                <td>Lucro monopolista, exportação e consumo de minorias.</td>
+                <td>Bem-estar coletivo, consumo popular e mercado interno.</td>
+              </tr>
+              <tr>
+                <td><strong>Relação entre Circuitos</strong></td>
+                <td>Dominação e drenagem da poupança popular para cima.</td>
+                <td>Comunicação, elevação da produtividade e absorção gradual sem choques.</td>
+              </tr>
+              <tr>
+                <td><strong>Papel do Estado</strong></td>
+                <td>Endividado, financiador de multinacionais ("menos Estado").</td>
+                <td>Regulador soberano, investidor social ("mais Estado").</td>
+              </tr>
+              <tr>
+                <td><strong>Organização Espacial</strong></td>
+                <td>Macrocefalia, enclaves, curto-circuito e empobrecimento periférico.</td>
+                <td>Modernização nacional regionalizada e fortalecimento das cidades regionais.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       RENDERIZAÇÃO DE CAPÍTULO COMPLETO
+       ========================================================================= */
+
+    function renderChapter(ch) {
+      const part = PARTS[ch.part];
+      const isDone = !!studiedMap[ch.id];
+
+      const prevTarget = ch.id === 1 ? 'overview' : ch.id - 1;
+      const prevTitle = ch.id === 1 ? 'Mapa Geral da Obra' : `Cap. ${ch.id - 1} — ${CHAPTERS[ch.id - 2].title}`;
+
+      const nextTarget = ch.id < 11 ? ch.id + 1 : 'overview';
+      const nextTitle = ch.id < 11 ? `Cap. ${ch.id + 1} — ${CHAPTERS[ch.id].title}` : 'Voltar ao Mapa Geral da Obra';
+
+      return `
+        <header class="chapter-head">
+          <div class="meta-bar">
+            <span class="part-pill" style="background:${part.color};">${part.label} • ${part.title}</span>
+            <button type="button" class="study-btn ${isDone ? 'studied' : ''}" onclick="toggleStudied(${ch.id})">
+              <span>${isDone ? '✓' : '○'}</span>
+              <span>${isDone ? 'Capítulo Estudado' : 'Marcar como estudado'}</span>
+            </button>
+          </div>
+          <h2 class="chapter-title">Capítulo ${ch.id} — ${ch.title}</h2>
+          <p class="chapter-lead">${ch.summary}</p>
+          <div class="editorial-rule"></div>
+        </header>
+
+        <!-- Citação / Ideia-Força -->
+        <blockquote class="quote-box" style="background:${part.soft};border-left-color:${part.color};">
+          <p>“${ch.quote}”</p>
+          <footer>— Milton Santos, ${ch.quoteRef}</footer>
+        </blockquote>
+
+        <!-- Ideias-Chave Principais -->
+        <section>
+          <span class="kicker" style="color:${part.color};">Síntese Analítica</span>
+          <h3 class="heading-md">Ideias-Chave Principais</h3>
+          <div class="ideas-grid">
+            ${ch.keyIdeas.map(item => `
+              <article class="idea-card">
+                <span class="idea-tag" style="color:${part.color};">${item.tag}</span>
+                <h4>${item.title}</h4>
+                <p>${item.desc}</p>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+
+        <!-- Infográfico Interativo Exclusivo -->
+        <section class="infographic-card">
+          ${renderChapterInfographic(ch.id)}
+        </section>
+
+        <!-- Navegação Inferior -->
+        <nav class="chapter-footer" aria-label="Navegação entre capítulos">
+          <button type="button" class="footer-nav-btn" onclick="navigateTo(${typeof prevTarget === 'string' ? `'${prevTarget}'` : prevTarget})">
+            <span style="font-size:1.15rem;color:var(--sup);">←</span>
+            <div>
+              <span class="footer-nav-meta">Capítulo Anterior</span>
+              <span class="footer-nav-title">${prevTitle}</span>
+            </div>
+          </button>
+
+          <button type="button" class="footer-nav-btn next" onclick="navigateTo(${typeof nextTarget === 'string' ? `'${nextTarget}'` : nextTarget})">
+            <div>
+              <span class="footer-nav-meta">${ch.id < 11 ? 'Próximo Capítulo' : 'Concluir Percurso'}</span>
+              <span class="footer-nav-title">${nextTitle}</span>
+            </div>
+            <span style="font-size:1.15rem;">${ch.id < 11 ? '→' : '↺'}</span>
+          </button>
+        </nav>
+      `;
+    }
+
+    function renderMain() {
+      const container = document.getElementById('main-content');
+      if (!container) return;
+      if (currentView === 'overview') {
+        container.innerHTML = renderOverview();
+      } else {
+        const ch = CHAPTERS.find(c => c.id === currentView);
+        container.innerHTML = ch ? renderChapter(ch) : renderOverview();
+      }
+    }
+
+    /* =========================================================================
+       INICIALIZAÇÃO SEGURA
+       ========================================================================= */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        document.getElementById('open-drawer-btn').addEventListener('click', openDrawer);
+        document.getElementById('close-drawer-btn').addEventListener('click', closeDrawer);
+        document.getElementById('sidebar-overlay').addEventListener('click', closeDrawer);
+        document.getElementById('reset-progress-btn').addEventListener('click', resetProgress);
+
+        const searchInput = document.getElementById('search-input');
+        const searchClear = document.getElementById('search-clear');
+
+        searchInput.addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          searchClear.classList.toggle('visible', searchQuery.length > 0);
+          renderSidebar();
+        });
+
+        searchClear.addEventListener('click', () => {
+          searchQuery = '';
+          searchInput.value = '';
+          searchClear.classList.remove('visible');
+          renderSidebar();
+          searchInput.focus();
+        });
+
+        renderSidebar();
+        renderMain();
+      } catch (err) {
+        console.error('Erro ao inicializar o Atlas de O Espaço Dividido:', err);
+      }
+    });
+  </script>
+</body>
+</html>
