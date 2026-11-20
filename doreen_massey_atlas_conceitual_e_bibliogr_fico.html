@@ -1,0 +1,3349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doreen Massey: Atlas Conceitual e Bibliográfico</title>
+  <!-- Google Fonts: Cormorant Garamond, Plus Jakarta Sans e JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS — ESTÉTICA EDITORIAL-CARTOGRÁFICA
+       ========================================================================== */
+    :root {
+      --bg-paper: #F7F4EF;
+      --bg-surface: #FFFFFF;
+      --bg-cream: #EFECE6;
+      --bg-cream-deep: #E5E0D6;
+      --ink-primary: #1A2228;
+      --ink-secondary: #434E56;
+      --ink-muted: #6C7780;
+      --border-subtle: rgba(26, 34, 40, 0.12);
+      --border-strong: rgba(26, 34, 40, 0.24);
+
+      /* Paleta dos 4 Eixos Conceituais */
+      --axis-ontologico: #1D5C63;
+      --axis-ontologico-soft: rgba(29, 92, 99, 0.10);
+      --axis-economico: #C68B2C;
+      --axis-economico-soft: rgba(198, 139, 44, 0.12);
+      --axis-poder: #C44536;
+      --axis-poder-soft: rgba(196, 69, 54, 0.10);
+      --axis-lugar: #4A6B5D;
+      --axis-lugar-soft: rgba(74, 107, 93, 0.12);
+
+      /* Tipografia */
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Geometria e Sombras */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow-sm: 0 2px 8px rgba(26, 34, 40, 0.05);
+      --shadow-md: 0 8px 24px rgba(26, 34, 40, 0.08);
+      --transition: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* ==========================================================================
+       RESET E BASE
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--ink-primary);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        radial-gradient(rgba(26, 34, 40, 0.04) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    button:focus-visible, [tabindex="0"]:focus-visible {
+      outline: 2px solid var(--axis-ontologico);
+      outline-offset: 2px;
+    }
+
+    /* ==========================================================================
+       CABEÇALHO E NAVEGAÇÃO PRINCIPAL
+       ========================================================================== */
+    .atlas-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247, 244, 239, 0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
+    .brand-emblem {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-serif);
+      font-size: 1.55rem;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      color: var(--ink-primary);
+    }
+
+    .brand-text p {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--ink-muted);
+      margin-top: 2px;
+    }
+
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--bg-cream);
+      padding: 0.3rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .nav-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--ink-secondary);
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+
+    .nav-tab:hover {
+      color: var(--ink-primary);
+      background: rgba(255, 255, 255, 0.55);
+    }
+
+    .nav-tab.active {
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.1rem 0.42rem;
+      border-radius: 999px;
+      background: rgba(26, 34, 40, 0.08);
+      color: inherit;
+    }
+
+    .nav-tab.active .nav-badge {
+      background: rgba(247, 244, 239, 0.2);
+    }
+
+    /* ==========================================================================
+       CONTAINER PRINCIPAL E MÓDULOS
+       ========================================================================== */
+    .atlas-main {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    .module-view {
+      display: none;
+      animation: fadeSlideIn 300ms ease;
+    }
+
+    .module-view.active {
+      display: block;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Utilitários tipográficos e badges */
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--ink-muted);
+    }
+
+    .serif-title {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      line-height: 1.12;
+      color: var(--ink-primary);
+    }
+
+    .axis-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .axis-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       MÓDULO 1: REDE CONCEITUAL
+       ========================================================================== */
+    .network-intro {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .network-intro h2 {
+      font-size: 2.1rem;
+      margin-top: 0.2rem;
+    }
+
+    .network-intro p {
+      max-width: 680px;
+      color: var(--ink-secondary);
+      font-size: 0.94rem;
+      margin-top: 0.35rem;
+    }
+
+    .axis-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .axis-filter-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.42rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--ink-secondary);
+      transition: all var(--transition);
+    }
+
+    .axis-filter-btn:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-1px);
+    }
+
+    .axis-filter-btn.active {
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      border-color: var(--ink-primary);
+    }
+
+    .network-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 370px;
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+
+    .network-canvas-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+      min-height: 580px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .canvas-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1.15rem;
+      background: var(--bg-cream);
+      border-bottom: 1px solid var(--border-subtle);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    .network-svg-wrap {
+      flex: 1;
+      width: 100%;
+      position: relative;
+      background-image:
+        linear-gradient(to right, rgba(26, 34, 40, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(26, 34, 40, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    #network-svg {
+      width: 100%;
+      height: 100%;
+      min-height: 520px;
+      display: block;
+    }
+
+    .net-edge {
+      fill: none;
+      stroke: #949FA6;
+      stroke-width: 1.6;
+      stroke-opacity: 0.42;
+      transition: stroke-opacity 240ms ease, stroke-width 240ms ease, stroke 240ms ease;
+    }
+
+    .net-edge.highlighted {
+      stroke-opacity: 0.95;
+      stroke-width: 2.8;
+    }
+
+    .net-edge.dimmed {
+      stroke-opacity: 0.08;
+    }
+
+    .net-node {
+      cursor: pointer;
+      transition: opacity 240ms ease;
+    }
+
+    .net-node.dimmed {
+      opacity: 0.22;
+    }
+
+    .net-node .node-ring {
+      transition: transform 240ms ease, stroke-width 240ms ease;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .net-node:hover .node-ring,
+    .net-node.selected .node-ring {
+      transform: scale(1.12);
+    }
+
+    .net-node-label {
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      font-weight: 600;
+      fill: var(--ink-primary);
+      pointer-events: none;
+    }
+
+    .net-node-code {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      fill: #FFFFFF;
+      pointer-events: none;
+    }
+
+    /* Painel Lateral da Rede */
+    .network-inspector {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.1rem;
+    }
+
+    .inspector-empty {
+      margin: auto 0;
+      text-align: left;
+    }
+
+    .inspector-title {
+      font-size: 1.75rem;
+      margin: 0.5rem 0 0.25rem;
+    }
+
+    .inspector-en {
+      font-family: var(--font-mono);
+      font-size: 0.76rem;
+      color: var(--ink-muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .inspector-summary {
+      font-size: 0.9rem;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .connections-heading {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 0.6rem;
+      padding-top: 0.8rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .connection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      max-height: 250px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .connection-item {
+      text-align: left;
+      padding: 0.65rem 0.8rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      transition: all var(--transition);
+    }
+
+    .connection-item:hover {
+      background: var(--bg-cream);
+      border-color: var(--border-strong);
+      transform: translateX(2px);
+    }
+
+    .connection-item strong {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.82rem;
+      color: var(--ink-primary);
+      margin-bottom: 0.2rem;
+    }
+
+    .connection-item span {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--ink-secondary);
+      line-height: 1.45;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.8rem 1.1rem;
+      border-radius: var(--radius-md);
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+
+    .btn-primary:hover {
+      background: #2C3942;
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ==========================================================================
+       LAYOUT COM SIDEBAR (MÓDULOS 2 E 3)
+       ========================================================================== */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .sidebar-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      position: sticky;
+      top: 86px;
+    }
+
+    .sidebar-header {
+      padding: 1rem 1.15rem;
+      background: var(--bg-cream);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .sidebar-header h3 {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .sidebar-list {
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100vh - 180px);
+      overflow-y: auto;
+    }
+
+    .sidebar-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.85rem 1.1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+      border-left: 3px solid transparent;
+      transition: all var(--transition);
+    }
+
+    .sidebar-item:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar-item:hover {
+      background: var(--bg-paper);
+    }
+
+    .sidebar-item.active {
+      background: var(--bg-cream);
+      border-left-color: var(--item-accent, var(--ink-primary));
+    }
+
+    .sidebar-code {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.18rem 0.42rem;
+      border-radius: 4px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .sidebar-item.active .sidebar-code {
+      background: var(--item-accent, var(--ink-primary));
+      color: #FFFFFF;
+      border-color: transparent;
+    }
+
+    .sidebar-item-title {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--ink-primary);
+      line-height: 1.3;
+    }
+
+    .sidebar-item-sub {
+      font-size: 0.74rem;
+      color: var(--ink-muted);
+      margin-top: 2px;
+      display: block;
+    }
+
+    /* Conteúdo Principal (Direita) */
+    .detail-stage {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.65rem;
+    }
+
+    .detail-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1.25rem;
+    }
+
+    .detail-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.65rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .detail-title {
+      font-size: 2.35rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-subtitle {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+    }
+
+    .concept-synthesis {
+      font-size: 0.98rem;
+      color: var(--ink-secondary);
+      line-height: 1.72;
+    }
+
+    .concept-synthesis p + p {
+      margin-top: 0.8rem;
+    }
+
+    /* ==========================================================================
+       CAIXA DE DIAGRAMA SVG INTERATIVO (MÓDULO 2)
+       ========================================================================== */
+    .diagram-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .diagram-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.85rem 1.2rem;
+      background: var(--bg-cream);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .diagram-label {
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-primary);
+    }
+
+    .diagram-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .diag-btn {
+      padding: 0.38rem 0.78rem;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--ink-secondary);
+      transition: all var(--transition);
+    }
+
+    .diag-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--ink-primary);
+    }
+
+    .diag-btn.active {
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      border-color: var(--ink-primary);
+    }
+
+    .diagram-viewport {
+      padding: 1.25rem;
+      background: #FCFBF8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .diagram-viewport svg {
+      width: 100%;
+      max-width: 780px;
+      height: auto;
+      display: block;
+    }
+
+    .diagram-caption {
+      width: 100%;
+      padding: 0.95rem 1.2rem;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      font-size: 0.88rem;
+      color: var(--ink-secondary);
+      line-height: 1.55;
+    }
+
+    .diagram-caption strong {
+      color: var(--ink-primary);
+    }
+
+    /* Quadro de Ruptura Epistemológica */
+    .rupture-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .rupture-box {
+      padding: 1.2rem 1.3rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .rupture-box.traditional {
+      background: #F4F1EC;
+      border-left: 4px solid #8C969E;
+    }
+
+    .rupture-box.massey {
+      background: #F4F8F7;
+      border-left: 4px solid var(--accent-color, var(--axis-ontologico));
+    }
+
+    .rupture-box h4 {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.55rem;
+      color: var(--ink-muted);
+    }
+
+    .rupture-box.massey h4 {
+      color: var(--accent-color, var(--axis-ontologico));
+    }
+
+    .rupture-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.88rem;
+      color: var(--ink-secondary);
+    }
+
+    .rupture-box li {
+      position: relative;
+      padding-left: 1.1rem;
+    }
+
+    .rupture-box li::before {
+      content: "—";
+      position: absolute;
+      left: 0;
+      color: var(--ink-muted);
+    }
+
+    .rupture-box.massey li::before {
+      content: "→";
+      color: var(--accent-color, var(--axis-ontologico));
+      font-weight: 700;
+    }
+
+    /* Tags Cruzadas */
+    .crosslinks-section {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .crosslink-group h4 {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 0.65rem;
+    }
+
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .link-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.38rem 0.72rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      color: var(--ink-primary);
+      transition: all var(--transition);
+    }
+
+    .link-tag:hover {
+      background: var(--ink-primary);
+      color: var(--bg-paper);
+      border-color: var(--ink-primary);
+      transform: translateY(-1px);
+    }
+
+    /* ==========================================================================
+       MÓDULO 3: OBRAS & LIVROS (ESQUEMA ARQUITETÔNICO)
+       ========================================================================== */
+    .book-spine-badge {
+      width: 14px;
+      height: 38px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      box-shadow: inset -2px 0 0 rgba(0, 0, 0, 0.16);
+    }
+
+    .book-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.85rem;
+      background: var(--bg-paper);
+      padding: 1rem 1.2rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .meta-cell span {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 2px;
+    }
+
+    .meta-cell strong {
+      font-size: 0.88rem;
+      color: var(--ink-primary);
+      font-weight: 600;
+    }
+
+    .book-thesis-box {
+      padding: 1.2rem 1.4rem;
+      background: var(--bg-cream);
+      border-left: 4px solid var(--book-accent, var(--ink-primary));
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+
+    .book-thesis-box h4 {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--ink-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .book-thesis-box p {
+      font-size: 0.96rem;
+      color: var(--ink-primary);
+      line-height: 1.65;
+    }
+
+    /* Esquema Estrutural Interativo do Livro */
+    .architecture-wrap {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.35rem;
+    }
+
+    .architecture-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .architecture-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .arch-node-row {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .arch-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 22px;
+      color: var(--ink-muted);
+    }
+
+    .arch-block {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--book-accent, var(--ink-primary));
+      border-radius: var(--radius-sm);
+      padding: 0.95rem 1.15rem;
+      transition: all var(--transition);
+    }
+
+    .arch-block:hover {
+      border-color: var(--border-strong);
+      border-left-color: var(--book-accent, var(--ink-primary));
+      box-shadow: var(--shadow-sm);
+    }
+
+    .arch-block.expanded {
+      background: #FFFFFF;
+      box-shadow: var(--shadow-md);
+    }
+
+    .arch-block.interlude {
+      border-left-style: dashed;
+      background: #FAF6EE;
+    }
+
+    .arch-block-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .arch-step-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.16rem 0.5rem;
+      border-radius: 4px;
+      background: var(--bg-cream);
+      color: var(--ink-secondary);
+      flex-shrink: 0;
+    }
+
+    .arch-block-title {
+      font-weight: 700;
+      font-size: 0.94rem;
+      color: var(--ink-primary);
+      flex: 1;
+    }
+
+    .arch-chevron {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--ink-muted);
+      transition: transform var(--transition);
+    }
+
+    .arch-block.expanded .arch-chevron {
+      transform: rotate(180deg);
+    }
+
+    .arch-block-body {
+      display: none;
+      margin-top: 0.8rem;
+      padding-top: 0.8rem;
+      border-top: 1px dashed var(--border-subtle);
+      font-size: 0.88rem;
+      color: var(--ink-secondary);
+      line-height: 1.6;
+    }
+
+    .arch-block.expanded .arch-block-body {
+      display: block;
+      animation: fadeSlideIn 200ms ease;
+    }
+
+    .arch-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-top: 0.65rem;
+    }
+
+    .arch-kw {
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: var(--bg-paper);
+      color: var(--ink-muted);
+      border: 1px solid var(--border-subtle);
+    }
+
+    /* ==========================================================================
+       RODAPÉ EDITORIAL
+       ========================================================================== */
+    .atlas-footer {
+      max-width: 1440px;
+      margin: 2rem auto 0;
+      padding: 1.25rem 1.5rem 2.5rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--ink-muted);
+    }
+
+    .atlas-footer strong {
+      color: var(--ink-secondary);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE
+       ========================================================================== */
+    @media (max-width: 1080px) {
+      .network-layout {
+        grid-template-columns: 1fr;
+      }
+      .split-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar-panel {
+        position: static;
+      }
+      .sidebar-list {
+        max-height: 290px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .header-inner {
+        padding: 0.75rem 1rem;
+      }
+      .atlas-main {
+        padding: 1rem;
+      }
+      .detail-stage {
+        padding: 1.25rem;
+      }
+      .detail-title {
+        font-size: 1.8rem;
+      }
+      .rupture-grid,
+      .crosslinks-section {
+        grid-template-columns: 1fr;
+      }
+      .main-nav {
+        width: 100%;
+        justify-content: space-between;
+        overflow-x: auto;
+      }
+      .nav-tab {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.78rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========================================================================
+       CABEÇALHO GLOBAL & NAVEGAÇÃO DOS 3 MÓDULOS
+       ======================================================================== -->
+  <header class="atlas-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-emblem" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+            <circle cx="12" cy="12" r="9" />
+            <ellipse cx="12" cy="12" rx="4.2" ry="9" />
+            <path d="M3.6 9h16.8M3.6 15h16.8" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>Doreen Massey</h1>
+          <p>Atlas Conceitual e Bibliográfico (1944–2016)</p>
+        </div>
+      </div>
+
+      <nav class="main-nav" role="tablist" aria-label="Módulos do Atlas">
+        <button class="nav-tab active" data-module="network" role="tab" aria-selected="true">
+          Rede Conceitual
+          <span class="nav-badge">Mapa</span>
+        </button>
+        <button class="nav-tab" data-module="concepts" role="tab" aria-selected="false">
+          Conceitos
+          <span class="nav-badge">10</span>
+        </button>
+        <button class="nav-tab" data-module="books" role="tab" aria-selected="false">
+          Obras &amp; Livros
+          <span class="nav-badge">8</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="atlas-main">
+    <!-- ======================================================================
+         MÓDULO 1: REDE CONCEITUAL INTERATIVA
+         ====================================================================== -->
+    <section id="module-network" class="module-view active" aria-label="Rede Conceitual">
+      <div class="network-intro">
+        <div>
+          <span class="eyebrow">Cartografia Teórica • Módulo 01</span>
+          <h2 class="serif-title">Rede de Inter-relações Conceituais</h2>
+          <p>
+            No pensamento de Doreen Massey, nenhum conceito opera isoladamente: a ontologia relacional do espaço
+            conecta-se diretamente à economia política do desenvolvimento desigual, às geometrias de poder e à
+            ética política do lugar. Clique ou passe o cursor sobre qualquer nó para rastrear suas articulações.
+          </p>
+        </div>
+        <div class="axis-filters" id="axis-filters" aria-label="Filtrar por eixo temático">
+          <button class="axis-filter-btn active" data-axis="all">Todos os Eixos</button>
+          <button class="axis-filter-btn" data-axis="ontologico">
+            <span class="axis-dot" style="background: var(--axis-ontologico)"></span>Ontológico
+          </button>
+          <button class="axis-filter-btn" data-axis="economico">
+            <span class="axis-dot" style="background: var(--axis-economico)"></span>Econômico-Estrutural
+          </button>
+          <button class="axis-filter-btn" data-axis="poder">
+            <span class="axis-dot" style="background: var(--axis-poder)"></span>Poder &amp; Diferença
+          </button>
+          <button class="axis-filter-btn" data-axis="lugar">
+            <span class="axis-dot" style="background: var(--axis-lugar)"></span>Lugar &amp; Política
+          </button>
+        </div>
+      </div>
+
+      <div class="network-layout">
+        <div class="network-canvas-card">
+          <div class="canvas-topbar">
+            <span>PROJEÇÃO TOPOLÓGICA • 10 NÓS CONCEITUAIS • 4 EIXOS</span>
+            <span id="network-status">Selecione um nó para inspecionar conexões</span>
+          </div>
+          <div class="network-svg-wrap">
+            <svg id="network-svg" viewBox="0 0 880 560" role="img" aria-label="Mapa interativo dos 10 conceitos de Doreen Massey"></svg>
+          </div>
+        </div>
+
+        <aside class="network-inspector" id="network-inspector" aria-live="polite">
+          <!-- Preenchido dinamicamente via JavaScript -->
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MÓDULO 2: CONCEITOS (10) COM DIAGRAMAS SVG EXCLUSIVOS
+         ====================================================================== -->
+    <section id="module-concepts" class="module-view" aria-label="Conceitos de Doreen Massey">
+      <div class="split-layout">
+        <aside class="sidebar-panel">
+          <div class="sidebar-header">
+            <span class="eyebrow">Módulo 02 • Glossário Visual</span>
+            <h3>10 Conceitos Fundamentais</h3>
+          </div>
+          <div class="sidebar-list" id="concepts-menu" role="listbox" aria-label="Lista de conceitos"></div>
+        </aside>
+
+        <article class="detail-stage" id="concept-detail" aria-live="polite">
+          <!-- Preenchido dinamicamente via JavaScript -->
+        </article>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         MÓDULO 3: OBRAS & LIVROS (8) COM ESQUEMAS VISUAIS
+         ====================================================================== -->
+    <section id="module-books" class="module-view" aria-label="Obras e Livros de Doreen Massey">
+      <div class="split-layout">
+        <aside class="sidebar-panel">
+          <div class="sidebar-header">
+            <span class="eyebrow">Módulo 03 • Cronologia (1978–2015)</span>
+            <h3>8 Obras Principais</h3>
+          </div>
+          <div class="sidebar-list" id="books-menu" role="listbox" aria-label="Lista de livros"></div>
+        </aside>
+
+        <article class="detail-stage" id="book-detail" aria-live="polite">
+          <!-- Preenchido dinamicamente via JavaScript -->
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="atlas-footer">
+    <div>
+      <strong>Doreen Massey: Atlas Conceitual e Bibliográfico</strong> — Síntese cartográfica da obra da geógrafa britânica (Open University, Reino Unido).
+    </div>
+    <div style="font-family: var(--font-mono); font-size: 0.72rem;">
+      “O espaço é a dimensão social, o terreno da política e da multiplicidade.”
+    </div>
+  </footer>
+
+  <script>
+    /* ==========================================================================
+       BANCO DE DADOS CONCEITUAL E BIBLIOGRÁFICO DE DOREEN MASSEY
+       ========================================================================== */
+
+    const AXES = {
+      ontologico: {
+        id: 'ontologico',
+        label: 'Eixo Ontológico',
+        color: '#1D5C63',
+        soft: 'rgba(29, 92, 99, 0.12)'
+      },
+      economico: {
+        id: 'economico',
+        label: 'Eixo Econômico-Estrutural',
+        color: '#C68B2C',
+        soft: 'rgba(198, 139, 44, 0.14)'
+      },
+      poder: {
+        id: 'poder',
+        label: 'Eixo Poder & Diferença',
+        color: '#C44536',
+        soft: 'rgba(196, 69, 54, 0.12)'
+      },
+      lugar: {
+        id: 'lugar',
+        label: 'Eixo Lugar & Política',
+        color: '#4A6B5D',
+        soft: 'rgba(74, 107, 93, 0.13)'
+      }
+    };
+
+    const CONCEPTS = [
+      {
+        id: 'espaco-relacional',
+        code: 'C01',
+        title: 'Espaço Relacional (As Três Proposições)',
+        en: 'Relational Space — Three Propositions',
+        axis: 'ontologico',
+        pos: { x: 255, y: 120 },
+        shortSummary: 'O espaço não é um recipiente vazio nem uma superfície inerte, mas o produto vivo de inter-relações, a esfera da multiplicidade simultânea e uma realidade sempre em construção.',
+        synthesis: [
+          'Em sua obra-síntese Pelo Espaço (For Space, 2005), Doreen Massey formula uma ontologia política radical do espaço apoiada em três proposições inseparáveis. Primeiro, o espaço é produto de inter-relações, constituído por meio de interações que vão desde a imensidão do global até o intimamente pequeno.',
+          'Segundo, o espaço é a esfera da possibilidade da existência da multiplicidade: a condição na qual distintas trajetórias coexistem simultaneamente. Sem espaço, não há multiplicidade; sem multiplicidade, não há espaço. Terceiro, justamente porque é produzido por práticas e relações contínuas, o espaço está sempre em construção — nunca acabado, nunca fechado, com pontas soltas que tornam a política possível.'
+        ],
+        traditional: [
+          'Espaço concebido como superfície plana, palco passivo ou contêiner neutro onde a história “acontece”.',
+          'Espaço associado à estase, à imobilidade, à representação fechada e à ausência de política.',
+          'Tempo privilegiado como única dimensão dinâmica, ativa e transformadora.'
+        ],
+        massey: [
+          'Espaço é produzido por relações sociais, materiais e ecológicas — não existe antes delas.',
+          'Espaço é a própria condição da coexistência de múltiplas vozes e trajetórias simultâneas.',
+          'Por estar permanentemente aberto e inacabado, o espaço é intrinsecamente político.'
+        ],
+        connections: [
+          { target: 'espaco-tempo', reason: 'A abertura do espaço impede separá-lo do tempo: ambos formam o espaço-tempo dinâmico.' },
+          { target: 'geometrias-poder', reason: 'As inter-relações que produzem o espaço nunca são simétricas; são embebidas em poder.' },
+          { target: 'sentido-global-lugar', reason: 'Se o espaço é relacional, o lugar não pode ser um enclave fechado, mas um nó aberto.' },
+          { target: 'acabar-juntos', reason: 'A coexistência de múltiplas trajetórias gera o evento político do “acabar-juntos”.' }
+        ],
+        books: ['for-space', 'space-place-gender']
+      },
+      {
+        id: 'espaco-tempo',
+        code: 'C02',
+        title: 'Espaço-Tempo & Estórias-até-Agora',
+        en: 'Space-Time & Stories-so-far',
+        axis: 'ontologico',
+        pos: { x: 465, y: 88 },
+        shortSummary: 'Recusa a conversão da geografia em história linear (“fila única do progresso”) e propõe o espaço como a simultaneidade de múltiplas “estórias-até-agora”.',
+        synthesis: [
+          'Massey identifica uma das operações ideológicas mais poderosas da modernidade e da globalização neoliberal: a “convenção da fila histórica”. Nela, diferenças espaciais entre países ou regiões são transformadas em diferenças temporais — países “atrasados” ou “em desenvolvimento” seriam apenas versões anteriores do que o Ocidente já é, obrigados a percorrer a mesma trilha única.',
+          'Contra esse apagamento da diferença, Massey propõe pensar o espaço-tempo de modo integrado (inspirada na física contemporânea e na filosofia política) e o espaço como uma “simultaneidade de estórias-até-agora” (stories-so-far). Diferentes sociedades possuem trajetórias próprias e coexistentes; o futuro não está pré-escrito em uma linha única, mas aberto à disputa.'
+        ],
+        traditional: [
+          'Separação rígida entre Tempo (dinâmico, histórico) e Espaço (estático, congelado).',
+          'Geografia reduzida a uma fila cronológica única: “desenvolvidos” à frente, “subdesenvolvidos” atrás.',
+          'Narrativa da globalização como destino inevitável e sem alternativa.'
+        ],
+        massey: [
+          'Espaço e tempo são indissociáveis (espaço-tempo): o espaço é um corte através de múltiplas histórias em curso.',
+          'Reconhecimento da coexistência contemporânea de diferentes trajetórias (“estórias-até-agora”).',
+          'Devolve agência histórica aos povos e abre o futuro para caminhos políticos plurais.'
+        ],
+        connections: [
+          { target: 'espaco-relacional', reason: 'Traduz a segunda e a terceira proposições do espaço relacional em chave temporal.' },
+          { target: 'acabar-juntos', reason: 'O lugar é justamente o encontro provisório dessas múltiplas “estórias-até-agora”.' },
+          { target: 'espaco-lugar-genero', reason: 'A oposição binária Tempo vs. Espaço historicamente foi codificada como Masculino vs. Feminino.' },
+          { target: 'cidade-mundial', reason: 'Desmonta o discurso neoliberal de que a financeirização de Londres seria o único futuro possível.' }
+        ],
+        books: ['for-space', 'space-place-gender', 'kilburn-manifesto']
+      },
+      {
+        id: 'geometrias-poder',
+        code: 'C03',
+        title: 'Geometrias de Poder',
+        en: 'Power-Geometries',
+        axis: 'poder',
+        pos: { x: 255, y: 285 },
+        shortSummary: 'A compressão espaço-tempo não atinge a todos igualmente: grupos sociais ocupam posições radicalmente assimétricas quanto ao controle, início e recepção dos fluxos globais.',
+        synthesis: [
+          'Cunhado no início dos anos 1990 em diálogo crítico com David Harvey sobre a “compressão espaço-tempo”, o conceito de geometrias de poder (power-geometries) mostra que a mobilidade e a conectividade global são profundamente desiguais. Não se trata apenas de quem se move mais ou menos, mas de quem controla e inicia os fluxos.',
+          'Enquanto elites financeiras, executivos e gestores da mídia iniciam fluxos, controlam redes e decidem movimentos de capital, migrantes e refugiados deslocam-se fisicamente sob coerção e com baixíssimo controle. Há ainda quem receba os impactos globais sem sair do lugar e quem fique aprisionado pela desconexão, vendo sua própria mobilidade reduzida pela mobilidade dos poderosos.'
+        ],
+        traditional: [
+          'Visão homogênea da globalização como um “encolhimento do mundo” vivido de modo universal.',
+          'Associação ingênua de mobilidade com liberdade e de imobilidade com atraso.',
+          'Poder tratado como atributo abstrato, desvinculado de sua organização espacial.'
+        ],
+        massey: [
+          'O poder possui sempre uma geometria espacial específica e desigual.',
+          'A mobilidade de certos grupos pode ativamente enfraquecer ou imobilizar outros grupos.',
+          'Permite formular uma política progressista voltada a transformar as próprias geometrias de poder.'
+        ],
+        connections: [
+          { target: 'espaco-relacional', reason: 'Especifica que as inter-relações constituintes do espaço são estruturalmente assimétricas.' },
+          { target: 'sentido-global-lugar', reason: 'Cada lugar é posicionado diferentemente dentro das geometrias de poder globais.' },
+          { target: 'espaco-lugar-genero', reason: 'Gênero, raça e classe co-produzem quem tem acesso seguro e controle sobre o espaço.' },
+          { target: 'cidade-mundial', reason: 'Londres exemplifica uma concentração extrema de geometrias de poder financeiro.' },
+          { target: 'geografias-responsabilidade', reason: 'Quem ocupa posições privilegiadas nas geometrias de poder carrega maior responsabilidade política.' }
+        ],
+        books: ['space-place-gender', 'for-space', 'world-city']
+      },
+      {
+        id: 'sentido-global-lugar',
+        code: 'C04',
+        title: 'Um Sentido Global do Lugar',
+        en: 'A Global Sense of Place',
+        axis: 'lugar',
+        pos: { x: 485, y: 248 },
+        shortSummary: 'O lugar não precisa ser defensivo ou fechado para ser único: sua singularidade nasce justamente da combinação particular de redes globais e locais que nele se entrecruzam.',
+        synthesis: [
+          'No célebre ensaio de 1991 “A Global Sense of Place”, Massey caminha por sua rua no noroeste de Londres — a Kilburn High Road — para demonstrar que é possível amar um lugar sem cair em nacionalismos xenófobos ou nostalgias paroquiais. Em Kilburn, jornais irlandeses, lojas indianas, marcas multinacionais, rotas aéreas rumo a Heathrow e histórias locais misturam-se cotidianamente.',
+          'Massey propõe quatro características para um sentido progressista (extrovertido) do lugar: (1) lugares são processos, não essências estáticas; (2) não precisam de fronteiras rígidas que oponham “nós” a “eles”; (3) não possuem identidades únicas e homogêneas, sendo cheios de conflitos internos; e (4) sua especificidade resulta da mistura irrepetível de relações locais e globais que ali se articulam.'
+        ],
+        traditional: [
+          'Lugar como refúgio nostálgico, fechado por fronteiras rígidas e ameaçado pelo “global” externo.',
+          'Identidade do lugar ancorada em um passado único, puro e essencialista.',
+          'Oposição dualista entre “Local” (autêntico, vítima) e “Global” (abstrato, invasor).'
+        ],
+        massey: [
+          'Lugar como ponto de encontro extrovertido, poroso e relacional.',
+          'O global não está “lá fora”: ele é produzido nos lugares e atravessa o cotidiano local.',
+          'A singularidade de um lugar é continuamente renovada por suas conexões com o além.'
+        ],
+        connections: [
+          { target: 'espaco-relacional', reason: 'Aplica a ontologia do espaço relacional diretamente à escala e à experiência do lugar.' },
+          { target: 'geometrias-poder', reason: 'Os fluxos que formam o lugar são desiguais e atravessados por relações de poder.' },
+          { target: 'acabar-juntos', reason: 'Aprofunda a ideia do lugar como encontro provisório e politicamente negociado.' },
+          { target: 'geografias-responsabilidade', reason: 'Um sentido extrovertido do lugar exige responsabilidade para além das fronteiras locais.' }
+        ],
+        books: ['space-place-gender', 'for-space', 'world-city']
+      },
+      {
+        id: 'acabar-juntos',
+        code: 'C05',
+        title: 'Acabar-Juntos (Throwntogetherness) & Lugar como Evento',
+        en: 'Throwntogetherness & Place as Event',
+        axis: 'lugar',
+        pos: { x: 695, y: 170 },
+        shortSummary: 'O lugar é o evento provisório de trajetórias humanas e não-humanas que “acabam juntas” no aqui-e-agora, impondo o desafio inevitável da negociação política.',
+        synthesis: [
+          'Em Pelo Espaço (2005), Massey radicaliza sua teoria do lugar com o neologismo throwntogetherness (traduzido no Brasil como “acabar-juntos” ou “ser lançado junto”). Para ilustrar que nada no lugar é fixo, ela evoca até mesmo a geologia: as rochas do monte Skiddaw, no norte da Inglaterra, são imigrantes tectônicos que viajaram milhões de anos desde o hemisfério sul.',
+          'Um lugar é, portanto, um “evento” — uma constelação temporária de trajetórias radicalmente heterogêneas (pessoas, infraestruturas, capitais, climas, rochas, memórias) que se encontram em um “aqui-e-agora”. Esse encontro não garante harmonia prévia; pelo contrário, ele funda o imperativo ético e político de negociar como viver juntos na diferença.'
+        ],
+        traditional: [
+          'Lugar entendido como comunidade orgânica, harmoniosa e naturalmente coerente.',
+          'Paisagem natural vista como pano de fundo eterno, imóvel e a-histórico.',
+          'Política reduzida a consenso pré-estabelecido ou exclusão de “estranhos”.'
+        ],
+        massey: [
+          'Lugar como evento contingente de trajetórias humanas e não-humanas em movimento.',
+          'A própria natureza (rochas, rios, clima) possui temporalidades e deslocamentos próprios.',
+          'Viver juntos não é um dado natural, mas uma negociação política permanente e aberta.'
+        ],
+        connections: [
+          { target: 'espaco-relacional', reason: 'Expressa a abertura e a multiplicidade do espaço no nível concreto da coexistência.' },
+          { target: 'espaco-tempo', reason: 'O “aqui-e-agora” do lugar é o cruzamento de diferentes temporalidades e estórias-até-agora.' },
+          { target: 'sentido-global-lugar', reason: 'Amplia o sentido extrovertido do lugar para incluir também trajetórias não-humanas e geológicas.' },
+          { target: 'geografias-responsabilidade', reason: 'A negociação do “aqui-e-agora” se desdobra em responsabilidade política para além do imediato.' }
+        ],
+        books: ['for-space']
+      },
+      {
+        id: 'divisoes-espaciais-trabalho',
+        code: 'C06',
+        title: 'Divisões Espaciais do Trabalho & Metáfora Geológica',
+        en: 'Spatial Divisions of Labour & Geological Metaphor',
+        axis: 'economico',
+        pos: { x: 130, y: 420 },
+        shortSummary: 'O capital usa e produz diferenças espaciais para acumular; novas rodadas de investimento sobrepõem-se a camadas herdadas, recombinando-se de modo único em cada território.',
+        synthesis: [
+          'Em Spatial Divisions of Labour (1984), livro que revolucionou a geografia econômica, Massey refutou tanto a teoria neoclássica da localização quanto o marxismo economicista que via o espaço como mero reflexo do capital. Sua tese célebre — “Geography Matters!” (A geografia importa!) — demonstra que as relações sociais de produção sempre se organizam espacialmente.',
+          'Para explicar a especificidade de cada região, Massey desenvolveu a metáfora geológica: cada nova “rodada de investimento” deposita uma nova camada de relações econômicas sobre camadas históricas anteriores (indústrias antigas, culturas sindicais, divisões de gênero herdadas). O resultado não é uma simples soma, mas uma recombinação ativa que gera novas formas de desenvolvimento desigual.'
+        ],
+        traditional: [
+          'Teoria locacional clássica focada apenas em custos de transporte, distância e fatores abstratos.',
+          'Análises econômicas que tratam regiões como lousas em branco à espera de investimentos.',
+          'Reducionismo que explica o desemprego apenas por “declínio natural” de certas áreas.'
+        ],
+        massey: [
+          'A organização espacial da produção é parte constitutiva da própria dinâmica de acumulação e classe.',
+          'Metáfora geológica: a espacialidade herdada modifica ativamente o impacto de novos investimentos.',
+          'Permite articular estrutura macroeconômica (capital) com especificidade histórica e local.'
+        ],
+        connections: [
+          { target: 'regiao-relacional', reason: 'Supera a região-mosaico ao mostrar que regiões emergem de divisões espaciais do trabalho.' },
+          { target: 'espaco-lugar-genero', reason: 'As novas camadas de investimento exploram diretamente divisões de gênero herdadas no território.' },
+          { target: 'cidade-mundial', reason: 'A financeirização de Londres redefine toda a divisão espacial do trabalho no Reino Unido.' },
+          { target: 'geometrias-poder', reason: 'A separação espacial entre sedes de controle e fábricas periféricas cria hierarquias territoriais.' }
+        ],
+        books: ['spatial-divisions', 'anatomy-job-loss', 'capital-and-land']
+      },
+      {
+        id: 'espaco-lugar-genero',
+        code: 'C07',
+        title: 'Espaço, Lugar e Gênero (Crítica ao Sexismo Flexível)',
+        en: 'Space, Place and Gender & Flexible Sexism',
+        axis: 'poder',
+        pos: { x: 355, y: 430 },
+        shortSummary: 'Espaço e gênero constituem-se mutuamente: a cultura ocidental associou o feminino ao lugar/estase/privado, e teorias pós-modernas muitas vezes reproduziram esse viés.',
+        synthesis: [
+          'Em Space, Place and Gender (1994), Massey realiza uma dupla intervenção feminista. Primeiro, mostra empiricamente como a organização espacial do trabalho (como nos parques de alta tecnologia de Cambridge ou na reestruturação industrial) tanto se apoia quanto transforma relações de gênero — separando esfera produtiva e reprodutiva e moldando masculinidades científicas.',
+          'Segundo, no ensaio incisivo “Flexible Sexism”, ela critica autores influentes da teoria espacial pós-moderna (como David Harvey e Edward Soja) por universalizarem a experiência do flâneur masculino e silenciarem a crítica feminista. Massey desmonta a cadeia de dualismos ocidentais que associa Tempo/História/Público/Mobilidade ao masculino e Espaço/Lugar/Doméstico/Estase ao feminino.'
+        ],
+        traditional: [
+          'Dualismos rígidos: Masculino = Tempo, Razão, Mobilidade, Público vs. Feminino = Espaço, Emoção, Lar, Estase.',
+          'Teoria geográfica e pós-moderna escrita a partir de um sujeito pretensamente neutro, mas implicitamente masculino.',
+          'Gênero tratado como variável secundária frente à classe social.'
+        ],
+        massey: [
+          'Espaço e gênero são co-constitutivos: espaços generificam sujeitos e relações de gênero estruturam espaços.',
+          'Crítica ao “sexismo flexível” e defesa de epistemologias situadas e plurais.',
+          'Desconstrução da imagem nostálgica do lugar como “refúgio materno” imóvel.'
+        ],
+        connections: [
+          { target: 'geometrias-poder', reason: 'O gênero é um eixo central que estrutura o acesso desigual à mobilidade e ao espaço público.' },
+          { target: 'divisoes-espaciais-trabalho', reason: 'A reestruturação produtiva recruta e reconfigura identidades de gênero em diferentes regiões.' },
+          { target: 'espaco-tempo', reason: 'Expõe como a subordinação filosófica do espaço ao tempo possui raízes generificadas.' },
+          { target: 'sentido-global-lugar', reason: 'Rompe com a associação conservadora entre mulher, domesticidade e lugar fechado.' }
+        ],
+        books: ['space-place-gender', 'spatial-divisions']
+      },
+      {
+        id: 'regiao-relacional',
+        code: 'C08',
+        title: 'Região Aberta e Relacional',
+        en: 'Open and Relational Region',
+        axis: 'economico',
+        pos: { x: 525, y: 470 },
+        shortSummary: 'Regiões não são polígonos administrativos fechados nem mosaicos homogêneos, mas recortes abertos, descontínuos e atravessados por fluxos desiguais de crescimento e exclusão.',
+        synthesis: [
+          'Em Rethinking the Region (1998), escrito com John Allen e Allan Cochrane, Massey toma o Sudeste da Inglaterra da era Thatcher — celebrado pelo neoliberalismo como motor homogêneo de prosperidade — para desconstruir a ideia tradicional de região como um “contêiner” contínuo e fechado.',
+          'Os autores mostram que o “Sudeste” não existe como bloco coerente: seus fluxos financeiros e de alta tecnologia estendem-se globalmente, enquanto dentro de suas fronteiras oficiais existem bolsões profundos de pobreza e exclusão desconectados desse dinamismo. Uma região é um recorte espacial descontínuo, produzido por redes de poder e sempre sujeito a disputa política.'
+        ],
+        traditional: [
+          'Região como polígono cartográfico contíguo, delimitado por fronteiras administrativas fixas.',
+          'Suposição de homogeneidade interna e coerência econômica ou cultural de cada região.',
+          'Mundo dividido como um quebra-cabeça de peças fechadas (região-mosaico).'
+        ],
+        massey: [
+          'Região como constelação aberta, porosa e geograficamente descontínua de relações sociais.',
+          'Coexistência de espaços de hiperconectividade e espaços de exclusão dentro do mesmo território formal.',
+          'A definição de uma região depende da pergunta política e das relações que colocamos em foco.'
+        ],
+        connections: [
+          { target: 'divisoes-espaciais-trabalho', reason: 'A região relacional é o desdobramento conceitual da análise das divisões espaciais do trabalho.' },
+          { target: 'cidade-mundial', reason: 'O Sudeste inglês e Londres formam um nexo desigual que reconfigura todo o Reino Unido.' },
+          { target: 'sentido-global-lugar', reason: 'Estende a concepção extrovertida e aberta do lugar para a escala regional.' }
+        ],
+        books: ['rethinking-region', 'world-city']
+      },
+      {
+        id: 'geografias-responsabilidade',
+        code: 'C09',
+        title: 'Política da Espacialidade & Geografias da Responsabilidade',
+        en: 'Geographies of Responsibility',
+        axis: 'lugar',
+        pos: { x: 745, y: 340 },
+        shortSummary: 'Substitui a ética concêntrica das “bonecas russas” (cuidado que enfraquece com a distância) por uma ética relacional que assume responsabilidade pelas conexões distantes que sustentam o local.',
+        synthesis: [
+          'Em artigos marcantes dos anos 2000, em Pelo Espaço (2005) e em World City (2007), Massey interroga como o espaço relacional transforma nossa ética política. A cultura dominante opera sob uma “geografia das bonecas russas”: cuidamos primeiro da família, depois do bairro, depois da nação — como se a responsabilidade diminuísse mecanicamente com a distância física.',
+          'Massey propõe uma geografia da responsabilidade baseada na conectividade real e na causalidade histórica. Se o padrão de consumo, o sistema financeiro ou os serviços públicos de um lugar (como Londres) dependem de cadeias globais de extração, trabalho ou migração de profissionais de saúde do Sul Global, então há responsabilidade política direta à distância.'
+        ],
+        traditional: [
+          'Ética das “bonecas russas”: círculos concêntricos onde a proximidade física dita o grau de cuidado.',
+          'Política local restrita à defesa paroquial dos interesses imediatos de seus residentes.',
+          'Invisibilização dos efeitos externos gerados por centros ricos sobre territórios distantes.'
+        ],
+        massey: [
+          'Ética da conectividade: responsabilidade vinculada às redes reais nas quais estamos implicados.',
+          'Política do lugar para além do lugar: agir localmente implica questionar conexões globais injustas.',
+          'Solidariedade internacionalista ancorada na interdependência espacial concreta.'
+        ],
+        connections: [
+          { target: 'sentido-global-lugar', reason: 'Converte a constatação de que o lugar é global em um compromisso ético-político.' },
+          { target: 'acabar-juntos', reason: 'Amplia a negociação do “aqui-e-agora” para incluir os ausentes implicados nas redes locais.' },
+          { target: 'geometrias-poder', reason: 'A responsabilidade é diferenciada segundo a posição ocupada nas geometrias de poder.' },
+          { target: 'cidade-mundial', reason: 'É o eixo normativo da Parte III de World City: que responsabilidade tem Londres perante o mundo?' }
+        ],
+        books: ['world-city', 'for-space', 'kilburn-manifesto']
+      },
+      {
+        id: 'cidade-mundial',
+        code: 'C10',
+        title: 'Cidade Mundial & Hegemonia Neoliberal',
+        en: 'World City & Neoliberal Hegemony',
+        axis: 'economico',
+        pos: { x: 670, y: 478 },
+        shortSummary: 'A cidade mundial neoliberal (como Londres) não é um destino inevitável, mas um projeto político que concentra poder financeiro global enquanto aprofunda desigualdades internas e regionais.',
+        synthesis: [
+          'Em World City (2007) e no Kilburn Manifesto (2015, com Stuart Hall e Michael Rustin), Massey analisa Londres como epicentro do neoliberalismo financeiro. Ela desmonta o mito de que o setor financeiro da City de Londres “sustenta o país inteiro”: na verdade, o modelo de cidade mundial produz uma dupla tensão — para fora, integra circuitos globais de extração e desregulação; para dentro, inflaciona custos, polariza salários e drena recursos e talentos do restante do Reino Unido.',
+          'Mais do que uma economia, o neoliberalismo é um projeto cultural e espacial que colonizou o “senso comum” (em chave gramsciana), transformando cidadãos em consumidores e o espaço em ativo financeiro. Enfrentá-lo exige disputar vocabulários, construir alternativas democráticas e imaginar novas geografias de igualdade.'
+        ],
+        traditional: [
+          'Cidades globais vistas como vitrines neutras de sucesso econômico que “transbordam” riqueza (trickle-down).',
+          'Neoliberalismo naturalizado como único modelo racional e tecnicamente inevitável.',
+          'Competitividade urbana tratada acima da justiça social e do equilíbrio territorial.'
+        ],
+        massey: [
+          'A cidade mundial é uma construção política específica, atravessada por conflitos de classe e território.',
+          'Evidencia a contradição entre riqueza financeira concentrada, pobreza local e desequilíbrio nacional.',
+          'Articula crítica espacial com disputa cultural contra-hegemônica do senso comum neoliberal.'
+        ],
+        connections: [
+          { target: 'geometrias-poder', reason: 'A City de Londres é um nó comando nas geometrias de poder do capitalismo financeiro.' },
+          { target: 'regiao-relacional', reason: 'O dinamismo financeiro de Londres produz desenvolvimento desigual no restante do país.' },
+          { target: 'geografias-responsabilidade', reason: 'Questiona a responsabilidade global de uma metrópole que lucra com a desregulação financeira.' },
+          { target: 'divisoes-espaciais-trabalho', reason: 'A financeirização reestrutura profundamente a divisão espacial do trabalho britânica e mundial.' },
+          { target: 'espaco-tempo', reason: 'Desnaturaliza o discurso de que o neoliberalismo seria o único futuro histórico possível.' }
+        ],
+        books: ['world-city', 'kilburn-manifesto', 'rethinking-region']
+      }
+    ];
+
+    /* ==========================================================================
+       BANCO DE DADOS DAS 8 OBRAS PRINCIPAIS (1978–2015)
+       ========================================================================== */
+    const BOOKS = [
+      {
+        id: 'capital-and-land',
+        year: '1978',
+        title: 'Capital and Land',
+        subtitle: 'Landownership by Capital in Great Britain',
+        ptTitle: 'Capital e Terra (sem tradução integral em português)',
+        coauthors: 'Com Alejandrina Catalano',
+        accent: '#8D5B3E',
+        thesis: 'A propriedade privada da terra na Grã-Bretanha não é um resquício feudal homogêneo nem um obstáculo simples ao capitalismo; ela se fragmenta em frações distintas — tradicional, industrial e financeira — que mediam de maneiras contraditórias a acumulação de capital e as políticas urbanas e agrárias.',
+        context: 'Primeira grande obra de Massey, escrita em diálogo com a economia política marxista da renda da terra e os debates britânicos sobre reforma fundiária e especulação imobiliária nos anos 1970.',
+        concepts: ['divisoes-espaciais-trabalho', 'geometrias-poder'],
+        structure: [
+          {
+            step: 'Bloco 01',
+            title: 'Desconstrução da Propriedade Fundiária Homogênea',
+            summary: 'Crítica às teorias clássicas que tratavam os “proprietários de terra” como uma classe única e anacrônica. Massey e Catalano mostram a necessidade de investigar empiricamente quem de fato detém a terra no capitalismo contemporâneo.',
+            keywords: ['Renda da terra', 'Estrutura de classes', 'Economia política']
+          },
+          {
+            step: 'Bloco 02',
+            title: 'Tipologia das Três Formas de Propriedade da Terra',
+            summary: 'Classificação analítica inédita do padrão fundiário britânico em três grandes categorias com lógicas econômicas distintas: (1) Antiga propriedade fundiária (aristocracia, Igreja, Coroa); (2) Propriedade industrial (terra como condição de produção fabril/agrícola); e (3) Propriedade financeira (fundos de pensão, seguradoras e bancos tratando a terra como ativo de investimento).',
+            keywords: ['Propriedade antiga', 'Capital industrial', 'Capital financeiro']
+          },
+          {
+            step: 'Bloco 03',
+            title: 'A Mediação Crescente do Capital Financeiro',
+            summary: 'Análise do boom imobiliário britânico dos anos 1970 e da entrada massiva de instituições financeiras no mercado de terras urbanas e rurais, subordinando o uso do solo à valorização patrimonial e à especulação.',
+            keywords: ['Financeirização do solo', 'Especulação urbana', 'Fundos de pensão']
+          },
+          {
+            step: 'Bloco 04',
+            title: 'Contradições Espaciais e Políticas da Terra',
+            summary: 'Avaliação dos limites das reformas legislativas trabalhistas (como o Community Land Act) e demonstração de que o conflito em torno da terra revela tensões estruturais entre distintas frações do próprio capital e os interesses sociais pelo uso do espaço.',
+            keywords: ['Política fundiária', 'Contradições do capital', 'Estado britânico']
+          }
+        ]
+      },
+      {
+        id: 'anatomy-job-loss',
+        year: '1982',
+        title: 'The Anatomy of Job Loss',
+        subtitle: 'The How, Why and Where of Employment Decline',
+        ptTitle: 'A Anatomia da Perda de Empregos (sem tradução integral)',
+        coauthors: 'Com Richard Meegan',
+        accent: '#B57B27',
+        thesis: 'O desemprego industrial não pode ser explicado por fatores puramente locacionais ou por taxas agregadas de declínio setorial; diferentes estratégias de reestruturação do capital (intensificação, racionalização e mudança técnica) produzem geografias radicalmente distintas de perda de empregos.',
+        context: 'Escrito durante a severa desindustrialização britânica no início da era Thatcher, o livro estabeleceu as bases metodológicas para a geografia econômica crítica.',
+        concepts: ['divisoes-espaciais-trabalho', 'regiao-relacional'],
+        structure: [
+          {
+            step: 'Parte I',
+            title: 'Crítica às Explicações Meramente Locacionais',
+            summary: 'Massey e Meegan demonstram que modelos tradicionais (que atribuem a perda de empregos a “cidades caras” ou “regiões periféricas”) confundem sintomas geográficos com causas econômicas. É preciso abrir a caixa-preta da produção.',
+            keywords: ['Crítica metodológica', 'Desindustrialização', 'Produção']
+          },
+          {
+            step: 'Parte II',
+            title: 'Os Três Mecanismos de Reestruturação e Perda de Empregos',
+            summary: 'Distinção rigorosa de três processos pelos quais empresas eliminam postos de trabalho: (1) Intensificação (mais produtividade sem grande novo capital, aumentando ritmo de trabalho); (2) Racionalização (fechamento de plantas e corte de capacidade produtiva); (3) Mudança Técnica (investimento em novas tecnologias que substituem mão de obra).',
+            keywords: ['Intensificação', 'Racionalização', 'Mudança técnica']
+          },
+          {
+            step: 'Parte III',
+            title: 'Geografias Distintas do Desemprego',
+            summary: 'Estudos empíricos de 31 setores industriais britânicos provando que o mesmo volume estatístico de demissões gera impactos territoriais completamente diferentes conforme o mecanismo predominante — concentrando crises em certas áreas industriais ou dispersando cortes em novas frentes.',
+            keywords: ['Geografia do emprego', 'Reestruturação industrial', 'Empiria']
+          },
+          {
+            step: 'Parte IV',
+            title: 'Implicações para a Política Regional e Sindical',
+            summary: 'Como diferentes causas de desemprego exigem respostas políticas distintas, políticas regionais genéricas falham. O livro oferece instrumentos analíticos para sindicatos e governos locais compreenderem a lógica das corporações.',
+            keywords: ['Política regional', 'Ação sindical', 'Economia crítica']
+          }
+        ]
+      },
+      {
+        id: 'spatial-divisions',
+        year: '1984',
+        title: 'Spatial Divisions of Labour',
+        subtitle: 'Social Structures and the Geography of Production (2ª ed. 1995)',
+        ptTitle: 'Divisões Espaciais do Trabalho (sem tradução integral)',
+        coauthors: 'Autoria individual',
+        accent: '#C68B2C',
+        thesis: 'A geografia não é um mero reflexo passivo da economia: o capital organiza a produção de forma espacialmente desigual, utilizando e reconfigurando características herdadas de classe e gênero em cada região — processo que Massey sintetiza pela metáfora geológica das camadas de investimento.',
+        context: 'Marco fundador da geografia humana crítica contemporânea. A 2ª edição (1995) inclui um posfácio fundamental refletindo sobre o debate teórico gerado pela obra.',
+        concepts: ['divisoes-espaciais-trabalho', 'espaco-lugar-genero', 'regiao-relacional', 'geometrias-poder'],
+        structure: [
+          {
+            step: 'Cap. 1',
+            title: 'Questões Teóricas: Por que a Geografia Importa',
+            summary: 'Apresentação da tese central de que relações sociais e estruturas espaciais são mutuamente constitutivas. Rejeição tanto do espacialismo fetichista quanto do reducionismo econômico a-espacial.',
+            keywords: ['Geography matters', 'Teoria social', 'Espaço e economia']
+          },
+          {
+            step: 'Cap. 2',
+            title: 'Relações Sociais e Organização Espacial',
+            summary: 'Desenvolvimento conceitual de como as relações de produção (propriedade, controle, execução) se estendem pelo espaço, criando hierarquias entre sedes decisórias, centros de P&D e fábricas de montagem.',
+            keywords: ['Estruturas espaciais', 'Hierarquia produtiva', 'Controle']
+          },
+          {
+            step: 'Cap. 3',
+            title: 'Desenvolvimento Desigual e a Metáfora Geológica',
+            summary: 'Formulação do modelo de “camadas de investimento”: cada nova rodada de acumulação interage com legados locais anteriores, produzindo combinações territoriais singulares e perpetuando o desenvolvimento desigual.',
+            keywords: ['Metáfora geológica', 'Rodadas de investimento', 'Desenvolvimento desigual']
+          },
+          {
+            step: 'Cap. 4',
+            title: 'Estruturas Espaciais Mutáveis no Reino Unido',
+            summary: 'Análise histórica da transição das antigas especializações setoriais (carvão, aço, têxteis) para novas divisões espaciais baseadas na separação funcional dentro de grandes empresas (eletrônica, serviços, calçados).',
+            keywords: ['Indústria britânica', 'Setor eletrônico', 'Serviços']
+          },
+          {
+            step: 'Cap. 5',
+            title: 'Efeitos Locais: Classe, Gênero e Território',
+            summary: 'Estudos de caso (como o País de Gales e a Cornualha) mostrando como a chegada de novas fábricas recrutava trabalho feminino em antigas zonas mineiras masculinas, transformando simultaneamente a estrutura de classes e as relações de gênero.',
+            keywords: ['Trabalho feminino', 'País de Gales', 'Cornualha', 'Reestruturação de classe']
+          },
+          {
+            step: 'Cap. 6',
+            title: 'A Política do Emprego e a Disputa Territorial',
+            summary: 'Crítica à competição inter-regional por investimentos (“guerra fiscal”) e análise de como a mobilidade do capital enfraquece comunidades trabalhadoras se não houver solidariedade entre lugares.',
+            keywords: ['Política do emprego', 'Competição regional', 'Solidariedade']
+          },
+          {
+            step: 'Cap. 7',
+            title: 'Reprodução da Desigualdade e Posfácio (1995)',
+            summary: 'Síntese teórica sobre como a desigualdade geográfica é continuamente reproduzida sob novas formas — e, na 2ª edição, revisão crítica integrando gênero, cultura e espaço relacional.',
+            keywords: ['Reprodução desigual', 'Revisão teórica', 'Legado']
+          }
+        ]
+      },
+      {
+        id: 'space-place-gender',
+        year: '1994',
+        title: 'Space, Place and Gender',
+        subtitle: 'Coletânea de ensaios (1978–1994)',
+        ptTitle: 'Espaço, Lugar e Gênero (sem tradução integral em português)',
+        coauthors: 'Autoria individual',
+        accent: '#C44536',
+        thesis: 'As construções sociais de espaço, lugar e gênero estão profundamente entrelaçadas: desmontar os dualismos patriarcais que aprisionam o feminino ao lugar imóvel permite conceber simultaneamente uma política feminista do espaço e um sentido global, aberto e progressista do lugar.',
+        context: 'Reúne alguns dos ensaios mais citados de toda a carreira de Massey, marcando a virada dos anos 1990 rumo à articulação entre economia política, feminismo e teoria cultural do espaço.',
+        concepts: ['espaco-lugar-genero', 'sentido-global-lugar', 'geometrias-poder', 'espaco-relacional', 'espaco-tempo'],
+        structure: [
+          {
+            step: 'Parte I',
+            title: 'Relações Sociais e Organização Espacial',
+            summary: 'Ensaios da fase de economia política espacial, revisando a reestruturação industrial, a divisão espacial do trabalho e o papel do gênero na transformação dos mercados de trabalho regionais.',
+            keywords: ['Industrialização', 'Divisão do trabalho', 'Espaço econômico']
+          },
+          {
+            step: 'Parte II',
+            title: 'Lugar e Identidade: “Um Sentido Global do Lugar” & “Power-Geometries”',
+            summary: 'Núcleo da teoria do lugar de Massey. Inclui o ensaio clássico “A Global Sense of Place” (1991), a formulação de “geometrias de poder” e a crítica às leituras essencialistas e nostálgicas de comunidade e fronteira.',
+            keywords: ['Kilburn High Road', 'Sentido global do lugar', 'Power-geometries']
+          },
+          {
+            step: 'Parte III',
+            title: 'Espaço, Lugar e Gênero: “Sexismo Flexível” e Alta Tecnologia',
+            summary: 'Contém “Flexible Sexism” (crítica feminista a David Harvey e Edward Soja), “Politics and Space/Time” (desconstrução do dualismo Tempo/Masculino vs. Espaço/Feminino) e estudos sobre masculinidades nos laboratórios de alta tecnologia de Cambridge.',
+            keywords: ['Sexismo flexível', 'Dualismos binários', 'Feminismo', 'Espaço-tempo']
+          }
+        ]
+      },
+      {
+        id: 'rethinking-region',
+        year: '1998',
+        title: 'Rethinking the Region',
+        subtitle: 'Spaces of Neo-liberalism',
+        ptTitle: 'Repensando a Região (sem tradução integral em português)',
+        coauthors: 'Com John Allen e Allan Cochrane',
+        accent: '#A97424',
+        thesis: 'Regiões não existem como blocos territoriais fechados e homogêneos: o estudo do Sudeste da Inglaterra neoliberal comprova que a região é um recorte aberto, descontínuo e atravessado por redes de crescimento, desigualdade e exclusão que ultrapassam limites administrativos.',
+        context: 'Resultado de um amplo projeto coletivo na Open University que redefiniu os estudos regionais e urbanos frente à ascensão do neoliberalismo britânico.',
+        concepts: ['regiao-relacional', 'cidade-mundial', 'divisoes-espaciais-trabalho', 'sentido-global-lugar'],
+        structure: [
+          {
+            step: 'Parte 01',
+            title: 'Questionamento do Sudeste Inglês Neoliberal',
+            summary: 'Problematização do mapa oficial do “Sudeste” como vitrine da prosperidade thatcherista. Os autores perguntam: onde começa e termina uma região quando suas finanças e serviços operam em escala global?',
+            keywords: ['Sudeste da Inglaterra', 'Thatcherismo', 'Espaço neoliberal']
+          },
+          {
+            step: 'Parte 02',
+            title: 'Desconstrução da Região-Contêiner',
+            summary: 'Crítica sistemática à geografia regional tradicional (mosaico de polígonos contíguos). Proposta de pensar a região a partir de séries de relações sociais estendidas no espaço.',
+            keywords: ['Região-mosaico', 'Crítica cartográfica', 'Relações sociais']
+          },
+          {
+            step: 'Parte 03',
+            title: 'Espaços de Crescimento vs. Espaços de Exclusão',
+            summary: 'Mapeamento das fraturas internas do Sudeste: corredores de alta tecnologia e finanças convivem lado a lado com antigos bairros industriais empobrecidos e grupos excluídos do mercado imobiliário.',
+            keywords: ['Desigualdade interna', 'Exclusão social', 'Polarização']
+          },
+          {
+            step: 'Parte 04',
+            title: 'O Conceito de Região Aberta e Descontínua',
+            summary: 'Formulação teórica e política da região relacional: um objeto geograficamente descontínuo, poroso e definido em função das disputas políticas e das redes que o atravessam.',
+            keywords: ['Região relacional', 'Descontinuidade', 'Política regional']
+          }
+        ]
+      },
+      {
+        id: 'for-space',
+        year: '2005',
+        title: 'For Space',
+        subtitle: 'Obra-síntese filosófica e política sobre a ontologia do espaço',
+        ptTitle: 'Pelo Espaço: Uma Nova Política da Espacialidade (Bertrand Brasil, 2008)',
+        coauthors: 'Autoria individual',
+        accent: '#1D5C63',
+        thesis: 'Repensar o espaço como produto de inter-relações, esfera da multiplicidade e realidade sempre em construção é indispensável para resgatar a imaginação política radical e superar tanto o determinismo da globalização neoliberal quanto os essencialismos identitários.',
+        context: 'A obra magna filosófica de Doreen Massey, traduzida para diversos idiomas (no Brasil em 2008, por Hilda Pareto Maciel e Rogério Haesbaert), dialogando com filosofia, física, antropologia e política.',
+        concepts: ['espaco-relacional', 'espaco-tempo', 'acabar-juntos', 'sentido-global-lugar', 'geografias-responsabilidade'],
+        structure: [
+          {
+            step: 'Parte 1',
+            title: 'Abertura: As Três Proposições sobre o Espaço',
+            summary: 'Apresenta a agenda do livro e formula as três proposições inaugurais: o espaço como produto de inter-relações, esfera da multiplicidade coexistente e sistema sempre aberto e em construção.',
+            keywords: ['3 Proposições', 'Ontologia relacional', 'Multiplicidade']
+          },
+          {
+            step: 'Parte 2',
+            title: 'Associações Pouco Promissoras',
+            summary: 'Crítica filosófica minuciosa às tradições que imobilizaram e despolitizaram o espaço: o bergsonismo (que opõe duração viva a espaço morto), o estruturalismo (espaço como sincronia fechada) e Ernesto Laclau (que associa espacialização ao fim da política).',
+            keywords: ['Crítica a Bergson', 'Estruturalismo', 'Ernesto Laclau', 'Representação']
+          },
+          {
+            step: 'Interlúdio',
+            title: '“Confiar na ciência?” (Diálogo com a Física e a Biologia)',
+            summary: 'Breve ensaio reflexivo questionando a fascinação acrítica das ciências humanas por metáforas das ciências naturais, ao mesmo tempo em que dialoga produtivamente com concepções não-deterministas de espaço-tempo e complexidade.',
+            keywords: ['Ciência', 'Espaço-tempo', 'Incerteza'],
+            interlude: true
+          },
+          {
+            step: 'Parte 3',
+            title: 'Vivendo em Tempos Espaciais?',
+            summary: 'Desmonta a narrativa hegemônica da globalização como “fila única histórica” que transforma a geografia em atraso temporal. Analisa encontros coloniais (como Cortés e Tenochtitlán) para recuperar a simultaneidade de múltiplas estórias-até-agora.',
+            keywords: ['Fila histórica', 'Globalização', 'Tenochtitlán', 'Stories-so-far']
+          },
+          {
+            step: 'Parte 4',
+            title: 'Reorientações: Paisagem, Movimento e Throwntogetherness',
+            summary: 'Reconstrói a noção de paisagem e lugar a partir de trajetórias humanas e não-humanas (as rochas migrantes de Skiddaw). Cunhagem e aprofundamento de “acabar-juntos” (throwntogetherness) e do lugar como evento.',
+            keywords: ['Throwntogetherness', 'Skiddaw', 'Lugar como evento', 'Não-humano']
+          },
+          {
+            step: 'Parte 5',
+            title: 'Uma Política Relacional do Espacial',
+            summary: 'Traduz a teoria em agenda política: critica a ética das bonecas russas, propõe geografias da responsabilidade e defende uma política democrática da conectividade e do espaço público negociado.',
+            keywords: ['Política relacional', 'Responsabilidade', 'Espaço público']
+          }
+        ]
+      },
+      {
+        id: 'world-city',
+        year: '2007',
+        title: 'World City',
+        subtitle: 'Com novo prefácio “After the Crash” (2010)',
+        ptTitle: 'Cidade Mundial (sem tradução integral em português)',
+        coauthors: 'Autoria individual',
+        accent: '#2B4C59',
+        thesis: 'Londres não é apenas o palco onde a globalização acontece, mas um agente central na invenção e exportação do capitalismo financeiro neoliberal — o que gera tensões agudas dentro da própria cidade, na sua relação com o resto do Reino Unido e na sua responsabilidade ética perante o mundo.',
+        context: 'Publicado às vésperas da crise financeira de 2008 (e reeditado em 2010 com o prefácio “After the Crash”), o livro tornou-se referência sobre cidades globais e neoliberalismo.',
+        concepts: ['cidade-mundial', 'geometrias-poder', 'geografias-responsabilidade', 'regiao-relacional', 'sentido-global-lugar'],
+        structure: [
+          {
+            step: 'Introdução',
+            title: '“O futuro do nosso mundo?” & Prefácio “After the Crash” (2010)',
+            summary: 'Apresenta Londres como laboratório político do século XXI. No prefácio de 2010, mostra como a crise de 2008 expôs a fragilidade do modelo financeiro sem que a hegemonia política do neoliberalismo tenha sido automaticamente derrubada.',
+            keywords: ['Crise de 2008', 'Londres', 'Hegemonia financeira']
+          },
+          {
+            step: 'Parte I',
+            title: 'Inventando uma Cidade Mundial: O Projeto Neoliberal',
+            summary: 'Reconstrói como a desregulação financeira (“Big Bang” de 1986) e o desmonte do Greater London Council transformaram Londres de metrópole industrial-portuária em capital global das finanças, produzindo extrema polarização salarial e habitacional.',
+            keywords: ['City de Londres', 'Big Bang 1986', 'Polarização urbana']
+          },
+          {
+            step: 'Parte II',
+            title: 'O Mundo no País: Relação Desigual com o Reino Unido',
+            summary: 'Desconstrói o mito da “galinha dos ovos de ouro” (de que Londres sustenta o resto da nação). Mostra como o aquecimento econômico e os preços do Sudeste moldam taxas de juros e políticas nacionais em detrimento do Norte e de outras regiões.',
+            keywords: ['Desigualdade regional', 'Norte vs. Sul', 'Economia nacional']
+          },
+          {
+            step: 'Parte III',
+            title: 'A Cidade Mundial no Mundo: Geografias da Responsabilidade',
+            summary: 'Investiga o impacto global da metrópole — desde a drenagem de enfermeiras de países africanos para o sistema de saúde londrino até a atuação global de bancos da City — e propõe uma “política externa local” baseada em responsabilidade e solidariedade.',
+            keywords: ['Responsabilidade global', 'Migração de cuidados', 'Política do lugar para além do lugar']
+          }
+        ]
+      },
+      {
+        id: 'kilburn-manifesto',
+        year: '2015',
+        title: 'After Neoliberalism? The Kilburn Manifesto',
+        subtitle: 'Intervenção político-intelectual coletiva (revista Soundings)',
+        ptTitle: 'Depois do Neoliberalismo? O Manifesto de Kilburn',
+        coauthors: 'Com Stuart Hall e Michael Rustin',
+        accent: '#4A6B5D',
+        thesis: 'A crise financeira de 2008 não produziu o colapso do neoliberalismo porque este se enraizou como “senso comum” cultural, econômico e espacial; superá-lo exige uma batalha contra-hegemônica pelos vocabulários da economia, pelas instituições democráticas e por uma nova organização justa do espaço.',
+        context: 'Última grande obra de Doreen Massey (escrita ao lado de Stuart Hall, falecido em 2014, e Michael Rustin), sintetizando a militância intelectual da revista Soundings em torno da conjuntura pós-crise.',
+        concepts: ['cidade-mundial', 'espaco-tempo', 'geografias-responsabilidade', 'geometrias-poder'],
+        structure: [
+          {
+            step: 'Eixo 01',
+            title: 'Diagnóstico da Conjuntura Pós-2008',
+            summary: 'Análise gramsciana do assentamento neoliberal: mesmo após falhar economicamente em 2008, o neoliberalismo manteve hegemonia política ao impor agendas de austeridade e culpar o Estado de bem-estar social.',
+            keywords: ['Conjuntura', 'Gramsci', 'Austeridade', 'Crise orgânica']
+          },
+          {
+            step: 'Eixo 02',
+            title: 'Disputa do “Senso Comum” Neoliberal',
+            summary: 'Investigação de como a racionalidade de mercado redefiniu subjetividades, transformando cidadãos em “clientes”, solidariedade em competição individual e serviços públicos em mercadorias.',
+            keywords: ['Senso comum', 'Subjetividade', 'Cultura política']
+          },
+          {
+            step: 'Eixo 03',
+            title: 'Vocabulários da Economia e do Espaço (Texto-chave de Massey)',
+            summary: 'Contribuição central de Massey analisando como a linguagem econômica dominante naturaliza o mercado, oculta relações de poder e trata desigualdades espaciais como fatos inevitáveis — propondo novos vocabulários públicos.',
+            keywords: ['Vocabulários da economia', 'Linguagem e poder', 'Desnaturalização']
+          },
+          {
+            step: 'Eixo 04',
+            title: 'Agenda para uma Alternativa Democrática e Espacialmente Justa',
+            summary: 'Articulação de frentes de transformação: democratização das finanças, reequilíbrio territorial, transição ecológica, valorização do trabalho de cuidado e reconstrução de uma aliança social progressista.',
+            keywords: ['Alternativa democrática', 'Justiça espacial', 'Transição ecológica']
+          }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       ESTADO GLOBAL DA APLICAÇÃO
+       ========================================================================== */
+    const state = {
+      activeModule: 'network',
+      selectedNetworkNode: 'espaco-relacional',
+      networkAxisFilter: 'all',
+      selectedConceptId: 'espaco-relacional',
+      selectedBookId: 'for-space',
+      diagramState: {} // Armazena abas/toggles/itens ativos de cada diagrama SVG
+    };
+
+    // Helpers de busca
+    const getConcept = (id) => CONCEPTS.find((c) => c.id === id) || CONCEPTS[0];
+    const getBook = (id) => BOOKS.find((b) => b.id === id) || BOOKS[0];
+
+    /* ==========================================================================
+       NAVEGAÇÃO ENTRE MÓDULOS E LINKS CRUZADOS
+       ========================================================================== */
+    function switchModule(moduleName) {
+      state.activeModule = moduleName;
+
+      document.querySelectorAll('.nav-tab').forEach((btn) => {
+        const isActive = btn.dataset.module === moduleName;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', String(isActive));
+      });
+
+      document.querySelectorAll('.module-view').forEach((sec) => {
+        sec.classList.toggle('active', sec.id === `module-${moduleName}`);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openConcept(conceptId) {
+      state.selectedConceptId = conceptId;
+      renderConceptsMenu();
+      renderConceptDetail(conceptId);
+      switchModule('concepts');
+    }
+
+    function openBook(bookId) {
+      state.selectedBookId = bookId;
+      renderBooksMenu();
+      renderBookDetail(bookId);
+      switchModule('books');
+    }
+
+    /* ==========================================================================
+       MÓDULO 1: RENDERIZAÇÃO DA REDE CONCEITUAL EM SVG
+       ========================================================================== */
+    function getUniqueEdges() {
+      const seen = new Set();
+      const edges = [];
+      CONCEPTS.forEach((c) => {
+        c.connections.forEach((conn) => {
+          const pair = [c.id, conn.target].sort().join('--');
+          if (!seen.has(pair)) {
+            seen.add(pair);
+            edges.push({ source: c.id, target: conn.target });
+          }
+        });
+      });
+      return edges;
+    }
+
+    function renderNetworkSVG() {
+      const svg = document.getElementById('network-svg');
+      const edges = getUniqueEdges();
+      const activeId = state.selectedNetworkNode;
+      const filterAxis = state.networkAxisFilter;
+
+      // Calcula vizinhos do nó selecionado
+      const neighbors = new Set();
+      if (activeId) {
+        neighbors.add(activeId);
+        edges.forEach((e) => {
+          if (e.source === activeId) neighbors.add(e.target);
+          if (e.target === activeId) neighbors.add(e.source);
+        });
+      }
+
+      // Halos suaves de agrupamento dos 4 eixos
+      const axisClusters = `
+        <g aria-hidden="true">
+          <!-- Eixo Ontológico -->
+          <ellipse cx="360" cy="108" rx="185" ry="72" fill="${AXES.ontologico.soft}" stroke="${AXES.ontologico.color}" stroke-opacity="0.22" stroke-dasharray="5 5" />
+          <text x="190" y="54" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600" fill="${AXES.ontologico.color}" letter-spacing="1">EIXO ONTOLÓGICO</text>
+
+          <!-- Eixo Lugar & Política -->
+          <ellipse cx="645" cy="255" rx="195" ry="138" fill="${AXES.lugar.soft}" stroke="${AXES.lugar.color}" stroke-opacity="0.22" stroke-dasharray="5 5" />
+          <text x="645" y="136" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600" fill="${AXES.lugar.color}" letter-spacing="1">EIXO LUGAR &amp; POLÍTICA</text>
+
+          <!-- Eixo Poder & Diferença -->
+          <ellipse cx="305" cy="355" rx="135" ry="120" fill="${AXES.poder.soft}" stroke="${AXES.poder.color}" stroke-opacity="0.22" stroke-dasharray="5 5" />
+          <text x="195" y="255" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600" fill="${AXES.poder.color}" letter-spacing="1">PODER &amp; DIFERENÇA</text>
+
+          <!-- Eixo Econômico-Estrutural -->
+          <ellipse cx="430" cy="468" rx="345" ry="75" fill="${AXES.economico.soft}" stroke="${AXES.economico.color}" stroke-opacity="0.24" stroke-dasharray="5 5" />
+          <text x="115" y="528" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600" fill="${AXES.economico.color}" letter-spacing="1">EIXO ECONÔMICO-ESTRUTURAL</text>
+        </g>
+      `;
+
+      // Arestas curvas (Bézier quadráticas)
+      const edgesSVG = edges.map((e) => {
+        const s = getConcept(e.source);
+        const t = getConcept(e.target);
+        const mx = (s.pos.x + t.pos.x) / 2;
+        const my = (s.pos.y + t.pos.y) / 2;
+        const dx = t.pos.x - s.pos.x;
+        const dy = t.pos.y - s.pos.y;
+        // Curvatura sutil perpendicular ao segmento
+        const cx = mx - dy * 0.12;
+        const cy = my + dx * 0.12;
+
+        const isConnected = activeId && (e.source === activeId || e.target === activeId);
+        const matchesFilter = filterAxis === 'all' || s.axis === filterAxis || t.axis === filterAxis;
+        let cls = 'net-edge';
+        let strokeColor = '#8C97A0';
+
+        if (filterAxis !== 'all' && !matchesFilter) {
+          cls += ' dimmed';
+        } else if (activeId) {
+          if (isConnected) {
+            cls += ' highlighted';
+            strokeColor = AXES[getConcept(activeId).axis].color;
+          } else {
+            cls += ' dimmed';
+          }
+        }
+
+        return `<path class="${cls}" d="M ${s.pos.x} ${s.pos.y} Q ${cx} ${cy} ${t.pos.x} ${t.pos.y}" style="stroke:${strokeColor}" />`;
+      }).join('');
+
+      // Nós conceituais
+      const nodesSVG = CONCEPTS.map((c) => {
+        const axis = AXES[c.axis];
+        const isSelected = activeId === c.id;
+        const isNeighbor = neighbors.has(c.id);
+        const matchesFilter = filterAxis === 'all' || c.axis === filterAxis;
+
+        let dimmed = false;
+        if (filterAxis !== 'all' && !matchesFilter) dimmed = true;
+        else if (activeId && !isNeighbor) dimmed = true;
+
+        // Quebra de rótulo em até 2 linhas para máxima legibilidade
+        const shortLabels = {
+          'espaco-relacional': ['Espaço Relacional', '(3 Proposições)'],
+          'espaco-tempo': ['Espaço-Tempo &', 'Estórias-até-Agora'],
+          'geometrias-poder': ['Geometrias', 'de Poder'],
+          'sentido-global-lugar': ['Sentido Global', 'do Lugar'],
+          'acabar-juntos': ['Acabar-Juntos', '(Throwntogetherness)'],
+          'divisoes-espaciais-trabalho': ['Divisões Espaciais', 'do Trabalho'],
+          'espaco-lugar-genero': ['Espaço, Lugar', 'e Gênero'],
+          'regiao-relacional': ['Região Aberta', 'e Relacional'],
+          'geografias-responsabilidade': ['Geografias da', 'Responsabilidade'],
+          'cidade-mundial': ['Cidade Mundial &', 'Neoliberalismo']
+        };
+        const lines = shortLabels[c.id] || [c.title];
+
+        return `
+          <g class="net-node ${isSelected ? 'selected' : ''} ${dimmed ? 'dimmed' : ''}"
+             data-node-id="${c.id}"
+             tabindex="0"
+             role="button"
+             aria-label="${c.title}">
+            ${isSelected ? `<circle cx="${c.pos.x}" cy="${c.pos.y}" r="30" fill="none" stroke="${axis.color}" stroke-width="2" stroke-dasharray="4 3" opacity="0.7" />` : ''}
+            <circle class="node-ring" cx="${c.pos.x}" cy="${c.pos.y}" r="22" fill="${axis.color}" stroke="#FFFFFF" stroke-width="3" />
+            <text class="net-node-code" x="${c.pos.x}" y="${c.pos.y + 3.5}" text-anchor="middle">${c.code}</text>
+            <g transform="translate(${c.pos.x}, ${c.pos.y + 36})">
+              <rect x="-68" y="-12" width="136" height="${lines.length > 1 ? 30 : 18}" rx="4" fill="rgba(255,255,255,0.88)" />
+              <text class="net-node-label" x="0" y="0" text-anchor="middle">${lines[0]}</text>
+              ${lines[1] ? `<text class="net-node-label" x="0" y="13" text-anchor="middle" style="font-weight:500; fill:#434E56; font-size:10.5px;">${lines[1]}</text>` : ''}
+            </g>
+          </g>
+        `;
+      }).join('');
+
+      svg.innerHTML = `${axisClusters}<g>${edgesSVG}</g><g>${nodesSVG}</g>`;
+
+      // Eventos nos nós
+      svg.querySelectorAll('.net-node').forEach((nodeEl) => {
+        const id = nodeEl.dataset.nodeId;
+        nodeEl.addEventListener('click', () => {
+          state.selectedNetworkNode = id;
+          renderNetworkSVG();
+          renderNetworkInspector(id);
+        });
+        nodeEl.addEventListener('mouseenter', () => {
+          if (state.selectedNetworkNode !== id) {
+            state.selectedNetworkNode = id;
+            renderNetworkSVG();
+            renderNetworkInspector(id);
+          }
+        });
+        nodeEl.addEventListener('keydown', (ev) => {
+          if (ev.key === 'Enter' || ev.key === ' ') {
+            ev.preventDefault();
+            state.selectedNetworkNode = id;
+            renderNetworkSVG();
+            renderNetworkInspector(id);
+          }
+        });
+      });
+    }
+
+    function renderNetworkInspector(conceptId) {
+      const panel = document.getElementById('network-inspector');
+      const statusEl = document.getElementById('network-status');
+      const c = getConcept(conceptId);
+      const axis = AXES[c.axis];
+
+      statusEl.textContent = `Foco: ${c.code} • ${c.connections.length} articulações diretas`;
+
+      const connHTML = c.connections.map((conn) => {
+        const target = getConcept(conn.target);
+        const tAxis = AXES[target.axis];
+        return `
+          <button class="connection-item" data-jump-node="${target.id}">
+            <strong>
+              <span class="axis-dot" style="background:${tAxis.color}"></span>
+              ${target.code} — ${target.title}
+            </strong>
+            <span>${conn.reason}</span>
+          </button>
+        `;
+      }).join('');
+
+      panel.innerHTML = `
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:0.5rem;">
+            <span class="axis-pill" style="background:${axis.soft}; color:${axis.color};">
+              <span class="axis-dot" style="background:${axis.color}"></span>
+              ${axis.label}
+            </span>
+            <span class="eyebrow">${c.code}</span>
+          </div>
+
+          <h3 class="serif-title inspector-title">${c.title}</h3>
+          <div class="inspector-en">${c.en}</div>
+          <p class="inspector-summary">${c.shortSummary}</p>
+
+          <div class="connections-heading">Como se articula aos demais conceitos (${c.connections.length})</div>
+          <div class="connection-list">${connHTML}</div>
+        </div>
+
+        <button class="btn-primary" id="btn-explore-concept" style="background:${axis.color}">
+          Explorar explicação visual →
+        </button>
+      `;
+
+      panel.querySelector('#btn-explore-concept').addEventListener('click', () => {
+        openConcept(c.id);
+      });
+
+      panel.querySelectorAll('[data-jump-node]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedNetworkNode = btn.dataset.jumpNode;
+          renderNetworkSVG();
+          renderNetworkInspector(btn.dataset.jumpNode);
+        });
+      });
+    }
+
+    /* ==========================================================================
+       MÓDULO 2: MENU DE CONCEITOS & 10 DIAGRAMAS SVG EXCLUSIVOS
+       ========================================================================== */
+    function renderConceptsMenu() {
+      const container = document.getElementById('concepts-menu');
+      container.innerHTML = CONCEPTS.map((c) => {
+        const axis = AXES[c.axis];
+        const isActive = c.id === state.selectedConceptId;
+        return `
+          <button class="sidebar-item ${isActive ? 'active' : ''}"
+                  data-concept-id="${c.id}"
+                  style="--item-accent: ${axis.color}"
+                  role="option"
+                  aria-selected="${isActive}">
+            <span class="sidebar-code">${c.code}</span>
+            <div>
+              <div class="sidebar-item-title">${c.title}</div>
+              <span class="sidebar-item-sub">${axis.label}</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.sidebar-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedConceptId = btn.dataset.conceptId;
+          renderConceptsMenu();
+          renderConceptDetail(btn.dataset.conceptId);
+        });
+      });
+    }
+
+    function renderConceptDetail(conceptId) {
+      const stage = document.getElementById('concept-detail');
+      const c = getConcept(conceptId);
+      const axis = AXES[c.axis];
+
+      const linkedConceptsHTML = c.connections.map((conn) => {
+        const t = getConcept(conn.target);
+        return `<button class="link-tag" data-open-concept="${t.id}">
+          <span class="axis-dot" style="background:${AXES[t.axis].color}"></span>
+          ${t.title}
+        </button>`;
+      }).join('');
+
+      const linkedBooksHTML = c.books.map((bookId) => {
+        const b = getBook(bookId);
+        return `<button class="link-tag" data-open-book="${b.id}">
+          <span style="font-family:var(--font-mono); font-size:0.7rem; opacity:0.75;">${b.year}</span>
+          ${b.title}
+        </button>`;
+      }).join('');
+
+      stage.innerHTML = `
+        <header class="detail-header">
+          <div class="detail-meta-row">
+            <span class="sidebar-code" style="background:${axis.color}; color:#FFF; border:none;">${c.code}</span>
+            <span class="axis-pill" style="background:${axis.soft}; color:${axis.color};">
+              <span class="axis-dot" style="background:${axis.color}"></span>
+              ${axis.label}
+            </span>
+          </div>
+          <h2 class="serif-title detail-title">${c.title}</h2>
+          <div class="detail-subtitle">${c.en}</div>
+        </header>
+
+        <div class="concept-synthesis">
+          ${c.synthesis.map((p) => `<p>${p}</p>`).join('')}
+        </div>
+
+        <div class="diagram-card" id="concept-diagram-slot">
+          <!-- Diagrama SVG exclusivo renderizado abaixo -->
+        </div>
+
+        <section aria-label="Ruptura Epistemológica">
+          <div class="eyebrow" style="margin-bottom:0.65rem;">Ruptura Epistemológica</div>
+          <div class="rupture-grid">
+            <div class="rupture-box traditional">
+              <h4>Visão Tradicional / Hegemônica</h4>
+              <ul>${c.traditional.map((item) => `<li>${item}</li>`).join('')}</ul>
+            </div>
+            <div class="rupture-box massey" style="--accent-color: ${axis.color}">
+              <h4>Proposta de Doreen Massey</h4>
+              <ul>${c.massey.map((item) => `<li>${item}</li>`).join('')}</ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="crosslinks-section">
+          <div class="crosslink-group">
+            <h4>Conceitos Interligados</h4>
+            <div class="tag-cloud">${linkedConceptsHTML}</div>
+          </div>
+          <div class="crosslink-group">
+            <h4>Obras de Referência</h4>
+            <div class="tag-cloud">${linkedBooksHTML}</div>
+          </div>
+        </section>
+      `;
+
+      // Renderiza o diagrama SVG exclusivo para o conceito
+      renderConceptDiagram(conceptId);
+
+      // Links cruzados
+      stage.querySelectorAll('[data-open-concept]').forEach((btn) => {
+        btn.addEventListener('click', () => openConcept(btn.dataset.openConcept));
+      });
+      stage.querySelectorAll('[data-open-book]').forEach((btn) => {
+        btn.addEventListener('click', () => openBook(btn.dataset.openBook));
+      });
+    }
+
+    /* --------------------------------------------------------------------------
+       GERADOR DOS 10 DIAGRAMAS SVG INTERATIVOS SOB MEDIDA
+       -------------------------------------------------------------------------- */
+    function renderConceptDiagram(conceptId) {
+      const slot = document.getElementById('concept-diagram-slot');
+      if (!slot) return;
+
+      const builders = {
+        'espaco-relacional': buildDiagramC01,
+        'espaco-tempo': buildDiagramC02,
+        'geometrias-poder': buildDiagramC03,
+        'sentido-global-lugar': buildDiagramC04,
+        'acabar-juntos': buildDiagramC05,
+        'divisoes-espaciais-trabalho': buildDiagramC06,
+        'espaco-lugar-genero': buildDiagramC07,
+        'regiao-relacional': buildDiagramC08,
+        'geografias-responsabilidade': buildDiagramC09,
+        'cidade-mundial': buildDiagramC10
+      };
+
+      const builder = builders[conceptId];
+      if (builder) builder(slot);
+    }
+
+    /* C01 — Espaço Relacional (3 Proposições) */
+    function buildDiagramC01(slot) {
+      const active = state.diagramState.c01 || 'all';
+      const props = {
+        all: {
+          title: 'Convergência no Espaço Político',
+          desc: 'As três proposições de Pelo Espaço (2005) sustentam-se mutuamente: é porque o espaço resulta de relações plurais e inacabadas que ele se torna o terreno irredutível da política.'
+        },
+        p1: {
+          title: 'Proposição 1 — Produto de Inter-relações',
+          desc: 'O espaço não existe antes das relações que o produzem. Identidades e lugares são constituídos por interações materiais, sociais e ecológicas que vão do íntimo ao global.'
+        },
+        p2: {
+          title: 'Proposição 2 — Esfera da Multiplicidade',
+          desc: 'O espaço é a condição de possibilidade para a coexistência simultânea de trajetórias distintas. Sem espaço não há multiplicidade; reduzir o espaço ao uno destrói a alteridade.'
+        },
+        p3: {
+          title: 'Proposição 3 — Sempre em Construção',
+          desc: 'Como produto de relações em andamento, o espaço nunca está fechado ou concluído. Ele sempre contém “pontas soltas” e relações ainda por fazer — garantindo um futuro genuinamente aberto.'
+        }
+      };
+
+      const op = (key) => (active === 'all' || active === key ? 1 : 0.24);
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Esquema Visual • As 3 Proposições de Pelo Espaço</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${active === 'all' ? 'active' : ''}" data-c01="all">Síntese</button>
+            <button class="diag-btn ${active === 'p1' ? 'active' : ''}" data-c01="p1">1. Inter-relações</button>
+            <button class="diag-btn ${active === 'p2' ? 'active' : ''}" data-c01="p2">2. Multiplicidade</button>
+            <button class="diag-btn ${active === 'p3' ? 'active' : ''}" data-c01="p3">3. Em Construção</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">
+          <svg viewBox="0 0 740 360" role="img" aria-label="Diagrama triangular das três proposições do espaço relacional">
+            <defs>
+              <marker id="arr-c01" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#1D5C63" />
+              </marker>
+            </defs>
+            <!-- Órbita externa -->
+            <circle cx="370" cy="195" r="142" fill="none" stroke="#1D5C63" stroke-opacity="0.16" stroke-dasharray="6 6" />
+            <!-- Triângulo estrutural -->
+            <polygon points="370,62 175,285 565,285" fill="rgba(29,92,99,0.05)" stroke="#1D5C63" stroke-width="1.5" stroke-opacity="0.35" />
+
+            <!-- Vetores convergentes ao núcleo -->
+            <line x1="370" y1="98" x2="370" y2="148" stroke="#1D5C63" stroke-width="2" opacity="${op('p1')}" marker-end="url(#arr-c01)" />
+            <line x1="218" y1="265" x2="318" y2="215" stroke="#1D5C63" stroke-width="2" opacity="${op('p2')}" marker-end="url(#arr-c01)" />
+            <line x1="522" y1="265" x2="422" y2="215" stroke="#1D5C63" stroke-width="2" opacity="${op('p3')}" marker-end="url(#arr-c01)" />
+
+            <!-- Proposição 1 -->
+            <g opacity="${op('p1')}" style="cursor:pointer" data-c01="p1">
+              <rect x="245" y="24" width="250" height="72" rx="12" fill="#FFFFFF" stroke="#1D5C63" stroke-width="${active === 'p1' ? 3 : 1.8}" />
+              <text x="370" y="47" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#1D5C63">PROPOSIÇÃO 01</text>
+              <text x="370" y="67" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="13" font-weight="700" fill="#1A2228">Produto de Inter-relações</text>
+              <text x="370" y="84" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#6C7780">Do intimamente pequeno ao global</text>
+            </g>
+
+            <!-- Proposição 2 -->
+            <g opacity="${op('p2')}" style="cursor:pointer" data-c01="p2">
+              <rect x="42" y="255" width="248" height="76" rx="12" fill="#FFFFFF" stroke="#4A6B5D" stroke-width="${active === 'p2' ? 3 : 1.8}" />
+              <text x="166" y="278" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#4A6B5D">PROPOSIÇÃO 02</text>
+              <text x="166" y="298" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="13" font-weight="700" fill="#1A2228">Esfera da Multiplicidade</text>
+              <text x="166" y="315" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#6C7780">Coexistência de trajetórias distintas</text>
+            </g>
+
+            <!-- Proposição 3 -->
+            <g opacity="${op('p3')}" style="cursor:pointer" data-c01="p3">
+              <rect x="450" y="255" width="248" height="76" rx="12" fill="#FFFFFF" stroke="#C44536" stroke-width="${active === 'p3' ? 3 : 1.8}" />
+              <text x="574" y="278" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#C44536">PROPOSIÇÃO 03</text>
+              <text x="574" y="298" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="13" font-weight="700" fill="#1A2228">Sempre em Construção</text>
+              <text x="574" y="315" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#6C7780">Aberto, inacabado, com pontas soltas</text>
+            </g>
+
+            <!-- Núcleo Central -->
+            <g>
+              <circle cx="370" cy="196" r="52" fill="#1D5C63" />
+              <circle cx="370" cy="196" r="60" fill="none" stroke="#1D5C63" stroke-width="1.5" stroke-dasharray="3 4" />
+              <text x="370" y="191" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" font-weight="700" fill="#FFFFFF">ESPAÇO</text>
+              <text x="370" y="210" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" font-weight="700" fill="#FFFFFF">POLÍTICO</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${props[active].title}:</strong> ${props[active].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c01]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagramState.c01 = el.dataset.c01;
+          buildDiagramC01(slot);
+        });
+      });
+    }
+
+    /* C02 — Espaço-Tempo & Estórias-até-Agora */
+    function buildDiagramC02(slot) {
+      const mode = state.diagramState.c02 || 'massey';
+
+      const svgContent = mode === 'traditional'
+        ? `
+          <svg viewBox="0 0 740 310" role="img" aria-label="Armadilha da fila histórica única">
+            <defs>
+              <marker id="arr-gray" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#8C969E" />
+              </marker>
+            </defs>
+            <text x="370" y="36" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#6C7780">CONVERSÃO DA GEOGRAFIA EM TEMPO LINEAR ÚNICO</text>
+            <!-- Linha única do progresso -->
+            <line x1="65" y1="165" x2="665" y2="165" stroke="#8C969E" stroke-width="4" marker-end="url(#arr-gray)" />
+            <!-- Estágios -->
+            <circle cx="135" cy="165" r="14" fill="#B8C0C6" stroke="#FFFFFF" stroke-width="3" />
+            <text x="135" y="132" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#434E56">“Atrasados”</text>
+            <text x="135" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6C7780">Passado do Ocidente</text>
+
+            <circle cx="360" cy="165" r="16" fill="#8C969E" stroke="#FFFFFF" stroke-width="3" />
+            <text x="360" y="132" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#434E56">“Em Desenvolvimento”</text>
+            <text x="360" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#6C7780">Correndo atrás na fila</text>
+
+            <circle cx="585" cy="165" r="20" fill="#1A2228" stroke="#FFFFFF" stroke-width="3" />
+            <text x="585" y="130" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="700" fill="#1A2228">“Avançados”</text>
+            <text x="585" y="200" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#1A2228">Modelo único / Futuro dado</text>
+
+            <rect x="175" y="236" width="390" height="44" rx="8" fill="#F4EFEA" stroke="#C44536" stroke-dasharray="4 3" />
+            <text x="370" y="262" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11.5" font-weight="600" fill="#C44536">Resultado: apaga a diferença espacial e fecha o futuro político</text>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 740 310" role="img" aria-label="Corte espaço-temporal com múltiplas estórias-até-agora">
+            <text x="370" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#1D5C63">SIMULTANEIDADE DE MÚLTIPLAS “ESTÓRIAS-ATÉ-AGORA”</text>
+            <!-- Plano do Corte Espacial (Agora) -->
+            <rect x="425" y="48" width="90" height="225" rx="10" fill="rgba(29,92,99,0.10)" stroke="#1D5C63" stroke-width="2" stroke-dasharray="5 4" />
+            <text x="470" y="68" text-anchor="middle" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#1D5C63">AGORA</text>
+            <text x="470" y="262" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#1D5C63">Corte Espacial</text>
+
+            <!-- Trajetórias simultâneas (passado -> agora) -->
+            <path d="M 60 95 C 180 85, 290 130, 470 102" fill="none" stroke="#1D5C63" stroke-width="3" />
+            <path d="M 60 155 C 190 185, 300 120, 470 152" fill="none" stroke="#C44536" stroke-width="3" />
+            <path d="M 60 205 C 210 190, 310 230, 470 198" fill="none" stroke="#C68B2C" stroke-width="3" />
+            <path d="M 60 250 C 195 265, 320 220, 470 238" fill="none" stroke="#4A6B5D" stroke-width="3" />
+
+            <!-- Futuros abertos (pontilhados divergentes) -->
+            <path d="M 470 102 Q 570 85, 675 72" fill="none" stroke="#1D5C63" stroke-width="2.2" stroke-dasharray="5 5" />
+            <path d="M 470 152 Q 570 142, 675 168" fill="none" stroke="#C44536" stroke-width="2.2" stroke-dasharray="5 5" />
+            <path d="M 470 198 Q 570 212, 675 194" fill="none" stroke="#C68B2C" stroke-width="2.2" stroke-dasharray="5 5" />
+            <path d="M 470 238 Q 580 255, 675 268" fill="none" stroke="#4A6B5D" stroke-width="2.2" stroke-dasharray="5 5" />
+
+            <!-- Pontos de coexistência no corte -->
+            <circle cx="470" cy="102" r="7" fill="#1D5C63" stroke="#FFF" stroke-width="2" />
+            <circle cx="470" cy="152" r="7" fill="#C44536" stroke="#FFF" stroke-width="2" />
+            <circle cx="470" cy="198" r="7" fill="#C68B2C" stroke="#FFF" stroke-width="2" />
+            <circle cx="470" cy="238" r="7" fill="#4A6B5D" stroke="#FFF" stroke-width="2" />
+
+            <!-- Legendas laterais -->
+            <text x="65" y="84" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#1D5C63">Trajetória A (Cidades globais)</text>
+            <text x="65" y="144" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#C44536">Trajetória B (Economias do Sul)</text>
+            <text x="65" y="195" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#C68B2C">Trajetória C (Lutas comunitárias)</text>
+            <text x="65" y="242" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#4A6B5D">Trajetória D (Dinâmicas ecológicas)</text>
+
+            <text x="615" y="128" text-anchor="middle" font-family="Cormorant Garamond" font-size="17" font-weight="700" fill="#1A2228">Futuros</text>
+            <text x="615" y="146" text-anchor="middle" font-family="Cormorant Garamond" font-size="17" font-weight="700" fill="#1A2228">Abertos</text>
+          </svg>
+        `;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Esquema Comparativo • Tempo Linear vs. Espaço-Tempo</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${mode === 'traditional' ? 'active' : ''}" data-c02="traditional">Armadilha da Fila Histórica</button>
+            <button class="diag-btn ${mode === 'massey' ? 'active' : ''}" data-c02="massey">Corte Espaço-Temporal (Massey)</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">${svgContent}</div>
+        <div class="diagram-caption">
+          ${mode === 'traditional'
+            ? '<strong>Armadilha da Fila Histórica:</strong> Ao transformar países e regiões diferentes em “estágios atrasados” de uma única linha do tempo, nega-se a contemporaneidade dos outros povos e impõe-se um único modelo econômico.'
+            : '<strong>Corte Espaço-Temporal:</strong> O espaço é o corte transversal através de múltiplas “estórias-até-agora” que coexistem no presente, interagem entre si e mantêm o futuro genuinamente aberto.'}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c02]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.diagramState.c02 = btn.dataset.c02;
+          buildDiagramC02(slot);
+        });
+      });
+    }
+
+    /* C03 — Geometrias de Poder */
+    function buildDiagramC03(slot) {
+      const profile = state.diagramState.c03 || 'control';
+      const profiles = {
+        control: {
+          label: '1. Iniciam e controlam fluxos',
+          color: '#C44536',
+          desc: 'Executivos transnacionais, banqueiros e gestores de mídia: movem-se livremente, decidem investimentos, enviam ordens e moldam a própria arquitetura das redes globais.'
+        },
+        moveNoControl: {
+          label: '2. Movem-se sem controle',
+          color: '#C68B2C',
+          desc: 'Migrantes econômicos, refugiados e trabalhadores precários: percorrem longas distâncias geográficas, mas sob coerção, fronteiras hostis e sem poder de comando sobre os fluxos.'
+        },
+        receiveImmobile: {
+          label: '3. Recebem fluxos sem se mover',
+          color: '#1D5C63',
+          desc: 'Moradores locais e consumidores urbanos: permanecem fisicamente no mesmo lugar, mas seu cotidiano é continuamente atravessado por capitais, mídias, mercadorias e decisões distantes.'
+        },
+        trapped: {
+          label: '4. Aprisionados pela desconexão',
+          color: '#6C7780',
+          desc: 'Populações empobrecidas ou isoladas pela reestruturação espacial: a hiper-mobilidade de outros grupos (ex.: fechamento de linhas locais, gentrificação) reduz ativamente sua própria mobilidade.'
+        }
+      };
+
+      const op = (k) => (profile === k ? 1 : 0.28);
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Campo Vetorial Assimétrico • Posições nas Geometrias de Poder</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${profile === 'control' ? 'active' : ''}" data-c03="control">Controlam fluxos</button>
+            <button class="diag-btn ${profile === 'moveNoControl' ? 'active' : ''}" data-c03="moveNoControl">Movem-se s/ controle</button>
+            <button class="diag-btn ${profile === 'receiveImmobile' ? 'active' : ''}" data-c03="receiveImmobile">Recebem imóveis</button>
+            <button class="diag-btn ${profile === 'trapped' ? 'active' : ''}" data-c03="trapped">Aprisionados</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">
+          <svg viewBox="0 0 740 330" role="img" aria-label="Diagrama de geometrias de poder frente aos fluxos globais">
+            <defs>
+              <marker id="arr-red" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#C44536" />
+              </marker>
+              <marker id="arr-ochre" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#C68B2C" />
+              </marker>
+              <marker id="arr-teal" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#1D5C63" />
+              </marker>
+            </defs>
+
+            <!-- Eixos de referência -->
+            <line x1="65" y1="285" x2="685" y2="285" stroke="#1A2228" stroke-opacity="0.2" stroke-width="1.5" />
+            <line x1="65" y1="35" x2="65" y2="285" stroke="#1A2228" stroke-opacity="0.2" stroke-width="1.5" />
+            <text x="680" y="305" text-anchor="end" font-family="JetBrains Mono" font-size="10" fill="#6C7780">GRAU DE MOBILIDADE FÍSICA →</text>
+            <text x="22" y="160" text-anchor="middle" transform="rotate(-90 22 160)" font-family="JetBrains Mono" font-size="10" fill="#6C7780">CONTROLE SOBRE FLUXOS →</text>
+
+            <!-- Perfil 1: Controlam e iniciam fluxos (Alto controle, Alta mobilidade) -->
+            <g opacity="${op('control')}" style="cursor:pointer" data-c03="control">
+              <circle cx="560" cy="88" r="38" fill="rgba(196,69,54,0.14)" stroke="#C44536" stroke-width="2.5" />
+              <line x1="560" y1="88" x2="650" y2="55" stroke="#C44536" stroke-width="2.5" marker-end="url(#arr-red)" />
+              <line x1="560" y1="88" x2="455" y2="62" stroke="#C44536" stroke-width="2.5" marker-end="url(#arr-red)" />
+              <line x1="560" y1="88" x2="645" y2="128" stroke="#C44536" stroke-width="2.5" marker-end="url(#arr-red)" />
+              <text x="560" y="85" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#C44536">ELITES</text>
+              <text x="560" y="99" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#1A2228">Iniciam fluxos</text>
+            </g>
+
+            <!-- Perfil 2: Movem-se sem controle (Baixo controle, Alta mobilidade) -->
+            <g opacity="${op('moveNoControl')}" style="cursor:pointer" data-c03="moveNoControl">
+              <rect x="460" y="192" width="195" height="62" rx="10" fill="rgba(198,139,44,0.14)" stroke="#C68B2C" stroke-width="2.2" />
+              <path d="M 380 222 Q 420 205, 456 222" fill="none" stroke="#C68B2C" stroke-width="2.2" stroke-dasharray="4 3" marker-end="url(#arr-ochre)" />
+              <text x="557" y="218" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11.5" font-weight="700" fill="#9E6A18">Migrantes &amp; Refugiados</text>
+              <text x="557" y="236" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#434E56">Deslocam-se sem comando</text>
+            </g>
+
+            <!-- Perfil 3: Recebem fluxos sem se mover (Controle baixo/médio, Baixa mobilidade) -->
+            <g opacity="${op('receiveImmobile')}" style="cursor:pointer" data-c03="receiveImmobile">
+              <circle cx="215" cy="112" r="40" fill="rgba(29,92,99,0.12)" stroke="#1D5C63" stroke-width="2.2" />
+              <line x1="120" y1="75" x2="174" y2="96" stroke="#1D5C63" stroke-width="2" marker-end="url(#arr-teal)" />
+              <line x1="315" y1="88" x2="258" y2="104" stroke="#1D5C63" stroke-width="2" marker-end="url(#arr-teal)" />
+              <line x1="215" y1="45" x2="215" y2="68" stroke="#1D5C63" stroke-width="2" marker-end="url(#arr-teal)" />
+              <text x="215" y="108" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#1D5C63">Receptores</text>
+              <text x="215" y="123" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Imóveis locais</text>
+            </g>
+
+            <!-- Perfil 4: Aprisionados pela desconexão (Baixo controle, Baixa mobilidade) -->
+            <g opacity="${op('trapped')}" style="cursor:pointer" data-c03="trapped">
+              <rect x="118" y="196" width="194" height="60" rx="10" fill="#EFECE6" stroke="#6C7780" stroke-width="2" stroke-dasharray="5 3" />
+              <text x="215" y="221" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11.5" font-weight="700" fill="#434E56">Aprisionados no Lugar</text>
+              <text x="215" y="238" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#6C7780">Desconectados / Imobilizados</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong style="color:${profiles[profile].color}">${profiles[profile].label}:</strong> ${profiles[profile].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c03]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagramState.c03 = el.dataset.c03;
+          buildDiagramC03(slot);
+        });
+      });
+    }
+
+    /* C04 — Um Sentido Global do Lugar */
+    function buildDiagramC04(slot) {
+      const mode = state.diagramState.c04 || 'open';
+
+      const svgContent = mode === 'closed'
+        ? `
+          <svg viewBox="0 0 740 310" role="img" aria-label="Lugar reacionário e fechado">
+            <text x="370" y="34" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#6C7780">SENTIDO REACIONÁRIO / DEFENSIVO DO LUGAR</text>
+            <!-- Muro rígido -->
+            <circle cx="370" cy="168" r="96" fill="#EFECE6" stroke="#1A2228" stroke-width="7" />
+            <circle cx="370" cy="168" r="82" fill="none" stroke="#8C969E" stroke-width="1.5" stroke-dasharray="3 3" />
+            <text x="370" y="156" text-anchor="middle" font-family="Cormorant Garamond" font-size="22" font-weight="700" fill="#1A2228">“NÓS”</text>
+            <text x="370" y="177" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" fill="#434E56">Identidade única e fixa</text>
+            <text x="370" y="194" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#6C7780">Nostalgia / Fronteira rígida</text>
+
+            <!-- Fluxos barrados -->
+            <line x1="95" y1="125" x2="252" y2="148" stroke="#C44536" stroke-width="2.5" stroke-dasharray="5 4" />
+            <line x1="252" y1="138" x2="252" y2="158" stroke="#C44536" stroke-width="3" />
+            <text x="145" y="112" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#C44536">“ELES” / Global ameaçador</text>
+
+            <line x1="645" y1="195" x2="488" y2="178" stroke="#C44536" stroke-width="2.5" stroke-dasharray="5 4" />
+            <line x1="488" y1="168" x2="488" y2="188" stroke="#C44536" stroke-width="3" />
+            <text x="595" y="218" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#C44536">Diferença excluída</text>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 740 310" role="img" aria-label="Lugar extrovertido e poroso — Kilburn High Road">
+            <text x="370" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#4A6B5D">SENTIDO GLOBAL / EXTROVERTIDO DO LUGAR (EX.: KILBURN HIGH ROAD)</text>
+            <!-- Redes atravessando o lugar -->
+            <path d="M 55 82 C 210 90, 290 155, 370 165 C 455 175, 540 235, 685 242" fill="none" stroke="#1D5C63" stroke-width="2.6" />
+            <path d="M 55 245 C 195 235, 295 180, 370 165 C 445 150, 550 90, 685 80" fill="none" stroke="#C44536" stroke-width="2.6" />
+            <path d="M 80 165 C 200 135, 285 165, 370 165 C 455 165, 540 195, 665 165" fill="none" stroke="#C68B2C" stroke-width="2.6" />
+            <path d="M 370 50 L 370 282" fill="none" stroke="#4A6B5D" stroke-width="2.4" stroke-dasharray="5 4" />
+
+            <!-- Fronteira porosa do lugar -->
+            <circle cx="370" cy="165" r="78" fill="rgba(74,107,93,0.14)" stroke="#4A6B5D" stroke-width="2.5" stroke-dasharray="8 6" />
+            <circle cx="370" cy="165" r="34" fill="#4A6B5D" />
+            <text x="370" y="161" text-anchor="middle" font-family="Cormorant Garamond" font-size="16" font-weight="700" fill="#FFFFFF">KILBURN</text>
+            <text x="370" y="176" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#E6F0EC">NÓ ABERTO</text>
+
+            <!-- Rótulos das redes -->
+            <text x="125" y="72" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#1D5C63">Diáspora irlandesa &amp; imprensa</text>
+            <text x="530" y="70" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#C44536">Comércio sul-asiático &amp; sari</text>
+            <text x="85" y="264" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#C44536">Rotas aéreas (Heathrow)</text>
+            <text x="535" y="262" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#1D5C63">Capital &amp; marcas globais</text>
+            <text x="370" y="296" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#4A6B5D">Histórias locais &amp; conflitos internos em processo</text>
+          </svg>
+        `;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Esquema Comparativo • Lugar Fechado vs. Lugar Extrovertido</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${mode === 'closed' ? 'active' : ''}" data-c04="closed">Lugar Reacionário/Fechado</button>
+            <button class="diag-btn ${mode === 'open' ? 'active' : ''}" data-c04="open">Lugar Extrovertido/Poroso</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">${svgContent}</div>
+        <div class="diagram-caption">
+          ${mode === 'closed'
+            ? '<strong>Lugar Reacionário:</strong> Busca segurança em fronteiras rígidas e num passado mitificado, tratando qualquer conexão externa como ameaça à autenticidade.'
+            : '<strong>Lugar Extrovertido (Kilburn High Road):</strong> A especificidade de um lugar não vem do isolamento, mas da combinação singular e irrepetível de redes locais e globais que se entrecruzam em um ponto aberto.'}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c04]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.diagramState.c04 = btn.dataset.c04;
+          buildDiagramC04(slot);
+        });
+      });
+    }
+
+    /* C05 — Acabar-Juntos (Throwntogetherness) */
+    function buildDiagramC05(slot) {
+      const focus = state.diagramState.c05 || 'all';
+      const notes = {
+        all: 'O lugar é um “evento” provisório: trajetórias humanas, técnicas, políticas e geológicas colidem no aqui-e-agora, exigindo negociação democrática contínua.',
+        geo: 'Trajetória Não-Humana / Geológica: Massey lembra que até as rochas do monte Skiddaw viajaram milhares de quilômetros por deriva tectônica — a própria natureza está em movimento.',
+        urban: 'Trajetórias Humanas & Urbanas: Moradores antigos, migrantes recentes, infraestruturas de transporte e rotinas cotidianas compartilham o mesmo território com memórias distintas.',
+        capital: 'Trajetórias Econômicas & Políticas: Investimentos, leis municipais e mercados imobiliários cruzam o lugar, gerando tensões reais que não se resolvem sem disputa política.'
+      };
+      const op = (k) => (focus === 'all' || focus === k ? 1 : 0.25);
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Evento Espacial • Convergência de Trajetórias Heterogêneas</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${focus === 'all' ? 'active' : ''}" data-c05="all">Evento Completo</button>
+            <button class="diag-btn ${focus === 'geo' ? 'active' : ''}" data-c05="geo">Geológica (Skiddaw)</button>
+            <button class="diag-btn ${focus === 'urban' ? 'active' : ''}" data-c05="urban">Humana / Urbana</button>
+            <button class="diag-btn ${focus === 'capital' ? 'active' : ''}" data-c05="capital">Político-Econômica</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">
+          <svg viewBox="0 0 740 320" role="img" aria-label="Diagrama de throwntogetherness com trajetórias convergindo no aqui-e-agora">
+            <!-- Trajetória Geológica -->
+            <g opacity="${op('geo')}" style="cursor:pointer" data-c05="geo">
+              <path d="M 45 270 C 165 260, 255 215, 365 162" fill="none" stroke="#4A6B5D" stroke-width="5" stroke-dasharray="10 4" />
+              <rect x="45" y="218" width="190" height="42" rx="8" fill="#EFF5F2" stroke="#4A6B5D" />
+              <text x="140" y="236" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#4A6B5D">Trajetória Geológica</text>
+              <text x="140" y="251" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Rochas em movimento (Milhões de anos)</text>
+            </g>
+
+            <!-- Trajetória Humana/Urbana -->
+            <g opacity="${op('urban')}" style="cursor:pointer" data-c05="urban">
+              <path d="M 55 68 C 190 78, 260 125, 365 160" fill="none" stroke="#1D5C63" stroke-width="3.5" />
+              <rect x="45" y="42" width="190" height="42" rx="8" fill="#EEF5F6" stroke="#1D5C63" />
+              <text x="140" y="60" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#1D5C63">Trajetórias Humanas</text>
+              <text x="140" y="75" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Migrações, bairros, memórias</text>
+            </g>
+
+            <!-- Trajetória Político-Econômica -->
+            <g opacity="${op('capital')}" style="cursor:pointer" data-c05="capital">
+              <path d="M 685 75 C 560 95, 470 130, 375 160" fill="none" stroke="#C44536" stroke-width="3.5" />
+              <rect x="505" y="42" width="192" height="42" rx="8" fill="#FDF2F0" stroke="#C44536" />
+              <text x="601" y="60" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#C44536">Fluxos Técnicos &amp; Capital</text>
+              <text x="601" y="75" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Redes digitais, imóveis, Estado</text>
+            </g>
+
+            <!-- Resultado: Negociação Política -->
+            <path d="M 418 176 C 485 198, 535 218, 595 232" fill="none" stroke="#C68B2C" stroke-width="3" stroke-dasharray="5 4" />
+            <rect x="505" y="218" width="192" height="58" rx="10" fill="#FAF4E8" stroke="#C68B2C" stroke-width="2" />
+            <text x="601" y="242" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11.5" font-weight="700" fill="#9E6A18">Desafio da Negociação</text>
+            <text x="601" y="260" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10" fill="#434E56">Como viver juntos na diferença?</text>
+
+            <!-- Ponto Aqui-e-Agora -->
+            <circle cx="370" cy="162" r="56" fill="rgba(74,107,93,0.14)" stroke="#4A6B5D" stroke-width="2" stroke-dasharray="4 4" />
+            <circle cx="370" cy="162" r="40" fill="#1A2228" />
+            <text x="370" y="158" text-anchor="middle" font-family="Cormorant Garamond" font-size="15.5" font-weight="700" fill="#FFFFFF">AQUI-E-</text>
+            <text x="370" y="175" text-anchor="middle" font-family="Cormorant Garamond" font-size="15.5" font-weight="700" fill="#FFFFFF">AGORA</text>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>Leitura do Evento:</strong> ${notes[focus]}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c05]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagramState.c05 = el.dataset.c05;
+          buildDiagramC05(slot);
+        });
+      });
+    }
+
+    /* C06 — Divisões Espaciais do Trabalho & Metáfora Geológica */
+    function buildDiagramC06(slot) {
+      const layer = state.diagramState.c06 || 'l3';
+      const layers = {
+        l1: {
+          title: 'Camada 1 — Base Industrial Herdada',
+          desc: 'Antigas estruturas produtivas (ex.: mineração de carvão, siderurgia, tradição sindical forte e divisão sexual do trabalho masculina) deixam marcas materiais e culturais duradouras no território.'
+        },
+        l2: {
+          title: 'Camada 2 — Nova Rodada de Investimento',
+          desc: 'Novo capital (ex.: fábricas eletrônicas ou serviços de rotina) chega buscando vantagens específicas — como força de trabalho disponível, incentivos ou menor sindicalização em certos segmentos.'
+        },
+        l3: {
+          title: 'Camada 3 — Recombinação Desigual (“Geography Matters”)',
+          desc: 'O novo investimento não apaga o passado nem produz resultados idênticos em todo lugar: ele se funde com a camada herdada, gerando novas classes, novas relações de gênero e uma singularidade regional inédita.'
+        }
+      };
+
+      const op = (k) => (layer === k ? 1 : 0.48);
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Corte Estratigráfico • Metáfora Geológica das Camadas</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${layer === 'l1' ? 'active' : ''}" data-c06="l1">Camada 1: Base Herdada</button>
+            <button class="diag-btn ${layer === 'l2' ? 'active' : ''}" data-c06="l2">Camada 2: Novo Capital</button>
+            <button class="diag-btn ${layer === 'l3' ? 'active' : ''}" data-c06="l3">Camada 3: Recombinação</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">
+          <svg viewBox="0 0 740 320" role="img" aria-label="Diagrama estratigráfico da metáfora geológica de Doreen Massey">
+            <!-- Camada 3 (Topo: Recombinação) -->
+            <g opacity="${op('l3')}" style="cursor:pointer" data-c06="l3">
+              <path d="M 70 98 Q 220 74, 370 96 T 670 88 L 670 150 Q 520 162, 370 148 T 70 152 Z" fill="#E8D3B0" stroke="#C68B2C" stroke-width="${layer === 'l3' ? 3 : 1.5}" />
+              <text x="100" y="120" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#8C5D12">CAMADA 03 — RECOMBINAÇÃO ATIVA</text>
+              <text x="100" y="138" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#1A2228">Nova configuração local de classe, gênero e desigualdade</text>
+            </g>
+
+            <!-- Camada 2 (Meio: Nova rodada) -->
+            <g opacity="${op('l2')}" style="cursor:pointer" data-c06="l2">
+              <path d="M 70 152 Q 220 138, 370 148 T 670 150 L 670 212 Q 520 225, 370 210 T 70 216 Z" fill="#DCE9EB" stroke="#1D5C63" stroke-width="${layer === 'l2' ? 3 : 1.5}" />
+              <text x="100" y="178" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#1D5C63">CAMADA 02 — NOVA RODADA DE INVESTIMENTO</text>
+              <text x="100" y="196" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#1A2228">Expansão de filiais, serviços ou indústria leve buscando novos perfis de trabalho</text>
+            </g>
+
+            <!-- Camada 1 (Base: Legado histórico) -->
+            <g opacity="${op('l1')}" style="cursor:pointer" data-c06="l1">
+              <path d="M 70 216 Q 220 202, 370 210 T 670 212 L 670 282 L 70 282 Z" fill="#DFD9CE" stroke="#5A5248" stroke-width="${layer === 'l1' ? 3 : 1.5}" />
+              <text x="100" y="244" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#4A443C">CAMADA 01 — BASE INDUSTRIAL HERDADA</text>
+              <text x="100" y="262" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#1A2228">Estruturas antigas (mineração, sindicatos, infraestruturas e papéis de gênero)</text>
+            </g>
+
+            <!-- Setas de interação vertical entre camadas -->
+            <line x1="620" y1="252" x2="620" y2="112" stroke="#C44536" stroke-width="2.5" stroke-dasharray="4 3" />
+            <text x="612" y="64" text-anchor="end" font-family="JetBrains Mono" font-size="10" font-weight="600" fill="#C44536">INTERAÇÃO CONTÍNUA (NÃO É SOMA MECÂNICA)</text>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>${layers[layer].title}:</strong> ${layers[layer].desc}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c06]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagramState.c06 = el.dataset.c06;
+          buildDiagramC06(slot);
+        });
+      });
+    }
+
+    /* C07 — Espaço, Lugar e Gênero */
+    function buildDiagramC07(slot) {
+      const mode = state.diagramState.c07 || 'massey';
+
+      const svgContent = mode === 'dualism'
+        ? `
+          <svg viewBox="0 0 740 300" role="img" aria-label="Dualismos binários tradicionais de gênero e espaço">
+            <text x="370" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#6C7780">DUALISMOS BINÁRIOS DA CULTURA OCIDENTAL (CRITICADOS POR MASSEY)</text>
+            <!-- Coluna Masculino -->
+            <rect x="65" y="54" width="260" height="215" rx="12" fill="#EFECE6" stroke="#1A2228" stroke-width="1.8" />
+            <text x="195" y="84" text-anchor="middle" font-family="Cormorant Garamond" font-size="21" font-weight="700" fill="#1A2228">MASCULINO (A)</text>
+            <text x="195" y="118" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Tempo / História / Progresso</text>
+            <text x="195" y="150" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Esfera Pública / Trabalho</text>
+            <text x="195" y="182" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Mobilidade / Flâneur</text>
+            <text x="195" y="214" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Razão / Abstração</text>
+            <text x="195" y="248" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#6C7780">Termo positivo / Ativo</text>
+
+            <!-- Barreira -->
+            <line x1="370" y1="62" x2="370" y2="262" stroke="#C44536" stroke-width="3" stroke-dasharray="6 4" />
+            <circle cx="370" cy="162" r="20" fill="#C44536" />
+            <text x="370" y="167" text-anchor="middle" font-family="JetBrains Mono" font-size="12" font-weight="700" fill="#FFF">VS</text>
+
+            <!-- Coluna Feminino -->
+            <rect x="415" y="54" width="260" height="215" rx="12" fill="#FBF2F0" stroke="#C44536" stroke-width="1.8" />
+            <text x="545" y="84" text-anchor="middle" font-family="Cormorant Garamond" font-size="21" font-weight="700" fill="#C44536">FEMININO (não-A)</text>
+            <text x="545" y="118" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Espaço / Lugar / Estase</text>
+            <text x="545" y="150" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Esfera Privada / Doméstico</text>
+            <text x="545" y="182" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Fixidez / Refúgio Materno</text>
+            <text x="545" y="214" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="600" fill="#434E56">Corpo / Emoção</text>
+            <text x="545" y="248" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#C44536">Termo subordinado / Passivo</text>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 740 300" role="img" aria-label="Co-constituição mútua entre relações de gênero e espaço">
+            <text x="370" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#C44536">DESCONSTRUÇÃO DOS BINARISMOS • CO-CONSTITUIÇÃO ESPAÇO &amp; GÊNERO</text>
+
+            <!-- Anéis entrelaçados -->
+            <ellipse cx="270" cy="158" rx="155" ry="92" fill="rgba(196,69,54,0.10)" stroke="#C44536" stroke-width="2.4" />
+            <ellipse cx="470" cy="158" rx="155" ry="92" fill="rgba(29,92,99,0.10)" stroke="#1D5C63" stroke-width="2.4" />
+
+            <text x="190" y="138" text-anchor="middle" font-family="Cormorant Garamond" font-size="19" font-weight="700" fill="#C44536">RELAÇÕES DE</text>
+            <text x="190" y="160" text-anchor="middle" font-family="Cormorant Garamond" font-size="19" font-weight="700" fill="#C44536">GÊNERO</text>
+            <text x="190" y="185" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">Identidades plurais,</text>
+            <text x="190" y="200" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">trabalho &amp; cuidado</text>
+
+            <text x="550" y="138" text-anchor="middle" font-family="Cormorant Garamond" font-size="19" font-weight="700" fill="#1D5C63">ORGANIZAÇÃO</text>
+            <text x="550" y="160" text-anchor="middle" font-family="Cormorant Garamond" font-size="19" font-weight="700" fill="#1D5C63">ESPACIAL</text>
+            <text x="550" y="185" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">Cidades, fábricas,</text>
+            <text x="550" y="200" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">mobilidade &amp; lares</text>
+
+            <!-- Interseção -->
+            <text x="370" y="148" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11.5" font-weight="700" fill="#1A2228">Co-produção</text>
+            <text x="370" y="166" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11.5" font-weight="700" fill="#1A2228">Histórica</text>
+            <text x="370" y="184" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Varia no espaço-tempo</text>
+
+            <text x="370" y="278" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#434E56">Crítica ao “Sexismo Flexível”: toda teoria espacial fala a partir de uma posição situada</text>
+          </svg>
+        `;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Esquema Crítico • Desmontando o Dualismo Espaço/Gênero</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${mode === 'dualism' ? 'active' : ''}" data-c07="dualism">Dualismo Tradicional</button>
+            <button class="diag-btn ${mode === 'massey' ? 'active' : ''}" data-c07="massey">Co-constituição (Massey)</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">${svgContent}</div>
+        <div class="diagram-caption">
+          ${mode === 'dualism'
+            ? '<strong>Dualismo Binário:</strong> O pensamento ocidental alinhou o espaço e o lugar ao feminino imóvel e apolítico — hierarquia reproduzida inclusive por correntes da geografia pós-moderna (“sexismo flexível”).'
+            : '<strong>Co-constituição Espaço-Gênero:</strong> Relações de gênero variam geograficamente e ajudam a estruturar cidades, mercados de trabalho e espaços públicos, assim como a espacialidade molda o que significa ser mulher ou homem.'}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c07]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.diagramState.c07 = btn.dataset.c07;
+          buildDiagramC07(slot);
+        });
+      });
+    }
+
+    /* C08 — Região Aberta e Relacional */
+    function buildDiagramC08(slot) {
+      const mode = state.diagramState.c08 || 'relational';
+
+      const svgContent = mode === 'container'
+        ? `
+          <svg viewBox="0 0 740 300" role="img" aria-label="Região como mosaico de polígonos contêineres">
+            <text x="370" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#6C7780">REGIÃO-MOSAICO / CONTÊINER ADMINISTRATIVO</text>
+            <polygon points="110,70 310,60 340,175 135,190" fill="#EFECE6" stroke="#1A2228" stroke-width="2.5" />
+            <polygon points="310,60 560,72 540,185 340,175" fill="#E5E0D6" stroke="#1A2228" stroke-width="2.5" />
+            <polygon points="135,190 340,175 365,265 120,260" fill="#E5E0D6" stroke="#1A2228" stroke-width="2.5" />
+            <polygon points="340,175 540,185 610,265 365,265" fill="#F2E4CE" stroke="#C68B2C" stroke-width="3" />
+
+            <text x="225" y="130" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#434E56">Região A</text>
+            <text x="435" y="128" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#434E56">Região B</text>
+            <text x="240" y="232" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#434E56">Região C</text>
+            <text x="468" y="222" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12.5" font-weight="700" fill="#9E6A18">“Sudeste Homogêneo”</text>
+            <text x="468" y="240" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#6C7780">Fronteira rígida / Contígua</text>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 740 300" role="img" aria-label="Região aberta, relacional e descontínua">
+            <text x="370" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#C68B2C">REGIÃO RELACIONAL &amp; DESCONTÍNUA (SUDESTE DA INGLATERRA)</text>
+            <!-- Limite administrativo oficial esmaecido -->
+            <rect x="210" y="60" width="320" height="205" rx="16" fill="none" stroke="#8C969E" stroke-width="1.6" stroke-dasharray="6 6" />
+            <text x="370" y="254" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#6C7780">Limite administrativo formal (insuficiente)</text>
+
+            <!-- Fluxos que extrapolam a fronteira -->
+            <path d="M 45 110 C 170 95, 250 130, 345 125 C 455 120, 560 85, 695 95" fill="none" stroke="#C68B2C" stroke-width="3" />
+            <path d="M 55 190 C 185 180, 265 140, 345 125 C 445 148, 550 198, 685 185" fill="none" stroke="#1D5C63" stroke-width="2.4" />
+
+            <!-- Polos dinâmicos interligados (descontínuos) -->
+            <circle cx="345" cy="125" r="30" fill="#C68B2C" />
+            <text x="345" y="123" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="700" fill="#FFF">Crescimento</text>
+            <text x="345" y="137" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#FFF">Finanças/P&amp;D</text>
+
+            <circle cx="472" cy="108" r="22" fill="rgba(198,139,44,0.85)" />
+            <text x="472" y="112" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9.5" font-weight="700" fill="#FFF">Polo Tech</text>
+
+            <!-- Bolsão de exclusão DENTRO da região rica -->
+            <rect x="242" y="172" width="142" height="48" rx="8" fill="#FDF2F0" stroke="#C44536" stroke-width="2" stroke-dasharray="4 3" />
+            <text x="313" y="193" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="700" fill="#C44536">Espaço de Exclusão</text>
+            <text x="313" y="209" text-anchor="middle" font-family="JetBrains Mono" font-size="8.5" fill="#6C7780">Desconectado internamente</text>
+
+            <!-- Conexões globais externas -->
+            <text x="115" y="94" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#9E6A18">← Fluxos globais</text>
+            <text x="630" y="84" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#9E6A18">Redes europeias →</text>
+          </svg>
+        `;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Esquema Cartográfico • Região-Contêiner vs. Região Relacional</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${mode === 'container' ? 'active' : ''}" data-c08="container">Região-Mosaico</button>
+            <button class="diag-btn ${mode === 'relational' ? 'active' : ''}" data-c08="relational">Região Relacional (Massey)</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">${svgContent}</div>
+        <div class="diagram-caption">
+          ${mode === 'container'
+            ? '<strong>Região-Mosaico:</strong> Trata o território como peças fechadas e internamente homogêneas, escondendo desigualdades internas e conexões que cruzam fronteiras.'
+            : '<strong>Região Relacional:</strong> O Sudeste neoliberal não é um bloco uniforme, mas um arquipélago de redes de crescimento conectadas ao mundo que coexistem com bolsões internos de exclusão.'}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c08]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.diagramState.c08 = btn.dataset.c08;
+          buildDiagramC08(slot);
+        });
+      });
+    }
+
+    /* C09 — Geografias da Responsabilidade */
+    function buildDiagramC09(slot) {
+      const mode = state.diagramState.c09 || 'connectivity';
+
+      const svgContent = mode === 'dolls'
+        ? `
+          <svg viewBox="0 0 740 310" role="img" aria-label="Geografia das bonecas russas">
+            <text x="370" y="30" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#6C7780">GEOGRAFIA DAS “BONECAS RUSSAS” (ÉTICA CONCÊNTRICA)</text>
+            <circle cx="370" cy="175" r="122" fill="#F4F1EC" stroke="#B0B8BE" stroke-width="1.8" stroke-dasharray="5 4" />
+            <circle cx="370" cy="175" r="88" fill="#EAE5DC" stroke="#8C969E" stroke-width="2" />
+            <circle cx="370" cy="175" r="56" fill="#DED7CA" stroke="#5E6870" stroke-width="2" />
+            <circle cx="370" cy="175" r="28" fill="#1A2228" />
+
+            <text x="370" y="179" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="700" fill="#FFF">Família</text>
+            <text x="370" y="136" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#1A2228">Bairro</text>
+            <text x="370" y="104" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#434E56">Nação</text>
+            <text x="370" y="72" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" font-weight="600" fill="#6C7780">Mundo (Cuidado rarefeito)</text>
+
+            <text x="580" y="166" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#C44536">Quanto mais longe,</text>
+            <text x="580" y="183" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#C44536">menor a responsabilidade</text>
+          </svg>
+        `
+        : `
+          <svg viewBox="0 0 740 310" role="img" aria-label="Ética relacional da conectividade">
+            <text x="370" y="28" text-anchor="middle" font-family="JetBrains Mono" font-size="11" font-weight="600" fill="#4A6B5D">ÉTICA DA CONECTIVIDADE • RESPONSABILIDADE À DISTÂNCIA</text>
+
+            <!-- Linhas de responsabilidade conectando o local a pontos distantes -->
+            <path d="M 205 162 Q 360 72, 545 86" fill="none" stroke="#4A6B5D" stroke-width="2.6" />
+            <path d="M 205 162 Q 380 158, 560 164" fill="none" stroke="#1D5C63" stroke-width="2.6" />
+            <path d="M 205 162 Q 360 245, 545 240" fill="none" stroke="#C44536" stroke-width="2.6" />
+
+            <!-- Nó Local -->
+            <circle cx="170" cy="162" r="46" fill="#4A6B5D" />
+            <text x="170" y="158" text-anchor="middle" font-family="Cormorant Garamond" font-size="17" font-weight="700" fill="#FFF">COTIDIANO</text>
+            <text x="170" y="176" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" fill="#E6F0EC">AQUI (LOCAL)</text>
+
+            <!-- Impactos distantes -->
+            <rect x="490" y="60" width="215" height="48" rx="8" fill="#EFF5F2" stroke="#4A6B5D" stroke-width="1.8" />
+            <text x="597" y="81" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#4A6B5D">Cadeias de Consumo &amp; Clima</text>
+            <text x="597" y="97" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Emissões e extração no Sul Global</text>
+
+            <rect x="490" y="138" width="215" height="48" rx="8" fill="#EEF5F6" stroke="#1D5C63" stroke-width="1.8" />
+            <text x="597" y="159" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#1D5C63">Migração de Cuidados</text>
+            <text x="597" y="175" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Enfermeiras treinadas no exterior</text>
+
+            <rect x="490" y="216" width="215" height="48" rx="8" fill="#FDF2F0" stroke="#C44536" stroke-width="1.8" />
+            <text x="597" y="237" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="700" fill="#C44536">Decisões Financeiras</text>
+            <text x="597" y="253" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#434E56">Bancos locais impactando países distantes</text>
+
+            <text x="355" y="286" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" font-weight="600" fill="#1A2228">Responsabilidade segue as linhas reais de causalidade e poder, não apenas a proximidade física</text>
+          </svg>
+        `;
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Esquema Ético-Espacial • Bonecas Russas vs. Conectividade</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${mode === 'dolls' ? 'active' : ''}" data-c09="dolls">Geografia das Bonecas Russas</button>
+            <button class="diag-btn ${mode === 'connectivity' ? 'active' : ''}" data-c09="connectivity">Ética da Conectividade (Massey)</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">${svgContent}</div>
+        <div class="diagram-caption">
+          ${mode === 'dolls'
+            ? '<strong>Bonecas Russas:</strong> A ética territorial tradicional assume que nossa obrigação moral diminui automaticamente com a distância geométrica, isentando lugares privilegiados de seus impactos externos.'
+            : '<strong>Ética da Conectividade:</strong> Como nosso cotidiano local é sustentado por redes globais reais, uma política democrática do lugar exige assumir responsabilidade política à distância.'}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c09]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.diagramState.c09 = btn.dataset.c09;
+          buildDiagramC09(slot);
+        });
+      });
+    }
+
+    /* C10 — Cidade Mundial & Hegemonia Neoliberal */
+    function buildDiagramC10(slot) {
+      const zone = state.diagramState.c10 || 'all';
+      const texts = {
+        all: 'Londres exemplifica a dupla tensão da cidade mundial neoliberal: projeta-se para fora como centro financeiro global enquanto aprofunda desigualdades internas e regionais — sustentada por uma hegemonia discursiva.',
+        out: 'Tensão Para Fora (Concentração Financeira): A City de Londres opera como nó de comando da desregulação global, atraindo capitais, sedes corporativas e drenando recursos de outras partes do planeta.',
+        in: 'Tensão Para Dentro (Polarização & Dependência): Inflação imobiliária, abismo entre banqueiros e trabalhadores de limpeza/serviços e desequilíbrio estrutural frente ao Norte e demais regiões britânicas.',
+        discourse: 'Disputa Discursiva (Kilburn Manifesto): O neoliberalismo naturaliza esse modelo como “senso comum” inevitável. Enfrentá-lo exige novos vocabulários econômicos e alianças democráticas.'
+      };
+      const op = (k) => (zone === 'all' || zone === k ? 1 : 0.24);
+
+      slot.innerHTML = `
+        <div class="diagram-toolbar">
+          <span class="diagram-label">Diagrama Radial • A Dupla Tensão da Cidade Mundial (Londres)</span>
+          <div class="diagram-controls">
+            <button class="diag-btn ${zone === 'all' ? 'active' : ''}" data-c10="all">Visão Geral</button>
+            <button class="diag-btn ${zone === 'out' ? 'active' : ''}" data-c10="out">Para Fora (Global)</button>
+            <button class="diag-btn ${zone === 'in' ? 'active' : ''}" data-c10="in">Para Dentro (Nacional)</button>
+            <button class="diag-btn ${zone === 'discourse' ? 'active' : ''}" data-c10="discourse">Senso Comum</button>
+          </div>
+        </div>
+        <div class="diagram-viewport">
+          <svg viewBox="0 0 740 330" role="img" aria-label="Diagrama radial da cidade mundial neoliberal">
+            <defs>
+              <marker id="arr-c10a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#C68B2C" />
+              </marker>
+              <marker id="arr-c10b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                <path d="M0,1 L9,5 L0,9 Z" fill="#C44536" />
+              </marker>
+            </defs>
+
+            <!-- Tensão Para Fora (Esquerda) -->
+            <g opacity="${op('out')}" style="cursor:pointer" data-c10="out">
+              <line x1="305" y1="150" x2="225" y2="150" stroke="#C68B2C" stroke-width="3" marker-end="url(#arr-c10a)" />
+              <rect x="28" y="96" width="190" height="108" rx="12" fill="#FAF4E8" stroke="#C68B2C" stroke-width="2" />
+              <text x="123" y="122" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="#9E6A18">VETOR PARA FORA</text>
+              <text x="123" y="144" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#1A2228">Extração Financeira</text>
+              <text x="123" y="162" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">Desregulação global,</text>
+              <text x="123" y="178" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">fluxos de capital e poder</text>
+            </g>
+
+            <!-- Tensão Para Dentro (Direita) -->
+            <g opacity="${op('in')}" style="cursor:pointer" data-c10="in">
+              <line x1="435" y1="150" x2="515" y2="150" stroke="#C44536" stroke-width="3" marker-end="url(#arr-c10b)" />
+              <rect x="522" y="96" width="190" height="108" rx="12" fill="#FDF2F0" stroke="#C44536" stroke-width="2" />
+              <text x="617" y="122" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="#C44536">VETOR PARA DENTRO</text>
+              <text x="617" y="144" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="12" font-weight="700" fill="#1A2228">Polarização &amp; Drenagem</text>
+              <text x="617" y="162" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">Desigualdade urbana e</text>
+              <text x="617" y="178" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10.5" fill="#434E56">desequilíbrio nacional</text>
+            </g>
+
+            <!-- Base Discursiva (Abaixo) -->
+            <g opacity="${op('discourse')}" style="cursor:pointer" data-c10="discourse">
+              <line x1="370" y1="215" x2="370" y2="250" stroke="#1D5C63" stroke-width="2.5" stroke-dasharray="4 3" />
+              <rect x="175" y="252" width="390" height="58" rx="10" fill="#EEF5F6" stroke="#1D5C63" stroke-width="2" />
+              <text x="370" y="275" text-anchor="middle" font-family="JetBrains Mono" font-size="9.5" font-weight="600" fill="#1D5C63">DISPUTA HEGEMÔNICA (KILBURN MANIFESTO)</text>
+              <text x="370" y="295" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11.5" font-weight="600" fill="#1A2228">Desnaturalizar o “senso comum” neoliberal e seus vocabulários</text>
+            </g>
+
+            <!-- Núcleo: Londres / Cidade Mundial -->
+            <circle cx="370" cy="150" r="64" fill="#1A2228" />
+            <circle cx="370" cy="150" r="72" fill="none" stroke="#C68B2C" stroke-width="2" stroke-dasharray="5 4" />
+            <text x="370" y="141" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" font-weight="700" fill="#FFFFFF">CIDADE</text>
+            <text x="370" y="160" text-anchor="middle" font-family="Cormorant Garamond" font-size="18" font-weight="700" fill="#FFFFFF">MUNDIAL</text>
+            <text x="370" y="178" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#E8D3B0">EX.: LONDRES</text>
+          </svg>
+        </div>
+        <div class="diagram-caption">
+          <strong>Análise Crítica:</strong> ${texts[zone]}
+        </div>
+      `;
+
+      slot.querySelectorAll('[data-c10]').forEach((el) => {
+        el.addEventListener('click', () => {
+          state.diagramState.c10 = el.dataset.c10;
+          buildDiagramC10(slot);
+        });
+      });
+    }
+
+    /* ==========================================================================
+       MÓDULO 3: MENU DE OBRAS & ESQUEMAS VISUAIS ESTRUTURAIS
+       ========================================================================== */
+    function renderBooksMenu() {
+      const container = document.getElementById('books-menu');
+      container.innerHTML = BOOKS.map((b) => {
+        const isActive = b.id === state.selectedBookId;
+        return `
+          <button class="sidebar-item ${isActive ? 'active' : ''}"
+                  data-book-id="${b.id}"
+                  style="--item-accent: ${b.accent}"
+                  role="option"
+                  aria-selected="${isActive}">
+            <span class="book-spine-badge" style="background:${b.accent}" aria-hidden="true"></span>
+            <div>
+              <div style="font-family:var(--font-mono); font-size:0.7rem; color:var(--ink-muted); font-weight:600;">${b.year}</div>
+              <div class="sidebar-item-title">${b.title}</div>
+              <span class="sidebar-item-sub">${b.coauthors}</span>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.sidebar-item').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.selectedBookId = btn.dataset.bookId;
+          renderBooksMenu();
+          renderBookDetail(btn.dataset.bookId);
+        });
+      });
+    }
+
+    function renderBookDetail(bookId) {
+      const stage = document.getElementById('book-detail');
+      const b = getBook(bookId);
+
+      const archBlocksHTML = b.structure.map((part, idx) => {
+        const isFirst = idx === 0;
+        const connector = idx > 0
+          ? `<div class="arch-connector" aria-hidden="true">
+               <svg width="20" height="22" viewBox="0 0 20 22">
+                 <line x1="10" y1="0" x2="10" y2="16" stroke="currentColor" stroke-width="1.6" />
+                 <path d="M5 12 L10 19 L15 12" fill="none" stroke="currentColor" stroke-width="1.6" />
+               </svg>
+             </div>`
+          : '';
+
+        return `
+          <div class="arch-node-row">
+            ${connector}
+            <button class="arch-block ${isFirst ? 'expanded' : ''} ${part.interlude ? 'interlude' : ''}"
+                    style="--book-accent: ${b.accent}"
+                    aria-expanded="${isFirst}">
+              <div class="arch-block-top">
+                <span class="arch-step-badge">${part.step}</span>
+                <span class="arch-block-title">${part.title}</span>
+                <span class="arch-chevron" aria-hidden="true">▾</span>
+              </div>
+              <div class="arch-block-body">
+                <p>${part.summary}</p>
+                <div class="arch-keywords">
+                  ${part.keywords.map((kw) => `<span class="arch-kw">${kw}</span>`).join('')}
+                </div>
+              </div>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      const conceptTagsHTML = b.concepts.map((cid) => {
+        const c = getConcept(cid);
+        const axis = AXES[c.axis];
+        return `
+          <button class="link-tag" data-open-concept="${c.id}">
+            <span class="axis-dot" style="background:${axis.color}"></span>
+            ${c.code} — ${c.title}
+          </button>
+        `;
+      }).join('');
+
+      stage.innerHTML = `
+        <header class="detail-header">
+          <div class="detail-meta-row">
+            <span class="sidebar-code" style="background:${b.accent}; color:#FFF; border:none;">${b.year}</span>
+            <span class="eyebrow">Obra Bibliográfica • ${b.structure.length} Blocos Estruturais</span>
+          </div>
+          <h2 class="serif-title detail-title">${b.title}</h2>
+          <div class="detail-subtitle">${b.subtitle}</div>
+        </header>
+
+        <div class="book-meta-grid">
+          <div class="meta-cell">
+            <span>Título em Português</span>
+            <strong>${b.ptTitle}</strong>
+          </div>
+          <div class="meta-cell">
+            <span>Autoria</span>
+            <strong>${b.coauthors}</strong>
+          </div>
+          <div class="meta-cell">
+            <span>Publicação Original</span>
+            <strong>${b.year}</strong>
+          </div>
+        </div>
+
+        <div class="book-thesis-box" style="--book-accent: ${b.accent}">
+          <h4>Tese Central da Obra</h4>
+          <p>${b.thesis}</p>
+          <p style="margin-top:0.55rem; font-size:0.86rem; color:var(--ink-secondary);">${b.context}</p>
+        </div>
+
+        <section class="architecture-wrap" aria-label="Esquema visual estrutural do livro">
+          <div class="architecture-head">
+            <div>
+              <span class="eyebrow">Arquitetura Argumentativa do Livro</span>
+              <h3 class="serif-title" style="font-size:1.55rem; margin-top:2px;">Esquema Visual do Conteúdo</h3>
+            </div>
+            <button class="diag-btn" id="btn-toggle-all-parts">Expandir todas as partes</button>
+          </div>
+          <div class="architecture-flow">
+            ${archBlocksHTML}
+          </div>
+        </section>
+
+        <section style="padding-top:1rem; border-top:1px solid var(--border-subtle);">
+          <div class="eyebrow" style="margin-bottom:0.65rem;">Conceitos Trabalhados nesta Obra (Clique para abrir o diagrama)</div>
+          <div class="tag-cloud">${conceptTagsHTML}</div>
+        </section>
+      `;
+
+      // Expansão individual dos blocos
+      stage.querySelectorAll('.arch-block').forEach((block) => {
+        block.addEventListener('click', () => {
+          const isExp = block.classList.toggle('expanded');
+          block.setAttribute('aria-expanded', String(isExp));
+        });
+      });
+
+      // Botão expandir/recolher todos
+      const toggleAllBtn = stage.querySelector('#btn-toggle-all-parts');
+      let allExpanded = false;
+      toggleAllBtn.addEventListener('click', () => {
+        allExpanded = !allExpanded;
+        stage.querySelectorAll('.arch-block').forEach((block) => {
+          block.classList.toggle('expanded', allExpanded);
+          block.setAttribute('aria-expanded', String(allExpanded));
+        });
+        toggleAllBtn.textContent = allExpanded ? 'Recolher partes' : 'Expandir todas as partes';
+      });
+
+      // Links cruzados para conceitos
+      stage.querySelectorAll('[data-open-concept]').forEach((btn) => {
+        btn.addEventListener('click', () => openConcept(btn.dataset.openConcept));
+      });
+    }
+
+    /* ==========================================================================
+       INICIALIZAÇÃO DA APLICAÇÃO
+       ========================================================================== */
+    function initAtlas() {
+      // Abas principais de navegação
+      document.querySelectorAll('.nav-tab').forEach((tab) => {
+        tab.addEventListener('click', () => switchModule(tab.dataset.module));
+      });
+
+      // Filtros de eixo no Módulo 1
+      document.querySelectorAll('.axis-filter-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.networkAxisFilter = btn.dataset.axis;
+          document.querySelectorAll('.axis-filter-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          // Se o nó selecionado não pertence ao eixo filtrado, seleciona o primeiro do eixo
+          if (state.networkAxisFilter !== 'all') {
+            const firstInAxis = CONCEPTS.find((c) => c.axis === state.networkAxisFilter);
+            if (firstInAxis) {
+              state.selectedNetworkNode = firstInAxis.id;
+              renderNetworkInspector(firstInAxis.id);
+            }
+          }
+          renderNetworkSVG();
+        });
+      });
+
+      // Renderização inicial dos 3 módulos
+      renderNetworkSVG();
+      renderNetworkInspector(state.selectedNetworkNode);
+
+      renderConceptsMenu();
+      renderConceptDetail(state.selectedConceptId);
+
+      renderBooksMenu();
+      renderBookDetail(state.selectedBookId);
+    }
+
+    document.addEventListener('DOMContentLoaded', initAtlas);
+  </script>
+</body>
+</html>
