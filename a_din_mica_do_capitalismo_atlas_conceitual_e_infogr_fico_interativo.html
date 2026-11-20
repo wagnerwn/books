@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Dinâmica do Capitalismo — Atlas Conceitual e Infográfico Interativo | Fernand Braudel</title>
+
+  <style>
+    /* =========================================================================
+       TOKENS DE DESIGN — PALETA EDITORIAL HISTÓRICO-CARTOGRÁFICA (ROCCO, 1987)
+       ========================================================================= */
+    :root {
+      --bg-paper: #F6F1E7;
+      --bg-card: #FFFDF8;
+      --bg-soft: #EFE8D9;
+      --border-soft: #DFD5C3;
+      --border-strong: #C6B89E;
+
+      --text-main: #1E1B18;
+      --text-muted: #575046;
+
+      /* Cor Primária — Bordô / Carmim clássico (Capitalismo / Cúpula) */
+      --bordo: #8C2332;
+      --bordo-dark: #631621;
+      --bordo-soft: #F7E8EA;
+
+      /* Cor Secundária — Azul-Marinho Cartográfico (Atlântico / Tempo do Mundo) */
+      --navy: #1E354D;
+      --navy-dark: #132334;
+      --navy-soft: #E6EDF4;
+
+      /* Destaque 1 — Ouro Envelhecido / Ocre Monetário (Economia de Mercado) */
+      --gold: #C28728;
+      --gold-dark: #8C5E14;
+      --gold-soft: #FBF2E1;
+
+      /* Destaque 2 — Verde-Oliva (Vida Material / Cotidiano) */
+      --olive: #3E634E;
+      --olive-dark: #2A4636;
+      --olive-soft: #E7F0EA;
+
+      /* Tipografia 100% Nativa */
+      --font-serif: Georgia, 'Palatino Linotype', 'Book Antiqua', Palatino, serif;
+      --font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      --sidebar-w: 300px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 10px rgba(30, 27, 24, 0.06);
+      --shadow-md: 0 12px 30px rgba(30, 27, 24, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+      background-image:
+        radial-gradient(rgba(140, 35, 50, 0.045) 1px, transparent 0),
+        linear-gradient(rgba(30, 53, 77, 0.025) 1px, transparent 1px);
+      background-size: 26px 26px, 26px 26px;
+      overflow-x: hidden;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================================================
+       MICRO-ANIMAÇÕES PARA ESQUEMAS E ENGRENAGENS
+       ========================================================================= */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes spinCW {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes spinCCW {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -28; }
+    }
+
+    .gear-cw {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: spinCW 9s linear infinite;
+    }
+
+    .gear-ccw {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: spinCCW 9s linear infinite;
+    }
+
+    .gear-jammed {
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .flow-animated {
+      stroke-dasharray: 8 6;
+      animation: dashFlow 1.6s linear infinite;
+    }
+
+    /* =========================================================================
+       LAYOUT PRINCIPAL E BARRA LATERAL
+       ========================================================================= */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Topo Mobile */
+    .mobile-topbar {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(246, 241, 231, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 2px solid var(--bordo);
+      padding: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.16s ease;
+    }
+    .icon-btn:hover {
+      border-color: var(--bordo);
+      color: var(--bordo);
+      background: var(--bordo-soft);
+    }
+
+    .mobile-brand {
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .mobile-brand strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 0.96rem;
+      color: var(--text-main);
+      line-height: 1.15;
+    }
+    .mobile-brand span {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--bordo);
+    }
+
+    .mobile-progress-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--bordo-soft);
+      color: var(--bordo-dark);
+      border: 1px solid rgba(140, 35, 50, 0.3);
+      white-space: nowrap;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 27, 24, 0.5);
+      z-index: 45;
+    }
+    .sidebar-overlay.open {
+      display: block;
+    }
+
+    /* Barra Lateral Fixa */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--bg-card);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar-header {
+      padding: 20px 18px 16px;
+      background: linear-gradient(150deg, var(--bordo) 0%, var(--bordo-dark) 58%, var(--navy-dark) 100%);
+      color: #F6F1E7;
+      position: relative;
+      border-bottom: 4px solid var(--gold);
+    }
+
+    .edition-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.61rem;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: rgba(194, 135, 40, 0.28);
+      border: 1px solid rgba(251, 242, 225, 0.3);
+      color: #FBF2E1;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-weight: 700;
+      line-height: 1.18;
+      color: #FFFFFF;
+    }
+
+    .sidebar-author {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: #F4D59A;
+      margin-top: 5px;
+      letter-spacing: 0.04em;
+    }
+
+    .sidebar-sub {
+      font-size: 0.72rem;
+      color: rgba(246, 241, 231, 0.84);
+      margin-top: 2px;
+    }
+
+    .close-drawer-btn {
+      display: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.1);
+      color: #FFFFFF;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+    }
+
+    /* Progresso */
+    .progress-wrap {
+      margin-top: 14px;
+      padding-top: 11px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.71rem;
+      margin-bottom: 6px;
+      color: rgba(246, 241, 231, 0.92);
+    }
+    .progress-meta strong {
+      font-family: var(--font-mono);
+      color: #F4D59A;
+    }
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--gold), #F2C97D);
+      transition: width 0.3s ease;
+    }
+
+    /* Busca Instantânea */
+    .search-box {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-soft);
+      background: #F3ECE0;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 30px 9px 32px;
+      font-size: 0.79rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.16s, box-shadow 0.16s;
+    }
+    .search-input:focus {
+      border-color: var(--bordo);
+      box-shadow: 0 0 0 3px rgba(140, 35, 50, 0.12);
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 6px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+    }
+    .search-clear.visible {
+      display: inline-flex;
+    }
+    .search-clear:hover {
+      background: var(--border-soft);
+      color: var(--text-main);
+    }
+
+    /* Lista da Sidebar */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 10px 20px;
+    }
+
+    .nav-section-title {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      padding: 4px 10px 8px;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 11px;
+      padding: 10px 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--text-main);
+      transition: all 0.16s ease;
+      margin-bottom: 5px;
+    }
+    .nav-item:hover {
+      background: var(--bg-paper);
+      border-color: var(--border-soft);
+    }
+    .nav-item.active {
+      background: var(--bordo-soft);
+      border-color: rgba(140, 35, 50, 0.35);
+    }
+
+    .nav-num {
+      flex-shrink: 0;
+      width: 28px;
+      height: 26px;
+      border-radius: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-paper);
+      color: var(--text-muted);
+      border: 1px solid var(--border-soft);
+      margin-top: 1px;
+    }
+    .nav-item.active .nav-num {
+      background: var(--bordo);
+      color: #FFFFFF;
+      border-color: var(--bordo);
+    }
+
+    .nav-label {
+      flex: 1;
+      min-width: 0;
+    }
+    .nav-label-title {
+      display: block;
+      font-size: 0.81rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-main);
+    }
+    .nav-item.active .nav-label-title {
+      color: var(--bordo-dark);
+    }
+    .nav-label-sub {
+      display: block;
+      font-size: 0.69rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .nav-check {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.66rem;
+      color: transparent;
+      margin-top: 2px;
+      transition: all 0.16s ease;
+    }
+    .nav-check.done {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .search-match-tag {
+      display: inline-block;
+      margin-top: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--gold-soft);
+      color: var(--gold-dark);
+      border: 1px solid rgba(194, 135, 40, 0.35);
+    }
+
+    .sidebar-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border-soft);
+      background: #F3ECE0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.69rem;
+      color: var(--text-muted);
+    }
+    .reset-btn {
+      background: transparent;
+      border: none;
+      color: var(--bordo);
+      font-weight: 600;
+      font-size: 0.69rem;
+      text-decoration: underline;
+    }
+
+    /* =========================================================================
+       ÁREA PRINCIPAL DE LEITURA E EXPLORAÇÃO
+       ========================================================================= */
+    .main-area {
+      flex: 1;
+      min-width: 0;
+      padding: 32px 38px 68px;
+    }
+
+    .page-container {
+      max-width: 1020px;
+      margin: 0 auto;
+      animation: fadeUp 0.28s ease-out;
+    }
+
+    /* Cabeçalho da Visão / Capítulo */
+    .chapter-header {
+      margin-bottom: 24px;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .part-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.69rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 5px 13px;
+      border-radius: 999px;
+      color: #FFFFFF;
+    }
+
+    .study-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--text-main);
+      transition: all 0.16s ease;
+    }
+    .study-btn:hover {
+      border-color: var(--olive);
+      color: var(--olive);
+    }
+    .study-btn.studied {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .chapter-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.72rem, 3.1vw, 2.45rem);
+      font-weight: 700;
+      line-height: 1.16;
+      color: var(--text-main);
+    }
+
+    .chapter-subtitle {
+      font-size: 0.97rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      max-width: 840px;
+    }
+
+    .editorial-stripe {
+      height: 5px;
+      width: 100%;
+      margin: 18px 0 22px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--bordo) 0%, var(--bordo) 36%, var(--gold) 36%, var(--gold) 68%, var(--navy) 68%, var(--navy) 100%);
+    }
+
+    /* Epígrafe + Tese Central */
+    .thesis-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-left: 5px solid var(--bordo);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 26px;
+    }
+    .epigraph {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.03rem;
+      color: var(--bordo-dark);
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed var(--border-strong);
+      line-height: 1.52;
+    }
+    .thesis-text {
+      font-size: 0.94rem;
+      color: var(--text-main);
+      line-height: 1.66;
+    }
+
+    /* Container de Infográfico */
+    .infographic-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 28px;
+    }
+
+    .kicker {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.11em;
+      color: var(--bordo);
+      margin-bottom: 5px;
+    }
+
+    .section-heading {
+      font-family: var(--font-serif);
+      font-size: 1.42rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.24;
+      margin-bottom: 6px;
+    }
+
+    .section-lead {
+      font-size: 0.87rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      max-width: 820px;
+    }
+
+    /* Controles Interativos */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .ctrl-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-paper);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.16s ease;
+    }
+    .ctrl-btn:hover {
+      border-color: var(--bordo);
+      background: var(--bordo-soft);
+    }
+    .ctrl-btn.active-bordo {
+      background: var(--bordo);
+      color: #FFFFFF;
+      border-color: var(--bordo);
+      box-shadow: 0 2px 8px rgba(140, 35, 50, 0.25);
+    }
+    .ctrl-btn.active-navy {
+      background: var(--navy);
+      color: #FFFFFF;
+      border-color: var(--navy);
+      box-shadow: 0 2px 8px rgba(30, 53, 77, 0.22);
+    }
+    .ctrl-btn.active-gold {
+      background: var(--gold);
+      color: #FFFFFF;
+      border-color: var(--gold);
+    }
+    .ctrl-btn.active-olive {
+      background: var(--olive);
+      color: #FFFFFF;
+      border-color: var(--olive);
+    }
+
+    .panel-soft {
+      background: #F6F1E7;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    .svg-stage {
+      width: 100%;
+      background: #FAF6ED;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .svg-stage svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Sliders */
+    input[type="range"].atlas-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--border-soft);
+      outline: none;
+    }
+    input[type="range"].atlas-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bordo);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(140, 35, 50, 0.38);
+      cursor: pointer;
+    }
+    input[type="range"].atlas-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bordo);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(140, 35, 50, 0.38);
+      cursor: pointer;
+    }
+
+    /* Grids utilitários */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    /* Chips e Tags */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 600;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+    }
+    .chip-bordo { background: var(--bordo-soft); border-color: rgba(140,35,50,0.32); color: var(--bordo-dark); }
+    .chip-navy { background: var(--navy-soft); border-color: rgba(30,53,77,0.32); color: var(--navy); }
+    .chip-gold { background: var(--gold-soft); border-color: rgba(194,135,40,0.38); color: var(--gold-dark); }
+    .chip-olive { background: var(--olive-soft); border-color: rgba(62,99,78,0.34); color: var(--olive-dark); }
+
+    /* Medidores */
+    .meter-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.79rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .meter-head span:last-child {
+      font-family: var(--font-mono);
+    }
+
+    /* Grade de Conceitos-Chave Expansíveis */
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+      margin-bottom: 28px;
+    }
+
+    .concept-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-align: left;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .concept-card:hover {
+      border-color: var(--bordo);
+      transform: translateY(-2px);
+    }
+    .concept-card.expanded {
+      border-color: var(--bordo);
+      background: #FFFBF7;
+      box-shadow: var(--shadow-md);
+    }
+    .concept-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      width: 100%;
+    }
+    .concept-tag {
+      font-family: var(--font-mono);
+      font-size: 0.63rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--bordo);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .concept-icon {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--bordo);
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: var(--bordo-soft);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .concept-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1.04rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .concept-def {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.54;
+    }
+    .concept-extra {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-strong);
+      font-size: 0.79rem;
+      color: var(--text-main);
+      line-height: 1.52;
+    }
+    .concept-extra p {
+      margin-bottom: 5px;
+    }
+    .concept-extra p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Rodapé de Navegação */
+    .chapter-footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 12px;
+    }
+    .step-btn {
+      flex: 1;
+      min-width: 220px;
+      max-width: 400px;
+      padding: 13px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+      transition: all 0.16s ease;
+    }
+    .step-btn:hover {
+      border-color: var(--bordo);
+      background: var(--bordo-soft);
+    }
+    .step-btn.next {
+      margin-left: auto;
+      justify-content: flex-end;
+      text-align: right;
+      background: var(--navy);
+      border-color: var(--navy);
+      color: #FFFFFF;
+    }
+    .step-btn.next:hover {
+      background: var(--bordo-dark);
+      border-color: var(--bordo-dark);
+    }
+    .step-meta {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.78;
+    }
+    .step-title {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 90;
+      background: var(--navy-dark);
+      color: #F6F1E7;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(194, 135, 40, 0.55);
+      display: none;
+      align-items: center;
+      gap: 9px;
+    }
+    .toast.show {
+      display: flex;
+    }
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    /* Responsividade */
+    @media (max-width: 960px) {
+      .mobile-topbar {
+        display: flex;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translateX(-100%);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .close-drawer-btn {
+        display: inline-flex;
+      }
+      .main-area {
+        padding: 20px 16px 52px;
+      }
+      .infographic-card, .thesis-card {
+        padding: 18px;
+      }
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Mobile -->
+  <header class="mobile-topbar">
+    <button id="open-drawer-btn" class="icon-btn" type="button" aria-label="Abrir sumário">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <div class="mobile-brand">
+      <strong>A Dinâmica do Capitalismo</strong>
+      <span>Fernand Braudel • Atlas Conceitual</span>
+    </div>
+    <div id="mobile-progress-pill" class="mobile-progress-pill">0/4</div>
+  </header>
+
+  <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <!-- Barra Lateral Fixa -->
+    <aside id="sidebar" class="sidebar" aria-label="Navegação da obra">
+      <div class="sidebar-header">
+        <button id="close-drawer-btn" class="close-drawer-btn" type="button" aria-label="Fechar menu">✕</button>
+        <span class="edition-badge">Editora Rocco • 1987</span>
+        <h1 class="sidebar-title">A Dinâmica do Capitalismo</h1>
+        <p class="sidebar-author">Fernand Braudel</p>
+        <p class="sidebar-sub">Três Conferências — Johns Hopkins, 1977</p>
+
+        <div class="progress-wrap">
+          <div class="progress-meta">
+            <span>Progresso de Estudo</span>
+            <strong id="sidebar-progress-text">0/4 estudados</strong>
+          </div>
+          <div class="progress-track">
+            <div id="sidebar-progress-fill" class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Busca Instantânea -->
+      <div class="search-box">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/>
+          </svg>
+          <input id="search-input" class="search-input" type="text" placeholder="Buscar conceito (ex: poço, trigo, sincronismo)..." autocomplete="off">
+          <button id="search-clear" class="search-clear" type="button" aria-label="Limpar busca">✕</button>
+        </div>
+      </div>
+
+      <!-- Menu de 4 Visões Principais -->
+      <nav id="sidebar-nav" class="sidebar-nav"></nav>
+
+      <div class="sidebar-footer">
+        <span>Trad. Álvaro Cabral</span>
+        <button id="reset-progress-btn" class="reset-btn" type="button">Reiniciar</button>
+      </div>
+    </aside>
+
+    <!-- Conteúdo Principal -->
+    <main class="main-area">
+      <div id="main-content" class="page-container"></div>
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span id="toast-msg"></span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       BASE CONCEITUAL — A DINÂMICA DO CAPITALISMO (FERNAND BRAUDEL, ROCCO 1987)
+       ========================================================================= */
+
+    const STORAGE_KEY = 'braudel_dinamica_capitalismo_atlas_v1';
+
+    const VIEWS = [
+      {
+        id: 'overview',
+        num: '§0',
+        shortTitle: 'Mapa Geral — O Edifício de Três Andares',
+        sub: 'Arquitetura em relevo & Três Durações',
+        color: '#8C2332',
+        soft: '#F7E8EA',
+        keywords: ['mapa geral', 'edificio', 'tres andares', 'vida material', 'economia de mercado', 'capitalismo', 'longa duracao', 'conjuntura', 'acontecimento', 'estruturas', 'relevo']
+      },
+      {
+        id: 'cap1',
+        num: 'I',
+        shortTitle: 'Capítulo I — Vida Material e Vida Econômica',
+        sub: 'Rotina, teto biológico, derivas & fronteira do mercado',
+        color: '#3E634E',
+        soft: '#E7F0EA',
+        keywords: ['vida material', 'cotidiano', 'rotina', 'amazonas', 'teto biologico', 'peste', 'trigo', 'arroz', 'milho', 'derivas', 'gourou', 'tecnica', 'ciencia', 'moeda', 'cidades', 'gurvitch', 'sombra', 'luz', 'mercado', 'china', 'skinner', 'feiras', 'bolsas']
+      },
+      {
+        id: 'cap2',
+        num: 'II',
+        shortTitle: 'Capítulo II — Os Jogos da Troca',
+        sub: 'O Poço, Mercado vs. Contramercado & Visitante da Noite',
+        color: '#C28728',
+        soft: '#FBF2E1',
+        keywords: ['jogos da troca', 'poco', 'kula', 'mao invisivel', 'economia a', 'economia b', 'contramercado', 'private market', 'fernhandel', 'capital', 'capitalista', 'capitalismo', 'nao-especializacao', 'putting out', 'conjuntural', 'weber', 'hierarquia', 'grundvolk', 'visitante da noite', 'aguas calmas']
+      },
+      {
+        id: 'cap3',
+        num: 'III',
+        shortTitle: 'Capítulo III — O Tempo do Mundo',
+        sub: 'Economia-Mundo, Descentragens & Revolução Industrial',
+        color: '#1E354D',
+        soft: '#E6EDF4',
+        keywords: ['tempo do mundo', 'economia mundial', 'economia-mundo', 'weltwirtschaft', 'zonas concentricas', 'sincronismo', 'wallerstein', 'descentragem', 'recentragem', 'veneza', 'antuerpia', 'genova', 'amsterdam', 'londres', 'nova iorque', 'cidade-estado', 'mercado nacional', 'revolucao industrial', 'invariantes', 'lenin', 'monopolio', 'patrimonio']
+      }
+    ];
+
+    const CONCEPTS = {
+      overview: [
+        {
+          tag: 'Arquitetura Tripartida',
+          name: 'Os Três Andares da Economia',
+          def: 'A realidade econômica nunca é homogênea: articula-se em Vida Material (térreo), Economia de Mercado (2º andar) e Capitalismo (cúpula).',
+          opp: 'Rejeita a redução da história econômica a uma única camada contínua e uniforme.',
+          role: 'Fornece o mapa em relevo que estrutura as três conferências e a obra-prima de 1979.'
+        },
+        {
+          tag: 'Temporalidades',
+          name: 'As Três Durações Históricas',
+          def: 'A história move-se em ritmos distintos: a Longa Duração (estruturas lentas), a Conjuntura (ondas e crises) e o Acontecimento (tempo curto).',
+          opp: 'Supera a história puramente factual/episódica em favor dos equilíbrios profundos.',
+          role: 'Permite articular as inércias seculares do cotidiano com os sobressaltos do capital.'
+        },
+        {
+          tag: 'Princípio Metodológico',
+          name: 'Economia em Si Não Existe',
+          def: 'O econômico só ganha inteligibilidade quando reinserido no conjunto das sociedades, da política, da cultura e da geografia.',
+          opp: 'Contrapõe-se ao isolamento disciplinar da teoria econômica pura.',
+          role: 'Abre a história econômica ao diálogo constante com as demais ciências do homem.'
+        }
+      ],
+      cap1: [
+        {
+          tag: '1º Andar',
+          name: 'Vida Material (Estruturas do Cotidiano)',
+          def: 'Reino do hábito, da rotina e dos gestos herdados e repetidos sem decisão consciente — onde a humanidade é mais "agida" do que agente.',
+          opp: 'Opõe-se à zona lúcida e calculada da vida econômica de troca.',
+          role: 'Constitui a massa subjacente e o suporte energético sobre o qual o mercado e o capitalismo se erguem.'
+        },
+        {
+          tag: 'Limite Secular',
+          name: 'O Possível e o Impossível (Teto Biológico)',
+          def: 'Até o século XVIII, o crescimento populacional oscila dentro de um círculo fechado por pestes, fomes, guerras e higiene precária.',
+          opp: 'Rompe-se somente no século XVIII, quando a demografia ultrapassa definitivamente o antigo teto.',
+          role: 'Define as fronteiras físicas que constrangiam todas as economias pré-industriais.'
+        },
+        {
+          tag: 'Pierre Gourou',
+          name: 'Derivas e Escolhas de Civilização',
+          def: 'Plantas dominantes (trigo, arroz, milho) resultam de escolhas milenares que moldam o solo, o trabalho, a criação animal e a organização social.',
+          opp: 'Desloca o foco das batalhas políticas para as estruturas materiais profundas da alimentação.',
+          role: 'Mostra como o cotidiano alimentar condiciona a disponibilidade de trabalho e energia de cada civilização.'
+        },
+        {
+          tag: 'Fronteira',
+          name: 'Valor de Uso vs. Valor de Troca',
+          def: 'Os mercados elementares formam a "porta estreita": fora dela reina o autoconsumo (valor de uso); dentro dela inicia-se o cálculo (valor de troca).',
+          opp: 'Separa a sombra da vida material da luz da economia de mercado.',
+          role: 'Permite classificar agentes sociais conforme cruzem ou não a fronteira da troca.'
+        },
+        {
+          tag: 'Georges Gurvitch',
+          name: 'Moeda e Cidades (Regra de Reciprocidade)',
+          def: 'Estruturas imemoriais que simultaneamente fabricam a modernidade e são impelidas por ela — funcionando ao mesmo tempo como motores e indicadores.',
+          opp: 'Supera causalidades lineares simples ("A causa B") por interações recíprocas.',
+          role: 'Atuam como multiplicadores que aceleram a passagem da rotina à troca.'
+        },
+        {
+          tag: 'Hierarquia',
+          name: 'Dois Registros da Troca',
+          def: 'Registro inferior (mercados urbanos, lojas, mascates) e registro superior (feiras internacionais, Bolsas, redes de crédito).',
+          opp: 'A presença ou ausência do registro superior (ex.: Europa vs. China) cria assimetrias estruturais.',
+          role: 'Prepara a distinção decisiva entre economia de mercado e capitalismo no Capítulo II.'
+        }
+      ],
+      cap2: [
+        {
+          tag: 'Witold Kula',
+          name: 'Duplo Registro (A Metáfora do Poço)',
+          def: 'É preciso observar tanto a boca do poço (preços de mercado, visíveis e ruidosos) quanto o fundo (vida material profunda e silenciosa).',
+          opp: 'Critica historiadores e economistas que confundem o estreito rio do mercado com toda a economia.',
+          role: 'Evita superestimar o alcance do mercado nas sociedades do Antigo Regime e atuais.'
+        },
+        {
+          tag: 'Ruptura Central',
+          name: 'Economia A (Mercado) vs. Economia B (Contramercado)',
+          def: 'A Economia A é transparente, concorrencial e de lucros moderados; a Economia B (private market / Fernhandel) quebra o elo direto, usa opacidade e gera lucros anormais.',
+          opp: 'Desfaz a confusão ideológica que identifica automaticamente capitalismo com livre mercado.',
+          role: 'Localiza o verdadeiro berço do capitalismo na esfera superior, opaca e monopolista.'
+        },
+        {
+          tag: 'Vocabulário',
+          name: 'Tríade: Capital, Capitalista e Capitalismo',
+          def: 'Capital são bens produtivos em ação (não tesouro ocioso); capitalista é quem comanda sua inserção; capitalismo é o modo pouco altruísta de conduzir esse jogo.',
+          opp: 'Disciplina uma palavra polêmica ("capitalismo") contra o anacronismo e a imprecisão.',
+          role: 'Estabelece rigor conceitual para rastrear práticas capitalistas antes da Revolução Industrial.'
+        },
+        {
+          tag: 'Topo da Pirâmide',
+          name: 'Não-Especialização e Caráter Conjuntural',
+          def: 'Enquanto a base se especializa, o grande negociante permanece polivalente, migrando de ramo conforme o alto lucro se desloca ("trocar o fuzil de ombro").',
+          opp: 'Contesta a tese de que a polivalência seria apenas cautela ("não pôr todos os ovos no mesmo cesto").',
+          role: 'Explica a espantosa capacidade de adaptação e reconversão do grande capital.'
+        },
+        {
+          tag: 'Refutação',
+          name: 'Crítica à Tese de Max Weber',
+          def: 'O capitalismo moderno não nasceu da ética protestante: o Norte da Europa copiou técnicas mediterrâneas ao herdar o deslocamento do centro econômico.',
+          opp: 'Recusa explicações puramente culturais que exageram o capitalismo como motor isolado.',
+          role: 'Reinsere a ascensão de Amsterdam e Londres na geografia das escalas e dos mercados.'
+        },
+        {
+          tag: 'Condições Sociais',
+          name: 'O "Visitante da Noite" e Águas Calmas',
+          def: 'O capitalismo exige propriedade protegida, linhagens familiares e um Estado complacente ou aliado; ele não inventa hierarquias, apenas se apropria delas.',
+          opp: 'Contrasta Europa/Japão ("águas calmas") com China/Islã (cúpula instável controlada pelo príncipe).',
+          role: 'Demonstra que o capitalismo é sempre uma realidade social, política e de civilização.'
+        }
+      ],
+      cap3: [
+        {
+          tag: 'Conceito-Chave',
+          name: 'Economia-Mundo (Weltwirtschaft)',
+          def: 'Porção economicamente autônoma do planeta ("um mundo em si mesmo") definida por limites geográficos, um pólo urbano dominante e zonas concêntricas.',
+          opp: 'Distingue-se de "Economia Mundial" (o mercado global em sua totalidade).',
+          role: 'Revela que o capitalismo se gestou dentro de matrizes espaciais hierarquizadas.'
+        },
+        {
+          tag: 'Braudel / Wallerstein',
+          name: 'Sincronismo das Desigualdades',
+          def: 'A economia-mundo sobrepõe simultaneamente capitalismo no centro, trabalho intermediário no meio e servidão/escravatura nas margens.',
+          opp: 'Rompe o modelo linear evolutivo (escravismo → feudalismo → capitalismo).',
+          role: 'Mostra que o centro capitalista se alimenta estruturalmente das zonas periféricas.'
+        },
+        {
+          tag: 'Dinâmica Secular',
+          name: 'Centragem, Descentragem e Recentragem',
+          def: 'Os pólos dominantes deslocam-se raramente e através de crises prolongadas (Veneza → Antuérpia → Gênova → Amsterdam → Londres → Nova Iorque).',
+          opp: 'A crise não é mero acidente: é a provação que derruba o centro antigo e consagra o novo.',
+          role: 'Explica as grandes viradas geopolíticas e a passagem das Cidades-Estados aos Mercados Nacionais.'
+        },
+        {
+          tag: 'Cesura Moderna',
+          name: 'Mercado Nacional e Revolução Industrial',
+          def: 'Espaço político unificado pelo Estado e pelos transportes (Inglaterra/Londres). A Revolução Industrial foi um processo lento, sistêmico e de conjunto.',
+          opp: 'Supera o falso dilema "causas internas vs. causas externas": ambas agem juntas.',
+          role: 'Mostra que o capitalismo industrial só deslanchou apoiado na força da economia de base.'
+        },
+        {
+          tag: 'Síntese Final',
+          name: 'As Três Invariantes e o Horizonte da História',
+          def: 'Escala mundial, vocação monopolista (crítica a Lênin) e permanência dos 3 andares. A história futura deve unir fluxos (renda) e estoques (patrimônio).',
+          opp: 'Recusa a confusão ideológica (tanto no Oeste quanto no Leste) entre capitalismo e mercado.',
+          role: 'Conecta o passado de 1400–1800 diretamente à compreensão crítica do capitalismo atual.'
+        }
+      ]
+    };
+
+    /* =========================================================================
+       ESTADO GLOBAL DA APLICAÇÃO E DOS INFOGRÁFICOS INTERATIVOS
+       ========================================================================= */
+
+    let currentView = 'overview'; // 'overview' | 'cap1' | 'cap2' | 'cap3'
+    let searchQuery = '';
+    let studied = loadStudied();
+    let expandedCards = {};
+
+    const ui = {
+      // Visão 0
+      ovFloor: 3, // 1, 2 ou 3
+      ovDur: 'todas', // 'longa' | 'conjuntura' | 'acontecimento' | 'todas'
+      // Cap 1
+      c1Year: 1650, // 1450..1800
+      c1Cereal: 'trigo', // 'trigo' | 'arroz' | 'milho'
+      c1Agent: 'lojista', // 'autarquico' | 'fronteira' | 'itinerante' | 'mascate' | 'lojista' | 'negociante'
+      c1Gurvitch: false,
+      c1RegTab: 'europa', // 'europa' | 'comparada'
+      c1Century: 16, // 15 | 16 | 17 | 18
+      // Cap 2
+      c2Depth: 50, // 0 (Boca) .. 100 (Fundo)
+      c2Econ: 'ambas', // 'A' | 'B' | 'ambas'
+      c2Triad: 'capitalismo', // 'capital' | 'capitalista' | 'capitalismo'
+      c2Shift: false, // false (Cenário inicial) | true (Mudança de conjuntura)
+      c2Set: 'politico', // 'economico' | 'politico' | 'cultural' | 'social'
+      c2Water: 'calmas', // 'calmas' | 'agitadas'
+      // Cap 3
+      c3Zone: 'nucleo', // 'nucleo' | 'intermediaria' | 'margem'
+      c3Model: 'sincronico', // 'linear' | 'sincronico'
+      c3Clock: 5, // 0..6 (0=Champagne, 1=Veneza, 2=Antuérpia, 3=Gênova, 4=Amsterdam, 5=Londres, 6=NY)
+      c3IndMode: 'inglaterra', // 'abortada' | 'inglaterra'
+      c3JamGear: 'agricultura', // engrenagem travada no modo abortada
+      c3Inv: 1 // 1 | 2 | 3
+    };
+
+    /* =========================================================================
+       PERSISTÊNCIA E UTILITÁRIOS
+       ========================================================================= */
+
+    function loadStudied() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveStudied() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(studied));
+      } catch (e) { /* ambiente sem localStorage */ }
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      const txt = document.getElementById('toast-msg');
+      if (!el || !txt) return;
+      txt.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+    }
+
+    function norm(s) {
+      return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function toggleStudied(viewId, evt) {
+      if (evt) evt.stopPropagation();
+      studied[viewId] = !studied[viewId];
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      const v = VIEWS.find(x => x.id === viewId);
+      showToast(studied[viewId] ? `"${v.shortTitle}" marcado como estudado.` : `"${v.shortTitle}" desmarcado.`);
+    }
+
+    function resetProgress() {
+      studied = {};
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      showToast('Progresso de estudo reiniciado.');
+    }
+
+    function toggleConcept(viewId, idx) {
+      const key = `${viewId}-${idx}`;
+      expandedCards[key] = !expandedCards[key];
+      renderMain();
+    }
+
+    function navigateTo(viewId) {
+      currentView = viewId;
+      renderSidebar();
+      renderMain();
+      closeDrawer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openDrawer() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.add('open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('open');
+    }
+
+    /* =========================================================================
+       RENDERIZAÇÃO DA SIDEBAR
+       ========================================================================= */
+
+    function renderSidebar() {
+      const nav = document.getElementById('sidebar-nav');
+      const q = norm(searchQuery.trim());
+
+      const done = VIEWS.filter(v => studied[v.id]).length;
+      const pct = Math.round((done / VIEWS.length) * 100);
+      document.getElementById('sidebar-progress-text').textContent = `${done}/4 estudados (${pct}%)`;
+      document.getElementById('sidebar-progress-fill').style.width = `${pct}%`;
+      document.getElementById('mobile-progress-pill').textContent = `${done}/4`;
+
+      const filtered = VIEWS.filter(v => {
+        if (!q) return true;
+        const cText = (CONCEPTS[v.id] || []).map(c => `${c.name} ${c.def}`).join(' ');
+        const hay = norm(`${v.shortTitle} ${v.sub} ${v.keywords.join(' ')} ${cText}`);
+        return hay.includes(q);
+      });
+
+      if (!filtered.length) {
+        nav.innerHTML = `<div style="padding:18px;font-size:0.8rem;color:var(--text-muted);text-align:center;">Nenhum capítulo ou conceito encontrado para "<strong>${searchQuery}</strong>".</div>`;
+        return;
+      }
+
+      let html = `<div class="nav-section-title">Sumário Conceitual</div>`;
+      filtered.forEach(v => {
+        const isAct = currentView === v.id;
+        const isDone = !!studied[v.id];
+        const matchedKw = q ? v.keywords.find(k => norm(k).includes(q)) : null;
+        html += `
+          <button type="button" class="nav-item ${isAct ? 'active' : ''}" onclick="navigateTo('${v.id}')">
+            <span class="nav-num" style="${isAct ? `background:${v.color};border-color:${v.color};color:#fff;` : `border-left:3px solid ${v.color};`}">${v.num}</span>
+            <span class="nav-label">
+              <span class="nav-label-title">${v.shortTitle}</span>
+              <span class="nav-label-sub">${v.sub}</span>
+              ${matchedKw ? `<span class="search-match-tag">conceito: ${matchedKw}</span>` : ''}
+            </span>
+            <span class="nav-check ${isDone ? 'done' : ''}" title="${isDone ? 'Estudado' : 'Marcar como estudado'}" onclick="toggleStudied('${v.id}', event)">✓</span>
+          </button>
+        `;
+      });
+
+      nav.innerHTML = html;
+    }
+
+    /* =========================================================================
+       VISÃO 0 — MAPA GERAL: O EDIFÍCIO DE TRÊS ANDARES & TRÊS DURAÇÕES
+       ========================================================================= */
+
+    function renderOverview() {
+      const floors = {
+        3: {
+          title: '3º Andar (Cúpula) — Capitalismo ("Contramercado")',
+          color: '#8C2332',
+          nature: 'Zona superior, minoritária, sofisticada e polivalente (não-especializada).',
+          value: 'Alto lucro anormal, especulação, crédito, comércio a distância (Fernhandel).',
+          visibility: 'Opacidade deliberada, segredo nos negócios, manipulação das regras.',
+          comp: 'Monopólios de direito ou de fato — procura apagar ou contornar a concorrência.',
+          target: 'cap2',
+          targetLabel: 'Explorar Capítulo II — Os Jogos da Troca'
+        },
+        2: {
+          title: '2º Andar (Intermediário) — Economia de Mercado',
+          color: '#C28728',
+          nature: 'Ligação estreita, ativa e parcial entre a produção e o consumo.',
+          value: 'Valor de troca, preços públicos, cálculo do deve e haver, lucros moderados.',
+          visibility: 'Transparência ("olho no olho, mão na mão"), amplamente registrada nos arquivos.',
+          comp: 'Concorrência relativamente aberta (mercados elementares, lojas, mascates).',
+          target: 'cap2',
+          targetLabel: 'Explorar Capítulo II — Mercado vs. Contramercado'
+        },
+        1: {
+          title: '1º Andar (Térreo) — Vida Material / Estruturas do Cotidiano',
+          color: '#3E634E',
+          nature: 'Oceano de hábitos, rotinas, inércias biológicas e autoconsumo camponês.',
+          value: 'Valor de uso (tudo o que permanece fora da porta estreita do mercado).',
+          visibility: 'Zona de sombra, história "sem idade" e mediocremente vivida fora da consciência.',
+          comp: 'Ausente: autarquia, costumes seculares, o "possível e o impossível".',
+          target: 'cap1',
+          targetLabel: 'Explorar Capítulo I — Vida Material e Vida Econômica'
+        }
+      };
+      const f = floors[ui.ovFloor];
+
+      const durs = {
+        longa: { t: 'Longa Duração (Estruturas Quase Imóveis)', c: '#3E634E', d: 'Equilíbrios e desequilíbrios profundos: demografia antiga, escolhas alimentares (trigo/arroz/milho), rotinas técnicas e limites geográficos que evoluem muito lentamente.' },
+        conjuntura: { t: 'Conjuntura (Ondas Médias e Crises)', c: '#C28728', d: 'Ciclos de expansão e refluxo, movimentos de preços, crises prolongadas que derrubam centros antigos (ex.: Gênova, Amsterdam) e consagram novas hegemonias.' },
+        acontecimento: { t: 'Acontecimento (A Espuma da História)', c: '#8C2332', d: 'Tempo curto e agitado dos grandes atores (Jacques Coeur, Fugger, John Law), batalhas e decretos — visíveis na superfície, mas carregados pelas massas subjacentes.' },
+        todas: { t: 'História em Relevo (Sobreposição das Três Durações)', c: '#1E354D', d: 'A genialidade metodológica de Braudel está em ler os três tempos simultaneamente: o capitalismo de cúpula é carregado nas costas pela economia de mercado e pela vida material.' }
+      };
+      const d = durs[ui.ovDur];
+
+      return `
+        ${renderHeaderBlock('overview', 'Mapa Geral • Arquitetura em Relevo', 'A Dinâmica do Capitalismo: O Edifício de Três Andares', 'Três conferências proferidas na Universidade Johns Hopkins (1977) sintetizando a grande obra Civilização Material, Economia e Capitalismo (1979).', '“Poderia dizer-se que a economia do mundo inteiro é visível num verdadeiro mapa em relevo.”', 'Braudel propõe abandonar a visão plana e homogênea da economia. Entre os séculos XV e XVIII — e, em larga medida, ainda hoje — a vida humana organiza-se em três patamares superpostos com ritmos, regras e graus de liberdade profundamente distintos.')}
+
+        <!-- Infográfico 0.1: O Edifício de Três Andares -->
+        <section class="infographic-card">
+          <span class="kicker">Infográfico 0.1 • Corte Arquitetônico Interativo</span>
+          <h3 class="section-heading">O Edifício de Três Andares de Braudel</h3>
+          <p class="section-lead">Clique em qualquer um dos três pavimentos no corte arquitetônico para iluminar sua estrutura e inspecionar sua lógica conceitual.</p>
+
+          <div class="grid-2" style="align-items:center;">
+            <div class="svg-stage" style="margin-bottom:0;">
+              <svg viewBox="0 0 420 355" role="img" aria-label="Corte arquitetônico do Edifício de Três Andares de Braudel">
+                <!-- Cúpula / Telhado (3º Andar - Capitalismo) -->
+                <g onclick="ui.ovFloor=3; renderMain();" style="cursor:pointer;">
+                  <polygon points="210,14 382,78 38,78" fill="${ui.ovFloor===3 ? '#631621' : '#8C2332'}" opacity="${ui.ovFloor===3 ? 1 : 0.78}"/>
+                  <rect x="46" y="78" width="328" height="74" rx="4"
+                    fill="${ui.ovFloor===3 ? '#8C2332' : '#F7E8EA'}" stroke="#8C2332" stroke-width="${ui.ovFloor===3 ? 3 : 1.6}"/>
+                  <!-- Janelas / Arcos da Cúpula -->
+                  <rect x="70" y="96" width="26" height="34" rx="13" fill="${ui.ovFloor===3 ? '#FBF2E1' : '#FFFDF8'}" stroke="#631621"/>
+                  <rect x="324" y="96" width="26" height="34" rx="13" fill="${ui.ovFloor===3 ? '#FBF2E1' : '#FFFDF8'}" stroke="#631621"/>
+                  <text x="210" y="106" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${ui.ovFloor===3 ? '#F4D59A' : '#8C2332'}">3º ANDAR • CÚPULA</text>
+                  <text x="210" y="126" text-anchor="middle" font-family="Georgia, serif" font-size="16" font-weight="700" fill="${ui.ovFloor===3 ? '#FFFFFF' : '#1E1B18'}">CAPITALISMO</text>
+                  <text x="210" y="143" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="${ui.ovFloor===3 ? '#F7E8EA' : '#575046'}">Contramercado • Monopólio • Opacidade</text>
+                </g>
+
+                <!-- 2º Andar - Economia de Mercado -->
+                <g onclick="ui.ovFloor=2; renderMain();" style="cursor:pointer;">
+                  <rect x="46" y="160" width="328" height="80" rx="4"
+                    fill="${ui.ovFloor===2 ? '#C28728' : '#FBF2E1'}" stroke="#C28728" stroke-width="${ui.ovFloor===2 ? 3 : 1.6}"/>
+                  <!-- Toldos de mercado / balcões -->
+                  <rect x="66" y="182" width="34" height="36" rx="4" fill="${ui.ovFloor===2 ? '#FFFDF8' : '#F6F1E7'}" stroke="#8C5E14"/>
+                  <rect x="320" y="182" width="34" height="36" rx="4" fill="${ui.ovFloor===2 ? '#FFFDF8' : '#F6F1E7'}" stroke="#8C5E14"/>
+                  <text x="210" y="188" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${ui.ovFloor===2 ? '#FFFDF8' : '#8C5E14'}">2º ANDAR • INTERMEDIÁRIO</text>
+                  <text x="210" y="209" text-anchor="middle" font-family="Georgia, serif" font-size="15.5" font-weight="700" fill="${ui.ovFloor===2 ? '#FFFFFF' : '#1E1B18'}">ECONOMIA DE MERCADO</text>
+                  <text x="210" y="227" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="${ui.ovFloor===2 ? '#FBF2E1' : '#575046'}">Transparência • Concorrência • Valor de Troca</text>
+                </g>
+
+                <!-- 1º Andar (Térreo) - Vida Material -->
+                <g onclick="ui.ovFloor=1; renderMain();" style="cursor:pointer;">
+                  <rect x="34" y="248" width="352" height="88" rx="6"
+                    fill="${ui.ovFloor===1 ? '#3E634E' : '#E7F0EA'}" stroke="#3E634E" stroke-width="${ui.ovFloor===1 ? 3 : 1.6}"/>
+                  <!-- Alicerce / Porta térrea -->
+                  <rect x="60" y="276" width="28" height="44" rx="3" fill="${ui.ovFloor===1 ? '#E7F0EA' : '#FFFDF8'}" stroke="#2A4636"/>
+                  <rect x="332" y="276" width="28" height="44" rx="3" fill="${ui.ovFloor===1 ? '#E7F0EA' : '#FFFDF8'}" stroke="#2A4636"/>
+                  <text x="210" y="276" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${ui.ovFloor===1 ? '#D8ECE0' : '#2A4636'}">1º ANDAR • TÉRREO / ALICERCE</text>
+                  <text x="210" y="298" text-anchor="middle" font-family="Georgia, serif" font-size="15.5" font-weight="700" fill="${ui.ovFloor===1 ? '#FFFFFF' : '#1E1B18'}">VIDA MATERIAL</text>
+                  <text x="210" y="317" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="${ui.ovFloor===1 ? '#E7F0EA' : '#575046'}">Rotina • Autoconsumo • Valor de Uso • Inércia</text>
+                </g>
+
+                <!-- Solo -->
+                <rect x="14" y="336" width="392" height="12" rx="4" fill="#C6B89E"/>
+              </svg>
+            </div>
+
+            <div class="panel-soft" style="border-left:5px solid ${f.color};">
+              <span class="chip" style="border-color:${f.color};color:${f.color};margin-bottom:8px;">Pavimento Selecionado</span>
+              <h4 style="font-family:var(--font-serif);font-size:1.15rem;color:${f.color};margin-bottom:10px;">${f.title}</h4>
+              <p style="font-size:0.83rem;margin-bottom:7px;"><strong>Natureza:</strong> ${f.nature}</p>
+              <p style="font-size:0.83rem;margin-bottom:7px;"><strong>Lógica de Valor:</strong> ${f.value}</p>
+              <p style="font-size:0.83rem;margin-bottom:7px;"><strong>Visibilidade Histórica:</strong> ${f.visibility}</p>
+              <p style="font-size:0.83rem;margin-bottom:14px;"><strong>Grau de Concorrência:</strong> ${f.comp}</p>
+              <button type="button" class="ctrl-btn active-navy" onclick="navigateTo('${f.target}')">${f.targetLabel} →</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Infográfico 0.2: As Três Durações Históricas -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--navy);">Infográfico 0.2 • Ritmos do Tempo Histórico</span>
+          <h3 class="section-heading">As Três Durações Históricas</h3>
+          <p class="section-lead">Selecione uma duração para isolar ou sobrepor os três ritmos da história econômica identificados por Braudel.</p>
+
+          <div class="btn-row">
+            <button type="button" class="ctrl-btn ${ui.ovDur==='todas' ? 'active-navy' : ''}" onclick="ui.ovDur='todas'; renderMain();">Todas Sobrepostas</button>
+            <button type="button" class="ctrl-btn ${ui.ovDur==='longa' ? 'active-olive' : ''}" onclick="ui.ovDur='longa'; renderMain();">Longa Duração (Estruturas)</button>
+            <button type="button" class="ctrl-btn ${ui.ovDur==='conjuntura' ? 'active-gold' : ''}" onclick="ui.ovDur='conjuntura'; renderMain();">Conjuntura (Ciclos &amp; Crises)</button>
+            <button type="button" class="ctrl-btn ${ui.ovDur==='acontecimento' ? 'active-bordo' : ''}" onclick="ui.ovDur='acontecimento'; renderMain();">Acontecimento (Espuma)</button>
+          </div>
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 820 185" role="img" aria-label="Ondas das três durações históricas de Braudel">
+              <!-- Acontecimento (espuma rápida no topo) -->
+              <g opacity="${ui.ovDur==='todas'||ui.ovDur==='acontecimento' ? 1 : 0.14}">
+                <path d="M 30 42 Q 55 18 80 42 T 130 42 T 180 42 T 230 42 T 280 42 T 330 42 T 380 42 T 430 42 T 480 42 T 530 42 T 580 42 T 630 42 T 680 42 T 730 42 T 785 42"
+                  fill="none" stroke="#8C2332" stroke-width="2.6" class="flow-animated"/>
+                <text x="34" y="20" font-family="monospace" font-size="9.5" font-weight="700" fill="#8C2332">ACONTECIMENTO (Tempo Curto • Grandes Atores e Episódios)</text>
+              </g>
+
+              <!-- Conjuntura (ondas médias) -->
+              <g opacity="${ui.ovDur==='todas'||ui.ovDur==='conjuntura' ? 1 : 0.14}">
+                <path d="M 30 98 C 120 58 200 138 290 98 C 380 58 460 138 550 98 C 640 58 720 138 785 98"
+                  fill="none" stroke="#C28728" stroke-width="3.6"/>
+                <text x="34" y="78" font-family="monospace" font-size="9.5" font-weight="700" fill="#8C5E14">CONJUNTURA (Ondas Médias • Expansões e Crises)</text>
+              </g>
+
+              <!-- Longa Duração (onda quase imóvel na base) -->
+              <g opacity="${ui.ovDur==='todas'||ui.ovDur==='longa' ? 1 : 0.14}">
+                <path d="M 30 156 Q 410 136 785 152" fill="none" stroke="#3E634E" stroke-width="6" stroke-linecap="round"/>
+                <text x="34" y="138" font-family="monospace" font-size="9.5" font-weight="700" fill="#3E634E">LONGA DURAÇÃO (Estruturas Profundas • Séculos)</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${d.c};">
+            <strong style="font-family:var(--font-serif);font-size:1.05rem;color:${d.c};">${d.t}</strong>
+            <p style="font-size:0.84rem;color:var(--text-main);margin-top:4px;">${d.d}</p>
+          </div>
+        </section>
+
+        ${renderConceptsGrid('overview', '#8C2332')}
+        ${renderFooterNav(null, 'cap1', 'Capítulo I — Repensando a Vida Material e a Vida Econômica')}
+      `;
+    }
+
+    /* =========================================================================
+       CAPÍTULO I — REPENSANDO A VIDA MATERIAL E A VIDA ECONÔMICA
+       ========================================================================= */
+
+    function renderCap1() {
+      // 1.1 Cálculo do Teto Biológico (1450..1800)
+      const yr = ui.c1Year;
+      let popY = 128;
+      let bioMsg = '';
+      let breached = false;
+      if (yr < 1530) {
+        popY = 148 - Math.round(((yr - 1450) / 80) * 58);
+        bioMsg = `${yr}: Recuperação demográfica pós-Peste Negra. O "tropismo da primavera" empurra o número de homens para cima, ainda dentro do círculo do possível.`;
+      } else if (yr < 1640) {
+        popY = 92 + Math.round(Math.sin((yr - 1530) / 18) * 14);
+        bioMsg = `${yr}: Pressão contra o Teto Biológico! Penúrias, epidemias regulares de peste, tifo, varíola e guerras forçam sucessivos fluxos e refluxos.`;
+      } else if (yr < 1735) {
+        popY = 114 - Math.round(((yr - 1640) / 95) * 26);
+        bioMsg = `${yr}: Novo refluxo e reequilíbrio doloroso. A mortalidade infantil elevada e a realidade biológica malsã ainda mantêm o sistema encerrado no círculo antigo.`;
+      } else {
+        breached = true;
+        popY = Math.max(24, 86 - Math.round(((yr - 1735) / 65) * 60));
+        bioMsg = `${yr}: EXPLOSÃO DAS FRONTEIRAS DO IMPOSSÍVEL! No século XVIII o teto biológico é finalmente rompido — desde então, a população humana não parou mais de crescer sem reversão.`;
+      }
+      const xPos = Math.round(70 + ((yr - 1450) / 350) * 680);
+
+      // 1.2 Cereais (Derivas)
+      const cereals = {
+        trigo: {
+          name: 'Trigo — Civilização Europeia',
+          color: '#C28728',
+          chain: ['Planta que esgota o solo e exige pousio regular', 'Implica e permite criação associada de gado', 'Uso de charruas, parelhas de cavalos/bois e carroças', 'Energia animal integrada ao cotidiano rural europeu']
+        },
+        arroz: {
+          name: 'Arroz — Civilização Asiática',
+          color: '#3E634E',
+          chain: ['Cultura intensiva ("jardinagem") de altíssimo rendimento por área', 'Exige irrigação coletiva e trabalho humano denso', 'Não deixa espaço para grandes rebanhos animais', 'Sustenta altíssimas densidades demográficas estáveis']
+        },
+        milho: {
+          name: 'Milho — Civilizações Ameríndias',
+          color: '#8C2332',
+          chain: ['Refeição cotidiana mais cômoda e rápida de obter', 'Libera enorme quantidade de tempo de ócio camponês', 'Força de trabalho livre confiscada pela sociedade (corveias)', 'Ergue monumentos colossais (astecas, maias, incas)']
+        }
+      };
+      const cer = cereals[ui.c1Cereal];
+
+      // 1.3 Agentes na Fronteira Sombra / Luz
+      const agents = {
+        autarquico: { label: 'Camponês Autárquico', x: 115, zone: 'Sombra (Vida Material)', desc: 'Vive em autarquia quase total na aldeia: produz o que consome. Permanece integralmente no domínio do Valor de Uso.' },
+        fronteira: { label: 'Camponês na Fronteira', x: 265, zone: 'Porta Estreita (Borda)', desc: 'Vai ao burgo apenas ocasionalmente vender ovos ou uma galinha para pagar impostos ou comprar uma relha de charrua. Toca a fronteira, mas permanece na massa do autoconsumo.' },
+        itinerante: { label: 'Artesão Itinerante', x: 375, zone: 'Oscilação Sombra ↔ Luz', desc: 'Reempalhador ou limpa-chaminés: depende do mercado para comer, mas volta à aldeia na colheita/vindima, cruzando a fronteira nos dois sentidos.' },
+        mascate: { label: 'Mascate / Camelô', x: 485, zone: 'Luz (Registro Inferior)', desc: 'Percorre ruas e campos vendendo pequenas quantidades. Já pertence integralmente ao mundo da troca e do cálculo do deve e haver.' },
+        lojista: { label: 'Lojista', x: 605, zone: 'Luz (Troca Contínua + Crédito)', desc: 'Agente pleno da economia de mercado: sua loja aberta todos os dias substitui o mercado intermitente e cria cadeias de dívidas e créditos.' },
+        negociante: { label: 'Grande Negociante', x: 725, zone: 'Registro Superior (Feiras & Bolsas)', desc: 'Opera no atacado, domina feiras internacionais e Bolsas diárias (como a Loggia de Rialto ou Amsterdam), abrindo a esfera do capitalismo.' }
+      };
+      const ag = agents[ui.c1Agent];
+
+      // 1.4 Dinâmica Secular Europeia
+      const centuries = {
+        15: { motor: 'Mercados Urbanos & Lojas de Artesãos', desc: 'Após 1450, a retomada econômica beneficia as cidades (preços "industriais" sobem enquanto os agrícolas estagnam). O papel propulsor está no patamar mínimo da troca.' },
+        16: { motor: 'Grandes Feiras Internacionais & Crédito', desc: 'Apogeu das feiras (Antuérpia, Lyon, Medina del Campo, feiras financeiras genovesas de "Besançon"). Superestrutura inchada pelos metais americanos e papéis de crédito.' },
+        17: { motor: 'Bolsas Contínuas (Amsterdam) + Rede de Lojas', desc: 'Retorno decisivo à mercadoria. O fluxo contínuo das Bolsas substitui as feiras intermitentes, enquanto as lojas multiplicam-se em redes compactas ("todo se ha vuelto tiendas").' },
+        18: { motor: 'Aceleração Geral + Private Market (Contramercado)', desc: 'Todos os instrumentos giram juntos (Bolsas em Londres/Paris, mercados, lojas, mascates) e explode o contramercado fora do controle urbano para abastecer grandes capitais.' }
+      };
+      const cen = centuries[ui.c1Century];
+
+      return `
+        ${renderHeaderBlock('cap1', 'Capítulo I • 1ª Conferência', 'Repensando a Vida Material e a Vida Econômica', 'Da inércia cotidiana e dos limites biológicos à fronteira estreita do mercado e à hierarquia mundial das trocas.', '“Creio que a humanidade está pela metade enterrada no cotidiano. Muito antigo e sempre vivo, um passado multissecular desemboca no tempo presente como o Amazonas projeta no Atlântico a massa enorme de suas águas agitadas.”', 'A economia pré-industrial (séc. XV–XVIII) não é um bloco homogêneo: a imensa maioria da humanidade permanece mergulhada na rotina da Vida Material (valor de uso, autoconsumo e limites biológicos), sobre a qual se ergue a fronteira estreita da Economia de Mercado em dois registros.')}
+
+        <!-- Infográfico 1.1: O Rio do Passado e o Teto Biológico -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--olive);">Infográfico 1.1 • Longa Duração &amp; Demografia</span>
+          <h3 class="section-heading">O Rio do Passado e o Teto Biológico (1450–1800)</h3>
+          <p class="section-lead">Deslize a linha do tempo para observar como o passado multissecular flui no presente (metáfora do Amazonas) e como a população colide contra o <strong>Círculo do Possível e do Impossível</strong> até rompê-lo no século XVIII.</p>
+
+          <div class="panel-soft" style="margin-bottom:14px;">
+            <div class="meter-head">
+              <span>Linha do Tempo Pré-Industrial</span>
+              <span style="color:${breached ? 'var(--bordo)' : 'var(--olive)'};">Ano ${yr} ${breached ? '• TETO ROMPIDO!' : '• Fluxo e Refluxo'}</span>
+            </div>
+            <input type="range" class="atlas-slider" min="1450" max="1800" step="5" value="${yr}" oninput="ui.c1Year=Number(this.value); renderMain();" aria-label="Selecionar ano entre 1450 e 1800">
+          </div>
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 820 245" role="img" aria-label="Rio do Passado e Gráfico do Teto Biológico de 1450 a 1800">
+              <!-- Fundo: Rio Amazonas (Passado desaguando no Presente) na base -->
+              <path d="M 18 208 Q 220 185 430 205 T 798 192 L 798 232 L 18 232 Z" fill="#E6EDF4" stroke="#1E354D" stroke-width="1.2"/>
+              <path d="M 30 218 Q 250 198 460 216 T 785 206" fill="none" stroke="#1E354D" stroke-width="2" class="flow-animated"/>
+              <text x="410" y="226" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#1E354D">METÁFORA DO RIO AMAZONAS: HÁBITOS E ROTINAS MULTISSECULARES DESAGUANDO NO PRESENTE</text>
+
+              <!-- Teto Biológico (Linha horizontal crítica) -->
+              <line x1="60" y1="84" x2="760" y2="84" stroke="#8C2332" stroke-width="2.5" stroke-dasharray="8 5"/>
+              <rect x="64" y="54" width="380" height="22" rx="11" fill="#F7E8EA" stroke="#8C2332"/>
+              <text x="254" y="69" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#631621">TETO BIOLÓGICO: Peste • Fome • Guerras • Higiene Precária</text>
+
+              <!-- Zona pós-ruptura (séc. XVIII) -->
+              <rect x="625" y="18" width="145" height="66" rx="8" fill="${breached ? 'rgba(62,99,78,0.16)' : 'rgba(223,213,195,0.25)'}" stroke="#3E634E" stroke-dasharray="4 3"/>
+              <text x="697" y="42" text-anchor="middle" font-family="monospace" font-size="8.5" font-weight="700" fill="#3E634E">EXPLOSÃO DO</text>
+              <text x="697" y="55" text-anchor="middle" font-family="monospace" font-size="8.5" font-weight="700" fill="#3E634E">IMPOSSÍVEL</text>
+
+              <!-- Curva demográfica histórica -->
+              <path d="M 70 148 Q 160 112 225 90 Q 280 105 335 88 Q 395 118 455 114 Q 545 102 625 84 Q 685 52 750 26"
+                fill="none" stroke="#3E634E" stroke-width="3.5"/>
+
+              <!-- Eixo X -->
+              <line x1="60" y1="172" x2="765" y2="172" stroke="#575046" stroke-width="1.5"/>
+              ${[1450, 1550, 1650, 1750, 1800].map(y => {
+                const px = Math.round(70 + ((y - 1450) / 350) * 680);
+                return `<text x="${px}" y="186" text-anchor="middle" font-family="monospace" font-size="9.5" fill="#575046">${y}</text>`;
+              }).join('')}
+
+              <!-- Indicador móvel do ano -->
+              <line x1="${xPos}" y1="20" x2="${xPos}" y2="172" stroke="${breached ? '#8C2332' : '#C28728'}" stroke-width="2" stroke-dasharray="3 3"/>
+              <circle cx="${xPos}" cy="${popY}" r="9" fill="${breached ? '#8C2332' : '#3E634E'}" stroke="#FFFDF8" stroke-width="3"/>
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${breached ? 'var(--bordo)' : 'var(--olive)'};">
+            <p style="font-size:0.84rem;color:var(--text-main);">${bioMsg}</p>
+          </div>
+        </section>
+
+        <!-- Infográfico 1.2: Escolhas de Civilização (Derivas) + Técnicas vs Ciência -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--gold-dark);">Infográfico 1.2 • Plantas Dominantes &amp; Técnicas</span>
+          <h3 class="section-heading">Escolhas de Civilização (Derivas Multisseculares)</h3>
+          <p class="section-lead">Clique em uma das três plantas dominantes analisadas por Braudel (a partir das "derivas" de Pierre Gourou) para visualizar como a alimentação estrutura o trabalho e a civilização.</p>
+
+          <div class="grid-3" style="margin-bottom:16px;">
+            ${[
+              { k: 'trigo', title: 'Trigo (Europa)', sub: 'Solo + Pousio + Gado', col: '#C28728',
+                icon: `<path d="M24 38 L24 10 M24 16 L16 11 M24 16 L32 11 M24 23 L15 18 M24 23 L33 18 M24 30 L16 25 M24 30 L32 25" stroke="#C28728" stroke-width="2.6" stroke-linecap="round" fill="none"/>` },
+              { k: 'arroz', title: 'Arroz (Ásia)', sub: 'Jardinagem Intensiva', col: '#3E634E',
+                icon: `<path d="M12 34 L36 34 M14 27 Q24 20 34 27 M24 34 L24 14 M24 18 Q18 14 14 20 M24 18 Q30 14 34 20" stroke="#3E634E" stroke-width="2.4" stroke-linecap="round" fill="none"/>` },
+              { k: 'milho', title: 'Milho (Américas)', sub: 'Ócio + Monumentos', col: '#8C2332',
+                icon: `<polygon points="24,10 38,36 10,36" fill="none" stroke="#8C2332" stroke-width="2.4"/><line x1="16" y1="26" x2="32" y2="26" stroke="#8C2332" stroke-width="2"/><line x1="20" y1="19" x2="28" y2="19" stroke="#8C2332" stroke-width="2"/>` }
+            ].map(item => {
+              const act = ui.c1Cereal === item.k;
+              return `
+                <button type="button" onclick="ui.c1Cereal='${item.k}'; renderMain();"
+                  style="text-align:left;padding:14px;border-radius:14px;border:2px solid ${act ? item.col : 'var(--border-soft)'};background:${act ? '#FFFDF8' : 'var(--bg-paper)'};display:flex;align-items:center;gap:12px;">
+                  <svg width="46" height="46" viewBox="0 0 48 48" style="flex-shrink:0;background:#FAF6ED;border-radius:10px;border:1px solid var(--border-soft);">${item.icon}</svg>
+                  <div>
+                    <strong style="font-family:var(--font-serif);font-size:0.98rem;color:${item.col};display:block;">${item.title}</strong>
+                    <span style="font-size:0.75rem;color:var(--text-muted);">${item.sub}</span>
+                  </div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+
+          <!-- Cadeia Causal do Cereal Selecionado -->
+          <div class="panel-soft" style="border-left:4px solid ${cer.color};margin-bottom:16px;">
+            <strong style="font-family:var(--font-serif);font-size:1.06rem;color:${cer.color};display:block;margin-bottom:10px;">Cadeia Causal: ${cer.name}</strong>
+            <div class="grid-4">
+              ${cer.chain.map((step, i) => `
+                <div style="background:var(--bg-card);border:1px solid var(--border-soft);border-radius:10px;padding:10px 12px;">
+                  <span style="font-family:var(--font-mono);font-size:0.64rem;font-weight:700;color:${cer.color};">ETAPA ${i + 1}</span>
+                  <p style="font-size:0.79rem;color:var(--text-main);margin-top:3px;">${step}</p>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Técnicas vs. Ciência -->
+          <div class="grid-2">
+            <div class="panel-soft">
+              <span class="chip chip-olive" style="margin-bottom:6px;">Técnicas (Base Lenta) vs. Ciência (Superestrutura Tardia)</span>
+              <p style="font-size:0.81rem;color:var(--text-main);">A técnica acompanha o esforço paciente e conservador do cotidiano; a ciência só a recobre tardiamente, convocada à força pelas grandes concentrações econômicas (Arsenal de Veneza, Holanda, Inglaterra).</p>
+            </div>
+            <div class="panel-soft">
+              <span class="chip chip-bordo" style="margin-bottom:6px;">Por que Associações de Técnicas se Difundem Mal</span>
+              <p style="font-size:0.81rem;color:var(--text-main);">Técnicas isoladas viajam facilmente pelo globo; porém <strong>conjuntos associados</strong> (leme de cadaste + casco + artilharia + navegação de alto-mar, tal como o capitalismo) não se difundem por inteiro — criando supremacias duradouras.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Infográfico 1.3: A Fronteira Sombra / Luz -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--bordo);">Infográfico 1.3 • Limite Inferior da Economia</span>
+          <h3 class="section-heading">A Fronteira Sombra / Luz: A Porta Estreita do Mercado</h3>
+          <p class="section-lead">Clique nos 6 agentes históricos para posicioná-los entre a <strong>Sombra (Valor de Uso / Autoconsumo)</strong> e a <strong>Luz (Valor de Troca / Cálculo)</strong>.</p>
+
+          <div class="btn-row">
+            ${Object.entries(agents).map(([k, a]) => `
+              <button type="button" class="ctrl-btn ${ui.c1Agent===k ? 'active-bordo' : ''}" onclick="ui.c1Agent='${k}'; renderMain();">${a.label}</button>
+            `).join('')}
+            <button type="button" class="ctrl-btn ${ui.c1Gurvitch ? 'active-navy' : ''}" onclick="ui.c1Gurvitch=!ui.c1Gurvitch; renderMain();">
+              ${ui.c1Gurvitch ? '✓' : '+'} Moeda &amp; Cidades (Gurvitch)
+            </button>
+          </div>
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 820 190" role="img" aria-label="Diagrama da fronteira entre Sombra (Vida Material) e Luz (Economia de Mercado)">
+              <!-- Zona de Sombra -->
+              <rect x="16" y="22" width="248" height="142" rx="12" fill="#E7F0EA" stroke="#3E634E" stroke-width="2"/>
+              <text x="140" y="46" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#2A4636">ZONA DE SOMBRA</text>
+              <text x="140" y="62" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#3E634E">Vida Material • Valor de Uso</text>
+
+              <!-- Porta Estreita (Mercado Elementar) -->
+              <rect x="264" y="22" width="12" height="142" fill="#C28728"/>
+              <text x="270" y="178" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#8C5E14">PORTA ESTREITA</text>
+
+              <!-- Zona de Luz - Registro Inferior -->
+              <rect x="276" y="22" width="380" height="142" rx="0" fill="#FBF2E1" stroke="#C28728" stroke-width="2"/>
+              <text x="466" y="46" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8C5E14">ZONA DE LUZ • REGISTRO INFERIOR</text>
+              <text x="466" y="62" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#575046">Mercados, Mascates, Lojas • Valor de Troca</text>
+
+              <!-- Zona de Luz - Registro Superior -->
+              <rect x="656" y="22" width="148" height="142" rx="12" fill="#F7E8EA" stroke="#8C2332" stroke-width="2"/>
+              <text x="730" y="46" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#631621">REGISTRO SUPERIOR</text>
+              <text x="730" y="62" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#8C2332">Feiras &amp; Bolsas</text>
+
+              <!-- Marcador do Agente Selecionado -->
+              <g>
+                <circle cx="${ag.x}" cy="108" r="16" fill="#1E354D" stroke="#FFFDF8" stroke-width="3"/>
+                <circle cx="${ag.x}" cy="103" r="4.5" fill="#FBF2E1"/>
+                <path d="M ${ag.x - 7} 116 Q ${ag.x} 109 ${ag.x + 7} 116 Z" fill="#FBF2E1"/>
+                <text x="${ag.x}" y="142" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#1E1B18">${ag.label}</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid var(--navy);">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-bottom:5px;">
+              <strong style="font-family:var(--font-serif);font-size:1.05rem;">${ag.label}</strong>
+              <span class="chip chip-navy">${ag.zone}</span>
+            </div>
+            <p style="font-size:0.84rem;color:var(--text-main);">${ag.desc}</p>
+          </div>
+
+          ${ui.c1Gurvitch ? `
+            <div class="panel-soft" style="margin-top:14px;border-left:4px solid var(--gold);background:var(--gold-soft);">
+              <strong style="font-family:var(--font-serif);font-size:0.98rem;color:var(--gold-dark);">Regra de Reciprocidade (Georges Gurvitch): Cidades ⇄ Moeda ⇄ Modernidade</strong>
+              <p style="font-size:0.82rem;color:var(--text-main);margin-top:4px;">
+                Cidades e moedas mergulham tanto na rotina imemorial quanto na modernidade mais recente. Elas <strong>fabricam a modernidade</strong> (como motores e multiplicadores) e, reciprocamente, <strong>são impelidas e ampliadas por ela</strong> (atuando como indicadores sensíveis da mudança).
+              </p>
+            </div>
+          ` : ''}
+        </section>
+
+        <!-- Infográfico 1.4: Dois Registros da Troca e Hierarquia Mundial -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--navy);">Infográfico 1.4 • Evolução Europeia &amp; Geometria Comparada</span>
+          <h3 class="section-heading">Dois Registros da Troca e a Hierarquia Mundial em Relevo</h3>
+          <p class="section-lead">Alterne entre a evolução dos motores de troca na Europa (séc. XV–XVIII) e a comparação geométrica entre a Europa e a China cantonal (W. Skinner).</p>
+
+          <div class="btn-row">
+            <button type="button" class="ctrl-btn ${ui.c1RegTab==='europa' ? 'active-navy' : ''}" onclick="ui.c1RegTab='europa'; renderMain();">Aba A: Dinâmica Secular Europeia (XV–XVIII)</button>
+            <button type="button" class="ctrl-btn ${ui.c1RegTab==='comparada' ? 'active-bordo' : ''}" onclick="ui.c1RegTab='comparada'; renderMain();">Aba B: Europa vs. China Cantonal (Skinner)</button>
+          </div>
+
+          ${ui.c1RegTab === 'europa' ? `
+            <div class="btn-row">
+              ${[15, 16, 17, 18].map(s => `
+                <button type="button" class="ctrl-btn ${ui.c1Century===s ? 'active-gold' : ''}" onclick="ui.c1Century=${s}; renderMain();">Século ${s===15?'XV':s===16?'XVI':s===17?'XVII':'XVIII'}</button>
+              `).join('')}
+            </div>
+            <div class="panel-soft" style="border-left:4px solid var(--gold);">
+              <span class="chip chip-gold" style="margin-bottom:6px;">Motor Dominante do Século ${ui.c1Century===15?'XV':ui.c1Century===16?'XVI':ui.c1Century===17?'XVII':'XVIII'}</span>
+              <h4 style="font-family:var(--font-serif);font-size:1.1rem;margin-bottom:6px;">${cen.motor}</h4>
+              <p style="font-size:0.84rem;color:var(--text-main);">${cen.desc}</p>
+            </div>
+          ` : `
+            <div class="svg-stage">
+              <svg viewBox="0 0 820 220" role="img" aria-label="Comparação entre Hexágono Cantonal Chinês e Pirâmide Europeia de Trocas">
+                <!-- Esquerda: China Cantonal (Skinner) -->
+                <rect x="16" y="14" width="380" height="192" rx="12" fill="#E7F0EA" stroke="#3E634E" stroke-width="1.8"/>
+                <text x="206" y="36" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#2A4636">CHINA CANTONAL (W. SKINNER)</text>
+                <!-- Hexágono de aldeias ao redor do burgo -->
+                <polygon points="206,62 256,86 256,138 206,162 156,138 156,86" fill="none" stroke="#3E634E" stroke-width="2"/>
+                ${[[206,62],[256,86],[256,138],[206,162],[156,138],[156,86]].map(([ax, ay]) => `
+                  <line x1="206" y1="112" x2="${ax}" y2="${ay}" stroke="#3E634E" stroke-width="1.2" stroke-dasharray="3 3"/>
+                  <circle cx="${ax}" cy="${ay}" r="7" fill="#3E634E"/>
+                `).join('')}
+                <circle cx="206" cy="112" r="14" fill="#C28728"/>
+                <text x="206" y="115" text-anchor="middle" font-family="monospace" font-size="7.5" font-weight="700" fill="#fff">BURGO</text>
+                <text x="206" y="184" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1E1B18">Circulação capilar densa, mas APARADA no topo</text>
+                <text x="206" y="197" text-anchor="middle" font-family="sans-serif" font-size="9.5" fill="#575046">(Sem feiras centrais nem Bolsas; Estado vigilante)</text>
+
+                <!-- Direita: Pirâmide Europeia -->
+                <rect x="424" y="14" width="380" height="192" rx="12" fill="#F7E8EA" stroke="#8C2332" stroke-width="1.8"/>
+                <text x="614" y="36" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#631621">PIRÂMIDE EUROPEIA DE TROCAS</text>
+                <polygon points="614,54 662,92 566,92" fill="#8C2332"/>
+                <text x="614" y="84" text-anchor="middle" font-family="monospace" font-size="8.5" font-weight="700" fill="#fff">BOLSAS</text>
+                <polygon points="562,96 666,96 694,132 534,132" fill="#C28728"/>
+                <text x="614" y="118" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#fff">FEIRAS &amp; CRÉDITO</text>
+                <polygon points="530,136 698,136 728,168 500,168" fill="#3E634E"/>
+                <text x="614" y="156" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#fff">MERCADOS, LOJAS &amp; MASCATES</text>
+                <text x="614" y="188" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#1E1B18">Superioridade nos instrumentos de cúpula</text>
+              </svg>
+            </div>
+            <div class="panel-soft">
+              <p style="font-size:0.82rem;color:var(--text-main);"><strong>Hierarquia Mundial em Relevo:</strong> Todos os mecanismos existem fora da Europa em graus diversos — no patamar quase superior, Japão, Islã, Insulíndia e Índia (banianos/crédito); abaixo, a China voltada para si; na base, economias ainda primitivas.</p>
+            </div>
+          `}
+        </section>
+
+        ${renderConceptsGrid('cap1', '#3E634E')}
+        ${renderFooterNav('overview', 'cap2', 'Capítulo II — Os Jogos da Troca')}
+      `;
+    }
+
+    /* =========================================================================
+       CAPÍTULO II — OS JOGOS DA TROCA
+       ========================================================================= */
+
+    function renderCap2() {
+      const depth = ui.c2Depth; // 0 (Boca) .. 100 (Fundo)
+      const probeY = Math.round(48 + (depth / 100) * 145);
+      const wellMsg = depth < 35
+        ? 'Boca do Poço (Economia de Mercado): zona viva, ruidosa e farta em arquivos (preços, câmaras de comércio). O perigo dos economistas clássicos (Turgot, Smith, Ricardo) é olhar só para cá e crer no mito da "mão invisível" onipotente.'
+        : depth < 70
+        ? 'Zona de Transição (Duplo Registro): os preços do mercado tocam a superfície da água, mas não penetram uniformemente toda a profundidade social — o mercado continua sendo uma ligação parcial.'
+        : 'Fundo do Poço (Vida Material): imensa massa de água profunda (autoconsumo, hábitos seculares) que os preços do mercado tocam sem sempre agitar. Uma história econômica completa exige o duplo registro de Witold Kula.';
+
+      const triadMap = {
+        capital: { t: 'Capital (Realidade Tangível)', c: '#3E634E', d: 'Não apenas dinheiro, mas todos os bens de capital (casas, navios, campos limpos, estradas, grãos) efetivamente inseridos na produção renovada. Tesouro ocioso ou floresta inexplorada não são capital.' },
+        capitalista: { t: 'Capitalista (O Agente)', c: '#C28728', d: 'O homem ou grupo que preside — ou procura presidir — à inserção estratégica do capital no processo incessante de produção e circulação.' },
+        capitalismo: { t: 'Capitalismo (A Forma do Jogo)', c: '#8C2332', d: 'O modo como se conduz, para fins usualmente pouco altruístas, esse jogo constante de inserção, privilegiando a cúpula, a opacidade e o monopólio.' }
+      };
+      const tr = triadMap[ui.c2Triad];
+
+      const setsMap = {
+        economico: { t: 'Conjunto Econômico', c: '#C28728', d: 'Base material e redes de troca. O capitalismo flutua sobre a economia de mercado e depende de seu vigor subjacente (crítica a Schumpeter: o empresário não é um deus ex machina isolado).' },
+        politico: { t: 'Conjunto Político (O Estado)', c: '#8C2332', d: 'O Estado moderno não criou o capitalismo, mas o herdou: ora o favorece, ora lhe quebra as molas. "O capitalismo só triunfa quando se identifica com o Estado, quando ele é o Estado" (Veneza, Holanda, Inglaterra pós-1688).' },
+        cultural: { t: 'Conjunto Cultural / Religioso (Crítica a Max Weber)', c: '#1E354D', d: 'A religião diz "não" à usura, mas cede em aggiornamentos (Santo Tomás). Braudel refuta Max Weber: o protestantismo não inventou o capitalismo; o Norte apenas copiou o Mediterrâneo quando o centro de gravidade econômico migrou para o Atlântico.' },
+        social: { t: 'Conjunto Social Hierárquico (As "Escadas")', c: '#3E634E', d: 'Acima da massa popular (Grundvolk de Sombart) erguem-se várias escadas (política, religiosa, militar, do dinheiro). O capitalismo precisa de uma hierarquia estável e de "longas famílias" para acumular.' }
+      };
+      const cs = setsMap[ui.c2Set];
+
+      return `
+        ${renderHeaderBlock('cap2', 'Capítulo II • 2ª Conferência', 'Os Jogos da Troca', 'A distinção decisiva entre Economia de Mercado e Capitalismo, a polivalência da cúpula e as condições sociais do triunfo capitalista.', '“O capitalismo não inventa as hierarquias, utiliza-as, do mesmo modo que não inventou o mercado ou o consumo. Ele é, na longa perspectiva da história, o visitante da noite. Chega quando tudo já está em seus devidos lugares.”', 'É indispensável separar conceitualmente a "economia de mercado" (troca transparente, concorrencial e de lucros moderados) do "capitalismo" (zona de cúpula, opaca, monopolista e polivalente), que só triunfa mediante a cumplicidade das hierarquias sociais e do Estado.')}
+
+        <!-- Infográfico 2.1: A Metáfora do Poço (Witold Kula) -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--navy);">Infográfico 2.1 • Duplo Registro da História Econômica</span>
+          <h3 class="section-heading">A Metáfora do Poço (Witold Kula)</h3>
+          <p class="section-lead">Mova a sonda do historiador da <strong>Boca do Poço</strong> até o <strong>Fundo do Poço</strong> para compreender por que olhar apenas para os preços de mercado distorce a realidade econômica.</p>
+
+          <div class="panel-soft" style="margin-bottom:14px;">
+            <div class="meter-head">
+              <span>Profundidade da Lente do Historiador</span>
+              <span style="color:var(--navy);">${depth < 35 ? 'Superfície (Mercado)' : depth < 70 ? 'Zona Intermediária' : 'Profundidade (Vida Material)'} (${depth}%)</span>
+            </div>
+            <input type="range" class="atlas-slider" min="0" max="100" value="${depth}" oninput="ui.c2Depth=Number(this.value); renderMain();" aria-label="Profundidade da sonda no poço">
+          </div>
+
+          <div class="grid-2" style="align-items:center;">
+            <div class="svg-stage" style="margin-bottom:0;">
+              <svg viewBox="0 0 380 235" role="img" aria-label="Corte vertical de um poço com sonda deslizante">
+                <!-- Paredes do Poço -->
+                <rect x="70" y="24" width="240" height="192" rx="8" fill="#EFE8D9" stroke="#575046" stroke-width="2.5"/>
+                <!-- Boca do Poço (Mercado) -->
+                <rect x="72" y="26" width="236" height="58" fill="#FBF2E1"/>
+                <text x="190" y="48" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#8C5E14">BOCA DO POÇO: MERCADO</text>
+                <text x="190" y="64" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#575046">Preços • Arquivos • "Mão Invisível"</text>
+
+                <!-- Água Profunda (Vida Material) -->
+                <rect x="72" y="84" width="236" height="130" fill="#D4E3DA"/>
+                <path d="M 72 84 Q 130 76 190 84 T 308 84" fill="none" stroke="#3E634E" stroke-width="2.5"/>
+                <text x="190" y="138" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#2A4636">FUNDO DO POÇO:</text>
+                <text x="190" y="155" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#2A4636">VIDA MATERIAL</text>
+                <text x="190" y="174" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#3E634E">Massa profunda que os preços</text>
+                <text x="190" y="187" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#3E634E">tocam mas não agitam sempre</text>
+
+                <!-- Corda e Sonda Móvel -->
+                <line x1="190" y1="8" x2="190" y2="${probeY}" stroke="#8C2332" stroke-width="2.5"/>
+                <circle cx="190" cy="${probeY}" r="11" fill="#8C2332" stroke="#FFFDF8" stroke-width="2.5"/>
+              </svg>
+            </div>
+
+            <div class="panel-soft" style="border-left:4px solid var(--navy);">
+              <span class="chip chip-navy" style="margin-bottom:8px;">Leitura de Duplo Registro</span>
+              <p style="font-size:0.84rem;color:var(--text-main);margin-bottom:12px;">${wellMsg}</p>
+              <div style="border-top:1px dashed var(--border-strong);padding-top:10px;font-size:0.79rem;color:var(--text-muted);">
+                <strong>Crítica ao Laissez-Faire:</strong> O mercado é uma ligação <em>parcial</em> entre produção e consumo, frequentemente falseada por monopólios — jamais o reinado exclusivo imaginado pela economia clássica.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Infográfico 2.2: Economia A vs. Economia B + Tríade -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--bordo);">Infográfico 2.2 • O Grande Divisor Conceitual</span>
+          <h3 class="section-heading">Economia A (Mercado) vs. Economia B (Contramercado / Capitalismo)</h3>
+          <p class="section-lead">Compare a troca transparente da praça pública com as cadeias longas, opacas e desiguais do <em>Private Market</em> e do comércio a distância (<em>Fernhandel</em>).</p>
+
+          <div class="btn-row">
+            <button type="button" class="ctrl-btn ${ui.c2Econ==='A' ? 'active-gold' : ''}" onclick="ui.c2Econ='A'; renderMain();">Foco: Economia A (Mercado Público)</button>
+            <button type="button" class="ctrl-btn ${ui.c2Econ==='B' ? 'active-bordo' : ''}" onclick="ui.c2Econ='B'; renderMain();">Foco: Economia B (Contramercado)</button>
+            <button type="button" class="ctrl-btn ${ui.c2Econ==='ambas' ? 'active-navy' : ''}" onclick="ui.c2Econ='ambas'; renderMain();">Comparação Lado a Lado</button>
+          </div>
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 820 215" role="img" aria-label="Comparação entre Economia A (transparente) e Economia B (cadeia longa opaca)">
+              <!-- Economia A -->
+              <g opacity="${ui.c2Econ==='ambas'||ui.c2Econ==='A' ? 1 : 0.16}">
+                <rect x="16" y="16" width="378" height="184" rx="12" fill="#FBF2E1" stroke="#C28728" stroke-width="2"/>
+                <text x="205" y="40" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#8C5E14">ECONOMIA A • PUBLIC MARKET (TRANSPARENTE)</text>
+                <circle cx="85" cy="108" r="30" fill="#3E634E"/>
+                <text x="85" y="112" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="700" fill="#fff">Produtor</text>
+                <circle cx="325" cy="108" r="30" fill="#1E354D"/>
+                <text x="325" y="112" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="700" fill="#fff">Cliente</text>
+                <line x1="120" y1="108" x2="290" y2="108" stroke="#C28728" stroke-width="3.5"/>
+                <text x="205" y="96" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-style="italic" fill="#1E1B18">"Olho no olho, mão na mão"</text>
+                <text x="205" y="164" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#575046">Concorrência aberta • Preços públicos • Lucro moderado</text>
+              </g>
+
+              <!-- Economia B -->
+              <g opacity="${ui.c2Econ==='ambas'||ui.c2Econ==='B' ? 1 : 0.16}">
+                <rect x="426" y="16" width="378" height="184" rx="12" fill="#F7E8EA" stroke="#8C2332" stroke-width="2"/>
+                <text x="615" y="40" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#631621">ECONOMIA B • CONTRAMERCADO / FERNHANDEL</text>
+                <circle cx="478" cy="108" r="24" fill="#3E634E"/>
+                <text x="478" y="111" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700" fill="#fff">Produtor</text>
+
+                <!-- Intermediário / Grande Negociante quebrando o elo -->
+                <rect x="556" y="76" width="118" height="64" rx="10" fill="#8C2332"/>
+                <text x="615" y="102" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="700" fill="#fff">NEGOCIANTE</text>
+                <text x="615" y="119" text-anchor="middle" font-family="monospace" font-size="8" fill="#F4D59A">Info + Crédito + Ouro</text>
+
+                <circle cx="752" cy="108" r="24" fill="#1E354D"/>
+                <text x="752" y="111" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="700" fill="#fff">Mercado</text>
+
+                <line x1="504" y1="108" x2="554" y2="108" stroke="#8C2332" stroke-width="2.5" stroke-dasharray="5 3"/>
+                <line x1="676" y1="108" x2="726" y2="108" stroke="#8C2332" stroke-width="2.5" stroke-dasharray="5 3"/>
+                <text x="615" y="164" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#631621">Elo direto rompido • Troca desigual • Lucros anormais</text>
+                <text x="615" y="180" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#575046">Boas moedas (Capital) vs. Más moedas de cobre (Trabalho)</text>
+              </g>
+            </svg>
+          </div>
+
+          <!-- Tríade Conceitual -->
+          <span class="kicker" style="color:var(--navy);">Tríade Conceitual (Disciplinando o Vocabulário)</span>
+          <div class="btn-row" style="margin-top:6px;">
+            <button type="button" class="ctrl-btn ${ui.c2Triad==='capital' ? 'active-olive' : ''}" onclick="ui.c2Triad='capital'; renderMain();">1. Capital</button>
+            <button type="button" class="ctrl-btn ${ui.c2Triad==='capitalista' ? 'active-gold' : ''}" onclick="ui.c2Triad='capitalista'; renderMain();">2. Capitalista</button>
+            <button type="button" class="ctrl-btn ${ui.c2Triad==='capitalismo' ? 'active-bordo' : ''}" onclick="ui.c2Triad='capitalismo'; renderMain();">3. Capitalismo</button>
+          </div>
+          <div class="panel-soft" style="border-left:4px solid ${tr.c};">
+            <strong style="font-family:var(--font-serif);color:${tr.c};">${tr.t}</strong>
+            <p style="font-size:0.83rem;color:var(--text-main);margin-top:4px;">${tr.d}</p>
+          </div>
+        </section>
+
+        <!-- Infográfico 2.3: A Pirâmide Invertida da Especialização -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--gold-dark);">Infográfico 2.3 • Polivalência na Cúpula</span>
+          <h3 class="section-heading">A Pirâmide Invertida da Especialização</h3>
+          <p class="section-lead">Enquanto a base e o meio da sociedade mercantil se especializam, o grande negociante no topo permanece <strong>não-especializado</strong>. Simule uma mudança de conjuntura para ver o capitalismo "trocar o fuzil de ombro".</p>
+
+          <div class="btn-row">
+            <button type="button" class="ctrl-btn ${!ui.c2Shift ? 'active-navy' : ''}" onclick="ui.c2Shift=false; renderMain();">Conjuntura A: Lucro Alto nas Antilhas / Têxteis</button>
+            <button type="button" class="ctrl-btn ${ui.c2Shift ? 'active-bordo' : ''}" onclick="ui.c2Shift=true; renderMain();">⚡ Simular Mudança de Conjuntura (Lucro migra para Índias / Crédito)</button>
+          </div>
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 820 225" role="img" aria-label="Pirâmide da especialização com migração conjuntural de capital no topo">
+              <!-- Topo: Grande Negociante (Polivalente) -->
+              <polygon points="410,16 540,86 280,86" fill="#8C2332"/>
+              <text x="410" y="54" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#fff">GRANDE NEGOCIANTE</text>
+              <text x="410" y="72" text-anchor="middle" font-family="monospace" font-size="8.5" fill="#F4D59A">NÃO-ESPECIALIZADO (POLIVALENTE)</text>
+
+              <!-- Setas conjunturais saindo do topo -->
+              <line x1="285" y1="62" x2="120" y2="62" stroke="${!ui.c2Shift ? '#3E634E' : '#C6B89E'}" stroke-width="${!ui.c2Shift ? 4 : 1.5}" stroke-dasharray="${!ui.c2Shift ? 'none' : '4 3'}"/>
+              <rect x="20" y="42" width="128" height="40" rx="8" fill="${!ui.c2Shift ? '#E7F0EA' : '#F6F1E7'}" stroke="${!ui.c2Shift ? '#3E634E' : '#C6B89E'}" stroke-width="2"/>
+              <text x="84" y="60" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#1E1B18">Antilhas / Têxteis</text>
+              <text x="84" y="73" text-anchor="middle" font-family="sans-serif" font-size="8.5" fill="${!ui.c2Shift ? '#3E634E' : '#8C2332'}">${!ui.c2Shift ? 'Lucro Alto ★' : 'Lucro caiu ↓'}</text>
+
+              <line x1="535" y1="62" x2="670" y2="62" stroke="${ui.c2Shift ? '#8C2332' : '#C6B89E'}" stroke-width="${ui.c2Shift ? 4 : 1.5}" stroke-dasharray="${ui.c2Shift ? 'none' : '4 3'}"/>
+              <rect x="672" y="42" width="128" height="40" rx="8" fill="${ui.c2Shift ? '#F7E8EA' : '#F6F1E7'}" stroke="${ui.c2Shift ? '#8C2332' : '#C6B89E'}" stroke-width="2"/>
+              <text x="736" y="60" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="#1E1B18">Índias / Crédito</text>
+              <text x="736" y="73" text-anchor="middle" font-family="sans-serif" font-size="8.5" fill="${ui.c2Shift ? '#8C2332' : '#575046'}">${ui.c2Shift ? 'Capital migrou! ★' : 'Reserva latente'}</text>
+
+              <!-- Meio: Varejistas Especializados -->
+              <polygon points="274,92 546,92 612,150 208,150" fill="#C28728"/>
+              <text x="410" y="118" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#fff">VAREJISTAS ESPECIALIZADOS (ex.: botiguer)</text>
+              <text x="410" y="136" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#FBF2E1">${ui.c2Shift ? 'Presos a um único ramo — vulneráveis à crise conjuntural!' : 'Vendem apenas um ramo (tecidos, especiarias, mantéis)'}</text>
+
+              <!-- Base: Ofícios, Mascates, Putting-out -->
+              <polygon points="200,156 620,156 690,210 130,210" fill="#3E634E"/>
+              <text x="410" y="182" text-anchor="middle" font-family="Georgia, serif" font-size="13" font-weight="700" fill="#fff">BASE ESPECIALIZADA &amp; PUTTING-OUT</text>
+              <text x="410" y="199" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#E7F0EA">Estivadores, carroceiros, artesãos domiciliares (capital controla a comercialização sem imobilizar-se na fábrica)</text>
+            </svg>
+          </div>
+
+          <div class="panel-soft">
+            <p style="font-size:0.83rem;color:var(--text-main);">
+              <strong>Caráter Conjuntural:</strong> O grande negociante não se especializa porque nenhum ramo isolado absorve todo o seu capital e porque <em>o grande lucro muda incessantemente de setor</em>. Mesmo na produção, prefere o <strong>putting-out</strong> (trabalho domiciliar) a imobilizar capital em manufaturas rígidas.
+            </p>
+          </div>
+        </section>
+
+        <!-- Infográfico 2.4: Quatro Conjuntos Sociais e o Visitante da Noite -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--bordo);">Infográfico 2.4 • Condições Sociais do Capitalismo</span>
+          <h3 class="section-heading">Os Quatro Conjuntos Sociais e o "Visitante da Noite"</h3>
+          <p class="section-lead">Clique nos quatro conjuntos interdependentes da sociedade e compare as <strong>"Águas Calmas"</strong> (Europa/Japão) com as <strong>"Águas Agitadas"</strong> (China/Islã).</p>
+
+          <div class="btn-row">
+            <button type="button" class="ctrl-btn ${ui.c2Set==='economico' ? 'active-gold' : ''}" onclick="ui.c2Set='economico'; renderMain();">1. Econômico</button>
+            <button type="button" class="ctrl-btn ${ui.c2Set==='politico' ? 'active-bordo' : ''}" onclick="ui.c2Set='politico'; renderMain();">2. Político (Estado)</button>
+            <button type="button" class="ctrl-btn ${ui.c2Set==='cultural' ? 'active-navy' : ''}" onclick="ui.c2Set='cultural'; renderMain();">3. Cultural (Crítica a Weber)</button>
+            <button type="button" class="ctrl-btn ${ui.c2Set==='social' ? 'active-olive' : ''}" onclick="ui.c2Set='social'; renderMain();">4. Hierarquias Sociais</button>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${cs.c};margin-bottom:18px;">
+            <strong style="font-family:var(--font-serif);font-size:1.06rem;color:${cs.c};">${cs.t}</strong>
+            <p style="font-size:0.84rem;color:var(--text-main);margin-top:4px;">${cs.d}</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel-soft">
+              <span class="kicker" style="color:var(--navy);">Comparador Histórico de Hierarquias</span>
+              <div class="btn-row" style="margin-top:6px;margin-bottom:10px;">
+                <button type="button" class="ctrl-btn ${ui.c2Water==='calmas' ? 'active-olive' : ''}" onclick="ui.c2Water='calmas'; renderMain();">Águas Calmas (Europa &amp; Japão)</button>
+                <button type="button" class="ctrl-btn ${ui.c2Water==='agitadas' ? 'active-bordo' : ''}" onclick="ui.c2Water='agitadas'; renderMain();">Águas Agitadas (China &amp; Islã)</button>
+              </div>
+              <p style="font-size:0.82rem;color:var(--text-main);">
+                ${ui.c2Water === 'calmas'
+                  ? '<strong>Europa &amp; Japão:</strong> Propriedade hereditária protegida ("sacrossanta"). A burguesia parasita lentamente a nobreza feudal ao longo de gerações ("longas famílias"), acumulando patrimônios estáveis até erguer o capitalismo.'
+                  : '<strong>China &amp; Islã:</strong> Na China, os concursos de mandarins promovem um constante <em>New Deal</em> vertical e o Estado vigia e enquadra grandes fortunas. No Islã, terras são benefícios vitalícios que revertem ao príncipe após a morte — a sociedade política devora a cúpula mercantil.'}
+              </p>
+            </div>
+
+            <div class="panel-soft" style="background:var(--navy);color:#F6F1E7;border-color:var(--navy-dark);">
+              <span class="chip chip-gold" style="margin-bottom:8px;">Metáfora-Chave de Braudel</span>
+              <h4 style="font-family:var(--font-serif);font-size:1.1rem;color:#F4D59A;margin-bottom:6px;">O "Visitante da Noite"</h4>
+              <p style="font-size:0.82rem;color:rgba(246,241,231,0.92);">
+                O capitalismo não inventou as hierarquias sociais, o mercado nem o consumo. Ele chega tarde, quando a casa já está construída e a ordem social já existe — e apropria-se das "escadas" da sociedade em proveito próprio.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        ${renderConceptsGrid('cap2', '#C28728')}
+        ${renderFooterNav('cap1', 'cap3', 'Capítulo III — O Tempo do Mundo')}
+      `;
+    }
+
+    /* =========================================================================
+       CAPÍTULO III — O TEMPO DO MUNDO
+       ========================================================================= */
+
+    function renderCap3() {
+      // 3.1 Zonas Concêntricas
+      const zones = {
+        nucleo: {
+          title: '1. Núcleo / Centro (O Sol da História)',
+          color: '#8C2332',
+          desc: 'Região em torno da cidade dominante (ex.: Províncias Unidas com Amsterdam; Inglaterra com Londres). Concentra preços altos, salários altos, bancos, técnicas de ponta, ciência fundamental e "liberdades" relativas.'
+        },
+        intermediaria: {
+          title: '2. Zonas Intermediárias (Concorrentes & Êmulos)',
+          color: '#C28728',
+          desc: 'Países vizinhos e rivais do centro (ex.: França do séc. XVIII diante da Inglaterra). Possuem menos homens livres, redes bancárias incompletas e nível de vida um tom abaixo ("Jacques Bonhomme" de tamancos vs. "John Bull").'
+        },
+        margem: {
+          title: '3. Margens / Periferias ("Purgatório ou Inferno")',
+          color: '#1E354D',
+          desc: 'Mais subordinadas do que participantes na divisão do trabalho (ex.: Europa Oriental sob segunda servidão e Américas sob escravatura em 1650). Alimentam o centro que lhes dita a lei.'
+        }
+      };
+      const zn = zones[ui.c3Zone];
+
+      // 3.2 Relógio das Descentragens (7 marcos)
+      const clockSteps = [
+        { yr: 'Séc. XIII', city: 'Feiras de Champagne', type: 'Encruzilhada (Sem Cidade Dominante)', desc: 'Centro de gravidade entre a Itália e os Países Baixos: panos do Norte trocados por especiarias e crédito italianos. Declina com a rota marítima direta (1297) e a Peste Negra.' },
+        { yr: '~1380', city: 'Veneza', type: 'Cidade-Estado (Dominação Urbana)', desc: 'Após derrotar Gênova em Chioggia (1381), reina por mais de um século redistribuindo os produtos do Levante e do Extremo Oriente para toda a Europa.' },
+        { yr: '~1500', city: 'Antuérpia', type: 'Cidade-Estado (Dominação Urbana)', desc: 'Salto brusco para o Atlântico: torna-se o grande entreposto da pimenta portuguesa e do tráfego do Norte europeu, antes de sofrer com as guerras nos Países Baixos.' },
+        { yr: '1550–1560', city: 'Gênova', type: 'Cidade-Estado (Dominação Urbana)', desc: '"Século dos Genoveses": controla o desvio da prata americana para o Mediterrâneo e o clearing financeiro europeu nas feiras de Piacenza, até ser abatida pela crise de 1620 e pela ofensiva nórdica.' },
+        { yr: '1590–1610', city: 'Amsterdam', type: 'Última Cidade-Estado (Pólis)', desc: 'Estabiliza o centro europeu por quase dois séculos controlando simultaneamente os grãos/madeira do Báltico e o quase-monopólio das especiarias finas asiáticas.' },
+        { yr: '1790–1815', city: 'Londres', type: '1º Mercado Nacional Unificado!', desc: 'VIRADA ESTRUTURAL: Londres não é uma cidade-Estado, mas a capital de um mercado nacional coerente (sem pedágios internos, cabotagem, Navigation Acts). Inicia a era das dominações nacionais.' },
+        { yr: '1929', city: 'Nova Iorque', type: 'Mercado Continental / Mundial', desc: 'Atravessando o Atlântico em meio à grande crise de 1929, o centro econômico do mundo passa definitivamente de Londres para Nova Iorque (capital econômica, não Washington).' }
+      ];
+      const ck = clockSteps[ui.c3Clock];
+
+      // 3.3 Revolução Industrial (6 Engrenagens)
+      const isEng = ui.c3IndMode === 'inglaterra';
+      const gears = [
+        { k: 'agricultura', l: 'Agricultura', cx: 145, cy: 85, dir: 'cw', c: '#3E634E' },
+        { k: 'trabalho', l: 'Mão-de-Obra', cx: 275, cy: 85, dir: 'ccw', c: '#C28728' },
+        { k: 'interno', l: 'Merc. Interno', cx: 405, cy: 85, dir: 'cw', c: '#1E354D' },
+        { k: 'tecnica', l: 'Técnica Artesanal', cx: 535, cy: 85, dir: 'ccw', c: '#8C2332' },
+        { k: 'credito', l: 'Crédito / Capital', cx: 665, cy: 85, dir: 'cw', c: '#C28728' },
+        { k: 'externo', l: 'Merc. Externos', cx: 405, cy: 175, dir: 'ccw', c: '#8C2332' }
+      ];
+
+      // 3.4 Três Invariantes
+      const invs = {
+        1: { t: '1. Vocação de Escala Mundial', d: 'Ontem como hoje, o capitalismo permanece fundado na exploração das disparidades e recursos internacionais. Sua grande tarefa constante é reconstituir esse universalismo.' },
+        2: { t: '2. Vocação Monopolista (Diálogo Crítico com Lênin)', d: 'O capitalismo sempre se apoiou em monopólios de fato ou de direito. Contra a tese de Lênin (1917), Braudel mostra que mercadorias e capitais sempre viajaram juntos — a exportação de capitais já era cotidiana desde Florença no séc. XIII e Gênova no séc. XVI.' },
+        3: { t: '3. Permanência dos Três Andares', d: 'Mesmo hoje, o capitalismo nunca engloba toda a sociedade: no térreo subsiste o autoconsumo e o artesanato; no meio, PMEs sob concorrência feroz; no topo, gigantes que fundem interesses acima do mercado.' }
+      };
+      const curInv = invs[ui.c3Inv];
+
+      return `
+        ${renderHeaderBlock('cap3', 'Capítulo III • 3ª Conferência', 'O Tempo do Mundo', 'Economias-mundos, zonas concêntricas, sincronismo das desigualdades, descentragens seculares e a Revolução Industrial sistêmica.', '“O capitalismo é uma criação da desigualdade do mundo; para desenvolver-se, necessita das conivências da economia internacional. É filho da organização autoritária de um espaço evidentemente desmedido.”', 'Reconstruindo o quebra-cabeça em escala planetária, Braudel demonstra que o capitalismo nasce e se expande dentro de "economias-mundos" hierarquizadas em zonas concêntricas, cujos pólos se deslocam por meio de crises — culminando na passagem das Cidades-Estados aos Mercados Nacionais e à Revolução Industrial.')}
+
+        <!-- Infográfico 3.1: Economia-Mundo & Sincronismo -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--navy);">Infográfico 3.1 • Espaço Hierarquizado &amp; Sincronismo</span>
+          <h3 class="section-heading">Economia-Mundo (<em>Weltwirtschaft</em>): Zonas Concêntricas</h3>
+          <p class="section-lead">Enquanto <strong>Economia Mundial</strong> é o mercado do planeta inteiro, uma <strong>Economia-Mundo</strong> é uma porção autônoma ("um mundo em si mesmo") com limites, um pólo urbano e 3 zonas concêntricas. Clique nos anéis abaixo.</p>
+
+          <div class="grid-2" style="align-items:center;margin-bottom:18px;">
+            <div class="svg-stage" style="margin-bottom:0;">
+              <svg viewBox="0 0 380 270" role="img" aria-label="Mapa esquemático de 3 zonas concêntricas da Economia-Mundo">
+                <!-- Anel 3: Margens / Periferias -->
+                <circle cx="190" cy="135" r="122" fill="${ui.c3Zone==='margem' ? '#1E354D' : '#E6EDF4'}" stroke="#1E354D" stroke-width="${ui.c3Zone==='margem' ? 3.5 : 2}" onclick="ui.c3Zone='margem'; renderMain();" style="cursor:pointer;"/>
+                <text x="190" y="34" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${ui.c3Zone==='margem' ? '#fff' : '#1E354D'}">MARGENS / PERIFERIAS</text>
+
+                <!-- Anel 2: Zonas Intermediárias -->
+                <circle cx="190" cy="135" r="82" fill="${ui.c3Zone==='intermediaria' ? '#C28728' : '#FBF2E1'}" stroke="#C28728" stroke-width="${ui.c3Zone==='intermediaria' ? 3.5 : 2}" onclick="ui.c3Zone='intermediaria'; renderMain();" style="cursor:pointer;"/>
+                <text x="190" y="75" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="${ui.c3Zone==='intermediaria' ? '#fff' : '#8C5E14'}">ZONAS INTERMEDIÁRIAS</text>
+
+                <!-- Anel 1: Núcleo / Centro -->
+                <circle cx="190" cy="135" r="42" fill="${ui.c3Zone==='nucleo' ? '#8C2332' : '#F7E8EA'}" stroke="#8C2332" stroke-width="${ui.c3Zone==='nucleo' ? 3.5 : 2}" onclick="ui.c3Zone='nucleo'; renderMain();" style="cursor:pointer;"/>
+                <text x="190" y="132" text-anchor="middle" font-family="Georgia, serif" font-size="12" font-weight="700" fill="${ui.c3Zone==='nucleo' ? '#fff' : '#631621'}">NÚCLEO</text>
+                <text x="190" y="147" text-anchor="middle" font-family="monospace" font-size="8.5" fill="${ui.c3Zone==='nucleo' ? '#F4D59A' : '#8C2332'}">Pólo Urbano</text>
+              </svg>
+            </div>
+
+            <div class="panel-soft" style="border-left:5px solid ${zn.color};">
+              <span class="chip" style="border-color:${zn.color};color:${zn.color};margin-bottom:8px;">Anel Selecionado</span>
+              <h4 style="font-family:var(--font-serif);font-size:1.12rem;color:${zn.color};margin-bottom:8px;">${zn.title}</h4>
+              <p style="font-size:0.84rem;color:var(--text-main);">${zn.desc}</p>
+            </div>
+          </div>
+
+          <!-- Alternador Modelo Linear vs. Sincrônico -->
+          <div class="btn-row" style="margin-bottom:10px;">
+            <button type="button" class="ctrl-btn ${ui.c3Model==='linear' ? 'active-navy' : ''}" onclick="ui.c3Model='linear'; renderMain();">Modelo Linear Tradicional (Sucessivo)</button>
+            <button type="button" class="ctrl-btn ${ui.c3Model==='sincronico' ? 'active-bordo' : ''}" onclick="ui.c3Model='sincronico'; renderMain();">Modelo Sincrônico (Braudel / Wallerstein — 1650)</button>
+          </div>
+          <div class="panel-soft" style="border-left:4px solid ${ui.c3Model==='sincronico' ? 'var(--bordo)' : 'var(--navy)'};">
+            ${ui.c3Model === 'sincronico' ? `
+              <strong style="font-family:var(--font-serif);color:var(--bordo-dark);">Simultaneidade Estrutural (1650):</strong>
+              <p style="font-size:0.83rem;color:var(--text-main);margin-top:4px;">
+                Em vez de etapas sucessivas, a economia-mundo europeia de 1650 <strong>sobrepõe ao mesmo tempo</strong>: <strong>Capitalismo</strong> no centro (Holanda) + <strong>Segunda Servidão</strong> induzida no Leste europeu + <strong>Escravatura</strong> reinventada nas Américas. As periferias alimentam o centro.
+              </p>
+            ` : `
+              <strong style="font-family:var(--font-serif);color:var(--navy);">Esquema Linear Clássico (Questionado):</strong>
+              <p style="font-size:0.83rem;color:var(--text-main);margin-top:4px;">
+                <em>Escravatura → Servidão → Capitalismo</em> como estágios separados que se substituem no tempo. Braudel mostra que esse esquema oculta como o capitalismo europeu precisou recriar trabalho servil e escravo nas margens do mundo.
+              </p>
+            `}
+          </div>
+        </section>
+
+        <!-- Infográfico 3.2: O Relógio das Descentragens e Recentragens -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--bordo);">Infográfico 3.2 • Sucessão de Hegemonias</span>
+          <h3 class="section-heading">O Relógio das Descentragens e Recentragens</h3>
+          <p class="section-lead">Clique em cada marco do relógio histórico para acompanhar o deslocamento dos centros de gravidade — e a grande ruptura entre <strong>Cidades-Estados</strong> e <strong>Mercados Nacionais</strong>.</p>
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 820 175" role="img" aria-label="Arco cronológico das descentragens de Champagne a Nova Iorque">
+              <!-- Linha de base / arco -->
+              <line x1="55" y1="88" x2="765" y2="88" stroke="#C6B89E" stroke-width="4"/>
+              <!-- Divisória estrutural Cidade-Estado vs Mercado Nacional -->
+              <line x1="588" y1="18" x2="588" y2="162" stroke="#8C2332" stroke-width="2" stroke-dasharray="5 4"/>
+              <text x="310" y="26" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#8C5E14">ERA DAS CIDADES-ESTADOS (ATÉ ~1750)</text>
+              <text x="702" y="26" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="#8C2332">MERCADOS NACIONAIS</text>
+
+              ${clockSteps.map((st, idx) => {
+                const px = Math.round(65 + idx * 114);
+                const act = ui.c3Clock === idx;
+                const isNat = idx >= 5;
+                const col = isNat ? '#8C2332' : '#1E354D';
+                return `
+                  <g onclick="ui.c3Clock=${idx}; renderMain();" style="cursor:pointer;">
+                    <circle cx="${px}" cy="88" r="${act ? 18 : 12}" fill="${act ? col : '#FFFDF8'}" stroke="${col}" stroke-width="3"/>
+                    <text x="${px}" y="60" text-anchor="middle" font-family="monospace" font-size="9" font-weight="700" fill="${act ? col : '#575046'}">${st.yr}</text>
+                    <text x="${px}" y="124" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="700" fill="${act ? col : '#1E1B18'}">${st.city.replace('Feiras de ','')}</text>
+                  </g>
+                `;
+              }).join('')}
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${ui.c3Clock >= 5 ? 'var(--bordo)' : 'var(--navy)'};">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-bottom:6px;">
+              <strong style="font-family:var(--font-serif);font-size:1.12rem;">${ck.yr} — ${ck.city}</strong>
+              <span class="chip ${ui.c3Clock >= 5 ? 'chip-bordo' : 'chip-navy'}">${ck.type}</span>
+            </div>
+            <p style="font-size:0.84rem;color:var(--text-main);">${ck.desc}</p>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:8px;"><em>Regra das Crises:</em> Uma crise econômica prolongada atua como provação — os centros fortes resistem e se fortalecem; os centros ameaçados sucumbem, abrindo espaço à recentragem.</p>
+          </div>
+        </section>
+
+        <!-- Infográfico 3.3: A Engrenagem da Revolução Industrial -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--olive);">Infográfico 3.3 • Processo Lento e de Conjunto</span>
+          <h3 class="section-heading">A Engrenagem da Revolução Industrial</h3>
+          <p class="section-lead">Alterne entre <strong>Revoluções Abortadas</strong> (quando uma engrenagem trava e gera estrangulamento) e <strong>Inglaterra em Sintonia Global</strong> (quando todos os setores respondem em conjunto).</p>
+
+          <div class="btn-row">
+            <button type="button" class="ctrl-btn ${isEng ? 'active-olive' : ''}" onclick="ui.c3IndMode='inglaterra'; renderMain();">✓ Modo Inglaterra (Sintonia Global)</button>
+            <button type="button" class="ctrl-btn ${!isEng ? 'active-bordo' : ''}" onclick="ui.c3IndMode='abortada'; renderMain();">✕ Modo Revoluções Abortadas (Estrangulamento)</button>
+          </div>
+
+          ${!isEng ? `
+            <div class="btn-row" style="margin-bottom:12px;">
+              <span style="font-size:0.78rem;color:var(--text-muted);align-self:center;margin-right:4px;">Qual engrenagem travou?</span>
+              ${gears.map(g => `
+                <button type="button" class="ctrl-btn ${ui.c3JamGear===g.k ? 'active-bordo' : ''}" style="padding:5px 10px;font-size:0.73rem;" onclick="ui.c3JamGear='${g.k}'; renderMain();">${g.l}</button>
+              `).join('')}
+            </div>
+          ` : ''}
+
+          <div class="svg-stage">
+            <svg viewBox="0 0 820 245" role="img" aria-label="Seis engrenagens acopladas representando a Revolução Industrial sistêmica">
+              <!-- Conexões estruturais -->
+              <line x1="145" y1="85" x2="665" y2="85" stroke="#DFD5C3" stroke-width="6"/>
+              <line x1="405" y1="85" x2="405" y2="175" stroke="#DFD5C3" stroke-width="6"/>
+
+              ${gears.map(g => {
+                const jammed = !isEng && ui.c3JamGear === g.k;
+                const cls = isEng ? (g.dir === 'cw' ? 'gear-cw' : 'gear-ccw') : 'gear-jammed';
+                const strokeCol = jammed ? '#8C2332' : g.c;
+                const fillCol = jammed ? '#F7E8EA' : '#FFFDF8';
+                return `
+                  <g>
+                    <g class="${cls}">
+                      <circle cx="${g.cx}" cy="${g.cy}" r="42" fill="${fillCol}" stroke="${strokeCol}" stroke-width="4" stroke-dasharray="10 6"/>
+                      <circle cx="${g.cx}" cy="${g.cy}" r="28" fill="none" stroke="${strokeCol}" stroke-width="1.6"/>
+                    </g>
+                    <text x="${g.cx}" y="${g.cy + 3}" text-anchor="middle" font-family="sans-serif" font-size="9.5" font-weight="700" fill="${jammed ? '#8C2332' : '#1E1B18'}">${g.l}</text>
+                    ${jammed ? `<text x="${g.cx}" y="${g.cy + 16}" text-anchor="middle" font-family="monospace" font-size="8" font-weight="700" fill="#8C2332">TRAVADA!</text>` : ''}
+                  </g>
+                `;
+              }).join('')}
+
+              <text x="640" y="180" text-anchor="middle" font-family="monospace" font-size="9.5" font-weight="700" fill="${isEng ? '#3E634E' : '#8C2332'}">
+                ${isEng ? 'SINTONIA: INTERNO + EXTERNO' : 'MOTOR ENGUIÇADO POR GARGALO'}
+              </text>
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${isEng ? 'var(--olive)' : 'var(--bordo)'};">
+            <p style="font-size:0.84rem;color:var(--text-main);">
+              ${isEng
+                ? '<strong>Sintonia Global Inglesa:</strong> A revolução do algodão nasceu da vida comum e dos artesãos (não de Londres, que só assume o controle após 1830). Agricultura, mão-de-obra, mercado interno, técnica e crédito responderam sem gargalos, realimentados pelos mercados externos. <em>Causas internas e externas são inseparáveis: "não explora o mundo quem quer".</em>'
+                : '<strong>Revoluções Abortadas:</strong> Como o vapor no Egito ptolemaico, o coque na China do séc. XIV ou a industrialização difícil no Terceiro Mundo, basta um único gargalo (agricultura atrasada, mercado interno estreito, técnica inadequada ou mercado externo hostil) para travar toda a engrenagem.'}
+            </p>
+          </div>
+        </section>
+
+        <!-- Infográfico 3.4: Três Invariantes e Horizonte da História -->
+        <section class="infographic-card">
+          <span class="kicker" style="color:var(--bordo);">Infográfico 3.4 • Síntese &amp; Tempo Presente</span>
+          <h3 class="section-heading">As Três Invariantes do Capitalismo e o Horizonte da História</h3>
+          <p class="section-lead">O capitalismo mudou de escala, mas não de natureza. Explore as 3 provas de Braudel e seu duplo recado final como cidadão e historiador.</p>
+
+          <div class="grid-3" style="margin-bottom:14px;">
+            ${[1, 2, 3].map(n => `
+              <button type="button" class="ctrl-btn ${ui.c3Inv===n ? 'active-bordo' : ''}" style="text-align:left;padding:12px;" onclick="ui.c3Inv=${n}; renderMain();">
+                ${invs[n].t}
+              </button>
+            `).join('')}
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid var(--bordo);margin-bottom:18px;">
+            <strong style="font-family:var(--font-serif);font-size:1.06rem;color:var(--bordo-dark);">${curInv.t}</strong>
+            <p style="font-size:0.84rem;color:var(--text-main);margin-top:5px;">${curInv.d}</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="panel-soft" style="border-top:3px solid var(--gold);">
+              <span class="chip chip-gold" style="margin-bottom:6px;">Crítica Política Contemporânea</span>
+              <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:5px;">Não Confundir Mercado e Capitalismo</h4>
+              <p style="font-size:0.81rem;color:var(--text-main);">Braudel lamenta que tanto o mundo capitalista (justificando monopólios como preço da livre empresa) quanto o socialista (destruindo o mercado junto com o capitalismo) recusem separar os dois patamares.</p>
+            </div>
+            <div class="panel-soft" style="border-top:3px solid var(--navy);">
+              <span class="chip chip-navy" style="margin-bottom:6px;">Desafio Metodológico aos Historiadores</span>
+              <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:5px;">Unir Fluxos (Renda) + Estoques (Patrimônio)</h4>
+              <p style="font-size:0.81rem;color:var(--text-main);">Para construir uma história econômica totalizante, é preciso integrar a contabilidade nacional de fluxos (Kuznets, renda <em>per capita</em>) com a medida dos patrimônios nacionais. <em>"Haverá sempre uma América a descobrir."</em></p>
+            </div>
+          </div>
+        </section>
+
+        ${renderConceptsGrid('cap3', '#1E354D')}
+        ${renderFooterNav('cap2', 'overview', 'Voltar ao Mapa Geral — O Edifício de Três Andares')}
+      `;
+    }
+
+    /* =========================================================================
+       COMPONENTES REUTILIZÁVEIS (CABEÇALHO, CONCEITOS EXPANSÍVEIS, RODAPÉ)
+       ========================================================================= */
+
+    function renderHeaderBlock(viewId, pillText, title, subtitle, epigraph, thesis) {
+      const v = VIEWS.find(x => x.id === viewId);
+      const isDone = !!studied[viewId];
+      return `
+        <header class="chapter-header">
+          <div class="meta-row">
+            <span class="part-pill" style="background:${v.color};">${pillText}</span>
+            <button type="button" class="study-btn ${isDone ? 'studied' : ''}" onclick="toggleStudied('${viewId}')">
+              <span>${isDone ? '✓' : '○'}</span>
+              <span>${isDone ? 'Estudado' : 'Marcar como estudado'}</span>
+            </button>
+          </div>
+          <h2 class="chapter-title">${title}</h2>
+          <p class="chapter-subtitle">${subtitle}</p>
+          <div class="editorial-stripe"></div>
+        </header>
+
+        <section class="thesis-card" style="border-left-color:${v.color};">
+          <p class="epigraph">${epigraph}</p>
+          <span class="kicker" style="color:${v.color};">Tese Central</span>
+          <p class="thesis-text">${thesis}</p>
+        </section>
+      `;
+    }
+
+    function renderConceptsGrid(viewId, accentColor) {
+      const list = CONCEPTS[viewId] || [];
+      return `
+        <section>
+          <span class="kicker" style="color:${accentColor};">Glossário Interativo (Clique em cada cartão para expandir)</span>
+          <h3 class="section-heading">Conceitos-Chave desta Seção</h3>
+          <div class="concepts-grid">
+            ${list.map((c, idx) => {
+              const exp = !!expandedCards[`${viewId}-${idx}`];
+              return `
+                <button type="button" class="concept-card ${exp ? 'expanded' : ''}" onclick="toggleConcept('${viewId}', ${idx})">
+                  <div class="concept-top">
+                    <span class="concept-tag" style="color:${accentColor};">${c.tag}</span>
+                    <span class="concept-icon" aria-hidden="true">${exp ? '−' : '+'}</span>
+                  </div>
+                  <h4>${c.name}</h4>
+                  <p class="concept-def">${c.def}</p>
+                  ${exp ? `
+                    <div class="concept-extra">
+                      <p><strong style="color:var(--bordo-dark);">Oposição conceitual:</strong> ${c.opp}</p>
+                      <p><strong style="color:var(--navy);">Papel na dinâmica histórica:</strong> ${c.role}</p>
+                    </div>
+                  ` : ''}
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderFooterNav(prevId, nextId, nextLabel) {
+      const prevObj = prevId ? VIEWS.find(v => v.id === prevId) : null;
+      return `
+        <nav class="chapter-footer" aria-label="Navegação entre seções">
+          ${prevObj ? `
+            <button type="button" class="step-btn" onclick="navigateTo('${prevObj.id}')">
+              <span style="font-size:1.15rem;color:var(--bordo);">←</span>
+              <div>
+                <span class="step-meta">Anterior</span>
+                <span class="step-title">${prevObj.shortTitle}</span>
+              </div>
+            </button>
+          ` : '<div></div>'}
+
+          <button type="button" class="step-btn next" onclick="navigateTo('${nextId}')">
+            <div>
+              <span class="step-meta">${nextId === 'overview' ? 'Concluir Percurso' : 'Próxima Seção'}</span>
+              <span class="step-title">${nextLabel}</span>
+            </div>
+            <span style="font-size:1.15rem;">${nextId === 'overview' ? '↺' : '→'}</span>
+          </button>
+        </nav>
+      `;
+    }
+
+    function renderMain() {
+      const el = document.getElementById('main-content');
+      if (!el) return;
+      if (currentView === 'overview') el.innerHTML = renderOverview();
+      else if (currentView === 'cap1') el.innerHTML = renderCap1();
+      else if (currentView === 'cap2') el.innerHTML = renderCap2();
+      else if (currentView === 'cap3') el.innerHTML = renderCap3();
+      else el.innerHTML = renderOverview();
+    }
+
+    /* =========================================================================
+       INICIALIZAÇÃO
+       ========================================================================= */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        document.getElementById('open-drawer-btn').addEventListener('click', openDrawer);
+        document.getElementById('close-drawer-btn').addEventListener('click', closeDrawer);
+        document.getElementById('sidebar-overlay').addEventListener('click', closeDrawer);
+        document.getElementById('reset-progress-btn').addEventListener('click', resetProgress);
+
+        const searchInput = document.getElementById('search-input');
+        const searchClear = document.getElementById('search-clear');
+
+        searchInput.addEventListener('input', (e) => {
+          searchQuery = e.target.value;
+          searchClear.classList.toggle('visible', searchQuery.length > 0);
+          renderSidebar();
+        });
+
+        searchClear.addEventListener('click', () => {
+          searchQuery = '';
+          searchInput.value = '';
+          searchClear.classList.remove('visible');
+          renderSidebar();
+          searchInput.focus();
+        });
+
+        renderSidebar();
+        renderMain();
+      } catch (err) {
+        console.error('Erro ao inicializar o Atlas de Braudel:', err);
+      }
+    });
+  </script>
+</body>
+</html>
