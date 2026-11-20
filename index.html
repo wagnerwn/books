@@ -27,17 +27,23 @@
       font-family: Georgia, "Times New Roman", serif;
       display: grid;
       place-items: center;
-      padding: 2rem 1.25rem;
+      padding: 2.5rem 1.25rem;
     }
 
     main {
       width: 100%;
-      max-width: 560px;
+      max-width: 1180px;
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 2.25rem;
+      padding: 2.5rem;
       box-shadow: 0 10px 30px rgba(30, 28, 26, 0.06);
+    }
+
+    header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
     }
 
     .tag {
@@ -51,40 +57,49 @@
     }
 
     h1 {
-      font-size: 1.9rem;
+      font-size: 2rem;
       font-weight: 600;
       line-height: 1.2;
-      margin-bottom: 0.4rem;
     }
 
-    .autor {
-      color: var(--muted);
-      font-style: italic;
-      margin-bottom: 1.75rem;
-      padding-bottom: 1.25rem;
+    .colunas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    .coluna h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
       border-bottom: 1px solid var(--border);
     }
 
     ul {
       list-style: none;
       display: grid;
-      gap: 0.85rem;
+      gap: 0.75rem;
     }
 
     a {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.75rem;
       text-decoration: none;
       color: var(--ink);
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1rem 1.15rem;
+      padding: 0.9rem 1.05rem;
       font-family: system-ui, -apple-system, sans-serif;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 500;
-      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+      line-height: 1.35;
+      transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
     }
 
     a:hover {
@@ -96,30 +111,61 @@
 
     a::after {
       content: "→";
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        padding: 1.75rem 1.25rem;
+      }
+
+      .colunas {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
     }
   </style>
 </head>
 <body>
   <main>
-    <p class="tag">Índice de Resumos</p>
-    <h1>Livros e conceitos</h1>
+    <header>
+      <p class="tag">Índice de Resumos</p>
+      <h1>Livros e conceitos</h1>
+    </header>
 
-    <ul>
-      <li><a href="o_capital_livro_i_atlas_infogr_fico_interativo.html">Karl Marx - O Capital - Livro I</a></li>
-      <li><a href="o_capital_livro_ii_atlas_infogr_fico_interativo.html">Karl Marx - O Capital - Livro II</a></li>
-      <li><a href="o_18_de_brum_rio_de_lu_s_bonaparte_atlas_infogr_fico_interativo.html">Karl Marx - O 18 Brumário de Luís Bonaparte</a></li>
-      <li><a href="a_din_mica_do_capitalismo_atlas_conceitual_e_infogr_fico_interativo.html">Fernand Braudel - A dinâmica do capitalismo</a></li>
-      <li><a href="por_uma_geografia_do_poder_atlas_conceitual_e_infogr_fico_interativo.html">Claude Raffestin - Por uma geografia do poder</a></li>
-      <li><a href="o_espa_o_dividido_atlas_infogr_fico_interativo.html">Milton Santos - O espaço dividido</a></li>
-      <li><a href="a_natureza_do_espa_o_atlas_infogr_fico_interativo.html">Milton Santos - A natureza do espaço</a></li>
-      <li><a href="universo_conceitual_de_milton_santos_atlas_interativo_de_conceitos_e_obras.html">Milton Santos - Universo conceitual</a></li>
-      <li><a href="doreen_massey_atlas_conceitual_e_bibliogr_fico.html">Doreen Massey - Universo conceitual</a></li>
-      <li><a href="neil_brenner_atlas_conceitual_e_bibliogr_fico.html">Neil Brenner - Universo conceitual</a></li>
-      <li><a href="atlas_conceitual_wagner_nabarro.html">Wagner - Unvierso conceitual</a></li>
-      <li><a href="atlas_da_pesquisa_atual_em_geografia_econ_mica_no_brasil.html">Vertentes da Geografia Econômica brasileira</a></li>
-    </ul>
+    <div class="colunas">
+      <section class="coluna">
+        <h2>Esquemas de livros</h2>
+        <ul>
+          <li><a href="o_capital_livro_i_atlas_infogr_fico_interativo.html">Karl Marx - O Capital - Livro I</a></li>
+          <li><a href="o_capital_livro_ii_atlas_infogr_fico_interativo.html">Karl Marx - O Capital - Livro II</a></li>
+          <li><a href="o_18_de_brum_rio_de_lu_s_bonaparte_atlas_infogr_fico_interativo.html">Karl Marx - O 18 Brumário de Luís Bonaparte</a></li>
+          <li><a href="a_din_mica_do_capitalismo_atlas_conceitual_e_infogr_fico_interativo.html">Fernand Braudel - A dinâmica do capitalismo</a></li>
+          <li><a href="por_uma_geografia_do_poder_atlas_conceitual_e_infogr_fico_interativo.html">Claude Raffestin - Por uma geografia do poder</a></li>
+          <li><a href="o_espa_o_dividido_atlas_infogr_fico_interativo.html">Milton Santos - O espaço dividido</a></li>
+          <li><a href="a_natureza_do_espa_o_atlas_infogr_fico_interativo.html">Milton Santos - A natureza do espaço</a></li>
+        </ul>
+      </section>
+
+      <section class="coluna">
+        <h2>Universos conceituais</h2>
+        <ul>
+          <li><a href="universo_conceitual_de_milton_santos_atlas_interativo_de_conceitos_e_obras.html">Milton Santos - Universo conceitual</a></li>
+          <li><a href="doreen_massey_atlas_conceitual_e_bibliogr_fico.html">Doreen Massey - Universo conceitual</a></li>
+          <li><a href="neil_brenner_atlas_conceitual_e_bibliogr_fico.html">Neil Brenner - Universo conceitual</a></li>
+          <li><a href="atlas_conceitual_wagner_nabarro.html">Wagner - Universo conceitual</a></li>
+        </ul>
+      </section>
+
+      <section class="coluna">
+        <h2>Vertentes de pesquisa</h2>
+        <ul>
+          <li><a href="atlas_da_pesquisa_atual_em_geografia_econ_mica_no_brasil.html">Vertentes da Geografia Econômica brasileira</a></li>
+        </ul>
+      </section>
+    </div>
   </main>
 </body>
 </html>
