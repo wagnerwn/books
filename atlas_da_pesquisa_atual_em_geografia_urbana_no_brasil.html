@@ -1,0 +1,3629 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas da Pesquisa Atual em Geografia Urbana no Brasil: Vertentes, Matrizes e Diálogos</title>
+
+  <!-- Google Fonts com fallback editorial elegante -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================================
+       DESIGN TOKENS — ESTÉTICA EDITORIAL CARTOGRÁFICO-ARQUITETÔNICA
+       ========================================================================= */
+    :root {
+      --bg-paper: #F7F5F0;
+      --bg-card: #FFFFFF;
+      --bg-subtle: #F0EDE5;
+      --border-subtle: #E2DDD5;
+      --border-strong: #C9C2B6;
+      --text-primary: #1C1F26;
+      --text-secondary: #555B66;
+      --text-muted: #767D89;
+
+      /* Paleta das 8 Vertentes */
+      --c-v1: #B83B2A; /* Terracota Crítico */
+      --c-v2: #1E4E79; /* Azul Financeiro */
+      --c-v3: #2A7B6F; /* Verde-Petróleo Regional */
+      --c-v4: #8E3B7B; /* Violeta Interseccional */
+      --c-v5: #C96B18; /* Âmbar Insurgente */
+      --c-v6: #2F7D32; /* Verde Metabólico */
+      --c-v7: #0E7C9E; /* Ciano Informacional */
+      --c-v8: #6D4C41; /* Sépia Patrimonial */
+
+      /* Tipografia */
+      --font-serif: 'Fraunces', 'Georgia', 'Times New Roman', serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      /* Elevação e Raios */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 999px;
+      --shadow-card: 0 1px 2px rgba(28, 31, 38, 0.04), 0 8px 24px rgba(28, 31, 38, 0.045);
+      --shadow-float: 0 14px 36px -6px rgba(28, 31, 38, 0.14), 0 4px 12px -2px rgba(28, 31, 38, 0.06);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-paper);
+      color: var(--text-primary);
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-sans);
+      background-color: var(--bg-paper);
+      /* Grade arquitetônica sutil ao fundo */
+      background-image:
+        linear-gradient(to right, rgba(28, 31, 38, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(28, 31, 38, 0.025) 1px, transparent 1px);
+      background-size: 32px 32px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-serif);
+      margin: 0;
+      color: var(--text-primary);
+      letter-spacing: -0.015em;
+    }
+
+    p {
+      margin: 0;
+    }
+
+    button, input, select {
+      font-family: inherit;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* =========================================================================
+       CABEÇALHO EDITORIAL + BUSCA GLOBAL + ABAS
+       ========================================================================= */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(247, 245, 240, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 0 12px;
+    }
+
+    .brand-block {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      flex: 1 1 420px;
+      min-width: 0;
+    }
+
+    .brand-emblem {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--text-primary);
+      color: var(--bg-paper);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(28, 31, 38, 0.16);
+      margin-top: 2px;
+    }
+
+    .brand-kicker {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--c-v1);
+      margin-bottom: 3px;
+    }
+
+    .brand-kicker span.sep {
+      color: var(--border-strong);
+    }
+
+    .brand-kicker span.meta {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .brand-title {
+      font-size: clamp(1.18rem, 2.1vw, 1.55rem);
+      font-weight: 700;
+      line-height: 1.18;
+    }
+
+    .brand-subtitle {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      max-width: 720px;
+      line-height: 1.45;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1 1 320px;
+      max-width: 470px;
+      justify-content: flex-end;
+    }
+
+    .search-wrapper {
+      position: relative;
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 9px 34px 9px 36px;
+      font-size: 13.5px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--text-primary);
+      box-shadow: 0 0 0 3px rgba(28, 31, 38, 0.08);
+    }
+
+    .search-clear-btn {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 6px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-clear-btn.visible {
+      display: inline-flex;
+    }
+
+    .search-clear-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-subtle);
+    }
+
+    .search-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-float);
+      max-height: 410px;
+      overflow-y: auto;
+      z-index: 60;
+      display: none;
+    }
+
+    .search-dropdown.open {
+      display: block;
+    }
+
+    .search-result-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(226, 221, 213, 0.65);
+      padding: 10px 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .search-result-btn:last-child {
+      border-bottom: none;
+    }
+
+    .search-result-btn:hover {
+      background: var(--bg-paper);
+    }
+
+    .search-result-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .search-result-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 13px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .btn-print:hover {
+      background: var(--bg-subtle);
+      border-color: var(--border-strong);
+    }
+
+    /* Abas de Navegação */
+    .main-nav {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin-bottom: -1px;
+    }
+
+    .main-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 2.5px solid transparent;
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color 0.18s, border-color 0.18s;
+    }
+
+    .nav-tab:hover {
+      color: var(--text-primary);
+      border-bottom-color: var(--border-strong);
+    }
+
+    .nav-tab.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--text-primary);
+    }
+
+    /* =========================================================================
+       LAYOUT PRINCIPAL E PAINÉIS DE ABAS
+       ========================================================================= */
+    .main-content {
+      padding: 28px 0 48px;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeSlideIn 0.26s ease-out;
+    }
+
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .section-kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .section-title {
+      font-size: clamp(1.35rem, 2.4vw, 1.85rem);
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .section-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 760px;
+      margin-top: 6px;
+    }
+
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    mark.hl {
+      background: #FDE68A;
+      color: var(--text-primary);
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+
+    /* =========================================================================
+       ABA 1 — CONSTELAÇÃO INTEGRADA
+       ========================================================================= */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .kpi-label {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+    }
+
+    .kpi-value {
+      font-family: var(--font-serif);
+      font-size: 2.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.1;
+      margin: 6px 0 4px;
+    }
+
+    .kpi-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.38;
+    }
+
+    .constellation-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.75fr) minmax(300px, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .svg-stage-card {
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .svg-stage-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .svg-legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11.5px;
+      color: var(--text-secondary);
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      padding: 4px 11px;
+      border-radius: var(--radius-pill);
+    }
+
+    .svg-legend-line {
+      width: 18px;
+      border-top: 2px dashed var(--text-muted);
+    }
+
+    #constellationSvg {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    .svg-node {
+      cursor: pointer;
+      transition: opacity 0.25s ease;
+    }
+
+    .svg-node.dimmed {
+      opacity: 0.22;
+    }
+
+    .svg-node:focus {
+      outline: none;
+    }
+
+    .svg-node:focus .node-ring {
+      stroke: var(--text-primary);
+      stroke-width: 3;
+    }
+
+    .svg-edge {
+      transition: stroke-opacity 0.25s ease, stroke-width 0.25s ease, stroke 0.25s ease;
+      pointer-events: none;
+    }
+
+    .svg-edge.active {
+      stroke-opacity: 0.92 !important;
+      stroke-width: 2.8 !important;
+      stroke-dasharray: none !important;
+    }
+
+    .svg-edge.dimmed {
+      stroke-opacity: 0.08 !important;
+    }
+
+    .inspector-card {
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .inspector-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+    }
+
+    .quick-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .quick-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .quick-btn:hover {
+      background: var(--bg-paper);
+      border-color: var(--border-subtle);
+    }
+
+    .bridge-mini-list {
+      list-style: none;
+      padding: 0;
+      margin: 8px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .bridge-mini-item {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 12px;
+    }
+
+    .btn-primary-full {
+      width: 100%;
+      margin-top: 16px;
+      padding: 11px 16px;
+      border: none;
+      border-radius: var(--radius-md);
+      color: #FFFFFF;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: opacity 0.18s, transform 0.15s;
+    }
+
+    .btn-primary-full:hover {
+      opacity: 0.93;
+      transform: translateY(-1px);
+    }
+
+    /* Eixos de Tensão e Convergência */
+    .eixos-section {
+      margin-top: 28px;
+      padding: 26px;
+    }
+
+    .eixos-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .eixo-card {
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .eixo-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .eixo-card h4 {
+      font-size: 15.5px;
+      line-height: 1.28;
+    }
+
+    .eixo-card p {
+      font-size: 12.8px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* =========================================================================
+       ABA 2 — EXPLORAR VERTENTES (MASTER-DETAIL)
+       ========================================================================= */
+    .master-detail {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar-sticky {
+      position: sticky;
+      top: 136px;
+      padding: 16px;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-filter {
+      width: 100%;
+      padding: 8px 11px;
+      font-size: 12.5px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+
+    .sidebar-filter:focus {
+      outline: none;
+      border-color: var(--text-primary);
+    }
+
+    .vertentes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .vertente-item-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-card);
+      border: 1px solid transparent;
+      border-radius: var(--radius-md);
+      padding: 10px 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .vertente-item-btn:hover {
+      background: var(--bg-paper);
+    }
+
+    .vertente-item-btn.selected {
+      background: var(--bg-paper);
+      border-color: var(--border-strong);
+    }
+
+    .vertente-item-code {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .vertente-item-title {
+      font-size: 12.8px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.3;
+      margin-top: 2px;
+    }
+
+    .vertente-item-counts {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Dossiê Principal */
+    .dossier-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .dossier-hero {
+      overflow: hidden;
+    }
+
+    .dossier-accent-bar {
+      height: 7px;
+      width: 100%;
+    }
+
+    .dossier-hero-body {
+      padding: 26px 28px;
+    }
+
+    .dossier-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .dossier-title {
+      font-size: clamp(1.45rem, 2.5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.18;
+    }
+
+    .dossier-sintese {
+      font-size: 14.8px;
+      color: var(--text-secondary);
+      margin-top: 14px;
+      line-height: 1.65;
+    }
+
+    .polos-bar {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .polo-chip {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+    }
+
+    .dossier-section {
+      padding: 22px 26px;
+    }
+
+    .dossier-section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.18rem;
+      margin-bottom: 14px;
+    }
+
+    .title-bar {
+      width: 5px;
+      height: 20px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .matriz-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .matriz-tag {
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-paper);
+      color: var(--text-primary);
+    }
+
+    .matriz-explicacao {
+      font-size: 13.8px;
+      color: var(--text-secondary);
+      line-height: 1.62;
+    }
+
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .author-chip {
+      font-size: 12.8px;
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+
+    .author-chip .inst {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-left: 3px;
+    }
+
+    .temas-grid {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .tema-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 13px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 13.2px;
+      line-height: 1.45;
+    }
+
+    /* Conceitos-Chave Interativos */
+    .concept-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .concept-pill-btn {
+      padding: 8px 14px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-paper);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .concept-pill-btn:hover {
+      border-color: var(--text-primary);
+    }
+
+    .concept-expand-box {
+      padding: 18px 20px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      animation: fadeSlideIn 0.2s ease-out;
+    }
+
+    .concept-expand-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .concept-ref-author {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-secondary);
+    }
+
+    .concept-def-text {
+      font-size: 14px;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .dialogo-row {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border-strong);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .jump-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .jump-badge:hover {
+      border-color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    /* Obras de Referência */
+    .obras-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .obra-card {
+      padding: 15px 16px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .obra-year {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .obra-title {
+      font-family: var(--font-serif);
+      font-size: 14.5px;
+      font-weight: 700;
+      line-height: 1.32;
+      color: var(--text-primary);
+    }
+
+    .obra-author {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .obra-note {
+      font-size: 12.5px;
+      color: var(--text-secondary);
+      line-height: 1.48;
+      margin-top: 2px;
+    }
+
+    /* Pontes entre Vertentes */
+    .pontes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .ponte-card-btn {
+      text-align: left;
+      padding: 15px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s;
+    }
+
+    .ponte-card-btn:hover {
+      background: var(--bg-card);
+      border-color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .ponte-target-name {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+
+    .ponte-desc {
+      font-size: 12.3px;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* =========================================================================
+       ABA 3 — MATRIZ COMPARATIVA
+       ========================================================================= */
+    .filter-bar {
+      padding: 16px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .filter-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+    }
+
+    .filter-pill {
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-paper);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--text-primary);
+      color: var(--text-primary);
+    }
+
+    .filter-pill.active {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+      color: #FFFFFF;
+    }
+
+    .select-control {
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-paper);
+      color: var(--text-primary);
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 960px;
+      text-align: left;
+    }
+
+    .matrix-table thead th {
+      background: var(--bg-paper);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 13px 15px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .matrix-table tbody tr {
+      border-bottom: 1px solid rgba(226, 221, 213, 0.7);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .matrix-table tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    .matrix-table tbody tr:hover {
+      background: #FAF8F4;
+    }
+
+    .matrix-table td {
+      padding: 14px 15px;
+      vertical-align: top;
+      font-size: 12.8px;
+      line-height: 1.48;
+      color: var(--text-secondary);
+    }
+
+    .matrix-table td.col-vertente {
+      color: var(--text-primary);
+      width: 225px;
+    }
+
+    .matrix-table td.col-strong {
+      color: var(--text-primary);
+    }
+
+    /* =========================================================================
+       ABA 4 — CONCEITOS & OBRAS (ÍNDICE INTEGRADO)
+       ========================================================================= */
+    .sub-tabs {
+      display: inline-flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 4px;
+      border-radius: var(--radius-md);
+      gap: 4px;
+    }
+
+    .sub-tab-btn {
+      padding: 8px 15px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.16s;
+    }
+
+    .sub-tab-btn.active {
+      background: var(--text-primary);
+      color: #FFFFFF;
+    }
+
+    .vertente-pills-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .v-filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-paper);
+      color: var(--text-primary);
+      font-size: 11.8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .v-filter-pill.active {
+      background: var(--text-primary);
+      border-color: var(--text-primary);
+      color: #FFFFFF;
+    }
+
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .index-card {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: border-color 0.15s, transform 0.15s;
+    }
+
+    .index-card:hover {
+      border-color: var(--border-strong);
+      transform: translateY(-2px);
+    }
+
+    .badge-vertente {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: none;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    .index-card-footer {
+      padding-top: 10px;
+      border-top: 1px solid rgba(226, 221, 213, 0.7);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .link-action {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* =========================================================================
+       RODAPÉ
+       ========================================================================= */
+    .site-footer {
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.7);
+      padding: 22px 0;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    /* =========================================================================
+       RESPONSIVIDADE (TABLET E MOBILE)
+       ========================================================================= */
+    @media (max-width: 1100px) {
+      .constellation-layout {
+        grid-template-columns: 1fr;
+      }
+      .eixos-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .index-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .pontes-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .master-detail {
+        grid-template-columns: 1fr;
+      }
+      .sidebar-sticky {
+        position: static;
+      }
+      .vertentes-list {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 6px;
+      }
+      .vertente-item-btn {
+        min-width: 220px;
+        flex-shrink: 0;
+      }
+      .two-col-grid,
+      .temas-grid,
+      .obras-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 14px;
+      }
+      .kpi-grid,
+      .eixos-grid,
+      .index-grid,
+      .pontes-grid {
+        grid-template-columns: 1fr;
+      }
+      .header-actions {
+        max-width: 100%;
+      }
+      .btn-print span {
+        display: none;
+      }
+      .dossier-hero-body,
+      .dossier-section {
+        padding: 18px;
+      }
+    }
+
+    /* =========================================================================
+       IMPRESSÃO / EXPORTAR PDF LIMPO
+       ========================================================================= */
+    @media print {
+      body {
+        background: #FFFFFF !important;
+        background-image: none !important;
+      }
+      .site-header,
+      .no-print,
+      .sidebar-sticky,
+      .filter-bar {
+        display: none !important;
+      }
+      .card {
+        box-shadow: none !important;
+        border: 1px solid #CCC !important;
+        break-inside: avoid;
+      }
+      .master-detail {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =======================================================================
+       CABEÇALHO EDITORIAL + BUSCA GLOBAL + NAVEGAÇÃO
+       ======================================================================= -->
+  <header class="site-header">
+    <div class="container">
+      <div class="header-top">
+        <div class="brand-block">
+          <div class="brand-emblem" aria-hidden="true">
+            <!-- Ícone vetorial cartográfico-urbano -->
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18" />
+              <path d="M5 21V8l5-3v16" />
+              <path d="M10 21V4l9 4v13" />
+              <path d="M14 11h1" /><path d="M14 15h1" /><path d="M7 11h1" /><path d="M7 15h1" />
+            </svg>
+          </div>
+          <div>
+            <div class="brand-kicker">
+              <span>Cartografia Epistemológica</span>
+              <span class="sep">·</span>
+              <span class="meta">Geografia Urbana · Brasil Contemporâneo</span>
+            </div>
+            <h1 class="brand-title">Atlas da Pesquisa Atual em Geografia Urbana no Brasil</h1>
+            <p class="brand-subtitle">
+              Vertentes, Matrizes e Diálogos — Panorama do pluralismo crítico e da vitalidade científica articulada por redes como <strong>SIMPURB</strong>, <strong>ReCiMe</strong>, <strong>GESP</strong>, <strong>INCT Observatório das Metrópoles</strong>, <strong>GAsPERR</strong> e <strong>GETE</strong>.
+            </p>
+          </div>
+        </div>
+
+        <div class="header-actions no-print">
+          <div class="search-wrapper">
+            <label for="globalSearchInput" class="sr-only">Buscar vertente, autor, conceito, tema ou obra</label>
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.3-4.3"></path>
+            </svg>
+            <input
+              id="globalSearchInput"
+              class="search-input"
+              type="text"
+              autocomplete="off"
+              placeholder="Buscar autor, conceito, tema, obra..."
+            />
+            <button id="clearGlobalSearch" class="search-clear-btn" type="button" aria-label="Limpar busca">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+            <div id="globalSearchDropdown" class="search-dropdown" role="listbox" aria-label="Resultados da busca"></div>
+          </div>
+
+          <button id="btnPrintPdf" class="btn-print" type="button" title="Imprimir ou exportar em PDF">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+              <rect x="6" y="14" width="12" height="8"/>
+            </svg>
+            <span>Imprimir / PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Abas Principais -->
+      <nav class="main-nav no-print" aria-label="Seções do Atlas">
+        <button class="nav-tab active" data-tab="constelacao" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M14.1 9.9 17.6 6.4M9.9 14.1 6.4 17.6M9.7 10.2 6.6 7.4M14.3 13.8l3.1 2.8"/></svg>
+          Constelação Integrada
+        </button>
+        <button class="nav-tab" data-tab="vertentes" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+          Explorar Vertentes
+        </button>
+        <button class="nav-tab" data-tab="matriz" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+          Matriz Comparativa
+        </button>
+        <button class="nav-tab" data-tab="indice" type="button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+          Conceitos &amp; Obras
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =======================================================================
+       CONTEÚDO PRINCIPAL
+       ======================================================================= -->
+  <main class="main-content">
+    <div class="container">
+
+      <!-- ===================================================================
+           ABA 1: CONSTELAÇÃO INTEGRADA
+           =================================================================== -->
+      <section id="tab-constelacao" class="tab-panel active">
+        <!-- 4 KPIs Síntese -->
+        <div class="kpi-grid">
+          <div class="card kpi-card">
+            <span class="kpi-label">Arquitetura do Campo</span>
+            <span class="kpi-value">8</span>
+            <span class="kpi-sub">Vertentes Estruturantes da Geografia Urbana Brasileira</span>
+          </div>
+          <div class="card kpi-card">
+            <span class="kpi-label">Léxico Analítico</span>
+            <span class="kpi-value">40</span>
+            <span class="kpi-sub">Conceitos-Chave Integrados com definições e diálogos</span>
+          </div>
+          <div class="card kpi-card">
+            <span class="kpi-label">Acervo Bibliográfico</span>
+            <span class="kpi-value">32</span>
+            <span class="kpi-sub">Obras de Referência comentadas (clássicos e atuais)</span>
+          </div>
+          <div class="card kpi-card">
+            <span class="kpi-label">Comunidade &amp; Polos</span>
+            <span class="kpi-value">60+</span>
+            <span class="kpi-sub">Pesquisadores em USP, UFRJ, UNESP, UFF, UFMG, UFBA, UFC, UFRGS, UFPR, UFPB, UECE, UEPG, UNICAMP, UFPA</span>
+          </div>
+        </div>
+
+        <!-- Cabeçalho da Constelação -->
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Mapa Relacional do Campo</p>
+            <h2 class="section-title">Constelação das Vertentes e Pontes Teóricas</h2>
+            <p class="section-desc">
+              Passe o cursor sobre qualquer nó orbital para destacar as pontes teóricas e inspecionar suas matrizes e autores no painel lateral. Clique em uma vertente para abrir seu dossiê completo.
+            </p>
+          </div>
+        </div>
+
+        <!-- SVG + Painel Lateral Dinâmico -->
+        <div class="constellation-layout">
+          <div class="card svg-stage-card">
+            <div class="svg-stage-topbar">
+              <span class="mono" style="font-size:11px; color:var(--text-muted); font-weight:600;">DIAGRAMA INTERATIVO · VIEWBOX 960×580</span>
+              <span class="svg-legend-pill">
+                <span class="svg-legend-line"></span>
+                <span>Pontes teóricas entre vertentes</span>
+              </span>
+            </div>
+
+            <svg
+              id="constellationSvg"
+              viewBox="0 0 960 580"
+              role="img"
+              aria-label="Diagrama em constelação das 8 vertentes da Geografia Urbana no Brasil e suas conexões teóricas"
+            ></svg>
+
+            <p style="text-align:center; font-size:11.5px; color:var(--text-muted); margin-top:6px;">
+              Interação: <strong>hover</strong> destaca diálogos teóricos · <strong>clique</strong> abre o dossiê da vertente
+            </p>
+          </div>
+
+          <aside id="constellationInspector" class="card inspector-card" aria-live="polite">
+            <!-- Preenchido dinamicamente via JS -->
+          </aside>
+        </div>
+
+        <!-- Eixos de Tensão e Convergência Contemporânea -->
+        <section class="card eixos-section">
+          <p class="section-kicker" style="color:var(--c-v1);">Síntese Epistemológica</p>
+          <h3 class="section-title" style="font-size:1.45rem;">Eixos de Tensão e Convergência Contemporânea</h3>
+          <div class="eixos-grid">
+            <article class="eixo-card">
+              <span class="eixo-num">01</span>
+              <h4>Do Direito à Cidade à Crise da Reprodução Social</h4>
+              <p>
+                Articula a tradição lefebvriana e marxista crítica com o debate contemporâneo sobre espoliação, moradia precária, trabalho informal e a defesa do valor de uso frente à financeirização da vida cotidiana.
+              </p>
+            </article>
+            <article class="eixo-card">
+              <span class="eixo-num">02</span>
+              <h4>Fragmentação Socioespacial e Urbanização Extensiva</h4>
+              <p>
+                Supera o foco exclusivo nas grandes metrópoles ao investigar cidades médias, condomínios fechados, cidades do agronegócio e urbanidades amazônicas que redefinem a rede urbana brasileira.
+              </p>
+            </article>
+            <article class="eixo-card">
+              <span class="eixo-num">03</span>
+              <h4>Interseccionalidade, Racismo Ambiental e Corpos-Territórios</h4>
+              <p>
+                Aproxima geografias negras, feministas e decoloniais da ecologia política urbana e dos ativismos de favela, evidenciando como raça, gênero, classe e vulnerabilidade climática se co-produzem no espaço.
+              </p>
+            </article>
+            <article class="eixo-card">
+              <span class="eixo-num">04</span>
+              <h4>Financeirização, Plataformas e Governança Algorítmica</h4>
+              <p>
+                Conecta a captura de renda fundiária via fundos imobiliários à plataformização do trabalho, logística de última milha e smart cities periféricas, revelando novas formas corporativas de controle urbano.
+              </p>
+            </article>
+          </div>
+        </section>
+      </section>
+
+      <!-- ===================================================================
+           ABA 2: EXPLORAR VERTENTES (MASTER-DETAIL)
+           =================================================================== -->
+      <section id="tab-vertentes" class="tab-panel">
+        <div class="master-detail">
+          <aside class="card sidebar-sticky no-print">
+            <div class="sidebar-header">
+              <span class="mono" style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted);">Vertentes (8)</span>
+              <span id="sidebarCount" class="mono" style="font-size:11px; color:var(--text-muted);">8 exibidas</span>
+            </div>
+            <label for="sidebarFilterInput" class="sr-only">Filtrar vertentes</label>
+            <input
+              id="sidebarFilterInput"
+              class="sidebar-filter"
+              type="text"
+              placeholder="Filtrar autor, conceito, polo..."
+            />
+            <div id="vertentesSidebarList" class="vertentes-list"></div>
+          </aside>
+
+          <div id="vertenteDossierArea" class="dossier-stack">
+            <!-- Dossiê renderizado dinamicamente via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           ABA 3: MATRIZ COMPARATIVA
+           =================================================================== -->
+      <section id="tab-matriz" class="tab-panel">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Síntese Analítica</p>
+            <h2 class="section-title">Matriz Comparativa das 8 Vertentes</h2>
+            <p class="section-desc">
+              Filtre por escala predominante ou matriz epistemológica para comparar enfoques, métodos e polos. Clique em qualquer linha para abrir o dossiê completo.
+            </p>
+          </div>
+        </div>
+
+        <div class="card filter-bar no-print">
+          <div class="filter-group" id="scaleFilterPills">
+            <span class="filter-label">Escala:</span>
+            <button type="button" class="filter-pill active" data-scale="all">Todas</button>
+            <button type="button" class="filter-pill" data-scale="Intraurbana / Cotidiana">Intraurbana / Cotidiana</button>
+            <button type="button" class="filter-pill" data-scale="Metropolitana">Metropolitana</button>
+            <button type="button" class="filter-pill" data-scale="Urbano-Regional / Nacional">Urbano-Regional / Nacional</button>
+            <button type="button" class="filter-pill" data-scale="Multiescalar / Global">Multiescalar / Global</button>
+          </div>
+
+          <div class="filter-group">
+            <label for="matrixEpistemologySelect" class="filter-label">Matriz:</label>
+            <select id="matrixEpistemologySelect" class="select-control">
+              <option value="all">Todas as matrizes epistemológicas</option>
+              <option value="critica">Marxismo / Economia Política Crítica</option>
+              <option value="regional">Redes Urbanas / Reestruturação Regional</option>
+              <option value="interseccional">Interseccionalidade / Decolonialidade</option>
+              <option value="politica">Geografia Política / Autonomia / Conflitos</option>
+              <option value="ecologia">Ecologia Política / Clima</option>
+              <option value="digital">Plataformas / Meio Técnico-Informacional</option>
+              <option value="historica">Geografia Histórica / Cultural / Patrimônio</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card table-wrap">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>Vertente</th>
+                <th>Matriz Epistemológica</th>
+                <th>Escala Predominante</th>
+                <th>Métodos e Fontes</th>
+                <th>Foco Analítico Central</th>
+                <th>Principais Polos e Redes</th>
+              </tr>
+            </thead>
+            <tbody id="matrixTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           ABA 4: CONCEITOS & OBRAS (ÍNDICE INTEGRADO)
+           =================================================================== -->
+      <section id="tab-indice" class="tab-panel">
+        <div class="section-header">
+          <div>
+            <p class="section-kicker">Índice Integrado</p>
+            <h2 class="section-title">Glossário de Conceitos &amp; Biblioteca de Referência</h2>
+            <p class="section-desc">
+              Explore os 40 conceitos estruturantes e as 32 obras comentadas da Geografia Urbana brasileira, filtrando por vertente ou palavra-chave.
+            </p>
+          </div>
+
+          <div class="sub-tabs no-print" role="tablist">
+            <button id="subTabGlossario" class="sub-tab-btn active" type="button" role="tab" aria-selected="true">
+              Glossário Integrado (40 Conceitos)
+            </button>
+            <button id="subTabBiblioteca" class="sub-tab-btn" type="button" role="tab" aria-selected="false">
+              Biblioteca de Referência (32 Obras)
+            </button>
+          </div>
+        </div>
+
+        <div class="card filter-bar no-print" style="flex-direction:column; align-items:stretch;">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px;">
+            <div class="search-wrapper" style="max-width:480px;">
+              <label for="indexSearchInput" class="sr-only">Buscar no glossário ou biblioteca</label>
+              <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>
+              </svg>
+              <input id="indexSearchInput" class="search-input" type="text" placeholder="Filtrar conceito, autor, título ou ano..." />
+            </div>
+            <span id="indexResultCount" class="mono" style="font-size:11.5px; color:var(--text-muted);"></span>
+          </div>
+
+          <div id="indexVertentePills" class="vertente-pills-bar"></div>
+        </div>
+
+        <div id="indexCardsGrid" class="index-grid"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Rodapé Editorial -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p><strong>Atlas da Pesquisa Atual em Geografia Urbana no Brasil</strong> · Cartografia epistemológica interativa.</p>
+      <p class="mono" style="font-size:11px;">8 VERTENTES · 40 CONCEITOS · 32 OBRAS · PLURALISMO CRÍTICO &amp; PRÁXIS ESPACIAL</p>
+    </div>
+  </footer>
+
+  <!-- =======================================================================
+       BASE DE DADOS ACADÊMICA E MOTOR INTERATIVO (JAVASCRIPT PURO)
+       ======================================================================= -->
+  <script>
+    (function () {
+      'use strict';
+
+      // =======================================================================
+      // 1. DADOS COMPLETOS DAS 8 VERTENTES DA GEOGRAFIA URBANA NO BRASIL
+      // =======================================================================
+      const VERTENTES = [
+        {
+          id: 'producao-critica',
+          code: 'V01',
+          sigla: 'PC',
+          shortTitle: 'Produção Crítica & Metropolização',
+          svgLines: ['Produção Crítica', '& Metropolização'],
+          title: 'Produção Crítica do Espaço Urbano e Metropolização',
+          subtitle: 'Teoria Crítica do Espaço, Marxismo Espacial e Cotidiano',
+          color: '#B83B2A',
+          tint: '#FCEAE7',
+          sintese: 'Eixo fundacional da geografia urbana crítica brasileira, analisa a cidade como condição, meio e produto da reprodução capitalista. Articula a teoria lefebvriana da produção do espaço à análise da metropolização contemporânea, da crise da reprodução social e das lutas pelo valor de uso e pelo direito à cidade.',
+          polos: ['USP (GESP - Grupo de Estudos sobre São Paulo)', 'UFPR', 'UFPB', 'PUC-Rio', 'UFC'],
+          matrizes: [
+            'Marxismo Espacial',
+            'Teoria Crítica do Espaço (Lefebvre)',
+            'Crítica do Valor',
+            'Economia Política da Urbanização'
+          ],
+          matrizExplicacao: 'Sustentada na dialética entre valor de uso e valor de troca, compreende a urbanização não apenas como reflexo da economia, mas como momento estratégico da acumulação e da reprodução das relações sociais. A escola do GESP-USP aprofunda a dimensão do cotidiano e da alienação espacial, enquanto estudos sobre metropolização examinam a expansão da escala urbana para além dos limites metropolitanos clássicos.',
+          autoresBase: [
+            'Henri Lefebvre',
+            'David Harvey',
+            'Karl Marx',
+            'Milton Santos',
+            'Francisco de Oliveira',
+            'Lúcio Kowarick',
+            'Maurício de Almeida Abreu'
+          ],
+          autoresEvidencia: [
+            'Ana Fani Alessandri Carlos (USP)',
+            'Amélia Luísa Damiani (USP)',
+            'Sandra Lencioni (USP)',
+            'Isabel Pinto Alvarez (USP)',
+            'Rafael Faleiros de Padua (UFPB)',
+            'Danilo Volochko (UFPR)',
+            'Álvaro Ferreira (PUC-Rio)',
+            'Elisa Favaro Verdi (USP)',
+            'José Borzacchiello da Silva (UFC)'
+          ],
+          temas: [
+            'Produção e reprodução do espaço urbano como totalidade contraditória',
+            'Metropolização do espaço e consolidação de megarregiões / megalópole',
+            'Direito à cidade e crise estrutural da reprodução social',
+            'Alienação espacial, banalização da cidade e vida cotidiana',
+            'Valorização imobiliária e negação do valor de uso na metrópole',
+            'Espoliação urbana contemporânea e periferização precária'
+          ],
+          conceitos: [
+            {
+              nome: 'Produção do Espaço Urbano',
+              autor: 'Henri Lefebvre / Ana Fani A. Carlos',
+              definicao: 'Processo social contínuo pelo qual o espaço é produzido como condição, meio e produto da reprodução das relações sociais, atravessado pela contradição entre valor de uso (vida cotidiana) e valor de troca (mercadoria).',
+              dialogos: ['financeirizacao', 'conflitos-ativismos', 'ecologia-politica']
+            },
+            {
+              nome: 'Metropolização do Espaço',
+              autor: 'Sandra Lencioni',
+              definicao: 'Processo contemporâneo de reestruturação espacial em que as dinâmicas, infraestruturas e formas de vida metropolitanas se estendem de modo polinucleado para além da metrópole tradicional, conformando escalas megarregionais.',
+              dialogos: ['redes-urbanas', 'financeirizacao']
+            },
+            {
+              nome: 'Direito à Cidade',
+              autor: 'Henri Lefebvre / Ana Fani A. Carlos',
+              definicao: 'Horizonte político-utópico e prático de reapropriação coletiva do espaço urbano como obra e valor de uso, superando a segregação, a mercantilização e a alienação da vida urbana.',
+              dialogos: ['conflitos-ativismos', 'interseccional']
+            },
+            {
+              nome: 'Reprodução Social e Cotidiano',
+              autor: 'Amélia Damiani / Ana Fani A. Carlos',
+              definicao: 'Dimensão concreta onde se realizam e entram em crise as condições de existência dos trabalhadores na cidade, revelando tanto a dominação do capital quanto fissuras para a práxis transformadora.',
+              dialogos: ['interseccional', 'cidade-digital']
+            },
+            {
+              nome: 'Espoliação Urbana',
+              autor: 'Lúcio Kowarick / Rafael Faleiros de Padua',
+              definicao: 'Somatório de extorsões que se operam pela inexistência ou precariedade de serviços de consumo coletivo (moradia, transporte, saneamento), agravando a exploração da força de trabalho nas cidades brasileiras.',
+              dialogos: ['financeirizacao', 'ecologia-politica', 'conflitos-ativismos']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'A Condição Espacial',
+              autor: 'Ana Fani Alessandri Carlos',
+              ano: '2011',
+              comentario: 'Consolida a leitura crítica brasileira da produção do espaço urbano a partir do cotidiano, da reprodução social e da dialética valor de uso/troca.'
+            },
+            {
+              titulo: 'Metrópole, Metropolização e Regionalização',
+              autor: 'Sandra Lencioni',
+              ano: '2017',
+              comentario: 'Referência fundamental para distinguir metrópole de metropolização do espaço e analisar a formação da megarregião Rio–São Paulo.'
+            },
+            {
+              titulo: 'A Cidade no Século XXI: segregação e banalização do espaço',
+              autor: 'Álvaro Ferreira',
+              ano: '2011',
+              comentario: 'Examina a segregação socioespacial e os processos de homogeneização e banalização das paisagens urbanas sob o capitalismo contemporâneo.'
+            },
+            {
+              titulo: 'Geografia Urbana: a produção do urbano e a urgência da práxis transformadora',
+              autor: 'Danilo Volochko & Leonardo Prizon (Orgs.)',
+              ano: '2024',
+              comentario: 'Coletânea recente que atualiza o debate crítico da produção do espaço frente às crises urbanas brasileiras da década de 2020.'
+            }
+          ],
+          pontes: [
+            { target: 'financeirizacao', desc: 'Aprofunda como o circuito financeiro-imobiliário subordina a produção do espaço ao valor de troca.' },
+            { target: 'ecologia-politica', desc: 'Conecta a produção capitalista do espaço à produção social da natureza e às crises metabólicas urbanas.' },
+            { target: 'conflitos-ativismos', desc: 'Traduz a crítica da alienação espacial e o direito à cidade nas lutas e ocupações urbanas contemporâneas.' }
+          ],
+          matriz: {
+            epistemologia: 'Marxismo Espacial, Teoria Crítica do Espaço (Lefebvre) e Crítica do Valor',
+            epistemologiaCat: 'critica',
+            escala: 'Metropolitana',
+            escalaDetalhe: 'Metropolitana e Intraurbana (dialética cotidiano–metrópole)',
+            metodos: 'Análise histórico-dialética, pesquisa de campo qualitativa, análise de projetos urbanos e crítica documental',
+            foco: 'Contradições da produção do espaço, crise da reprodução social e metropolização'
+          }
+        },
+        {
+          id: 'financeirizacao',
+          code: 'V02',
+          sigla: 'FI',
+          shortTitle: 'Financeirização & Neoliberalismo',
+          svgLines: ['Financeirização', '& Neoliberalismo'],
+          title: 'Financeirização Urbana, Imobiliário e Neoliberalismo',
+          subtitle: 'Economia Política das Finanças, Renda Fundiária e Ativos Urbanos',
+          color: '#1E4E79',
+          tint: '#E6EFF7',
+          sintese: 'Uma das frentes de maior projeção nacional e internacional, investiga como mercados de capitais, fundos imobiliários, bancos e políticas estatais neoliberais transformam a terra, a moradia e a infraestrutura urbana em ativos financeiros líquidos, reconfigurando desigualdades e remoções.',
+          polos: ['UFF', 'UNESP (Presidente Prudente)', 'USP (FAU e FFLCH)', 'UFABC', 'UNIFESSPA', 'INCT Observatório das Metrópoles'],
+          matrizes: [
+            'Economia Política Crítica',
+            'Geografia das Finanças',
+            'Urbanismo Neoliberal',
+            'Teoria da Renda da Terra Urbana'
+          ],
+          matrizExplicacao: 'Articula a teoria marxista da renda fundiária e dos circuitos de acumulação (Harvey, Singer) com a literatura internacional de Geografia Financeira (Aalbers, Rolnik). Evidencia que o Estado não se retira no urbanismo neoliberal, mas atua ativamente como fiador, regulador e estruturador de mercados imobiliários financeirizados, inclusive na habitação de interesse social.',
+          autoresBase: [
+            'David Harvey',
+            'Neil Smith',
+            'Manuel Aalbers',
+            'Paul Singer',
+            'Mariana Fix',
+            'Raquel Rolnik'
+          ],
+          autoresEvidencia: [
+            'Daniel Sanfelici (UFF)',
+            'Everaldo Santos Melazzo (UNESP-PP)',
+            'Cesar Simoni Santos (USP)',
+            'Luciana Nicolau Ferrara (UFABC)',
+            'Beatriz Rufino (FAUUSP)',
+            'Lúcia Shimbo (IAU-USP)',
+            'Eudes Leopoldo (UNIFESSPA)',
+            'Patrícia Maria de Jesus (UFABC)'
+          ],
+          temas: [
+            'Fundos de Investimento Imobiliário (FIIs) e securitização via CRIs',
+            'Financeirização da habitação popular e circuitos do PMCMV / Casa Verde e Amarela',
+            'Grandes projetos urbanos, PPPs e operações urbanas consorciadas (CEPACs)',
+            'Captura de renda fundiária urbana por incorporadoras de capital aberto',
+            'Infraestrutura urbana (saneamento, energia, mobilidade) como ativo financeiro',
+            'Gentrificação, despejos e deslocamentos forçados em áreas de valorização'
+          ],
+          conceitos: [
+            {
+              nome: 'Financeirização da Produção do Espaço',
+              autor: 'Daniel Sanfelici / Cesar Simoni / Manuel Aalbers',
+              definicao: 'Subordinação crescente da produção de imóveis, terras e infraestruturas às métricas de rentabilidade, liquidez e governança de investidores institucionais e mercados de capitais.',
+              dialogos: ['producao-critica', 'redes-urbanas', 'cidade-digital']
+            },
+            {
+              nome: 'Renda Fundiária Urbana',
+              autor: 'Paul Singer / David Harvey / Everaldo Melazzo',
+              definicao: 'Parcela da mais-valia social capturada pelos proprietários fundiários e incorporadores em razão do monopólio sobre localizações diferenciadas e infraestruturas urbanas.',
+              dialogos: ['producao-critica', 'redes-urbanas']
+            },
+            {
+              nome: 'Ativo Imobiliário e Securitização',
+              autor: 'Raquel Rolnik / Beatriz Rufino',
+              definicao: 'Conversão de bens imóveis fixos e ilíquidos (terras, galpões, moradias) em títulos mobiliários negociáveis (FIIs, CRIs), conectando o urbano local a fluxos financeiros globais.',
+              dialogos: ['cidade-digital', 'producao-critica']
+            },
+            {
+              nome: 'Urbanismo Neoliberal',
+              autor: 'Neil Smith / Raquel Rolnik / Luciana Ferrara',
+              definicao: 'Modo de governança urbana orientado ao empreendedorismo competitivo, desregulação seletiva, parcerias público-privadas e captura do fundo público pelo setor imobiliário-financeiro.',
+              dialogos: ['conflitos-ativismos', 'geografia-historica']
+            },
+            {
+              nome: 'Gentrificação Periférica',
+              autor: 'Neil Smith / Lúcia Shimbo / Eudes Leopoldo',
+              definicao: 'Processos de valorização seletiva, substituição de classes e deslocamento populacional que assumem feições específicas nas cidades latino-americanas, inclusive em periferias e áreas de habitação social.',
+              dialogos: ['interseccional', 'ecologia-politica', 'geografia-historica']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'Guerra dos Lugares: a colonização da terra e da moradia na era das finanças',
+              autor: 'Raquel Rolnik',
+              ano: '2015',
+              comentario: 'Obra decisiva sobre como a financeirização global da habitação reconfigura políticas públicas, endividamento e insegurança da posse no Brasil e no mundo.'
+            },
+            {
+              titulo: 'Financeirização da Produção do Espaço Urbano',
+              autor: 'Cesar Simoni Santos, Everaldo Melazzo & Daniel Sanfelici (Debates e Coletâneas)',
+              ano: '2020–2023',
+              comentario: 'Conjunto de pesquisas que sistematizam as mediações específicas entre capital financeiro, incorporadoras e cidades médias e metropolitanas brasileiras.'
+            },
+            {
+              titulo: 'Financeirização e Estudos Urbanos na América Latina',
+              autor: 'Beatriz Rufino & Lúcia Shimbo (Orgs.)',
+              ano: '2019',
+              comentario: 'Reúne análises comparativas sobre o complexo imobiliário-financeiro, fundos de investimento e produção habitacional na periferia do capitalismo.'
+            },
+            {
+              titulo: 'Habitação Social de Mercado',
+              autor: 'Lúcia Shimbo',
+              ano: '2012',
+              comentario: 'Demonstra a convergência entre empresas construtoras de capital aberto e políticas estatais na produção em massa de moradias como mercadoria financeira.'
+            }
+          ],
+          pontes: [
+            { target: 'producao-critica', desc: 'Compartilha o arcabouço marxista sobre valorização do espaço, renda fundiária e negação do valor de uso.' },
+            { target: 'redes-urbanas', desc: 'Investiga a expansão das incorporadoras de capital aberto e FIIs para cidades médias e novos polos regionais.' },
+            { target: 'cidade-digital', desc: 'Conecta fundos logísticos, capital de risco (venture capital) e plataformas imobiliárias (proptechs e Airbnb).' }
+          ],
+          matriz: {
+            epistemologia: 'Economia Política Crítica, Geografia das Finanças e Urbanismo Neoliberal',
+            epistemologiaCat: 'critica',
+            escala: 'Multiescalar / Global',
+            escalaDetalhe: 'Multiescalar (mercados globais de capitais ↔ terrenos urbanos locais)',
+            metodos: 'Análise de balanços corporativos, dados da CVM/B3, cartografia de lançamentos imobiliários e entrevistas com gestores',
+            foco: 'Assetização da terra e moradia, FIIs/CRIs, renda fundiária e parcerias público-privadas'
+          }
+        },
+        {
+          id: 'redes-urbanas',
+          code: 'V03',
+          sigla: 'RU',
+          shortTitle: 'Redes Urbanas & Cidades Médias',
+          svgLines: ['Redes Urbanas', '& Cidades Médias'],
+          title: 'Redes Urbanas, Cidades Médias e Urbanização Extensiva',
+          subtitle: 'ReCiMe, Fragmentação Socioespacial e Reestruturação Regional',
+          color: '#2A7B6F',
+          tint: '#E4F3F0',
+          sintese: 'Tradição consolidada e altamente capilarizada no país (liderada pela ReCiMe e pelo GAsPERR), desloca o olhar exclusivo das metrópoles para compreender os papéis das cidades médias, a fragmentação socioespacial, as cidades do agronegócio e a urbanização extensiva na Amazônia e no interior.',
+          polos: ['ReCiMe (UNESP-PP)', 'GAsPERR', 'UFRJ', 'UECE', 'UFPA', 'UFPB', 'UFFS', 'IBGE (REGIC)'],
+          matrizes: [
+            'Teoria das Redes Urbanas',
+            'Reestruturação Urbano-Regional',
+            'Urbanização Extensiva e Planetária',
+            'Geografia Econômica-Urbana'
+          ],
+          matrizExplicacao: 'Combina a tradição de estudos sobre hierarquia e interações espaciais da rede urbana (Lobato Corrêa, REGIC/IBGE) com a leitura crítica da reestruturação urbana e da cidade (Sposito) e da urbanização extensiva (Monte-Mór). Nos últimos anos, o projeto temático FragUrb consolidou o conceito de fragmentação socioespacial em cidades médias brasileiras.',
+          autoresBase: [
+            'Roberto Lobato Corrêa',
+            'Milton Santos',
+            'Walter Christaller',
+            'Roberto Luís Monte-Mór',
+            'Neil Brenner'
+          ],
+          autoresEvidencia: [
+            'Maria Encarnação Beltrão Sposito (UNESP-PP)',
+            'Eliseu Savério Sposito (UNESP-PP)',
+            'Denise Elias (UECE)',
+            'William Ribeiro da Silva (UFRJ)',
+            'Arthur Magon Whitacker (UNESP-PP)',
+            'Doralice Sátyro Maia (UFPB)',
+            'Saint-Clair Cordeiro da Trindade Júnior (UFPA)',
+            'Rosa Moura (Obs. Metrópoles)',
+            'Márcio José Catelan (UNESP)',
+            'Igor Catalão (UFFS)'
+          ],
+          temas: [
+            'Fragmentação socioespacial e práticas espaciais cotidianas em cidades médias (projeto FragUrb)',
+            'Reestruturação urbana, multicentralidade e novos eixos de consumo',
+            'Expansão de loteamentos e condomínios fechados e autossegregação',
+            'Cidades do agronegócio e regiões produtivas agrícolas (RPAs)',
+            'Urbanização extensiva na Amazônia, cidades ribeirinhas e pequenas cidades',
+            'Arranjos urbano-regionais e hierarquia das Regiões de Influência das Cidades (REGIC)'
+          ],
+          conceitos: [
+            {
+              nome: 'Fragmentação Socioespacial',
+              autor: 'Maria Encarnação B. Sposito / Eda Góes',
+              definicao: 'Processo mais profundo que a segregação clássica, marcado pela ruptura dos laços socioespaciais, proliferação de espaços fechados, dispersão urbana e práticas espaciais cada vez mais isoladas e desiguais.',
+              dialogos: ['financeirizacao', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Cidades Médias e Papéis Regionais',
+              autor: 'Maria Encarnação B. Sposito / William Ribeiro da Silva',
+              definicao: 'Cidades definidas não apenas pelo porte demográfico, mas pela sua capacidade de intermediação na rede urbana, polarização regional e articulação entre escalas locais e globais.',
+              dialogos: ['financeirizacao', 'cidade-digital']
+            },
+            {
+              nome: 'Urbanização Extensiva',
+              autor: 'Roberto Luís Monte-Mór / Saint-Clair Trindade Jr.',
+              definicao: 'Expansão do tecido urbano-industrial e de suas condições gerais de produção para além dos núcleos citadinos, incorporando áreas rurais, fronteiras agrícolas e territórios amazônicos.',
+              dialogos: ['ecologia-politica', 'producao-critica']
+            },
+            {
+              nome: 'Cidades do Agronegócio',
+              autor: 'Denise Elias',
+              definicao: 'Núcleos urbanos do interior brasileiro cuja estrutura produtiva, serviços especializados, mercado de trabalho e morfologia são comandados pelas demandas do agronegócio globalizado.',
+              dialogos: ['financeirizacao', 'ecologia-politica']
+            },
+            {
+              nome: 'Reestruturação Urbana vs. da Cidade',
+              autor: 'Maria Encarnação B. Sposito',
+              definicao: 'Distinção analítica entre transformações na escala da rede urbana e das relações interurbanas (reestruturação urbana) e mudanças na estrutura interna, centralidades e morfologia (reestruturação da cidade).',
+              dialogos: ['producao-critica', 'geografia-historica']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'Espaços Fechados e Cidades: insegurança urbana e fragmentação socioespacial',
+              autor: 'Maria Encarnação B. Sposito & Eda Maria Góes',
+              ano: '2013',
+              comentario: 'Marco empírico e teórico sobre condomínios fechados, discurso do medo e transição da segregação à fragmentação em cidades médias.'
+            },
+            {
+              titulo: 'Estudos sobre a Rede Urbana',
+              autor: 'Roberto Lobato Corrêa',
+              ano: '2006',
+              comentario: 'Síntese clássica das tipologias, gêneses e dinâmicas das redes urbanas brasileiras e dos agentes produtores do espaço.'
+            },
+            {
+              titulo: 'Cidades Médias: espaços em transição',
+              autor: 'Maria Encarnação B. Sposito (Org.)',
+              ano: '2007',
+              comentario: 'Coletânea estruturante da rede ReCiMe sobre os novos papéis das cidades médias na divisão territorial do trabalho.'
+            },
+            {
+              titulo: 'Arranjos Urbano-Regionais no Brasil',
+              autor: 'Rosa Moura',
+              ano: '2009',
+              comentario: 'Analisa a conformação de extensas manchas urbanas polinucleadas e integrações regionais que transcendem recortes metropolitanos institucionais.'
+            }
+          ],
+          pontes: [
+            { target: 'financeirizacao', desc: 'Examina como o capital imobiliário financeirizado e grandes varejistas reestruturam as cidades médias.' },
+            { target: 'cidade-digital', desc: 'Analisa como redes informacionais, e-commerce e novas mobilidades reconfiguram centralidades e hierarquias urbanas.' },
+            { target: 'producao-critica', desc: 'Dialoga sobre metropolização do espaço, dispersão urbana e novas escalas da urbanização brasileira.' }
+          ],
+          matriz: {
+            epistemologia: 'Teoria das Redes Urbanas, Reestruturação Urbano-Regional e Urbanização Extensiva',
+            epistemologiaCat: 'regional',
+            escala: 'Urbano-Regional / Nacional',
+            escalaDetalhe: 'Urbano-Regional, Interurbana (Rede Urbana) e Cidades Médias',
+            metodos: 'Pesquisa comparada em rede (ReCiMe/FragUrb), dados REGIC/IBGE, entrevistas de práticas espaciais e cartografia de fluxos',
+            foco: 'Papéis regionais de cidades médias, fragmentação socioespacial e urbanização do interior e Amazônia'
+          }
+        },
+        {
+          id: 'interseccional',
+          code: 'V04',
+          sigla: 'IN',
+          shortTitle: 'Geografias Interseccionais & Decoloniais',
+          svgLines: ['Geografias Interseccionais', '& Decoloniais'],
+          title: 'Geografias Urbanas Interseccionais: Raça, Gênero e Decolonialidade',
+          subtitle: 'Geografias Negras, Feministas, Queer e Pensamento Contracolonial',
+          color: '#8E3B7B',
+          tint: '#F6E8F3',
+          sintese: 'Vertente em vigorosa ascensão epistemológica e política, tensiona o sujeito universal da geografia urbana clássica ao demonstrar que o espaço urbano brasileiro é estruturalmente co-produzido pelas relações de raça, gênero, sexualidade e colonialidade, valorizando quilombos urbanos e epistemologias periféricas.',
+          polos: ['GETE (UEPG)', 'UFRJ (IPPUR)', 'UERJ', 'UFG', 'UFRB', 'UEG', 'UFF', 'FURG', 'GT Geografias Negras e Feministas (ANPEGE)'],
+          matrizes: [
+            'Feminismo Interseccional e Decolonial',
+            'Geografias Negras',
+            'Pensamento Contracolonial',
+            'Estudos Queer e Teoria Crítica Racial'
+          ],
+          matrizExplicacao: 'Rompe com a neutralidade espacial eurocêntrica ao articular o pensamento negro brasileiro (Lélia Gonzalez, Beatriz Nascimento, Abdias do Nascimento) às geografias feministas e queer (Massey, McKittrick, Joseli Silva). O corpo é compreendido como primeira escala geográfica onde incidem o racismo estrutural, o patriarcado e a necropolítica, mas também como lugar de memória e insurgência.',
+          autoresBase: [
+            'Katherine McKittrick',
+            'Lélia Gonzalez',
+            'Beatriz Nascimento',
+            'Abdias do Nascimento',
+            'Doreen Massey',
+            'bell hooks',
+            'Aníbal Quijano'
+          ],
+          autoresEvidencia: [
+            'Joseli Maria Silva (UEPG)',
+            'Marcio Jose Ornat (UEPG)',
+            'Renato Emerson dos Santos (IPPUR/UFRJ)',
+            'Alex Ratts (UFG)',
+            'Lorena Francisco de Souza (UEG)',
+            'Geny Ferreira Guimarães (UFRB)',
+            'Diogo Marçal Cirqueira (UFF)',
+            'Denílson Araújo de Oliveira (UERJ)',
+            'Susana Maria Veleda da Silva (FURG)'
+          ],
+          temas: [
+            'Relações raciais, branquitude e segregação racializada nas metrópoles brasileiras',
+            'Quilombos urbanos, terreiros e territorialidades negras de resistência',
+            'Direito à cidade de mulheres, travestis e população LGBTQIAP+',
+            'Corpo-território, mobilidades restritas e violências urbanas de gênero e raça',
+            'Epistemologias periféricas, contracoloniais e pedagogias urbanas negras',
+            'Espacialidades do trabalho de cuidado e reprodução social nas periferias'
+          ],
+          conceitos: [
+            {
+              nome: 'Corpo-Território',
+              autor: 'Joseli Maria Silva / Feminismos Decoloniais',
+              definicao: 'Compreensão do corpo como primeira escala espacial indissociável do território, onde se inscrevem marcas de violência colonial-patriarcal, mas também afetos, agência e resistência política.',
+              dialogos: ['conflitos-ativismos', 'ecologia-politica']
+            },
+            {
+              nome: 'Geografias Negras e Quilombos Urbanos',
+              autor: 'Beatriz Nascimento / Alex Ratts / Renato Emerson dos Santos',
+              definicao: 'Campo teórico-político que analisa a racialização do espaço urbano e reconhece os quilombos urbanos, terreiros e coletivos negros como sistemas sociais alternativos e memórias vivas na cidade.',
+              dialogos: ['geografia-historica', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Interseccionalidade Espacial',
+              autor: 'Joseli Silva / Marcio Ornat / Lorena Souza',
+              definicao: 'Abordagem que demonstra como marcadores de raça, gênero, sexualidade, classe e geração operam de modo imbricado e geograficamente situado na produção das desigualdades urbanas.',
+              dialogos: ['producao-critica', 'ecologia-politica']
+            },
+            {
+              nome: 'Necropolítica Urbana',
+              autor: 'Achille Mbembe / Denílson Oliveira / Renato Emerson',
+              definicao: 'Gestão soberana da vida e da morte que opera seletivamente em territórios negros e periféricos por meio da letalidade policial, da precariedade sanitária e do abandono estatal.',
+              dialogos: ['conflitos-ativismos', 'ecologia-politica']
+            },
+            {
+              nome: 'Epistemologias Periféricas',
+              autor: 'Geny Guimarães / Diogo Cirqueira / Coletivos Urbanos',
+              definicao: 'Produção de conhecimento geográfico situada nas periferias, favelas e movimentos negros e feministas, desafiando o monopólio epistêmico acadêmico tradicional.',
+              dialogos: ['conflitos-ativismos', 'geografia-historica']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'Geografias Subversivas: discursos sobre espaço, gênero e sexualidades',
+              autor: 'Joseli Maria Silva (Org.)',
+              ano: '2009',
+              comentario: 'Obra pioneira que consolidou a agenda de gênero e sexualidades na geografia brasileira a partir do núcleo GETE-UEPG.'
+            },
+            {
+              titulo: 'Questões Urbanas e Racismo',
+              autor: 'Renato Emerson dos Santos (Org.)',
+              ano: '2012',
+              comentario: 'Referência basilar sobre a dimensão racial do planejamento urbano, da segregação e das políticas territoriais no Brasil.'
+            },
+            {
+              titulo: 'Eu Sou Atlântica: sobre a trajetória de vida de Beatriz Nascimento',
+              autor: 'Alex Ratts',
+              ano: '2006',
+              comentario: 'Resgata o pensamento geográfico-histórico de Beatriz Nascimento sobre quilombo, corpo e territorialidade negra.'
+            },
+            {
+              titulo: 'Espaço, Gênero e Poder: conectando fronteiras',
+              autor: 'Joseli Maria Silva, Marcio Ornat & Alides Chimin Jr.',
+              ano: '2011',
+              comentario: 'Aprofunda metodologias feministas e interseccionais para investigar relações de poder no cotidiano das cidades.'
+            }
+          ],
+          pontes: [
+            { target: 'conflitos-ativismos', desc: 'Articula lutas antirracistas, feministas e LGBTQIAP+ aos ativismos urbanos e ocupações territoriais.' },
+            { target: 'ecologia-politica', desc: 'Converge diretamente no debate sobre racismo ambiental, injustiça climática e vulnerabilidade de mulheres negras.' },
+            { target: 'geografia-historica', desc: 'Recupera memórias negras, apagamentos patrimoniais e geografias históricas da diáspora nas cidades brasileiras.' }
+          ],
+          matriz: {
+            epistemologia: 'Feminismo Interseccional e Decolonial, Geografias Negras e Estudos Queer',
+            epistemologiaCat: 'interseccional',
+            escala: 'Intraurbana / Cotidiana',
+            escalaDetalhe: 'Corpo-Território, Cotidiano Urbano e Periferias Racializadas',
+            metodos: 'Etnografia urbana, histórias de vida, cartografia contra-hegemônica, análise interseccional do Censo (raça/gênero)',
+            foco: 'Segregação racializada, violências de gênero, quilombos urbanos e epistemologias periféricas'
+          }
+        },
+        {
+          id: 'conflitos-ativismos',
+          code: 'V05',
+          sigla: 'CA',
+          shortTitle: 'Conflitos, Ativismos & Espaços Públicos',
+          svgLines: ['Conflitos, Ativismos', '& Espaços Públicos'],
+          title: 'Conflitos Territoriais, Ativismos e Espaços Públicos',
+          subtitle: 'Geografia Política Urbana, Autonomia e Planejamento Insurgente',
+          color: '#C96B18',
+          tint: '#FDF0E2',
+          sintese: 'Focada nas relações de poder, conflito e resistência na cidade, analisa desde a militarização urbana, a fobópole e o domínio de grupos armados até a potência política das favelas, das ocupações de moradia, dos espaços públicos populares e do planejamento urbano autônomo.',
+          polos: ['UFRJ (NuPeD)', 'UFF', 'UFBA', 'UERJ-FFP', 'UFRGS', 'Observatório de Favelas', 'Rede BrCidades'],
+          matrizes: [
+            'Geografia Política Urbana',
+            'Teoria da Autonomia (Castoriadis)',
+            'Movimentos Sociais Urbanos',
+            'Planejamento Insurgente'
+          ],
+          matrizExplicacao: 'Fundamentada na geografia política de base libertária e autonomista (Marcelo Lopes de Souza, Castoriadis) e no debate sobre cidadania insurgente e espaço público (Serpa, Holston, Maricato). Recusa leituras meramente tecnicistas do planejamento, compreendendo o espaço público e a favela como arenas centrais de disputa democrática.',
+          autoresBase: [
+            'Marcelo Lopes de Souza',
+            'Henri Lefebvre',
+            'Cornelius Castoriadis',
+            'Rogério Haesbaert',
+            'James Holston',
+            'Ermínia Maricato'
+          ],
+          autoresEvidencia: [
+            'Marcelo Lopes de Souza (UFRJ)',
+            'Angelo Szaniecki Perret Serpa (UFBA)',
+            'Glauco Bruce Rodrigues (UFF)',
+            'Tatiana Tramontani Ramos (UFF)',
+            'Jorge Luiz Barbosa (UFF)',
+            'Matheus da Silveira Grandi (UERJ-FFP)',
+            'Catia Antonia da Silva (UERJ-FFP)',
+            'Paulo Roberto Rodrigues Soares (UFRGS)'
+          ],
+          temas: [
+            'Segregação, favelas e favelização lidas sob o paradigma da potência política e cultural',
+            'Ativismos sociais urbanos, movimentos sem-teto e ocupações de moradia (MTST, MLB)',
+            'Territórios sob domínio de milícias, tráfico de drogas e militarização do cotidiano',
+            'Planejamento urbano autônomo, planos diretores participativos e conflitos fundiários',
+            'Espaços públicos contemporâneos, apropriação popular versus privatização e securitização',
+            'Governança metropolitana, orçamento participativo e disputas federativas'
+          ],
+          conceitos: [
+            {
+              nome: 'Planejamento Urbano Autônomo',
+              autor: 'Marcelo Lopes de Souza',
+              definicao: 'Abordagem crítica que distingue planejamento estatal tecnocrático de práticas de planejamento insurgente conduzidas "junto com" e "apesar do" Estado pelos próprios movimentos sociais.',
+              dialogos: ['producao-critica', 'financeirizacao']
+            },
+            {
+              nome: 'Ativismos Sociais Urbanos',
+              autor: 'Marcelo Lopes de Souza / Glauco Rodrigues',
+              definicao: 'Ações coletivas multiescalares — de ocupações de moradia a coletivos culturais e ciclistas — que produzem territórios dissidentes e disputam sentidos de justiça espacial.',
+              dialogos: ['interseccional', 'ecologia-politica']
+            },
+            {
+              nome: 'Fobópole e Militarização Urbana',
+              autor: 'Marcelo Lopes de Souza',
+              definicao: 'Cidade dominada pelo medo generalizado da violência, onde proliferam enclaves fortificados, vigilância ostensiva e operações militares permanentes em áreas populares.',
+              dialogos: ['redes-urbanas', 'interseccional']
+            },
+            {
+              nome: 'Espaço Público e Apropriação',
+              autor: 'Angelo Serpa',
+              definicao: 'Esfera material e simbólica de encontro da diferença na cidade, constantemente tensionada entre processos de privatização/espetacularização e usos populares cotidianos.',
+              dialogos: ['geografia-historica', 'producao-critica']
+            },
+            {
+              nome: 'Territórios Dissidentes',
+              autor: 'Marcelo Lopes de Souza / Jorge Luiz Barbosa',
+              definicao: 'Espaços apropriados por grupos subalternizados que instauram práticas de autogestão, solidariedade e contestação frente às normas estatais e mercantis dominantes.',
+              dialogos: ['interseccional', 'cidade-digital']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'Mudar a Cidade: uma introdução crítica ao planejamento e à gestão urbanos',
+              autor: 'Marcelo Lopes de Souza',
+              ano: '2002',
+              comentario: 'Clássico indispensável que sistematiza instrumentos urbanísticos, participação popular e a proposta do planejamento autonomista.'
+            },
+            {
+              titulo: 'Fobópole: o medo generalizado e a militarização da questão urbana',
+              autor: 'Marcelo Lopes de Souza',
+              ano: '2008',
+              comentario: 'Analisa a espacialidade da violência urbana, a criminalização da pobreza e a arquitetura do medo nas metrópoles brasileiras.'
+            },
+            {
+              titulo: 'O Espaço Público na Cidade Contemporânea',
+              autor: 'Angelo Serpa',
+              ano: '2007',
+              comentario: 'Investiga parques, praças e projetos de requalificação urbana, contrapondo modelos padronizados às apropriações populares.'
+            },
+            {
+              titulo: 'As Cidades da Favela',
+              autor: 'Jorge Luiz Barbosa & Jailson de Souza e Silva (Orgs.)',
+              ano: '2010',
+              comentario: 'Supera o paradigma da ausência ao propor a favela como parte constitutiva, inventiva e politicamente potente da cidade.'
+            }
+          ],
+          pontes: [
+            { target: 'interseccional', desc: 'Converge na crítica à necropolítica urbana e na valorização das resistências de favelas e coletivos negros.' },
+            { target: 'geografia-historica', desc: 'Dialoga sobre o direito à memória, disputas por espaços públicos históricos e culturas populares urbanas.' },
+            { target: 'producao-critica', desc: 'Compartilha o horizonte político do direito à cidade e a crítica aos projetos urbanos excludentes.' }
+          ],
+          matriz: {
+            epistemologia: 'Geografia Política Urbana, Teoria da Autonomia e Planejamento Insurgente',
+            epistemologiaCat: 'politica',
+            escala: 'Intraurbana / Cotidiana',
+            escalaDetalhe: 'Intraurbana (favelas, praças, ocupações) e Metropolitana',
+            metodos: 'Pesquisa-ação, cartografia participativa, observação em assembleias/ocupações e análise de planos diretores',
+            foco: 'Relações de poder na cidade, movimentos sociais urbanos, militarização e espaços públicos'
+          }
+        },
+        {
+          id: 'ecologia-politica',
+          code: 'V06',
+          sigla: 'EP',
+          shortTitle: 'Ecologia Política & Clima Urbano',
+          svgLines: ['Ecologia Política', '& Clima Urbano'],
+          title: 'Ecologia Política Urbana, Clima e Metabolismo Socioespacial',
+          subtitle: 'Justiça Climática, Racismo Ambiental e Produção da Natureza',
+          color: '#2F7D32',
+          tint: '#E6F4E7',
+          sintese: 'Frente estratégica diante da emergência climática (evidenciada por enchentes metropolitanas, ondas de calor e crises hídricas), supera a dicotomia sociedade–natureza para investigar o metabolismo socioespacial das cidades, o racismo ambiental, a agricultura urbana e a gentrificação verde.',
+          polos: ['UFMG (IGC/NPGAU)', 'UNICAMP', 'UFPR', 'UNESP-PP', 'UFRJ', 'UFF', 'USP (IEE)', 'Rede Brasileira de Justiça Ambiental'],
+          matrizes: [
+            'Ecologia Política Urbana (UPE)',
+            'Metabolismo Socioespacial',
+            'Justiça Ambiental e Climática',
+            'Climatologia Urbana Crítica'
+          ],
+          matrizExplicacao: 'Integra a Ecologia Política Urbana (Swyngedouw, Harvey, Neil Smith) à tradição brasileira da climatologia urbana crítica (Carlos Augusto Monteiro, Mendonça, Sant\'Anna Neto) e da justiça ambiental (Acselrad, Arlete Moysés Rodrigues). Demonstra que "desastres naturais" são social e espacialmente produzidos por padrões desiguais de urbanização.',
+          autoresBase: [
+            'Erik Swyngedouw',
+            'Neil Smith',
+            'Henri Acselrad',
+            'Joan Martínez-Alier',
+            'David Harvey',
+            'Carlos Augusto de Figueiredo Monteiro'
+          ],
+          autoresEvidencia: [
+            'Heloisa Soares de Moura Costa (UFMG)',
+            'Arlete Moysés Rodrigues (UNICAMP)',
+            'Luciana Corrêa do Lago (UFRJ)',
+            'Rita de Cássia Martins Montezuma (UFF)',
+            'Francisco Mendonça (UFPR)',
+            'João Lima Sant\'Anna Neto (UNESP-PP)',
+            'Pedro Henrique Campello Torres (USP)',
+            'Roberto Luís Monte-Mór (UFMG)'
+          ],
+          temas: [
+            'Racismo ambiental e justiça climática nas periferias e áreas de risco',
+            'Eventos climáticos extremos: enchentes metropolitanas, ilhas de calor e deslizamentos',
+            'Agricultura urbana, agroecologia, hortas comunitárias e sistemas alimentares',
+            'Crise hídrica, conflitos por água e desigualdade estrutural no saneamento básico',
+            'Produção capitalista da natureza, parques lineares e gentrificação verde',
+            'Impactos da mineração em regiões metropolitanas e áreas periurbanas'
+          ],
+          conceitos: [
+            {
+              nome: 'Ecologia Política Urbana',
+              autor: 'Erik Swyngedouw / Heloisa Costa',
+              definicao: 'Perspectiva crítica que entende a cidade como híbrido socionatural produzido por relações de poder que decidem quem acessa bens ecológicos e quem arca com riscos e poluição.',
+              dialogos: ['producao-critica', 'interseccional']
+            },
+            {
+              nome: 'Metabolismo Socioespacial',
+              autor: 'Erik Swyngedouw / Arlete Moysés Rodrigues',
+              definicao: 'Conjunto de fluxos de matéria, energia, água, alimentos e resíduos que sustentam a vida urbana e conectam a cidade a vastas hinterlândias extrativas.',
+              dialogos: ['redes-urbanas', 'producao-critica']
+            },
+            {
+              nome: 'Racismo e Injustiça Climática',
+              autor: 'Henri Acselrad / Pedro H. C. Torres',
+              definicao: 'Distribuição racial e socialmente desigual dos impactos de enchentes, calor extremo e contaminação, recaindo desproporcionalmente sobre populações negras, indígenas e periféricas.',
+              dialogos: ['interseccional', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Agricultura Urbana e Cuidado',
+              autor: 'Heloisa Costa / Luciana Lago',
+              definicao: 'Práticas agroecológicas intra e periurbanas que articulam soberania alimentar, regeneração ambiental, trabalho feminino de cuidado e resistência à especulação imobiliária.',
+              dialogos: ['interseccional', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Gentrificação Verde',
+              autor: 'Heloisa Costa / Debate Internacional UPE',
+              definicao: 'Valorização imobiliária e expulsão de moradores de baixa renda desencadeadas por intervenções de "esverdeamento", parques urbanos e discursos de cidade sustentável.',
+              dialogos: ['financeirizacao', 'producao-critica']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'A Duração das Cidades: sustentabilidade e risco nas políticas urbanas',
+              autor: 'Henri Acselrad (Org.)',
+              ano: '2001',
+              comentario: 'Obra seminal que desnaturaliza o discurso técnico da sustentabilidade e introduz a justiça ambiental nos estudos urbanos brasileiros.'
+            },
+            {
+              titulo: 'Produção e Consumo do e no Espaço: problemática ambiental urbana',
+              autor: 'Arlete Moysés Rodrigues',
+              ano: '1998',
+              comentario: 'Referência clássica sobre os nexos entre modo de produção capitalista, consumo espacial e crise ambiental nas cidades.'
+            },
+            {
+              titulo: 'Clima Urbano',
+              autor: 'Carlos Augusto de F. Monteiro & Francisco Mendonça (Orgs.)',
+              ano: '2003',
+              comentario: 'Marco metodológico da climatologia urbana brasileira articulada à morfologia e às desigualdades socioespaciais.'
+            },
+            {
+              titulo: 'Justiça Climática e Cidades no Brasil',
+              autor: 'Pedro Henrique Campello Torres et al.',
+              ano: '2021',
+              comentario: 'Atualiza o debate sobre adaptação climática, desigualdades urbanas e governança socioambiental frente aos eventos extremos.'
+            }
+          ],
+          pontes: [
+            { target: 'producao-critica', desc: 'Articula a produção capitalista do espaço à produção social da natureza e da crise ambiental urbana.' },
+            { target: 'interseccional', desc: 'Integra justiça climática ao enfrentamento do racismo ambiental e às lutas de mulheres por saneamento e agroecologia.' },
+            { target: 'financeirizacao', desc: 'Analisa a gentrificação verde, mercados de carbono urbanos e financeirização de infraestruturas de água e saneamento.' }
+          ],
+          matriz: {
+            epistemologia: 'Ecologia Política Urbana (UPE), Justiça Ambiental e Climatologia Crítica',
+            epistemologiaCat: 'ecologia',
+            escala: 'Metropolitana',
+            escalaDetalhe: 'Metropolitana, Bacias Hidrográficas Urbanas e Periurbana',
+            metodos: 'Análise socioambiental integrada, sensoriamento remoto térmico/hídrico, cartografia de riscos e justiça ambiental',
+            foco: 'Metabolismo urbano, racismo ambiental, eventos climáticos extremos e agroecologia urbana'
+          }
+        },
+        {
+          id: 'cidade-digital',
+          code: 'V07',
+          sigla: 'CD',
+          shortTitle: 'Cidade Digital, Plataformas & Mobilidades',
+          svgLines: ['Cidade Digital,', 'Plataformas & Mobilidades'],
+          title: 'Cidade Digital, Plataformas e Mobilidades Contemporâneas',
+          subtitle: 'Capitalismo de Plataforma, Meio Informacional e Multiterritorialidades',
+          color: '#0E7C9E',
+          tint: '#E3F4F9',
+          sintese: 'Frente de vanguarda da década de 2020, investiga como empresas-plataforma, algoritmos, infraestruturas digitais e sistemas de mobilidade reconfiguram o trabalho urbano, a logística de última milha, a vigilância e os dois circuitos da economia urbana nas metrópoles brasileiras.',
+          polos: ['UFMG', 'UNICAMP', 'UFF', 'UFJF', 'UECE', 'USP', 'UNILA'],
+          matrizes: [
+            'Capitalismo de Plataforma',
+            'Meio Técnico-Científico-Informacional (Milton Santos)',
+            'Geografia das Mobilidades',
+            'Estudos Críticos de Smart Cities'
+          ],
+          matrizExplicacao: 'Atualiza a teoria miltoniana do meio técnico-científico-informacional e dos dois circuitos da economia urbana em diálogo com a crítica ao capitalismo de plataforma (Srnicek, Morozov) e à virada das mobilidades (Sheller, Urry, Haesbaert). Revela que a "nuvem" possui densa materialidade urbana — de datacenters e dark stores aos corpos exaustos de entregadores.',
+          autoresBase: [
+            'Milton Santos',
+            'Manuel Castells',
+            'Nick Srnicek',
+            'Mimi Sheller',
+            'John Urry',
+            'Stephen Graham',
+            'Evgeny Morozov'
+          ],
+          autoresEvidencia: [
+            'Fabio Tozi (UFMG)',
+            'Adriana Maria Bernardes da Silva (UNICAMP)',
+            'Maria Laura Silveira (UBA/USP)',
+            'Rogério Haesbaert (UFF)',
+            'Silvana Cristina da Silva (UFF)',
+            'Helena Rizzatti (UFJF)',
+            'Denise Cristina Bomtempo (UECE)',
+            'Ricardo Castillo (UNICAMP)'
+          ],
+          temas: [
+            'Plataformização e uberização do trabalho urbano (entregadores e motoristas por aplicativo)',
+            'Logística urbana de última milha, galpões intraurbanos e dark stores',
+            'Smart cities periféricas, centros de operações integrados e vigilância algorítmica',
+            'Mobilidade urbana desigual, debates sobre tarifa zero e regimes de imobilidade',
+            'Migrações internacionais, refúgio e multiterritorialidades nas metrópoles brasileiras',
+            'Materialidade da nuvem: datacenters, cabos submarinos e consumo energético urbano'
+          ],
+          conceitos: [
+            {
+              nome: 'Capitalismo de Plataforma Urbano',
+              autor: 'Nick Srnicek / Fabio Tozi',
+              definicao: 'Modelo de acumulação baseado na mediação digital de serviços urbanos (transporte, entregas, hospedagem) por meio da extração de dados, gestão algorítmica e precarização do trabalho.',
+              dialogos: ['financeirizacao', 'producao-critica']
+            },
+            {
+              nome: 'Meio Técnico-Científico-Informacional',
+              autor: 'Milton Santos / Maria Laura Silveira',
+              definicao: 'Período histórico em que ciência, tecnologia e informação incorporam-se profundamente ao território, ampliando a fluidez para agentes hegemônicos e aprofundando seletividades urbanas.',
+              dialogos: ['redes-urbanas', 'financeirizacao']
+            },
+            {
+              nome: 'Mobilidade e Imobilidade Desigual',
+              autor: 'Mimi Sheller / Rogério Haesbaert',
+              definicao: 'Regimes diferenciados de circulação na cidade que combinam hiper-mobilidade de elites e fluxos digitais com contenção territorial e longos deslocamentos pendulares dos trabalhadores.',
+              dialogos: ['interseccional', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Smart Cities Periféricas',
+              autor: 'Adriana Bernardes / Evgeny Morozov',
+              definicao: 'Adoção subordinada de soluções corporativas de "cidades inteligentes" no Sul Global, frequentemente priorizando vigilância policial e captura de dados em detrimento de direitos básicos.',
+              dialogos: ['financeirizacao', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Circuitos da Economia Urbana Digital',
+              autor: 'Milton Santos / Maria Laura Silveira / Fabio Tozi',
+              definicao: 'Rearticulação entre o circuito superior (big techs e bancos digitais) e o circuito inferior (trabalhadores informais e pequenos comércios dependentes de apps e pagamentos digitais).',
+              dialogos: ['redes-urbanas', 'producao-critica']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'O Espaço Dividido / A Natureza do Espaço',
+              autor: 'Milton Santos',
+              ano: '1979 / 1996',
+              comentario: 'Alicerce teórico brasileiro para interpretar o meio informacional, as técnicas contemporâneas e os dois circuitos da economia urbana.'
+            },
+            {
+              titulo: 'Plataformização do Território e Cidades Contemporâneas',
+              autor: 'Fabio Tozi (Estudos e Artigos)',
+              ano: '2020–2024',
+              comentario: 'Analisa a espacialidade seletiva das plataformas de transporte e entrega, a exclusão algorítmica em periferias e as resistências dos trabalhadores.'
+            },
+            {
+              titulo: 'Território e Multiterritorialidade / Contenção Territorial',
+              autor: 'Rogério Haesbaert',
+              ano: '2004 / 2021',
+              comentario: 'Referência indispensável para compreender mobilidades, fronteiras internas, agenciamentos espaciais e regimes de contenção urbana.'
+            },
+            {
+              titulo: 'A Cidade Neoliberal e as Plataformas Digitais',
+              autor: 'Adriana Bernardes & pesquisadores do GT Cidade Digital SIMPURB',
+              ano: '2022–2024',
+              comentario: 'Sistematiza a agenda brasileira sobre governança algorítmica, infraestruturas digitais e smart cities na periferia do capitalismo.'
+            }
+          ],
+          pontes: [
+            { target: 'financeirizacao', desc: 'Conecta capital de risco, FIIs de galpões logísticos de última milha e plataformas imobiliárias.' },
+            { target: 'redes-urbanas', desc: 'Mostra como o comércio eletrônico e as redes digitais reorganizam centralidades e fluxos em cidades médias.' },
+            { target: 'conflitos-ativismos', desc: 'Analisa greves de entregadores ("breques dos apps") e disputas pelo controle dos dados e do espaço público.' }
+          ],
+          matriz: {
+            epistemologia: 'Capitalismo de Plataforma, Meio Técnico-Informacional e Geografia das Mobilidades',
+            epistemologiaCat: 'digital',
+            escala: 'Multiescalar / Global',
+            escalaDetalhe: 'Multiescalar (redes digitais globais ↔ rua e última milha)',
+            metodos: 'Etnografia digital e urbana, mapeamento de cobertura de aplicativos, análise de políticas de smart cities e entrevistas',
+            foco: 'Trabalho plataformizado, logística urbana, vigilância algorítmica e regimes de mobilidade'
+          }
+        },
+        {
+          id: 'geografia-historica',
+          code: 'V08',
+          sigla: 'GH',
+          shortTitle: 'Geografia Histórica, Patrimônio & Culturas',
+          svgLines: ['Geografia Histórica,', 'Patrimônio & Culturas'],
+          title: 'Geografia Histórica Urbana, Patrimônio e Culturas Urbanas',
+          subtitle: 'Morfologia Histórica, Memória, Paisagem Simbólica e Subúrbios',
+          color: '#6D4C41',
+          tint: '#F2EBE8',
+          sintese: 'Enraizada na fecunda escola de Maurício de Almeida Abreu e do NEPEC-UERJ, investiga a formação histórica das cidades brasileiras, as permanências e rugosidades da forma urbana, os conflitos em torno da patrimonialização e turistificação, bem como as paisagens sagradas, festas e culturas populares.',
+          polos: ['UFBA', 'UFPB', 'UERJ (NEPEC)', 'UFV', 'UFES', 'UECE', 'UFRGS', 'UFRJ'],
+          matrizes: [
+            'Geografia Histórica Urbana',
+            'Geografia Cultural Crítica',
+            'Morfologia Urbana Histórica',
+            'Memória e Paisagem Simbólica'
+          ],
+          matrizExplicacao: 'Rejeita a visão do passado como mero cenário introdutório, tratando o tempo materializado no espaço (rugosidades, permanências) como elemento ativo das desigualdades e identidades presentes. Em diálogo com a geografia cultural crítica (Cosgrove, Lobato Corrêa, Rosendahl), decifra símbolos, religiosidades, subúrbios e disputas patrimoniais.',
+          autoresBase: [
+            'Maurício de Almeida Abreu',
+            'Roberto Lobato Corrêa',
+            'Denis Cosgrove',
+            'Paul Claval',
+            'Walter Benjamin',
+            'Milton Santos'
+          ],
+          autoresEvidencia: [
+            'Pedro de Almeida Vasconcelos (UFBA)',
+            'Doralice Sátyro Maia (UFPB)',
+            'Maria Isabel de Jesus Chrysostomo (UFV)',
+            'Eneida Maria Souza Mendonça (UFES)',
+            'Zeny Rosendahl (UERJ)',
+            'Aureanice de Melo Corrêa (UERJ)',
+            'Igor Martins Medeiros Robaina (UFES)',
+            'Otávio José Lemos Costa (UECE)'
+          ],
+          temas: [
+            'Evolução histórica da forma urbana brasileira: cidades coloniais, imperiais e industriais',
+            'Ferrovias, portos, planos de melhoramentos e formação histórica dos subúrbios',
+            'Patrimônio cultural, políticas de requalificação de centros históricos e turistificação',
+            'Paisagens sagradas, festas populares, procissões e religiosidades afro-brasileiras e cristãs',
+            'Práticas culturais periféricas, memória coletiva e identidades de bairro'
+          ],
+          conceitos: [
+            {
+              nome: 'Geografia Histórica Urbana',
+              autor: 'Maurício de Almeida Abreu / Pedro Vasconcelos',
+              definicao: 'Campo dedicado a reconstruir as geografias do passado urbano para explicar a gênese estrutural da segregação, da morfologia e das instituições da cidade contemporânea.',
+              dialogos: ['producao-critica', 'redes-urbanas']
+            },
+            {
+              nome: 'Morfologia e Permanências Espaciais',
+              autor: 'Pedro Vasconcelos / Milton Santos',
+              definicao: 'Análise das formas urbanas (traçado, parcelamento, edificações) que persistem através de diferentes períodos históricos como rugosidades que condicionam novos usos.',
+              dialogos: ['redes-urbanas', 'producao-critica']
+            },
+            {
+              nome: 'Patrimonialização e Turistificação',
+              autor: 'Doralice Maia / Pedro Vasconcelos',
+              definicao: 'Processos seletivos de tombamento e revitalização de centros históricos que frequentemente convertem a memória urbana em mercadoria turística e expulsam moradores populares.',
+              dialogos: ['financeirizacao', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Paisagem Simbólica e Sagrada',
+              autor: 'Zeny Rosendahl / Roberto Lobato Corrêa / Denis Cosgrove',
+              definicao: 'Dimensão cultural da paisagem urbana constituída por monumentos, templos, terreiros, festas e rituais que expressam identidades, crenças e relações de poder.',
+              dialogos: ['interseccional', 'conflitos-ativismos']
+            },
+            {
+              nome: 'Memória Urbana e Subúrbio',
+              autor: 'Maurício Abreu / Maria Isabel Chrysostomo',
+              definicao: 'Valorização histórica e afetiva dos bairros populares e subúrbios ferroviários como lugares de sociabilidade, trabalho e identidade, contrapondo narrativas estigmatizantes.',
+              dialogos: ['conflitos-ativismos', 'interseccional']
+            }
+          ],
+          obras: [
+            {
+              titulo: 'Evolução Urbana do Rio de Janeiro',
+              autor: 'Maurício de Almeida Abreu',
+              ano: '1987',
+              comentario: 'Obra-prima da geografia histórica brasileira, explica a estratificação socioespacial carioca a partir da articulação entre Estado, transportes e capital.'
+            },
+            {
+              titulo: 'Salvador: transformações e permanências (1549–1999)',
+              autor: 'Pedro de Almeida Vasconcelos',
+              ano: '2002',
+              comentario: 'Estudo exemplar de longa duração sobre agentes, processos e permanências morfológicas na primeira capital do Brasil.'
+            },
+            {
+              titulo: 'Geografia Urbana do Brasil: agentes, processos e formas',
+              autor: 'Pedro Vasconcelos, Roberto Lobato Corrêa & Silvana Pintaudi (Orgs.)',
+              ano: '2013',
+              comentario: 'Sistematiza categorias analíticas essenciais para interpretar as formas urbanas brasileiras em perspectiva histórica e contemporânea.'
+            },
+            {
+              titulo: 'Temas e Caminhos da Geografia Cultural',
+              autor: 'Roberto Lobato Corrêa & Zeny Rosendahl (Orgs.)',
+              ano: '2010',
+              comentario: 'Coletânea de referência do NEPEC-UERJ sobre simbolismo, paisagem, religião e culturas urbanas no Brasil.'
+            }
+          ],
+          pontes: [
+            { target: 'conflitos-ativismos', desc: 'Dialoga sobre disputas por espaços públicos históricos, festas de rua e resistência à turistificação excludente.' },
+            { target: 'interseccional', desc: 'Aproxima a geografia cultural das memórias afro-brasileiras, terreiros e patrimônio negro urbano.' },
+            { target: 'financeirizacao', desc: 'Examina como a patrimonialização de centros históricos se articula a operações imobiliárias e gentrificação.' }
+          ],
+          matriz: {
+            epistemologia: 'Geografia Histórica Urbana, Geografia Cultural Crítica e Morfologia Urbana',
+            epistemologiaCat: 'historica',
+            escala: 'Intraurbana / Cotidiana',
+            escalaDetalhe: 'Intraurbana Histórica (centros, subúrbios, bairros) e Longa Duração',
+            metodos: 'Pesquisa em arquivos históricos, cartografia pretérita, iconografia, história oral e leitura morfológica da paisagem',
+            foco: 'Evolução da forma urbana, permanências, patrimônio cultural, religiosidades e memória suburbana'
+          }
+        }
+      ];
+
+      // =======================================================================
+      // 2. PONTES TEÓRICAS DA CONSTELAÇÃO SVG (CONEXÕES ENTRE VERTENTES)
+      // =======================================================================
+      const CONSTELLATION_EDGES = [
+        { source: 'producao-critica', target: 'financeirizacao', label: 'Subordinação da produção do espaço ao circuito financeiro-imobiliário' },
+        { source: 'financeirizacao', target: 'redes-urbanas', label: 'Expansão de incorporadoras de capital aberto e FIIs em cidades médias' },
+        { source: 'interseccional', target: 'conflitos-ativismos', label: 'Lutas antirracistas, feministas, favelas e crítica à necropolítica urbana' },
+        { source: 'ecologia-politica', target: 'producao-critica', label: 'Produção capitalista do espaço e produção social da natureza urbana' },
+        { source: 'cidade-digital', target: 'redes-urbanas', label: 'Redes informacionais, e-commerce e novas centralidades interurbanas' },
+        { source: 'geografia-historica', target: 'conflitos-ativismos', label: 'Disputas por espaços públicos históricos, festas populares e memória' },
+        { source: 'ecologia-politica', target: 'interseccional', label: 'Racismo ambiental, justiça climática e trabalho feminino de cuidado' },
+        { source: 'financeirizacao', target: 'cidade-digital', label: 'Venture capital, FIIs de logística de última milha e proptechs' },
+        { source: 'producao-critica', target: 'conflitos-ativismos', label: 'Direito à cidade, crise da reprodução social e ocupações urbanas' },
+        { source: 'geografia-historica', target: 'interseccional', label: 'Memórias negras, terreiros e patrimônio afro-brasileiro na cidade' },
+        { source: 'redes-urbanas', target: 'ecologia-politica', label: 'Urbanização extensiva na Amazônia e cidades do agronegócio' }
+      ];
+
+      // =======================================================================
+      // 3. ESTADO DA APLICAÇÃO
+      // =======================================================================
+      const state = {
+        activeTab: 'constelacao',
+        selectedVertenteId: VERTENTES[0].id,
+        selectedConceptName: VERTENTES[0].conceitos[0].nome,
+        hoveredNodeId: null,
+        sidebarFilter: '',
+        matrixScaleFilter: 'all',
+        matrixEpistFilter: 'all',
+        indexSubTab: 'glossario',
+        indexVertenteFilter: 'all',
+        indexSearch: ''
+      };
+
+      function getVertente(id) {
+        return VERTENTES.find(function (v) { return v.id === id; });
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function highlight(text, query) {
+        if (!query || query.trim().length < 2) return escapeHtml(text);
+        var safe = escapeHtml(text);
+        var escaped = query.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        return safe.replace(new RegExp('(' + escaped + ')', 'gi'), '<mark class="hl">$1</mark>');
+      }
+
+      // =======================================================================
+      // 4. NAVEGAÇÃO ENTRE ABAS
+      // =======================================================================
+      function switchTab(tabId) {
+        state.activeTab = tabId;
+        document.querySelectorAll('.tab-panel').forEach(function (panel) {
+          panel.classList.toggle('active', panel.id === 'tab-' + tabId);
+        });
+        document.querySelectorAll('.nav-tab').forEach(function (btn) {
+          btn.classList.toggle('active', btn.dataset.tab === tabId);
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function openVertenteDossier(vertenteId, conceptName) {
+        var v = getVertente(vertenteId);
+        if (!v) return;
+        state.selectedVertenteId = v.id;
+        state.selectedConceptName = conceptName || v.conceitos[0].nome;
+        switchTab('vertentes');
+        renderVertentesSidebar();
+        renderVertenteDossier();
+      }
+
+      // =======================================================================
+      // 5. CONSTELAÇÃO INTEGRADA (SVG INTERATIVO 960x580)
+      // =======================================================================
+      function renderConstellationSvg() {
+        var svg = document.getElementById('constellationSvg');
+        var cx = 480;
+        var cy = 290;
+        var rx = 330;
+        var ry = 202;
+
+        // Ordem orbital pensada para equilibrar visualmente as pontes teóricas
+        var orbitalOrder = [
+          'producao-critica',
+          'financeirizacao',
+          'cidade-digital',
+          'redes-urbanas',
+          'ecologia-politica',
+          'interseccional',
+          'conflitos-ativismos',
+          'geografia-historica'
+        ];
+
+        var coords = {};
+        orbitalOrder.forEach(function (id, idx) {
+          var angle = -Math.PI / 2 + (idx * 2 * Math.PI) / orbitalOrder.length;
+          coords[id] = {
+            x: cx + rx * Math.cos(angle),
+            y: cy + ry * Math.sin(angle),
+            idx: idx
+          };
+        });
+
+        var markup = ''
+          + '<defs>'
+          + '  <radialGradient id="coreHalo" cx="50%" cy="50%" r="50%">'
+          + '    <stop offset="0%" stop-color="#1C1F26" stop-opacity="0.09" />'
+          + '    <stop offset="100%" stop-color="#1C1F26" stop-opacity="0" />'
+          + '  </radialGradient>'
+          + '  <filter id="softDrop" x="-25%" y="-25%" width="150%" height="150%">'
+          + '    <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#1C1F26" flood-opacity="0.14" />'
+          + '  </filter>'
+          + '</defs>'
+          + '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" fill="none" stroke="#D8D2C7" stroke-width="1.2" stroke-dasharray="5 6" />'
+          + '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + (rx * 0.52) + '" ry="' + (ry * 0.52) + '" fill="url(#coreHalo)" stroke="#E2DDD5" stroke-width="1" />';
+
+        // Raios sutis do núcleo até os 8 nós
+        orbitalOrder.forEach(function (id) {
+          var p = coords[id];
+          markup += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p.x.toFixed(1) + '" y2="' + p.y.toFixed(1) + '" stroke="#D5CFC4" stroke-width="1" stroke-opacity="0.55" />';
+        });
+
+        // Pontes teóricas em curvas Bézier
+        CONSTELLATION_EDGES.forEach(function (edge, i) {
+          var p1 = coords[edge.source];
+          var p2 = coords[edge.target];
+          var midX = (p1.x + p2.x) / 2;
+          var midY = (p1.y + p2.y) / 2;
+          var ctrlX = midX * 0.72 + cx * 0.28;
+          var ctrlY = midY * 0.72 + cy * 0.28;
+
+          markup += '<path id="svg-edge-' + i + '" class="svg-edge" data-source="' + edge.source + '" data-target="' + edge.target + '"'
+            + ' d="M ' + p1.x.toFixed(1) + ' ' + p1.y.toFixed(1) + ' Q ' + ctrlX.toFixed(1) + ' ' + ctrlY.toFixed(1) + ' ' + p2.x.toFixed(1) + ' ' + p2.y.toFixed(1) + '"'
+            + ' fill="none" stroke="#6B7280" stroke-width="1.6" stroke-opacity="0.34" stroke-dasharray="5 4" />';
+        });
+
+        // Núcleo Central
+        markup += '<g>'
+          + '<circle cx="' + cx + '" cy="' + cy + '" r="74" fill="#1C1F26" filter="url(#softDrop)" />'
+          + '<circle cx="' + cx + '" cy="' + cy + '" r="67" fill="none" stroke="#F7F5F0" stroke-opacity="0.22" stroke-width="1" stroke-dasharray="3 3" />'
+          + '<text x="' + cx + '" y="' + (cy - 18) + '" text-anchor="middle" fill="#FFFFFF" font-family="Fraunces, Georgia, serif" font-size="13.5" font-weight="700">Geografia Urbana</text>'
+          + '<text x="' + cx + '" y="' + (cy - 1) + '" text-anchor="middle" fill="#FFFFFF" font-family="Fraunces, Georgia, serif" font-size="13.5" font-weight="700">Brasileira</text>'
+          + '<text x="' + cx + '" y="' + (cy + 18) + '" text-anchor="middle" fill="#FDE68A" font-family="JetBrains Mono, monospace" font-size="8.5" font-weight="600">PLURALISMO CRÍTICO</text>'
+          + '<text x="' + cx + '" y="' + (cy + 31) + '" text-anchor="middle" fill="#D5CFC4" font-family="JetBrains Mono, monospace" font-size="8.2">&amp; PRÁXIS ESPACIAL</text>'
+          + '</g>';
+
+        // 8 Nós Orbitais
+        orbitalOrder.forEach(function (id, idx) {
+          var v = getVertente(id);
+          var p = coords[id];
+          var labelY = p.y + 42;
+          if (idx === 0 || idx === 1 || idx === 7) {
+            labelY = p.y - 42;
+          }
+
+          var pillW = 166;
+          var pillH = 34;
+          var pillX = p.x - pillW / 2;
+          var pillY = labelY - 14;
+
+          markup += '<g class="svg-node" data-id="' + v.id + '" tabindex="0" role="button" aria-label="Explorar ' + escapeHtml(v.title) + '">'
+            + '<circle cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="31" fill="' + v.color + '" fill-opacity="0.13" />'
+            + '<circle class="node-ring" cx="' + p.x.toFixed(1) + '" cy="' + p.y.toFixed(1) + '" r="23" fill="' + v.color + '" stroke="#FFFFFF" stroke-width="3" filter="url(#softDrop)" />'
+            + '<text x="' + p.x.toFixed(1) + '" y="' + (p.y + 4.5).toFixed(1) + '" text-anchor="middle" fill="#FFFFFF" font-family="JetBrains Mono, monospace" font-size="11.5" font-weight="600">' + v.sigla + '</text>'
+            + '<rect x="' + pillX.toFixed(1) + '" y="' + pillY.toFixed(1) + '" width="' + pillW + '" height="' + pillH + '" rx="8" fill="#FFFFFF" fill-opacity="0.95" stroke="' + v.color + '" stroke-opacity="0.38" stroke-width="1" />'
+            + '<text x="' + p.x.toFixed(1) + '" y="' + (labelY - 1).toFixed(1) + '" text-anchor="middle" fill="#1C1F26" font-family="Plus Jakarta Sans, sans-serif" font-size="10.4" font-weight="700">' + escapeHtml(v.svgLines[0]) + '</text>'
+            + '<text x="' + p.x.toFixed(1) + '" y="' + (labelY + 12.5).toFixed(1) + '" text-anchor="middle" fill="#555B66" font-family="Plus Jakarta Sans, sans-serif" font-size="9.8" font-weight="500">' + escapeHtml(v.svgLines[1]) + '</text>'
+            + '</g>';
+        });
+
+        svg.innerHTML = markup;
+
+        svg.querySelectorAll('.svg-node').forEach(function (node) {
+          var id = node.dataset.id;
+          node.addEventListener('mouseenter', function () {
+            state.hoveredNodeId = id;
+            updateConstellationState();
+          });
+          node.addEventListener('mouseleave', function () {
+            state.hoveredNodeId = null;
+            updateConstellationState();
+          });
+          node.addEventListener('focus', function () {
+            state.hoveredNodeId = id;
+            updateConstellationState();
+          });
+          node.addEventListener('click', function () {
+            openVertenteDossier(id);
+          });
+          node.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              openVertenteDossier(id);
+            }
+          });
+        });
+
+        updateConstellationState();
+      }
+
+      function updateConstellationState() {
+        var activeId = state.hoveredNodeId;
+        var svg = document.getElementById('constellationSvg');
+
+        if (!activeId) {
+          svg.querySelectorAll('.svg-node').forEach(function (n) { n.classList.remove('dimmed'); });
+          svg.querySelectorAll('.svg-edge').forEach(function (e) {
+            e.classList.remove('active', 'dimmed');
+            e.setAttribute('stroke', '#6B7280');
+          });
+          renderInspector(null, []);
+          return;
+        }
+
+        var v = getVertente(activeId);
+        var connected = {};
+        connected[activeId] = true;
+        var activeEdges = [];
+
+        CONSTELLATION_EDGES.forEach(function (edge, i) {
+          var el = document.getElementById('svg-edge-' + i);
+          if (edge.source === activeId || edge.target === activeId) {
+            connected[edge.source] = true;
+            connected[edge.target] = true;
+            activeEdges.push(edge);
+            el.classList.add('active');
+            el.classList.remove('dimmed');
+            el.setAttribute('stroke', v.color);
+          } else {
+            el.classList.remove('active');
+            el.classList.add('dimmed');
+            el.setAttribute('stroke', '#6B7280');
+          }
+        });
+
+        svg.querySelectorAll('.svg-node').forEach(function (n) {
+          if (connected[n.dataset.id]) {
+            n.classList.remove('dimmed');
+          } else {
+            n.classList.add('dimmed');
+          }
+        });
+
+        renderInspector(v, activeEdges);
+      }
+
+      function renderInspector(vertente, activeEdges) {
+        var box = document.getElementById('constellationInspector');
+
+        if (!vertente) {
+          box.innerHTML = ''
+            + '<div>'
+            + '  <span class="inspector-badge" style="background:var(--bg-paper); color:var(--c-v1); border:1px solid var(--border-subtle);">Painel de Inspeção</span>'
+            + '  <h3 style="font-size:1.3rem; margin-top:12px;">Geografia Urbana em Diálogo</h3>'
+            + '  <p style="font-size:13.2px; color:var(--text-secondary); margin-top:8px; line-height:1.58;">'
+            + '    A pesquisa urbana brasileira articula sólida tradição crítica marxista e regional com agendas emergentes de interseccionalidade, justiça climática, financeirização e plataformas digitais.'
+            + '  </p>'
+            + '  <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border-subtle);">'
+            + '    <span class="mono" style="font-size:10.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.08em;">Acesso Rápido às 8 Vertentes</span>'
+            + '    <div class="quick-list">'
+            + VERTENTES.map(function (item) {
+                return '<button type="button" class="quick-btn" data-qid="' + item.id + '">'
+                  + '<span class="dot" style="background:' + item.color + ';"></span>'
+                  + '<span class="mono" style="font-size:10.5px; color:var(--text-muted);">' + item.code + '</span>'
+                  + '<span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + escapeHtml(item.shortTitle) + '</span>'
+                  + '</button>';
+              }).join('')
+            + '    </div>'
+            + '  </div>'
+            + '</div>';
+
+          box.querySelectorAll('.quick-btn').forEach(function (btn) {
+            btn.addEventListener('mouseenter', function () {
+              state.hoveredNodeId = btn.dataset.qid;
+              updateConstellationState();
+            });
+            btn.addEventListener('click', function () {
+              openVertenteDossier(btn.dataset.qid);
+            });
+          });
+          return;
+        }
+
+        box.innerHTML = ''
+          + '<div>'
+          + '  <span class="inspector-badge" style="background:' + vertente.tint + '; color:' + vertente.color + ';">'
+          + '    <span class="dot" style="width:8px; height:8px; background:' + vertente.color + ';"></span>'
+          + '    ' + vertente.code + ' · ' + vertente.sigla
+          + '  </span>'
+          + '  <h3 style="font-size:1.22rem; margin-top:10px; line-height:1.25;">' + escapeHtml(vertente.title) + '</h3>'
+          + '  <p style="font-size:12.8px; color:var(--text-secondary); margin-top:8px; line-height:1.52;">' + escapeHtml(vertente.sintese) + '</p>'
+          + '  <div style="margin-top:12px;">'
+          + '    <span class="mono" style="font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Matrizes Teóricas</span>'
+          + '    <p style="font-size:12px; color:var(--text-primary); margin-top:3px;">' + escapeHtml(vertente.matrizes.join(' · ')) + '</p>'
+          + '  </div>'
+          + '  <div style="margin-top:10px;">'
+          + '    <span class="mono" style="font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Autores em Evidência</span>'
+          + '    <p style="font-size:12px; color:var(--text-secondary); margin-top:3px;">' + escapeHtml(vertente.autoresEvidencia.slice(0, 5).join(', ')) + '…</p>'
+          + '  </div>'
+          + '  <div style="margin-top:12px; padding-top:10px; border-top:1px solid var(--border-subtle);">'
+          + '    <span class="mono" style="font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Pontes Teóricas Ativas (' + activeEdges.length + ')</span>'
+          + '    <ul class="bridge-mini-list">'
+          + activeEdges.map(function (edge) {
+              var otherId = edge.source === vertente.id ? edge.target : edge.source;
+              var other = getVertente(otherId);
+              return '<li class="bridge-mini-item">'
+                + '<div style="display:flex; align-items:center; gap:6px; font-weight:700; color:var(--text-primary);">'
+                + '  <span class="dot" style="width:8px; height:8px; background:' + other.color + ';"></span>'
+                + '  <span>' + escapeHtml(other.shortTitle) + '</span>'
+                + '</div>'
+                + '<p style="color:var(--text-secondary); margin-top:3px;">' + escapeHtml(edge.label) + '</p>'
+                + '</li>';
+            }).join('')
+          + '    </ul>'
+          + '  </div>'
+          + '</div>'
+          + '<button id="btnOpenFromInspector" type="button" class="btn-primary-full" style="background:' + vertente.color + ';">'
+          + '  <span>Abrir Dossiê Completo</span>'
+          + '  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>'
+          + '</button>';
+
+        document.getElementById('btnOpenFromInspector').addEventListener('click', function () {
+          openVertenteDossier(vertente.id);
+        });
+      }
+
+      // =======================================================================
+      // 6. EXPLORAR VERTENTES (MASTER-DETAIL)
+      // =======================================================================
+      function vertenteMatches(v, q) {
+        if (!q) return true;
+        var needle = q.toLowerCase();
+        var blob = [
+          v.title, v.subtitle, v.sintese, v.matrizExplicacao,
+          v.polos.join(' '), v.matrizes.join(' '),
+          v.autoresBase.join(' '), v.autoresEvidencia.join(' '),
+          v.temas.join(' '),
+          v.conceitos.map(function (c) { return c.nome + ' ' + c.definicao + ' ' + c.autor; }).join(' '),
+          v.obras.map(function (o) { return o.titulo + ' ' + o.autor + ' ' + o.ano + ' ' + o.comentario; }).join(' ')
+        ].join(' ').toLowerCase();
+        return blob.indexOf(needle) !== -1;
+      }
+
+      function renderVertentesSidebar() {
+        var list = document.getElementById('vertentesSidebarList');
+        var countEl = document.getElementById('sidebarCount');
+        var q = state.sidebarFilter.trim();
+
+        var filtered = VERTENTES.filter(function (v) { return vertenteMatches(v, q); });
+        countEl.textContent = filtered.length + (filtered.length === 1 ? ' exibida' : ' exibidas');
+
+        if (filtered.length === 0) {
+          list.innerHTML = '<p style="font-size:12.5px; color:var(--text-muted); padding:10px 4px;">Nenhuma vertente encontrada para "' + escapeHtml(q) + '".</p>';
+          return;
+        }
+
+        if (!filtered.some(function (v) { return v.id === state.selectedVertenteId; })) {
+          state.selectedVertenteId = filtered[0].id;
+          state.selectedConceptName = filtered[0].conceitos[0].nome;
+        }
+
+        list.innerHTML = filtered.map(function (v) {
+          var isSel = v.id === state.selectedVertenteId;
+          return '<button type="button" class="vertente-item-btn' + (isSel ? ' selected' : '') + '" data-vid="' + v.id + '" style="' + (isSel ? 'border-left:4px solid ' + v.color + ';' : '') + '">'
+            + '<span class="dot" style="background:' + v.color + '; margin-top:4px;"></span>'
+            + '<div style="min-width:0;">'
+            + '  <div class="vertente-item-code" style="color:' + v.color + ';">' + v.code + ' · ' + v.sigla + '</div>'
+            + '  <div class="vertente-item-title">' + escapeHtml(v.shortTitle) + '</div>'
+            + '  <div class="vertente-item-counts">' + v.conceitos.length + ' conceitos · ' + v.obras.length + ' obras</div>'
+            + '</div>'
+            + '</button>';
+        }).join('');
+
+        list.querySelectorAll('.vertente-item-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var target = getVertente(btn.dataset.vid);
+            state.selectedVertenteId = target.id;
+            state.selectedConceptName = target.conceitos[0].nome;
+            renderVertentesSidebar();
+            renderVertenteDossier();
+          });
+        });
+      }
+
+      function renderVertenteDossier() {
+        var area = document.getElementById('vertenteDossierArea');
+        var v = getVertente(state.selectedVertenteId);
+        if (!v) return;
+        var q = state.sidebarFilter.trim();
+
+        var activeConcept = v.conceitos.find(function (c) { return c.nome === state.selectedConceptName; }) || v.conceitos[0];
+
+        area.innerHTML = ''
+          // 1. Cabeçalho da Vertente
+          + '<article class="card dossier-hero">'
+          + '  <div class="dossier-accent-bar" style="background:' + v.color + ';"></div>'
+          + '  <div class="dossier-hero-body">'
+          + '    <div class="dossier-meta-row">'
+          + '      <span class="mono" style="font-size:11.5px; font-weight:700; color:' + v.color + '; letter-spacing:0.08em;">VERTENTE ' + v.code + ' DE 08</span>'
+          + '      <span style="font-size:12px; font-weight:600; padding:4px 12px; border-radius:999px; background:' + v.tint + '; color:' + v.color + ';">' + escapeHtml(v.subtitle) + '</span>'
+          + '    </div>'
+          + '    <h2 class="dossier-title">' + highlight(v.title, q) + '</h2>'
+          + '    <p class="dossier-sintese">' + highlight(v.sintese, q) + '</p>'
+          + '    <div class="polos-bar">'
+          + '      <span class="mono" style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; margin-right:4px;">Polos &amp; Redes:</span>'
+          + v.polos.map(function (p) { return '<span class="polo-chip">' + highlight(p, q) + '</span>'; }).join('')
+          + '    </div>'
+          + '  </div>'
+          + '</article>'
+
+          // 2. Matrizes Teóricas & Bases Epistemológicas
+          + '<section class="card dossier-section">'
+          + '  <h3 class="dossier-section-title"><span class="title-bar" style="background:' + v.color + ';"></span>Matrizes Teóricas &amp; Bases Epistemológicas</h3>'
+          + '  <div class="matriz-tags">'
+          + v.matrizes.map(function (m) {
+              return '<span class="matriz-tag" style="border-color:' + v.color + '38;">' + highlight(m, q) + '</span>';
+            }).join('')
+          + '  </div>'
+          + '  <p class="matriz-explicacao">' + highlight(v.matrizExplicacao, q) + '</p>'
+          + '</section>'
+
+          // 3. Autores de Base vs Autores em Evidência
+          + '<section class="two-col-grid">'
+          + '  <div class="card dossier-section">'
+          + '    <h3 class="dossier-section-title" style="margin-bottom:4px;"><span class="title-bar" style="background:' + v.color + ';"></span>Autores de Base</h3>'
+          + '    <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Clássicos e referências internacionais fundadoras</p>'
+          + '    <div class="chips-wrap">'
+          + v.autoresBase.map(function (a) {
+              return '<span class="author-chip"><strong>' + highlight(a, q) + '</strong></span>';
+            }).join('')
+          + '    </div>'
+          + '  </div>'
+          + '  <div class="card dossier-section">'
+          + '    <h3 class="dossier-section-title" style="margin-bottom:4px;"><span class="title-bar" style="background:' + v.color + ';"></span>Autores em Evidência no Brasil</h3>'
+          + '    <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Pesquisadores contemporâneos e filiação institucional</p>'
+          + '    <div class="chips-wrap">'
+          + v.autoresEvidencia.map(function (a) {
+              var m = a.match(/^(.+?)\s*(\(.+\))$/);
+              if (m) {
+                return '<span class="author-chip" style="background:' + v.tint + '88; border-color:' + v.color + '35;"><strong>' + highlight(m[1], q) + '</strong><span class="inst">' + highlight(m[2], q) + '</span></span>';
+              }
+              return '<span class="author-chip"><strong>' + highlight(a, q) + '</strong></span>';
+            }).join('')
+          + '    </div>'
+          + '  </div>'
+          + '</section>'
+
+          // 4. Temas e Frentes de Pesquisa Atuais
+          + '<section class="card dossier-section">'
+          + '  <h3 class="dossier-section-title"><span class="title-bar" style="background:' + v.color + ';"></span>Temas e Frentes de Pesquisa Atuais</h3>'
+          + '  <ul class="temas-grid">'
+          + v.temas.map(function (t) {
+              return '<li class="tema-item"><span class="dot" style="background:' + v.color + '; width:8px; height:8px; margin-top:6px;"></span><span>' + highlight(t, q) + '</span></li>';
+            }).join('')
+          + '  </ul>'
+          + '</section>'
+
+          // 5. Conceitos-Chave Interativos
+          + '<section class="card dossier-section">'
+          + '  <h3 class="dossier-section-title" style="margin-bottom:4px;"><span class="title-bar" style="background:' + v.color + ';"></span>Conceitos-Chave Interativos</h3>'
+          + '  <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">Clique em qualquer conceito para expandir sua definição rigorosa, autor de referência e vertentes em diálogo.</p>'
+          + '  <div class="concept-pills">'
+          + v.conceitos.map(function (c) {
+              var isAct = c.nome === activeConcept.nome;
+              return '<button type="button" class="concept-pill-btn" data-cname="' + escapeHtml(c.nome) + '" style="' + (isAct ? 'background:' + v.color + '; color:#FFFFFF; border-color:' + v.color + ';' : '') + '">'
+                + highlight(c.nome, q)
+                + '</button>';
+            }).join('')
+          + '  </div>'
+          + '  <div class="concept-expand-box" style="background:' + v.tint + '66; border-color:' + v.color + '44;">'
+          + '    <div class="concept-expand-header">'
+          + '      <h4 style="font-size:1.1rem;">' + highlight(activeConcept.nome, q) + '</h4>'
+          + '      <span class="concept-ref-author">Ref.: ' + highlight(activeConcept.autor, q) + '</span>'
+          + '    </div>'
+          + '    <p class="concept-def-text">' + highlight(activeConcept.definicao, q) + '</p>'
+          + '    <div class="dialogo-row">'
+          + '      <span class="mono" style="font-size:10.5px; font-weight:600; color:var(--text-muted); text-transform:uppercase;">Também mobilizado em:</span>'
+          + activeConcept.dialogos.map(function (tid) {
+              var tv = getVertente(tid);
+              if (!tv) return '';
+              return '<button type="button" class="jump-badge" data-jump="' + tv.id + '">'
+                + '<span class="dot" style="width:8px; height:8px; background:' + tv.color + ';"></span>'
+                + '<span>' + escapeHtml(tv.shortTitle) + '</span>'
+                + '</button>';
+            }).join('')
+          + '    </div>'
+          + '  </div>'
+          + '</section>'
+
+          // 6. Obras de Referência Comentadas
+          + '<section class="card dossier-section">'
+          + '  <h3 class="dossier-section-title"><span class="title-bar" style="background:' + v.color + ';"></span>Obras de Referência Comentadas</h3>'
+          + '  <div class="obras-grid">'
+          + v.obras.map(function (o) {
+              return '<article class="obra-card">'
+                + '  <span class="obra-year">' + highlight(o.ano, q) + '</span>'
+                + '  <h4 class="obra-title">' + highlight(o.titulo, q) + '</h4>'
+                + '  <span class="obra-author">' + highlight(o.autor, q) + '</span>'
+                + '  <p class="obra-note">' + highlight(o.comentario, q) + '</p>'
+                + '</article>';
+            }).join('')
+          + '  </div>'
+          + '</section>'
+
+          // 7. Pontes e Diálogos com Outras Vertentes
+          + '<section class="card dossier-section">'
+          + '  <h3 class="dossier-section-title" style="margin-bottom:4px;"><span class="title-bar" style="background:' + v.color + ';"></span>Pontes e Diálogos com Outras Vertentes</h3>'
+          + '  <p style="font-size:12.5px; color:var(--text-muted); margin-bottom:14px;">Clique em qualquer ponte para navegar diretamente à vertente em diálogo.</p>'
+          + '  <div class="pontes-grid">'
+          + v.pontes.map(function (p) {
+              var tv = getVertente(p.target);
+              if (!tv) return '';
+              return '<button type="button" class="ponte-card-btn" data-jump="' + tv.id + '">'
+                + '  <div class="ponte-target-name" style="color:' + tv.color + ';">'
+                + '    <span style="display:inline-flex; align-items:center; gap:7px;"><span class="dot" style="width:9px; height:9px; background:' + tv.color + ';"></span>' + escapeHtml(tv.shortTitle) + '</span>'
+                + '    <span>→</span>'
+                + '  </div>'
+                + '  <p class="ponte-desc">' + escapeHtml(p.desc) + '</p>'
+                + '</button>';
+            }).join('')
+          + '  </div>'
+          + '</section>';
+
+        // Listeners dos conceitos expansíveis
+        area.querySelectorAll('.concept-pill-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            state.selectedConceptName = btn.dataset.cname;
+            renderVertenteDossier();
+          });
+        });
+
+        // Listeners das pontes e badges de diálogo
+        area.querySelectorAll('[data-jump]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            openVertenteDossier(btn.dataset.jump);
+          });
+        });
+      }
+
+      // =======================================================================
+      // 7. MATRIZ COMPARATIVA
+      // =======================================================================
+      function renderMatrixTable() {
+        var tbody = document.getElementById('matrixTableBody');
+        var scaleF = state.matrixScaleFilter;
+        var epistF = state.matrixEpistFilter;
+
+        var rows = VERTENTES.filter(function (v) {
+          var okScale = (scaleF === 'all') || (v.matriz.escala === scaleF);
+          var okEpist = (epistF === 'all') || (v.matriz.epistemologiaCat === epistF);
+          return okScale && okEpist;
+        });
+
+        if (rows.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:32px; color:var(--text-muted);">Nenhuma vertente corresponde à combinação de filtros selecionada.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = rows.map(function (v) {
+          return '<tr data-mid="' + v.id + '">'
+            + '<td class="col-vertente">'
+            + '  <div style="display:flex; align-items:flex-start; gap:9px;">'
+            + '    <span class="dot" style="background:' + v.color + '; margin-top:5px;"></span>'
+            + '    <div>'
+            + '      <span class="mono" style="font-size:10px; font-weight:700; color:' + v.color + ';">' + v.code + '</span>'
+            + '      <div style="font-weight:700; line-height:1.3; margin-top:1px;">' + escapeHtml(v.shortTitle) + '</div>'
+            + '    </div>'
+            + '  </div>'
+            + '</td>'
+            + '<td class="col-strong">' + escapeHtml(v.matriz.epistemologia) + '</td>'
+            + '<td><span class="mono" style="font-size:11px; font-weight:600; color:var(--text-primary); display:block; margin-bottom:2px;">' + escapeHtml(v.matriz.escala) + '</span>' + escapeHtml(v.matriz.escalaDetalhe) + '</td>'
+            + '<td>' + escapeHtml(v.matriz.metodos) + '</td>'
+            + '<td class="col-strong">' + escapeHtml(v.matriz.foco) + '</td>'
+            + '<td>' + escapeHtml(v.polos.join(', ')) + '</td>'
+            + '</tr>';
+        }).join('');
+
+        tbody.querySelectorAll('tr[data-mid]').forEach(function (tr) {
+          tr.addEventListener('click', function () {
+            openVertenteDossier(tr.dataset.mid);
+          });
+        });
+      }
+
+      // =======================================================================
+      // 8. CONCEITOS & OBRAS (GLOSSÁRIO + BIBLIOTECA)
+      // =======================================================================
+      function renderIndexVertentePills() {
+        var bar = document.getElementById('indexVertentePills');
+        var html = '<button type="button" class="v-filter-pill' + (state.indexVertenteFilter === 'all' ? ' active' : '') + '" data-vf="all">Todas (8)</button>';
+        VERTENTES.forEach(function (v) {
+          var isAct = state.indexVertenteFilter === v.id;
+          html += '<button type="button" class="v-filter-pill' + (isAct ? ' active' : '') + '" data-vf="' + v.id + '">'
+            + '<span class="dot" style="width:8px; height:8px; background:' + (isAct ? '#FFFFFF' : v.color) + ';"></span>'
+            + '<span>' + v.code + ' · ' + escapeHtml(v.shortTitle) + '</span>'
+            + '</button>';
+        });
+        bar.innerHTML = html;
+
+        bar.querySelectorAll('.v-filter-pill').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            state.indexVertenteFilter = btn.dataset.vf;
+            renderIndexVertentePills();
+            renderIndexGrid();
+          });
+        });
+      }
+
+      function renderIndexGrid() {
+        var grid = document.getElementById('indexCardsGrid');
+        var countEl = document.getElementById('indexResultCount');
+        var q = state.indexSearch.trim().toLowerCase();
+        var vf = state.indexVertenteFilter;
+
+        var btnG = document.getElementById('subTabGlossario');
+        var btnB = document.getElementById('subTabBiblioteca');
+        btnG.classList.toggle('active', state.indexSubTab === 'glossario');
+        btnG.setAttribute('aria-selected', state.indexSubTab === 'glossario');
+        btnB.classList.toggle('active', state.indexSubTab === 'biblioteca');
+        btnB.setAttribute('aria-selected', state.indexSubTab === 'biblioteca');
+
+        if (state.indexSubTab === 'glossario') {
+          var concepts = [];
+          VERTENTES.forEach(function (v) {
+            if (vf !== 'all' && v.id !== vf) return;
+            v.conceitos.forEach(function (c) {
+              var text = (c.nome + ' ' + c.definicao + ' ' + c.autor + ' ' + v.shortTitle).toLowerCase();
+              if (!q || text.indexOf(q) !== -1) {
+                concepts.push({ c: c, v: v });
+              }
+            });
+          });
+
+          countEl.textContent = concepts.length + ' de 40 conceitos exibidos';
+
+          if (concepts.length === 0) {
+            grid.innerHTML = '<div class="card" style="grid-column:1/-1; padding:34px; text-align:center; color:var(--text-muted);">Nenhum conceito encontrado com os filtros aplicados.</div>';
+            return;
+          }
+
+          grid.innerHTML = concepts.map(function (item) {
+            var c = item.c;
+            var v = item.v;
+            return '<article class="card index-card">'
+              + '<div>'
+              + '  <button type="button" class="badge-vertente" data-open-v="' + v.id + '" data-open-c="' + escapeHtml(c.nome) + '" style="background:' + v.tint + '; color:' + v.color + ';">'
+              + '    <span class="dot" style="width:7px; height:7px; background:' + v.color + ';"></span>'
+              + '    ' + escapeHtml(v.shortTitle)
+              + '  </button>'
+              + '  <h3 style="font-size:1.08rem; margin-top:10px; line-height:1.25;">' + highlight(c.nome, state.indexSearch) + '</h3>'
+              + '  <p class="mono" style="font-size:11px; color:var(--text-muted); margin-top:4px;">' + highlight(c.autor, state.indexSearch) + '</p>'
+              + '  <p style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.55;">' + highlight(c.definicao, state.indexSearch) + '</p>'
+              + '</div>'
+              + '<div class="index-card-footer">'
+              + '  <div style="display:flex; flex-wrap:wrap; gap:5px; align-items:center;">'
+              + '    <span class="mono" style="font-size:10px; color:var(--text-muted);">DIÁLOGO:</span>'
+              + c.dialogos.map(function (did) {
+                  var dv = getVertente(did);
+                  return dv ? '<button type="button" class="jump-badge" data-open-v="' + dv.id + '" style="padding:2px 7px; font-size:10.5px;"><span class="dot" style="width:6px; height:6px; background:' + dv.color + ';"></span>' + dv.code + '</button>' : '';
+                }).join('')
+              + '  </div>'
+              + '  <button type="button" class="link-action" data-open-v="' + v.id + '" data-open-c="' + escapeHtml(c.nome) + '">Ver dossiê →</button>'
+              + '</div>'
+              + '</article>';
+          }).join('');
+        } else {
+          var obras = [];
+          VERTENTES.forEach(function (v) {
+            if (vf !== 'all' && v.id !== vf) return;
+            v.obras.forEach(function (o) {
+              var text = (o.titulo + ' ' + o.autor + ' ' + o.ano + ' ' + o.comentario + ' ' + v.shortTitle).toLowerCase();
+              if (!q || text.indexOf(q) !== -1) {
+                obras.push({ o: o, v: v });
+              }
+            });
+          });
+
+          countEl.textContent = obras.length + ' de 32 obras exibidas';
+
+          if (obras.length === 0) {
+            grid.innerHTML = '<div class="card" style="grid-column:1/-1; padding:34px; text-align:center; color:var(--text-muted);">Nenhuma obra encontrada com os filtros aplicados.</div>';
+            return;
+          }
+
+          grid.innerHTML = obras.map(function (item) {
+            var o = item.o;
+            var v = item.v;
+            return '<article class="card index-card">'
+              + '<div>'
+              + '  <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">'
+              + '    <button type="button" class="badge-vertente" data-open-v="' + v.id + '" style="background:' + v.tint + '; color:' + v.color + ';">'
+              + '      <span class="dot" style="width:7px; height:7px; background:' + v.color + ';"></span>'
+              + '      ' + escapeHtml(v.shortTitle)
+              + '    </button>'
+              + '    <span class="mono" style="font-size:11px; font-weight:600; color:var(--text-muted);">' + highlight(o.ano, state.indexSearch) + '</span>'
+              + '  </div>'
+              + '  <h3 style="font-size:1.05rem; margin-top:10px; line-height:1.3;">' + highlight(o.titulo, state.indexSearch) + '</h3>'
+              + '  <p style="font-size:12.5px; font-weight:600; color:var(--text-primary); margin-top:4px;">' + highlight(o.autor, state.indexSearch) + '</p>'
+              + '  <p style="font-size:13px; color:var(--text-secondary); margin-top:8px; line-height:1.52;">' + highlight(o.comentario, state.indexSearch) + '</p>'
+              + '</div>'
+              + '<div class="index-card-footer" style="justify-content:flex-end;">'
+              + '  <button type="button" class="link-action" data-open-v="' + v.id + '">Explorar vertente →</button>'
+              + '</div>'
+              + '</article>';
+          }).join('');
+        }
+
+        grid.querySelectorAll('[data-open-v]').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            openVertenteDossier(btn.dataset.openV, btn.dataset.openC || null);
+          });
+        });
+      }
+
+      // =======================================================================
+      // 9. BUSCA GLOBAL CATEGORIZADA EM TEMPO REAL
+      // =======================================================================
+      function initGlobalSearch() {
+        var input = document.getElementById('globalSearchInput');
+        var clearBtn = document.getElementById('clearGlobalSearch');
+        var dropdown = document.getElementById('globalSearchDropdown');
+
+        function closeDrop() {
+          dropdown.classList.remove('open');
+        }
+
+        input.addEventListener('input', function () {
+          var q = input.value.trim();
+          clearBtn.classList.toggle('visible', q.length > 0);
+          if (q.length < 2) {
+            closeDrop();
+            return;
+          }
+
+          var needle = q.toLowerCase();
+          var results = [];
+
+          VERTENTES.forEach(function (v) {
+            if (v.title.toLowerCase().indexOf(needle) !== -1 || v.subtitle.toLowerCase().indexOf(needle) !== -1) {
+              results.push({ cat: 'Vertente', title: v.title, sub: v.code + ' · ' + v.shortTitle, vid: v.id, color: v.color });
+            }
+            v.autoresEvidencia.forEach(function (a) {
+              if (a.toLowerCase().indexOf(needle) !== -1) {
+                results.push({ cat: 'Autor em Evidência', title: a, sub: v.shortTitle, vid: v.id, color: v.color });
+              }
+            });
+            v.autoresBase.forEach(function (a) {
+              if (a.toLowerCase().indexOf(needle) !== -1) {
+                results.push({ cat: 'Autor de Base', title: a, sub: v.shortTitle, vid: v.id, color: v.color });
+              }
+            });
+            v.conceitos.forEach(function (c) {
+              if (c.nome.toLowerCase().indexOf(needle) !== -1 || c.definicao.toLowerCase().indexOf(needle) !== -1) {
+                results.push({ cat: 'Conceito', title: c.nome, sub: v.shortTitle, vid: v.id, cname: c.nome, color: v.color });
+              }
+            });
+            v.obras.forEach(function (o) {
+              if ((o.titulo + ' ' + o.autor + ' ' + o.ano).toLowerCase().indexOf(needle) !== -1) {
+                results.push({ cat: 'Obra', title: o.titulo + ' (' + o.autor + ', ' + o.ano + ')', sub: v.shortTitle, vid: v.id, color: v.color });
+              }
+            });
+            v.temas.forEach(function (t) {
+              if (t.toLowerCase().indexOf(needle) !== -1) {
+                results.push({ cat: 'Tema', title: t, sub: v.shortTitle, vid: v.id, color: v.color });
+              }
+            });
+          });
+
+          var top = results.slice(0, 15);
+          if (top.length === 0) {
+            dropdown.innerHTML = '<div style="padding:16px; text-align:center; font-size:12.5px; color:var(--text-muted);">Nenhum resultado encontrado para "' + escapeHtml(q) + '".</div>';
+          } else {
+            dropdown.innerHTML = top.map(function (r) {
+              return '<button type="button" class="search-result-btn" data-vid="' + r.vid + '" data-cname="' + escapeHtml(r.cname || '') + '">'
+                + '<span class="dot" style="background:' + r.color + '; margin-top:5px;"></span>'
+                + '<div style="min-width:0;">'
+                + '  <div class="search-result-meta"><span>' + escapeHtml(r.cat) + '</span><span>•</span><span>' + escapeHtml(r.sub) + '</span></div>'
+                + '  <div class="search-result-title">' + highlight(r.title, q) + '</div>'
+                + '</div>'
+                + '</button>';
+            }).join('');
+
+            dropdown.querySelectorAll('.search-result-btn').forEach(function (btn) {
+              btn.addEventListener('click', function () {
+                closeDrop();
+                openVertenteDossier(btn.dataset.vid, btn.dataset.cname || null);
+              });
+            });
+          }
+
+          dropdown.classList.add('open');
+        });
+
+        clearBtn.addEventListener('click', function () {
+          input.value = '';
+          clearBtn.classList.remove('visible');
+          closeDrop();
+          input.focus();
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!dropdown.contains(e.target) && e.target !== input) {
+            closeDrop();
+          }
+        });
+      }
+
+      // =======================================================================
+      // 10. INICIALIZAÇÃO
+      // =======================================================================
+      document.addEventListener('DOMContentLoaded', function () {
+        // Abas principais
+        document.querySelectorAll('.nav-tab').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            switchTab(btn.dataset.tab);
+          });
+        });
+
+        // Imprimir / PDF
+        document.getElementById('btnPrintPdf').addEventListener('click', function () {
+          window.print();
+        });
+
+        // Filtro lateral da aba Explorar Vertentes
+        document.getElementById('sidebarFilterInput').addEventListener('input', function (e) {
+          state.sidebarFilter = e.target.value;
+          renderVertentesSidebar();
+          renderVertenteDossier();
+        });
+
+        // Filtros da Matriz Comparativa
+        document.querySelectorAll('#scaleFilterPills .filter-pill').forEach(function (pill) {
+          pill.addEventListener('click', function () {
+            document.querySelectorAll('#scaleFilterPills .filter-pill').forEach(function (p) { p.classList.remove('active'); });
+            pill.classList.add('active');
+            state.matrixScaleFilter = pill.dataset.scale;
+            renderMatrixTable();
+          });
+        });
+
+        document.getElementById('matrixEpistemologySelect').addEventListener('change', function (e) {
+          state.matrixEpistFilter = e.target.value;
+          renderMatrixTable();
+        });
+
+        // Sub-abas e busca do Índice Integrado
+        document.getElementById('subTabGlossario').addEventListener('click', function () {
+          state.indexSubTab = 'glossario';
+          renderIndexGrid();
+        });
+        document.getElementById('subTabBiblioteca').addEventListener('click', function () {
+          state.indexSubTab = 'biblioteca';
+          renderIndexGrid();
+        });
+        document.getElementById('indexSearchInput').addEventListener('input', function (e) {
+          state.indexSearch = e.target.value;
+          renderIndexGrid();
+        });
+
+        // Renderizações iniciais
+        initGlobalSearch();
+        renderConstellationSvg();
+        renderVertentesSidebar();
+        renderVertenteDossier();
+        renderMatrixTable();
+        renderIndexVertentePills();
+        renderIndexGrid();
+      });
+    })();
+  </script>
+</body>
+</html>
