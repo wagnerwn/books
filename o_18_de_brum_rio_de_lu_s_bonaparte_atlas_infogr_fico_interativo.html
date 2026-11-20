@@ -1,0 +1,2221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O 18 de Brumário de Luís Bonaparte — Atlas Infográfico Interativo</title>
+
+  <!-- Google Fonts com fallback seguro -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            parchment: '#F6F3EC',
+            ink: '#1C1B1A',
+            crimson: '#9B1C1C',
+            republic: '#1E3A5F',
+            gold: '#B78428',
+            peasant: '#2D6A4F',
+            borderline: '#E2DDD2',
+            surface: '#FFFFFF'
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'Cambria', 'serif'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg-parchment: #F6F3EC;
+      --bg-card: #FFFFFF;
+      --text-ink: #1C1B1A;
+      --accent-crimson: #9B1C1C;
+      --accent-republic: #1E3A5F;
+      --accent-gold: #B78428;
+      --accent-peasant: #2D6A4F;
+      --border-soft: #E2DDD2;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-parchment);
+      color: var(--text-ink);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-image: radial-gradient(rgba(28, 27, 26, 0.04) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Textura sutil de gravura em cabeçalhos editoriais */
+    .engraving-rule {
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 3px,
+        rgba(28, 27, 26, 0.14) 3px,
+        rgba(28, 27, 26, 0.14) 4px
+      );
+    }
+
+    /* Barra de rolagem discreta */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #EDE8DC;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C9C1B0;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A89E89;
+    }
+
+    /* Estilização do slider range */
+    input[type="range"].editorial-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      background: #E2DDD2;
+      border-radius: 999px;
+      outline: none;
+    }
+    input[type="range"].editorial-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #9B1C1C;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(28, 27, 26, 0.3);
+      cursor: pointer;
+      transition: transform 0.15s ease;
+    }
+    input[type="range"].editorial-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.12);
+    }
+    input[type="range"].editorial-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #9B1C1C;
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(28, 27, 26, 0.3);
+      cursor: pointer;
+    }
+
+    /* Animação suave de entrada de página */
+    .fade-in {
+      animation: fadeIn 0.28s ease-out forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cartão interativo com virada suave de estado */
+    .flip-state-card {
+      transition: all 0.25s ease;
+    }
+    .flip-state-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -6px rgba(28, 27, 26, 0.1);
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-crimson/20 selection:text-crimson">
+
+  <!-- Cabeçalho Mobile -->
+  <header class="lg:hidden sticky top-0 z-30 bg-parchment/95 backdrop-blur border-b border-borderline px-4 py-3 flex items-center justify-between">
+    <button id="mobile-menu-btn" type="button" class="p-2 rounded-lg border border-borderline bg-white text-ink hover:bg-parchment focus:outline-none focus:ring-2 focus:ring-crimson" aria-label="Abrir menu de navegação">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+      </svg>
+    </button>
+    <div class="text-center px-2">
+      <p class="font-serif font-bold text-sm text-ink leading-tight">O 18 de Brumário</p>
+      <p class="font-mono text-[10px] uppercase tracking-widest text-crimson">Atlas Infográfico</p>
+    </div>
+    <div id="mobile-progress-pill" class="font-mono text-xs font-semibold px-2.5 py-1 rounded-full bg-white border border-borderline text-republic">
+      0/7
+    </div>
+  </header>
+
+  <!-- Overlay Mobile Drawer -->
+  <div id="sidebar-overlay" class="fixed inset-0 z-40 bg-ink/40 backdrop-blur-[1px] hidden lg:hidden" aria-hidden="true"></div>
+
+  <!-- Layout Principal -->
+  <div class="flex min-h-screen">
+
+    <!-- Barra Lateral Fixa / Drawer Responsivo -->
+    <aside id="sidebar" class="fixed lg:sticky top-0 left-0 z-50 h-screen w-80 max-w-[88vw] bg-white border-r border-borderline flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-out shadow-xl lg:shadow-none">
+      <!-- Identidade Editorial -->
+      <div class="p-5 border-b border-borderline bg-parchment/60">
+        <div class="flex items-start justify-between gap-2">
+          <div>
+            <span class="inline-block font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-crimson mb-1">
+              Karl Marx • 1852 / Boitempo
+            </span>
+            <h1 class="font-serif font-extrabold text-xl leading-snug text-ink">
+              O 18 de Brumário
+            </h1>
+            <p class="text-xs text-ink/70 mt-0.5">de Luís Bonaparte — Atlas Interativo</p>
+          </div>
+          <button id="close-sidebar-btn" type="button" class="lg:hidden p-1.5 rounded-lg border border-borderline bg-white text-ink/70 hover:text-ink" aria-label="Fechar menu">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Progresso Geral -->
+        <div class="mt-4">
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="font-medium text-ink/70">Progresso de Estudo</span>
+            <span id="sidebar-progress-text" class="font-mono font-semibold text-republic">0 de 7 capítulos</span>
+          </div>
+          <div class="w-full h-2 bg-borderline/70 rounded-full overflow-hidden">
+            <div id="sidebar-progress-bar" class="h-full bg-crimson rounded-full transition-all duration-300" style="width: 0%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Busca Instantânea -->
+      <div class="p-4 border-b border-borderline">
+        <label for="search-input" class="sr-only">Buscar capítulo, conceito, data ou personagem</label>
+        <div class="relative">
+          <svg class="w-4 h-4 text-ink/45 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+          </svg>
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Buscar conceito, data, nome..."
+            autocomplete="off"
+            class="w-full pl-9 pr-8 py-2 text-xs rounded-lg border border-borderline bg-parchment/50 text-ink placeholder:text-ink/45 focus:bg-white focus:outline-none focus:ring-2 focus:ring-crimson/40 focus:border-crimson transition"
+          >
+          <button id="clear-search-btn" type="button" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 text-ink/45 hover:text-ink" aria-label="Limpar busca">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div id="search-results" class="hidden mt-2 max-h-60 overflow-y-auto rounded-lg border border-borderline bg-white divide-y divide-borderline/60 shadow-sm"></div>
+      </div>
+
+      <!-- Navegação Principal -->
+      <nav class="flex-1 overflow-y-auto p-3 space-y-1.5" aria-label="Sumário da obra">
+        <button
+          id="nav-overview"
+          type="button"
+          onclick="navigateTo('overview')"
+          class="w-full text-left px-3.5 py-2.5 rounded-xl border transition flex items-center justify-between gap-2 group"
+        >
+          <div class="flex items-center gap-2.5 min-w-0">
+            <span class="w-7 h-7 rounded-lg bg-republic/10 text-republic font-mono text-xs font-bold flex items-center justify-center shrink-0">
+              §0
+            </span>
+            <div class="min-w-0">
+              <p class="text-xs font-bold text-ink truncate">Mapa Geral &amp; Prefácios</p>
+              <p class="text-[11px] text-ink/60 truncate">Linha do Tempo • Marx, Engels, Marcuse</p>
+            </div>
+          </div>
+        </button>
+
+        <div class="pt-2 pb-1 px-2 flex items-center justify-between">
+          <span class="font-mono text-[10px] font-semibold uppercase tracking-wider text-ink/50">Capítulos da Obra</span>
+          <span class="font-mono text-[10px] text-ink/45">1848–1851</span>
+        </div>
+
+        <div id="chapter-nav-list" class="space-y-1.5">
+          <!-- Preenchido dinamicamente pelo JS -->
+        </div>
+      </nav>
+
+      <!-- Rodapé da Barra Lateral -->
+      <div class="p-3.5 border-t border-borderline bg-parchment/40 text-[11px] text-ink/60 flex items-center justify-between">
+        <span>Ed. Boitempo • Trad. Nélio Schneider</span>
+        <button type="button" onclick="resetProgress()" class="text-crimson hover:underline font-medium">Reiniciar</button>
+      </div>
+    </aside>
+
+    <!-- Área Principal de Conteúdo -->
+    <main class="flex-1 min-w-0">
+      <div id="main-content" class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-10">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Toast de Feedback (substitui qualquer uso de alert) -->
+  <div id="toast-banner" class="fixed bottom-5 right-5 z-50 hidden max-w-xs bg-ink text-parchment text-xs font-medium px-4 py-3 rounded-xl shadow-lg border border-gold/40 flex items-center gap-2.5">
+    <span class="w-2 h-2 rounded-full bg-gold shrink-0"></span>
+    <span id="toast-message"></span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       DADOS HISTÓRICOS, TEXTUAIS E DE BUSCA — O 18 DE BRUMÁRIO DE LUÍS BONAPARTE
+       Baseado fielmente na edição da Boitempo Editorial (Trad. Nélio Schneider)
+       ========================================================================= */
+
+    const STORAGE_KEY = 'brumario_atlas_studied_v1';
+
+    const CHAPTERS_META = [
+      {
+        id: 'cap1',
+        roman: 'I',
+        shortTitle: 'Tragédia, Farsa e o Prólogo de Fevereiro',
+        dates: 'Fev – Jun 1848',
+        color: '#9B1C1C',
+        keywords: ['Hegel', 'tragédia', 'farsa', 'pesadelo', 'tradição', 'mortos', 'Hic Rhodus', 'Fevereiro', 'Junho', 'barricadas', 'Blanqui', 'Propriedade', 'Família', 'Religião', 'Ordem', 'Crapulinski', '15 de maio', 'revoluções burguesas', 'proletárias']
+      },
+      {
+        id: 'cap2',
+        roman: 'II',
+        shortTitle: 'Os Republicanos Puros e a Constituição de Aquiles',
+        dates: 'Jun 1848 – Mai 1849',
+        color: '#1E3A5F',
+        keywords: ['National', 'republicanos puros', 'tricolores', 'Cavaignac', 'Marrast', 'estado de sítio', 'Constituição de 1848', 'Aquiles', 'câmara superior', 'câmara inferior', 'artigo 45', 'Frère il faut mourir', '10 de dezembro', 'Odilon Barrot', '29 de janeiro', 'Changarnier', 'Roma', 'Oudinot', 'bayonettes intelligentes']
+      },
+      {
+        id: 'cap3',
+        roman: 'III',
+        shortTitle: 'A Linha Descendente, o Partido da Ordem e o 13 de Junho',
+        dates: 'Mai – Ago 1849',
+        color: '#B78428',
+        keywords: ['linha ascendente', 'linha descendente', '1789', '1848', 'baionetas', 'Partido da Ordem', 'Legitimistas', 'Orleanistas', 'Bourbon', 'Orléans', 'flor-de-lis', 'Capital', 'Montanha', 'social-democracia', 'Ledru-Rollin', '13 de junho', 'Roma', 'Guarda Nacional', 'talismã', 'espectro vermelho']
+      },
+      {
+        id: 'cap4',
+        roman: 'IV',
+        shortTitle: 'Perda do Executivo, "Tudo é Socialismo!" e o 31 de Maio',
+        dates: 'Out 1849 – Mai 1850',
+        color: '#9B1C1C',
+        keywords: ['1º de novembro', 'Hautpoul', 'Fould', 'Carlier', 'imposto do vinho', 'lei de educação', 'jesuítas', 'socialismo', 'violino', 'espada de Dâmocles', '10 de março', 'De Flotte', 'Eugène Sue', '31 de maio', 'sufrágio universal', '3 milhões', 'golpe da burguesia', 'Baroche', 'Faucher']
+      },
+      {
+        id: 'cap5',
+        roman: 'V',
+        shortTitle: 'A Sociedade 10 de Dezembro, Salsichões e a Perda do Exército',
+        dates: 'Mai 1850 – Abr 1851',
+        color: '#1E3A5F',
+        keywords: ['lista civil', 'chantagem', 'Sociedade 10 de Dezembro', 'lumpemproletariado', 'bohemia', 'Saint-Maur', 'Satory', 'salsichões', 'champanhe', 'Changarnier', '12 de janeiro', 'cretinismo parlamentar', 'Mauguin', 'Yon', 'loteria', 'barras de ouro', 'ministério de transição', 'antiparlamentar', 'Persigny']
+      },
+      {
+        id: 'cap6',
+        roman: 'VI',
+        shortTitle: 'Ruptura da Burguesia, Crise de 1851 e o 2 de Dezembro',
+        dates: 'Mai – Dez 1851',
+        color: '#B78428',
+        keywords: ['revisão constitucional', 'artigo 111', '19 de julho', '446', '278', 'fusão', 'Chambord', 'Henrique V', 'Joinville', 'Economist', 'aristocracia financeira', 'crise comercial', '1851', 'superprodução', 'algodão', 'lã', 'Lei dos Questores', 'Asno de Buridano', '2 de dezembro', '25 milhões', 'Magnan', 'Thorigny', '10º arrondissement']
+      },
+      {
+        id: 'cap7',
+        roman: 'VII',
+        shortTitle: 'A Máquina Estatal, o "Saco de Batatas" e o Bonapartismo',
+        dates: 'Análise Estrutural',
+        color: '#2D6A4F',
+        keywords: ['4 de dezembro', 'retaliação', 'Fuge tace quiesce', 'república cossaca', 'velha toupeira', 'máquina estatal', 'burocracia', 'quebrar a máquina', 'saco de batatas', 'camponeses parceleiros', 'Parzellenbauern', 'Vendée', 'Cévennes', 'idées napoléoniennes', 'hipoteca', 'Coluna de Vendôme', 'Pierre dAilly']
+      }
+    ];
+
+    // Estado global da aplicação
+    let currentView = 'overview';
+    let studiedMap = loadStudiedMap();
+
+    // Estados internos dos infográficos (para manter interatividade fluida)
+    const widgetState = {
+      timelineIndex: 0,
+      prefaceTab: 'marx',
+      cap1RevMode: '18',
+      cap1CoalitionId: 'financa',
+      cap2Articles: { art8: false, art9: false, art3: false, sufragio: false },
+      cap2Head: 'compare',
+      cap3Step: 0,
+      cap3FactionMode: 'split',
+      cap4LawMode: 'before',
+      cap4SocialismKey: 'imprensa',
+      cap5ThermoStage: 0,
+      cap5ForceTab: 'soc10',
+      cap6VoteHighlight: 'all',
+      cap6CrisisTab: 'compare',
+      cap6CoupStep: 0,
+      cap7MachineStage: 5,
+      cap7PeasantMode: 'conservador',
+      cap7Idees: { i1: false, i2: false, i3: false, i4: false, i5: false },
+      cap7MirrorIdx: 0
+    };
+
+    /* =========================================================================
+       PERSISTÊNCIA (localStorage) E UTILITÁRIOS
+       ========================================================================= */
+
+    function loadStudiedMap() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveStudiedMap() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(studiedMap));
+      } catch (e) {
+        // Fallback silencioso se localStorage estiver bloqueado
+      }
+    }
+
+    function toggleStudied(chapterId, event) {
+      if (event) event.stopPropagation();
+      studiedMap[chapterId] = !studiedMap[chapterId];
+      saveStudiedMap();
+      renderSidebar();
+      updateCurrentStudiedButton();
+      const ch = CHAPTERS_META.find(c => c.id === chapterId);
+      if (ch) {
+        showToast(studiedMap[chapterId]
+          ? `Capítulo ${ch.roman} marcado como estudado.`
+          : `Capítulo ${ch.roman} desmarcado.`);
+      }
+    }
+
+    function resetProgress() {
+      studiedMap = {};
+      saveStudiedMap();
+      renderSidebar();
+      updateCurrentStudiedButton();
+      showToast('Progresso de estudo reiniciado.');
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const banner = document.getElementById('toast-banner');
+      const text = document.getElementById('toast-message');
+      if (!banner || !text) return;
+      text.textContent = msg;
+      banner.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 2600);
+    }
+
+    function updateCurrentStudiedButton() {
+      const btn = document.getElementById('chapter-studied-toggle-btn');
+      if (!btn || currentView === 'overview') return;
+      const isDone = !!studiedMap[currentView];
+      btn.className = isDone
+        ? 'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-peasant text-white shadow-sm hover:bg-peasant/90 transition'
+        : 'inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white border border-borderline text-ink hover:border-peasant hover:text-peasant transition';
+      btn.innerHTML = isDone
+        ? `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Capítulo Estudado`
+        : `<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/></svg> Marcar como Estudado`;
+    }
+
+    /* =========================================================================
+       NAVEGAÇÃO, SIDEBAR E BUSCA INSTANTÂNEA
+       ========================================================================= */
+
+    function renderSidebar() {
+      const list = document.getElementById('chapter-nav-list');
+      const overviewBtn = document.getElementById('nav-overview');
+
+      if (currentView === 'overview') {
+        overviewBtn.className = 'w-full text-left px-3.5 py-2.5 rounded-xl border border-republic bg-republic/10 transition flex items-center justify-between gap-2';
+      } else {
+        overviewBtn.className = 'w-full text-left px-3.5 py-2.5 rounded-xl border border-transparent hover:border-borderline hover:bg-parchment/60 transition flex items-center justify-between gap-2';
+      }
+
+      list.innerHTML = CHAPTERS_META.map(ch => {
+        const isActive = currentView === ch.id;
+        const isDone = !!studiedMap[ch.id];
+        return `
+          <div
+            onclick="navigateTo('${ch.id}')"
+            role="button"
+            tabindex="0"
+            onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigateTo('${ch.id}');}"
+            class="w-full text-left px-3 py-2.5 rounded-xl border cursor-pointer transition flex items-start justify-between gap-2 ${
+              isActive
+                ? 'border-crimson bg-crimson/[0.06] shadow-xs'
+                : 'border-transparent hover:border-borderline hover:bg-parchment/60'
+            }"
+          >
+            <div class="flex items-start gap-2.5 min-w-0">
+              <span class="w-7 h-7 rounded-lg font-serif font-bold text-xs flex items-center justify-center shrink-0 mt-0.5 ${
+                isActive ? 'bg-crimson text-white' : 'bg-parchment text-ink border border-borderline'
+              }">
+                ${ch.roman}
+              </span>
+              <div class="min-w-0">
+                <p class="text-xs font-semibold leading-snug ${isActive ? 'text-crimson' : 'text-ink'}">${ch.shortTitle}</p>
+                <p class="font-mono text-[10px] text-ink/55 mt-0.5">${ch.dates}</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onclick="toggleStudied('${ch.id}', event)"
+              title="${isDone ? 'Desmarcar como estudado' : 'Marcar como estudado'}"
+              aria-label="${isDone ? 'Desmarcar capítulo ' + ch.roman : 'Marcar capítulo ' + ch.roman + ' como estudado'}"
+              class="shrink-0 mt-1 w-5 h-5 rounded-md border flex items-center justify-center transition ${
+                isDone
+                  ? 'bg-peasant border-peasant text-white'
+                  : 'bg-white border-borderline text-transparent hover:border-peasant/70'
+              }"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+              </svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      // Atualizar barra de progresso
+      const doneCount = CHAPTERS_META.filter(c => studiedMap[c.id]).length;
+      const pct = Math.round((doneCount / CHAPTERS_META.length) * 100);
+      document.getElementById('sidebar-progress-text').textContent = `${doneCount} de ${CHAPTERS_META.length} capítulos`;
+      document.getElementById('sidebar-progress-bar').style.width = `${pct}%`;
+      const mobilePill = document.getElementById('mobile-progress-pill');
+      if (mobilePill) mobilePill.textContent = `${doneCount}/7`;
+    }
+
+    function navigateTo(viewId) {
+      currentView = viewId;
+      renderSidebar();
+      renderMainView();
+      closeMobileSidebar();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openMobileSidebar() {
+      document.getElementById('sidebar').classList.remove('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.remove('hidden');
+    }
+
+    function closeMobileSidebar() {
+      document.getElementById('sidebar').classList.add('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+
+    // Índice de busca instantânea
+    const SEARCH_INDEX = [
+      { target: 'overview', label: 'Mapa Geral & Prefácios', meta: 'Victor Hugo, Proudhon, Marx (1869), Engels (1885), Marcuse (1965), Sismondi, cesarismo, linha do tempo 1848-1851' },
+      ...CHAPTERS_META.map(c => ({
+        target: c.id,
+        label: `Capítulo ${c.roman} — ${c.shortTitle}`,
+        meta: `${c.dates} ${c.keywords.join(' ')}`
+      }))
+    ];
+
+    function setupSearch() {
+      const input = document.getElementById('search-input');
+      const resultsBox = document.getElementById('search-results');
+      const clearBtn = document.getElementById('clear-search-btn');
+
+      function runSearch() {
+        const q = input.value.trim().toLowerCase();
+        clearBtn.classList.toggle('hidden', q.length === 0);
+        if (q.length < 2) {
+          resultsBox.classList.add('hidden');
+          resultsBox.innerHTML = '';
+          return;
+        }
+        const normalizedQ = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const matches = SEARCH_INDEX.filter(item => {
+          const hay = (item.label + ' ' + item.meta).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          return hay.includes(normalizedQ);
+        });
+
+        if (matches.length === 0) {
+          resultsBox.innerHTML = `<div class="p-3 text-xs text-ink/55">Nenhum resultado para "<strong>${escapeHtml(input.value)}</strong>".</div>`;
+        } else {
+          resultsBox.innerHTML = matches.map(m => {
+            const matchedKeywords = m.meta.split(/[, ]+/).filter(w =>
+              w.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes(normalizedQ)
+            ).slice(0, 3);
+            return `
+              <button type="button" onclick="navigateTo('${m.target}'); document.getElementById('search-results').classList.add('hidden');" class="w-full text-left px-3 py-2.5 hover:bg-parchment/80 transition">
+                <p class="text-xs font-semibold text-ink">${m.label}</p>
+                ${matchedKeywords.length ? `<p class="font-mono text-[10px] text-crimson mt-0.5">Correspondência: ${matchedKeywords.join(', ')}</p>` : ''}
+              </button>
+            `;
+          }).join('');
+        }
+        resultsBox.classList.remove('hidden');
+      }
+
+      input.addEventListener('input', runSearch);
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        runSearch();
+        input.focus();
+      });
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    /* =========================================================================
+       COMPONENTE DE RODAPÉ DE NAVEGAÇÃO ENTRE CAPÍTULOS
+       ========================================================================= */
+
+    function renderChapterFooter(viewId) {
+      const order = ['overview', ...CHAPTERS_META.map(c => c.id)];
+      const idx = order.indexOf(viewId);
+      const prevId = idx > 0 ? order[idx - 1] : null;
+      const nextId = idx < order.length - 1 ? order[idx + 1] : null;
+
+      const labelFor = (id) => {
+        if (id === 'overview') return 'Mapa Geral & Prefácios';
+        const ch = CHAPTERS_META.find(c => c.id === id);
+        return ch ? `Cap. ${ch.roman}: ${ch.shortTitle}` : '';
+      };
+
+      return `
+        <footer class="mt-12 pt-6 border-t border-borderline flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          ${prevId ? `
+            <button type="button" onclick="navigateTo('${prevId}')" class="px-4 py-3 rounded-xl bg-white border border-borderline hover:border-republic text-left transition flex items-center gap-3 group">
+              <span class="text-republic group-hover:-translate-x-0.5 transition">←</span>
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-wider text-ink/50">Anterior</p>
+                <p class="text-xs font-semibold text-ink">${labelFor(prevId)}</p>
+              </div>
+            </button>
+          ` : `<div></div>`}
+
+          ${nextId ? `
+            <button type="button" onclick="navigateTo('${nextId}')" class="px-4 py-3 rounded-xl bg-republic text-white hover:bg-republic/90 text-right transition flex items-center justify-end gap-3 group shadow-sm">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-wider text-white/70">Próximo</p>
+                <p class="text-xs font-semibold text-white">${labelFor(nextId)}</p>
+              </div>
+              <span class="group-hover:translate-x-0.5 transition">→</span>
+            </button>
+          ` : `
+            <button type="button" onclick="navigateTo('overview')" class="px-4 py-3 rounded-xl bg-gold text-white hover:bg-gold/90 text-right transition flex items-center justify-end gap-3 shadow-sm">
+              <div>
+                <p class="font-mono text-[10px] uppercase tracking-wider text-white/80">Concluído</p>
+                <p class="text-xs font-semibold text-white">Voltar ao Mapa Geral</p>
+              </div>
+              <span>↺</span>
+            </button>
+          `}
+        </footer>
+      `;
+    }
+
+    function renderChapterHeader(ch, quote, quoteSource) {
+      const isDone = !!studiedMap[ch.id];
+      return `
+        <section class="mb-8">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2.5 py-1 rounded-md font-mono text-xs font-bold uppercase tracking-wider text-white" style="background-color: ${ch.color}">
+                Capítulo ${ch.roman}
+              </span>
+              <span class="font-mono text-xs text-ink/60 bg-white px-2.5 py-1 rounded-md border border-borderline">
+                ${ch.dates}
+              </span>
+            </div>
+            <button id="chapter-studied-toggle-btn" type="button" onclick="toggleStudied('${ch.id}')"></button>
+          </div>
+
+          <h2 class="font-serif font-extrabold text-3xl sm:text-4xl text-ink leading-tight">
+            ${ch.shortTitle}
+          </h2>
+          <div class="h-1.5 w-full engraving-rule my-5 rounded"></div>
+
+          <blockquote class="bg-white border-l-4 rounded-r-2xl p-5 sm:p-6 shadow-xs border border-borderline" style="border-left-color: ${ch.color}">
+            <p class="font-serif italic text-base sm:text-lg text-ink leading-relaxed">
+              “${quote}”
+            </p>
+            <footer class="mt-2.5 font-mono text-[11px] text-ink/55 uppercase tracking-wider">
+              — Karl Marx, ${quoteSource} (Boitempo / trad. Nélio Schneider)
+            </footer>
+          </blockquote>
+        </section>
+      `;
+    }
+
+    /* =========================================================================
+       0. MAPA GERAL & PREFÁCIOS
+       ========================================================================= */
+
+    const TIMELINE_EVENTS = [
+      {
+        date: '24 Fev 1848',
+        period: 'Período I — Fevereiro (Prólogo)',
+        title: 'Revolução de Fevereiro & República Social',
+        desc: 'Queda de Luís Filipe (Monarquia de Julho). O proletariado parisiense vai às barricadas e impõe a República; nasce o Governo Provisório, marcado pela "fraude da fraternização geral" e pelo contraste entre fraseologia grandiloquente e velha rotina.',
+        power: { proletariado: 72, montanha: 55, burguesia: 50, bonaparte: 8 }
+      },
+      {
+        date: '23–26 Jun 1848',
+        period: 'Período II — Assembleia Constituinte',
+        title: 'Insurreição de Junho (Massacre de Paris)',
+        desc: 'O primeiro grande embate da guerra civil moderna. Todas as classes possuidoras, o Exército e a Guarda Móvel unem-se sob o lema "Propriedade, Família, Religião, Ordem". Mais de 3.000 insurgentes trucidados e 15.000 deportados sem julgamento.',
+        power: { proletariado: 15, montanha: 38, burguesia: 85, bonaparte: 18 }
+      },
+      {
+        date: '10 Dez 1848',
+        period: 'Período II — Assembleia Constituinte',
+        title: 'Eleição de Luís Bonaparte para Presidente',
+        desc: 'Reação do campo contra a cidade: os camponeses parceleiros elegem o sobrinho de Napoleão. Termina a ditadura dos republicanos puros (Cavaignac); Bonaparte forma o Ministério Barrot-Falloux com o Partido da Ordem.',
+        power: { proletariado: 14, montanha: 34, burguesia: 78, bonaparte: 46 }
+      },
+      {
+        date: '13 Jun 1849',
+        period: 'Período III — Assembleia Legislativa',
+        title: 'Fiasco da Montanha (Expedição a Roma)',
+        desc: 'Atraída para fora do Parlamento pelo bombardeio francês à República Romana, a pequena-burguesia democrata faz um cortejo desarmado dispersado por Changarnier. Estado de sítio e fim do "talismã" da Guarda Nacional.',
+        power: { proletariado: 12, montanha: 14, burguesia: 90, bonaparte: 55 }
+      },
+      {
+        date: '31 Mai 1850',
+        period: 'Período III — Assembleia Legislativa',
+        title: 'Lei Eleitoral: O Golpe da Burguesia',
+        desc: 'Após a vitória social-democrata em Paris (10 mar 1850), o Partido da Ordem abole o sufrágio universal, riscando 3 milhões de eleitores. A burguesia destrói a base moral do próprio Parlamento e dá a Bonaparte o papel de futuro "restaurador" do voto.',
+        power: { proletariado: 8, montanha: 10, burguesia: 82, bonaparte: 68 }
+      },
+      {
+        date: '12 Jan 1851',
+        period: 'Período III — Assembleia Legislativa',
+        title: 'Deposição de Changarnier (Perda do Exército)',
+        desc: 'Após as revistas de Saint-Maur e Satory (champanhe, charutos e salsichões), Bonaparte demite Changarnier. Sem ministério parlamentar desde nov/1849 e agora sem comando militar, o Parlamento entra em "cretinismo parlamentar".',
+        power: { proletariado: 8, montanha: 12, burguesia: 42, bonaparte: 86 }
+      },
+      {
+        date: '02 Dez 1851',
+        period: 'Período III — Golpe de Estado',
+        title: 'O 18 de Brumário de Luís Bonaparte',
+        desc: 'Roubo de 25 milhões do Banco da França, suborno das tropas, prisão noturna dos líderes parlamentares e dissolução da Assembleia. Triunfo total do Poder Executivo autônomo; em 4 de dezembro, a burguesia prova do próprio estado de sítio.',
+        power: { proletariado: 10, montanha: 5, burguesia: 12, bonaparte: 98 }
+      }
+    ];
+
+    const PREFACES_DATA = {
+      marx: {
+        badge: 'Prefácio à 2ª Edição • 1869',
+        title: 'Karl Marx: Luta de Classes vs. Hugo e Proudhon',
+        accent: '#9B1C1C',
+        summary: 'Escrito no calor dos acontecimentos (dez 1851 – fev 1852) para a revista Die Revolution de Joseph Weydemeyer, o livro demonstra como a luta de classes na França criou as circunstâncias que permitiram a um personagem medíocre e grotesco desempenhar o papel de herói.',
+        columns: [
+          {
+            head: 'Victor Hugo (Napoléon le petit)',
+            body: 'Vê o golpe como "um raio vindo do céu sem nuvens", ato isolado de um indivíduo. Sem perceber, engrandece Bonaparte ao atribuir-lhe uma iniciativa pessoal ímpar na história mundial.'
+          },
+          {
+            head: 'P.-J. Proudhon (Coup d’état)',
+            body: 'Tenta apresentar o golpe como fruto de uma evolução histórica precedente, mas sua construção determinista desliza sorrateiramente para uma apologia do herói do golpe.'
+          },
+          {
+            head: 'Crítica ao "Cesarismo" (via Sismondi)',
+            body: 'Marx rejeita a analogia superficial com Roma: lá, a luta ocorria entre minoria de livres sobre uma base passiva de escravos. "O proletariado romano vivia à custa da sociedade; a sociedade moderna vive à custa do proletariado."'
+          }
+        ]
+      },
+      engels: {
+        badge: 'Prefácio à 3ª Edição • 1885',
+        title: 'Friedrich Engels: A França como Laboratório Clássico',
+        accent: '#1E3A5F',
+        summary: 'Trinta e três anos depois, Engels destaca a clarividência ímpar de Marx ao explicar o "milagre" de 2 de dezembro como resultado necessário do nexo interno da história francesa desde fevereiro de 1848.',
+        columns: [
+          {
+            head: 'Laboratório da Luta de Classes',
+            body: 'Mais que qualquer outro país, a França travou cada luta de classes histórica até a decisão final: destroçou o feudalismo em 1789, fundou o domínio puro da burguesia e expressou de modo agudo o embate do proletariado contra o capital.'
+          },
+          {
+            head: 'A Grande Lei da História',
+            body: 'Todas as lutas políticas, religiosas ou filosóficas são expressão mais ou menos nítida de lutas entre classes sociais, condicionadas pelo grau de desenvolvimento econômico e pelo modo de produção e intercâmbio.'
+          },
+          {
+            head: 'Prova Científica',
+            body: 'Engels compara a descoberta de Marx à lei da transformação da energia nas ciências naturais: a Segunda República francesa serviu de teste rigoroso, no qual a teoria passou com brilhantismo.'
+          }
+        ]
+      },
+      marcuse: {
+        badge: 'Prólogo à Edição de 1965',
+        title: 'Herbert Marcuse: A Farsa Mais Terrível que a Tragédia',
+        accent: '#B78428',
+        summary: 'Lendo Marx à luz do século XX e do terror fascista, Marcuse mostra que O 18 de Brumário antecipa a liquidação do período liberal pela própria estrutura da sociedade burguesa tardia.',
+        columns: [
+          {
+            head: 'Autodestruição Liberal',
+            body: 'Quando liberdade e igualdade ameaçam se estender aos "de baixo", tornam-se "socialismo". Para salvar a propriedade e os negócios, a burguesia sacrifica suas próprias instituições liberais e entrega o poder ao Executivo autoritário.'
+          },
+          {
+            head: 'Ditadura Plebiscitária',
+            body: 'O Estado autoritário moderno precisa de legitimação de massas. O sufrágio universal, negado pela burguesia parlamentar, converte-se em arma do líder "carismático" contra os grupos renitentes.'
+          },
+          {
+            head: 'Correção do Século XX',
+            body: 'Diante do horror fascista e da linguagem orwelliana na sociedade administrada, Marcuse corrige a sentença inicial: "na segunda vez, os fatos não ocorrem mais como farsa. Ou melhor: a farsa é mais terrível do que a tragédia à qual ela segue."'
+          }
+        ]
+      }
+    };
+
+    function renderOverview() {
+      const ev = TIMELINE_EVENTS[widgetState.timelineIndex];
+      const pref = PREFACES_DATA[widgetState.prefaceTab];
+
+      return `
+        <div class="fade-in space-y-10">
+          <!-- Cabeçalho Editorial -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-10 shadow-xs relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-48 h-48 bg-gold/5 rounded-bl-full pointer-events-none"></div>
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+              <span class="px-2.5 py-1 rounded-md bg-crimson text-white font-mono text-[11px] font-bold uppercase tracking-wider">Mapa Geral</span>
+              <span class="px-2.5 py-1 rounded-md bg-parchment border border-borderline font-mono text-[11px] text-ink/70">França • 1848–1851</span>
+              <span class="px-2.5 py-1 rounded-md bg-parchment border border-borderline font-mono text-[11px] text-ink/70">Edição Boitempo</span>
+            </div>
+            <h1 class="font-serif font-extrabold text-3xl sm:text-5xl text-ink leading-[1.12] tracking-tight">
+              O 18 de Brumário de Luís Bonaparte
+            </h1>
+            <p class="mt-3 text-base sm:text-lg text-ink/75 max-w-3xl leading-relaxed">
+              Atlas infográfico interativo da obra-prima de análise política de <strong>Karl Marx</strong>: como a luta de classes na Segunda República francesa pavimentou o golpe de Estado de 2 de dezembro de 1851 e a autonomia da máquina estatal burocrático-militar.
+            </p>
+            <div class="mt-6 pt-6 border-t border-borderline/80">
+              <blockquote class="font-serif italic text-lg sm:text-xl text-ink/90 leading-relaxed">
+                “Hegel comenta que todos os grandes fatos e todos os grandes personagens da história mundial são encenados, por assim dizer, duas vezes. Ele se esqueceu de acrescentar: a primeira vez como tragédia, a segunda como farsa.”
+              </blockquote>
+              <p class="mt-2 font-mono text-xs text-crimson uppercase tracking-wider">— Abertura do Capítulo I</p>
+            </div>
+          </section>
+
+          <!-- INFOGRÁFICO 1: Linha do Tempo & Termômetro de Poder -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-crimson">Infográfico Interativo 01</span>
+                <h2 class="font-serif font-bold text-2xl text-ink mt-0.5">Linha do Tempo &amp; Termômetro de Poder (1848–1851)</h2>
+              </div>
+              <span class="font-mono text-xs px-3 py-1 rounded-full bg-parchment border border-borderline text-republic font-semibold">
+                ${ev.period}
+              </span>
+            </div>
+            <p class="text-sm text-ink/70 mb-6">
+              Arraste o controle ou clique nos marcos históricos definidos por Marx para acompanhar o deslocamento da força política entre os quatro grandes blocos.
+            </p>
+
+            <!-- Faixa dos 3 Períodos -->
+            <div class="grid grid-cols-3 gap-1.5 mb-5 text-center">
+              <div class="p-2 rounded-lg border text-[11px] font-mono ${widgetState.timelineIndex === 0 ? 'bg-crimson/10 border-crimson text-crimson font-bold' : 'bg-parchment/60 border-borderline text-ink/60'}">
+                I. Período de Fevereiro<br><span class="text-[10px] opacity-80">24/02 a 04/05/1848</span>
+              </div>
+              <div class="p-2 rounded-lg border text-[11px] font-mono ${widgetState.timelineIndex >= 1 && widgetState.timelineIndex <= 2 ? 'bg-republic/10 border-republic text-republic font-bold' : 'bg-parchment/60 border-borderline text-ink/60'}">
+                II. Assembleia Constituinte<br><span class="text-[10px] opacity-80">04/05/1848 a 28/05/1849</span>
+              </div>
+              <div class="p-2 rounded-lg border text-[11px] font-mono ${widgetState.timelineIndex >= 3 ? 'bg-gold/15 border-gold text-ink font-bold' : 'bg-parchment/60 border-borderline text-ink/60'}">
+                III. Assembleia Legislativa<br><span class="text-[10px] opacity-80">28/05/1849 a 02/12/1851</span>
+              </div>
+            </div>
+
+            <!-- Slider + Marcos Clicáveis -->
+            <div class="mb-6">
+              <input
+                type="range"
+                min="0"
+                max="${TIMELINE_EVENTS.length - 1}"
+                step="1"
+                value="${widgetState.timelineIndex}"
+                oninput="setTimelineIndex(Number(this.value))"
+                class="editorial-slider mb-4"
+                aria-label="Selecionar marco histórico da linha do tempo"
+              >
+              <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2">
+                ${TIMELINE_EVENTS.map((item, idx) => `
+                  <button
+                    type="button"
+                    onclick="setTimelineIndex(${idx})"
+                    class="px-2.5 py-2 rounded-xl border text-left transition ${
+                      idx === widgetState.timelineIndex
+                        ? 'bg-ink text-parchment border-ink shadow-sm'
+                        : 'bg-parchment/50 border-borderline text-ink/75 hover:bg-parchment hover:border-ink/40'
+                    }"
+                  >
+                    <p class="font-mono text-[10px] font-bold ${idx === widgetState.timelineIndex ? 'text-gold' : 'text-crimson'}">${item.date}</p>
+                    <p class="text-[11px] font-medium leading-tight mt-0.5 line-clamp-2">${item.title.split('(')[0]}</p>
+                  </button>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Painel do Evento + Barras de Força -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-parchment/60 rounded-2xl p-5 border border-borderline">
+              <div class="lg:col-span-5">
+                <span class="font-mono text-xs font-bold text-crimson uppercase tracking-wider">${ev.date}</span>
+                <h3 class="font-serif font-bold text-xl text-ink mt-1">${ev.title}</h3>
+                <p class="text-sm text-ink/80 mt-2.5 leading-relaxed">${ev.desc}</p>
+              </div>
+              <div class="lg:col-span-7 space-y-3.5">
+                ${renderPowerBar('Proletariado (Paris)', ev.power.proletariado, '#9B1C1C')}
+                ${renderPowerBar('Pequena-Burguesia (Montanha)', ev.power.montanha, '#2D6A4F')}
+                ${renderPowerBar('Burguesia (Partido da Ordem)', ev.power.burguesia, '#1E3A5F')}
+                ${renderPowerBar('Poder Executivo (Luís Bonaparte)', ev.power.bonaparte, '#B78428')}
+              </div>
+            </div>
+          </section>
+
+          <!-- INFOGRÁFICO 2: Três Leituras do Golpe (Prefácios) -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-republic">Infográfico Interativo 02</span>
+            <h2 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Três Leituras do Golpe (Prefácios &amp; Prólogo)</h2>
+            <p class="text-sm text-ink/70 mb-5">
+              Alterne entre os textos introdutórios da edição da Boitempo para comparar as interpretações do 2 de dezembro de 1851.
+            </p>
+
+            <div class="flex flex-wrap gap-2 mb-6">
+              <button type="button" onclick="setPrefaceTab('marx')" class="px-4 py-2.5 rounded-xl text-xs font-semibold border transition ${widgetState.prefaceTab === 'marx' ? 'bg-crimson text-white border-crimson shadow-sm' : 'bg-parchment/60 border-borderline text-ink hover:bg-parchment'}">
+                Karl Marx (1869) — vs. Hugo &amp; Proudhon
+              </button>
+              <button type="button" onclick="setPrefaceTab('engels')" class="px-4 py-2.5 rounded-xl text-xs font-semibold border transition ${widgetState.prefaceTab === 'engels' ? 'bg-republic text-white border-republic shadow-sm' : 'bg-parchment/60 border-borderline text-ink hover:bg-parchment'}">
+                Friedrich Engels (1885) — Lei da História
+              </button>
+              <button type="button" onclick="setPrefaceTab('marcuse')" class="px-4 py-2.5 rounded-xl text-xs font-semibold border transition ${widgetState.prefaceTab === 'marcuse' ? 'bg-gold text-white border-gold shadow-sm' : 'bg-parchment/60 border-borderline text-ink hover:bg-parchment'}">
+                Herbert Marcuse (1965) — Século XX
+              </button>
+            </div>
+
+            <div class="rounded-2xl border border-borderline bg-parchment/45 p-5 sm:p-6">
+              <span class="inline-block font-mono text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded bg-white border border-borderline mb-2" style="color: ${pref.accent}">
+                ${pref.badge}
+              </span>
+              <h3 class="font-serif font-bold text-xl text-ink">${pref.title}</h3>
+              <p class="text-sm text-ink/80 mt-2 leading-relaxed">${pref.summary}</p>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
+                ${pref.columns.map(col => `
+                  <div class="bg-white rounded-xl p-4 border border-borderline shadow-2xs">
+                    <h4 class="font-serif font-bold text-sm text-ink mb-1.5">${col.head}</h4>
+                    <p class="text-xs text-ink/75 leading-relaxed">${col.body}</p>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          </section>
+
+          <!-- Grade Rápida de Acesso aos 7 Capítulos -->
+          <section>
+            <h2 class="font-serif font-bold text-2xl text-ink mb-4">Índice Analítico dos 7 Capítulos</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              ${CHAPTERS_META.map(ch => `
+                <button type="button" onclick="navigateTo('${ch.id}')" class="text-left bg-white rounded-2xl p-5 border border-borderline hover:border-ink/50 hover:shadow-md transition flex flex-col justify-between group">
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <span class="font-serif font-extrabold text-lg" style="color: ${ch.color}">Cap. ${ch.roman}</span>
+                      <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-parchment text-ink/65">${ch.dates}</span>
+                    </div>
+                    <h3 class="font-serif font-bold text-base text-ink group-hover:text-crimson transition leading-snug">
+                      ${ch.shortTitle}
+                    </h3>
+                  </div>
+                  <div class="mt-4 pt-3 border-t border-borderline/60 flex items-center justify-between text-xs font-medium text-republic">
+                    <span>Explorar infográficos</span>
+                    <span class="group-hover:translate-x-1 transition">→</span>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+          </section>
+
+          ${renderChapterFooter('overview')}
+        </div>
+      `;
+    }
+
+    function renderPowerBar(label, value, color) {
+      return `
+        <div>
+          <div class="flex items-center justify-between text-xs mb-1">
+            <span class="font-semibold text-ink">${label}</span>
+            <span class="font-mono font-bold" style="color: ${color}">${value}%</span>
+          </div>
+          <div class="w-full h-3 bg-white rounded-full overflow-hidden border border-borderline/80">
+            <div class="h-full rounded-full transition-all duration-500 ease-out" style="width: ${value}%; background-color: ${color};"></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setTimelineIndex(idx) {
+      widgetState.timelineIndex = idx;
+      renderMainView();
+    }
+
+    function setPrefaceTab(tab) {
+      widgetState.prefaceTab = tab;
+      renderMainView();
+    }
+
+    /* =========================================================================
+       1. CAPÍTULO I — TRAGÉDIA, FARSA E O PRÓLOGO DE FEVEREIRO
+       ========================================================================= */
+
+    const CAP1_COALITION = [
+      { id: 'financa', name: 'Aristocracia Financeira', role: 'Banqueiros e especuladores da Monarquia de Julho; temiam o ataque ao crédito público e ao orçamento.' },
+      { id: 'industria', name: 'Burguesia Industrial', role: 'Fabricantes que desejavam o domínio de toda a burguesia sem concessões sociais ao trabalho assalariado.' },
+      { id: 'peqburg', name: 'Pequena-Burguesia', role: 'Lojistas e artesãos assustados com o espectro do comunismo; traíram os operários e depois seriam derrotados em 1849.' },
+      { id: 'exercito', name: 'Exército Regular', role: 'Instrumento armado sob o general Cavaignac, que consolidou o estado de sítio sobre Paris.' },
+      { id: 'movel', name: 'Guarda Móvel (Lumpemproletariado)', role: '24 batalhões recrutados no lumpemproletariado parisiense, manipulados contra os próprios trabalhadores insurgentes.' },
+      { id: 'clero', name: 'Clero & Intelectuais', role: 'Padrecos e "capacidades intelectuais" que abençoaram a cruzada sob o signo "Propriedade, Família, Religião, Ordem".' },
+      { id: 'camponeses', name: 'População do Campo', role: 'Camponeses hostis aos custos fiscais da Revolução de Fevereiro, vendo Paris como ameaça à sua parcela.' }
+    ];
+
+    function renderCap1() {
+      const ch = CHAPTERS_META[0];
+      const is18 = widgetState.cap1RevMode === '18';
+      const activeForce = CAP1_COALITION.find(f => f.id === widgetState.cap1CoalitionId) || CAP1_COALITION[0];
+
+      const dims18 = [
+        { k: 'Ritmo Histórico', v: 'Precipitam-se de sucesso em sucesso; efeitos dramáticos fulgurantes, vida curta e longa ressaca posterior.' },
+        { k: 'Figurino & Passado', v: 'Conjuram espíritos do passado (República Romana em 1789, Antigo Testamento em Cromwell) para ocultar a limitação burguesa de suas lutas.' },
+        { k: 'Fraseologia vs. Conteúdo', v: 'A fraseologia supera o conteúdo: recorrem a memórias heroicas para manter o entusiasmo à altura das grandes tragédias.' },
+        { k: 'Autocrítica', v: 'Raro exame interno durante o ímpeto; só depois da ressaca a sociedade sóbria apropria-se dos resultados (Locke substitui Habacuque).' },
+        { k: 'Lema / Síntese', v: 'Desencadear e erigir a moderna sociedade burguesa sobre as ruínas do feudalismo.' }
+      ];
+
+      const dims19 = [
+        { k: 'Ritmo Histórico', v: 'Interrompem continuamente sua própria marcha, retornam ao que parecia realizado para recomeçar com maior profundidade.' },
+        { k: 'Figurino & Passado', v: 'Não colhem sua poesia do passado, mas unicamente do futuro; precisam despir toda superstição que as prende ao pretérito.' },
+        { k: 'Fraseologia vs. Conteúdo', v: 'O conteúdo supera a fraseologia: não precisam de autoilusões romanas para encarar a enormidade de seus objetivos.' },
+        { k: 'Autocrítica', v: 'Autocrítica constante e impiedosa: zombam das meias medidas e recuam até criar uma situação sem retorno.' },
+        { k: 'Lema / Síntese', v: '“Deixar os mortos enterrarem os seus mortos” — e quando o ponto sem volta chega: “Hic Rhodus, hic salta!” (Aqui é Rodes, salta aqui mesmo!).' }
+      ];
+
+      const rows = is18 ? dims18 : dims19;
+
+      return `
+        <div class="fade-in space-y-8">
+          ${renderChapterHeader(
+            ch,
+            'Os homens fazem a sua própria história; contudo, não a fazem de livre e espontânea vontade, pois não são eles quem escolhem as circunstâncias sob as quais ela é feita, mas estas lhes foram transmitidas assim como se encontram. A tradição de todas as gerações passadas é como um pesadelo que comprime o cérebro dos vivos.',
+            'Capítulo I'
+          )}
+
+          <!-- Ideias-chave -->
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-crimson font-bold mb-1">01 • Tragédia e Farsa</p>
+              <p class="text-xs text-ink/80 leading-relaxed">De 1848 a 1851 rondou apenas o fantasma da revolução de 1789: Marrast imitando Bailly, a nova Montanha parodiando 1793 e o sobrinho caricaturando Napoleão.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-republic font-bold mb-1">02 • Prólogo de Fevereiro</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Tudo foi "provisório". O proletariado proclamou a República Social, mas os velhos poderes reagruparam-se apoiados pelo campo e pela pequena-burguesia.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-gold font-bold mb-1">03 • O Estigma do "Socialismo"</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Após junho, a sociedade é "salva" toda vez que o círculo dos dominadores se estreita. Até o mais banal liberalismo acaba punido como atentado à ordem.</p>
+            </div>
+          </section>
+
+          <!-- Infográfico 1: Toggle Séc. XVIII vs Séc. XIX -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-crimson">Infográfico Exclusivo 1.1</span>
+                <h3 class="font-serif font-bold text-2xl text-ink mt-0.5">Revoluções do Séc. XVIII vs. Séc. XIX</h3>
+              </div>
+              <div class="inline-flex p-1 rounded-xl bg-parchment border border-borderline self-start">
+                <button type="button" onclick="widgetState.cap1RevMode='18'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${is18 ? 'bg-republic text-white shadow-xs' : 'text-ink/70 hover:text-ink'}">
+                  Séc. XVIII (Burguesas)
+                </button>
+                <button type="button" onclick="widgetState.cap1RevMode='19'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${!is18 ? 'bg-crimson text-white shadow-xs' : 'text-ink/70 hover:text-ink'}">
+                  Séc. XIX (Proletárias)
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              ${rows.map((r, i) => `
+                <div class="rounded-2xl p-4 border transition ${is18 ? 'bg-republic/[0.04] border-republic/25' : 'bg-crimson/[0.04] border-crimson/25'}">
+                  <span class="font-mono text-[10px] font-bold uppercase tracking-wider ${is18 ? 'text-republic' : 'text-crimson'}">0${i+1} • ${r.k}</span>
+                  <p class="text-xs text-ink/85 mt-2 leading-relaxed">${r.v}</p>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- Infográfico 2: Mapa das Barricadas de Junho de 1848 -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-republic">Infográfico Exclusivo 1.2</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Mapa das Barricadas de Junho de 1848</h3>
+            <p class="text-sm text-ink/70 mb-6">
+              O mais colossal acontecimento das guerras civis europeias. Clique em cada força da coalizão contrarrevolucionária para ver como o proletariado parisiense foi isolado.
+            </p>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+              <!-- Lado do Proletariado -->
+              <div class="lg:col-span-4 rounded-2xl bg-crimson text-white p-5 flex flex-col justify-between">
+                <div>
+                  <span class="font-mono text-[10px] uppercase tracking-widest bg-white/15 px-2.5 py-1 rounded">Isolado nas Barricadas</span>
+                  <h4 class="font-serif font-bold text-xl mt-3">Proletariado Parisiense</h4>
+                  <p class="text-xs text-white/85 mt-2 leading-relaxed">
+                    “Do lado do proletariado parisiense não havia ninguém além dele mesmo.” Sem seus líderes (Blanqui e camaradas presos em 15 de maio), lutou com honra histórica mundial.
+                  </p>
+                </div>
+                <div class="grid grid-cols-2 gap-3 mt-5 pt-4 border-t border-white/20">
+                  <div>
+                    <p class="font-mono font-bold text-2xl">+3.000</p>
+                    <p class="text-[11px] text-white/80">Insurgentes trucidados</p>
+                  </div>
+                  <div>
+                    <p class="font-mono font-bold text-2xl">15.000</p>
+                    <p class="text-[11px] text-white/80">Deportados sem julgamento</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Divisor VS -->
+              <div class="lg:col-span-8 flex flex-col justify-between">
+                <div class="mb-3 flex flex-wrap items-center justify-between gap-2">
+                  <span class="font-serif font-bold text-sm text-republic">Coalizão “Propriedade, Família, Religião, Ordem”</span>
+                  <span class="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-gold/15 text-ink font-semibold">“Sob este signo vencerás!”</span>
+                </div>
+                <div class="flex flex-wrap gap-2 mb-4">
+                  ${CAP1_COALITION.map(f => `
+                    <button
+                      type="button"
+                      onclick="widgetState.cap1CoalitionId='${f.id}'; renderMainView();"
+                      class="px-3 py-2 rounded-xl text-xs font-semibold border transition ${
+                        widgetState.cap1CoalitionId === f.id
+                          ? 'bg-republic text-white border-republic shadow-xs'
+                          : 'bg-parchment/70 border-borderline text-ink hover:border-republic/50'
+                      }"
+                    >
+                      ${f.name}
+                    </button>
+                  `).join('')}
+                </div>
+                <div class="rounded-2xl bg-parchment/70 border border-borderline p-5 flex-1 flex flex-col justify-center">
+                  <p class="font-mono text-[10px] uppercase tracking-wider text-republic font-bold">Papel no Massacre de Junho</p>
+                  <h4 class="font-serif font-bold text-lg text-ink mt-1">${activeForce.name}</h4>
+                  <p class="text-sm text-ink/80 mt-2 leading-relaxed">${activeForce.role}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          ${renderChapterFooter('cap1')}
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       2. CAPÍTULO II — OS REPUBLICANOS PUROS E A CONSTITUIÇÃO DE AQUILES
+       ========================================================================= */
+
+    const CAP2_ARTICLES = [
+      {
+        key: 'art8',
+        ref: 'Cap. II, § 8',
+        title: 'Associação, Reunião e Imprensa',
+        upper: '“Os cidadãos têm o direito de se associar, de reunir-se de modo pacífico e sem armas, de peticionar e expressar as suas opiniões por intermédio da imprensa.”',
+        lower: 'Revogado pela nota marginal: “enquanto não forem limitados pelos mesmos direitos dos outros e pela segurança pública” — isto é, a segurança da burguesia, regulamentada por leis orgânicas policiais.'
+      },
+      {
+        key: 'art9',
+        ref: 'Cap. II, § 9',
+        title: 'Liberdade de Ensino',
+        upper: '“O ensino é livre.” Proclamado como direito incondicional do cidadão francês sob a nova República.',
+        lower: 'Nota marginal: “deve ser gozada nas condições fixadas em lei e sob a supervisão do Estado” — abrindo caminho para entregar a instrução pública aos jesuítas e perseguir mestres-escola.'
+      },
+      {
+        key: 'art3',
+        ref: 'Cap. II, § 3',
+        title: 'Inviolabilidade do Domicílio',
+        upper: '“A residência de cada cidadão é inviolável.” Garantia clássica da liberdade individual contra o arbítrio.',
+        lower: 'Nota marginal: “exceto nas formas prescritas pela lei” — legitimando buscas policiais, prisões noturnas e o estado de sítio como instituto orgânico.'
+      },
+      {
+        key: 'sufragio',
+        ref: 'Lei Eleitoral',
+        title: 'Sufrágio Universal Direto',
+        upper: 'Conquista imediata de Fevereiro de 1848, substituindo o voto censitário da Monarquia de Julho.',
+        lower: 'Os republicanos puros impuseram a exigência de 6 meses de residência; depois, o Partido da Ordem (31 mai 1850) ampliaria para 3 anos e riscaria 3 milhões de eleitores.'
+      }
+    ];
+
+    function renderCap2() {
+      const ch = CHAPTERS_META[1];
+      return `
+        <div class="fade-in space-y-8">
+          ${renderChapterHeader(
+            ch,
+            'Cada parágrafo da Constituição contém a sua própria antítese, a sua câmara superior e a sua câmara inferior, a saber, na sentença universal, a liberdade e, na nota marginal, a revogação da liberdade.',
+            'Capítulo II'
+          )}
+
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-republic font-bold mb-1">01 • A Facção do National</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Os "republicanos puros" (Marrast, Cavaignac) não representavam uma fração econômica autônoma, mas uma corja de advogados, oficiais e jornalistas que governou sob o estado de sítio.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-gold font-bold mb-1">02 • 10 de Dezembro de 1848</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Eleição de Luís Bonaparte: reação dos camponeses contra os custos de Fevereiro, apoiada pelo Exército, pela alta burguesia (ponte para a monarquia) e por operários contra Cavaignac.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-crimson font-bold mb-1">03 • O Ensaio de 29 Jan 1849</p>
+              <p class="text-xs text-ink/80 leading-relaxed">O Ministério Barrot-Falloux e o general Changarnier cercam a Constituinte para forçar sua dissolução. O próprio Partido da Ordem ensinou a Bonaparte como humilhar um Parlamento.</p>
+            </div>
+          </section>
+
+          <!-- Infográfico 2.1: Raio-X da Constituição -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-republic">Infográfico Exclusivo 2.1</span>
+                <h3 class="font-serif font-bold text-2xl text-ink mt-0.5">Raio-X da Constituição de 1848</h3>
+              </div>
+              <button type="button" onclick="toggleAllCap2Articles()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-borderline bg-parchment hover:bg-ink hover:text-white transition">
+                Alternar Todos os Artigos
+              </button>
+            </div>
+            <p class="text-sm text-ink/70 mb-6">
+              Clique em cada cartão para virar da <strong>Câmara Superior</strong> (liberdade proclamada) para a <strong>Câmara Inferior</strong> (nota marginal que a anula na prática).
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              ${CAP2_ARTICLES.map(art => {
+                const flipped = !!widgetState.cap2Articles[art.key];
+                return `
+                  <button
+                    type="button"
+                    onclick="widgetState.cap2Articles['${art.key}'] = !widgetState.cap2Articles['${art.key}']; renderMainView();"
+                    class="flip-state-card text-left rounded-2xl p-5 border transition ${
+                      flipped
+                        ? 'bg-crimson/[0.05] border-crimson/40'
+                        : 'bg-republic/[0.04] border-republic/30'
+                    }"
+                  >
+                    <div class="flex items-center justify-between gap-2 mb-2.5">
+                      <span class="font-mono text-[11px] font-bold uppercase px-2 py-0.5 rounded ${flipped ? 'bg-crimson text-white' : 'bg-republic text-white'}">
+                        ${flipped ? 'Câmara Inferior (Revogação)' : 'Câmara Superior (Liberdade)'}
+                      </span>
+                      <span class="font-mono text-[11px] text-ink/60">${art.ref}</span>
+                    </div>
+                    <h4 class="font-serif font-bold text-base text-ink mb-2">${art.title}</h4>
+                    <p class="text-xs text-ink/85 leading-relaxed">${flipped ? art.lower : art.upper}</p>
+                    <p class="mt-3 font-mono text-[10px] uppercase tracking-wider ${flipped ? 'text-crimson' : 'text-republic'}">
+                      ↻ Clique para ver ${flipped ? 'o texto constitucional' : 'a nota marginal / lei orgânica'}
+                    </p>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </section>
+
+          <!-- Infográfico 2.2: O Calcanhar de Aquiles Bicéfalo -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-crimson">Infográfico Exclusivo 2.2</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">O Calcanhar de Aquiles Bicéfalo (Art. 45–70)</h3>
+            <p class="text-sm text-ink/70 mb-5">
+              A Constituição de 1848 não era vulnerável no calcanhar, mas nas duas cabeças que criou em choque permanente (<em>va banque</em>). Selecione um poder para inspecionar sua força real.
+            </p>
+
+            <div class="flex flex-wrap gap-2 mb-5">
+              <button type="button" onclick="widgetState.cap2Head='compare'; renderMainView();" class="px-3.5 py-2 rounded-xl text-xs font-semibold border ${widgetState.cap2Head==='compare' ? 'bg-ink text-white border-ink' : 'bg-parchment border-borderline text-ink'}">Visão Comparada</button>
+              <button type="button" onclick="widgetState.cap2Head='assembly'; renderMainView();" class="px-3.5 py-2 rounded-xl text-xs font-semibold border ${widgetState.cap2Head==='assembly' ? 'bg-republic text-white border-republic' : 'bg-parchment border-borderline text-ink'}">Foco: Assembleia (750)</button>
+              <button type="button" onclick="widgetState.cap2Head='president'; renderMainView();" class="px-3.5 py-2 rounded-xl text-xs font-semibold border ${widgetState.cap2Head==='president' ? 'bg-gold text-white border-gold' : 'bg-parchment border-borderline text-ink'}">Foco: Presidente (1)</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="rounded-2xl p-5 border transition ${widgetState.cap2Head==='president' ? 'opacity-45 bg-parchment/40 border-borderline' : 'bg-republic/[0.04] border-republic/40'}">
+                <div class="flex items-center justify-between mb-3">
+                  <h4 class="font-serif font-bold text-lg text-republic">Assembleia Legislativa</h4>
+                  <span class="font-mono text-xs font-bold px-2.5 py-1 rounded bg-republic text-white">Poder Moral</span>
+                </div>
+                <ul class="space-y-2 text-xs text-ink/85">
+                  <li>• <strong>750 representantes</strong> eleitos e reelegíveis; votos fragmentados por distritos e partidos.</li>
+                  <li>• Relação apenas <em>metafísica</em> com a nação; exposta diariamente à crítica pública no palco parlamentar.</li>
+                  <li>• Pode destituir o presidente pela via constitucional, mas depende do Executivo para executar suas leis.</li>
+                  <li>• Blindada pelo <strong>Art. 111</strong> (revisão exige 3/4 dos votos em 3 debates) — tentativa impotente dos republicanos puros.</li>
+                </ul>
+              </div>
+
+              <div class="rounded-2xl p-5 border transition ${widgetState.cap2Head==='assembly' ? 'opacity-45 bg-parchment/40 border-borderline' : 'bg-gold/[0.08] border-gold/50'}">
+                <div class="flex items-center justify-between mb-3">
+                  <h4 class="font-serif font-bold text-lg text-ink">Presidente da República</h4>
+                  <span class="font-mono text-xs font-bold px-2.5 py-1 rounded bg-gold text-white">Poder de Fato</span>
+                </div>
+                <ul class="space-y-2 text-xs text-ink/85">
+                  <li>• <strong>Eleito por voto direto nacional</strong>: encarna o espírito da nação numa relação pessoal ("graça do povo").</li>
+                  <li>• Controla <strong>500 mil funcionários públicos</strong>, o <strong>Exército</strong> e decide sobre <strong>1,5 milhão de existências</strong> dependentes.</li>
+                  <li>• Só pode dissolver a Assembleia pela via <em>inconstitucional</em> — isto é, rasgando a própria Constituição.</li>
+                  <li>• <strong>Art. 45 ("Frère, il faut mourir!")</strong>: mandato acaba no 2º domingo de maio de 1852, sem reeleição, com salário de 600 mil francos (ameaça da prisão de Clichy por dívidas).</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          ${renderChapterFooter('cap2')}
+        </div>
+      `;
+    }
+
+    function toggleAllCap2Articles() {
+      const anyFalse = Object.values(widgetState.cap2Articles).some(v => !v);
+      Object.keys(widgetState.cap2Articles).forEach(k => { widgetState.cap2Articles[k] = anyFalse; });
+      renderMainView();
+    }
+
+    /* =========================================================================
+       3. CAPÍTULO III — LINHA DESCENDENTE, PARTIDO DA ORDEM E 13 DE JUNHO
+       ========================================================================= */
+
+    const CAP3_STEPS = [
+      {
+        label: 'Etapa 1',
+        rev1789: 'Constitucionalistas (1789–1791): abrem a revolução derrubando o absolutismo feudal.',
+        rev1848: 'Proletariado (Fev–Jun 1848): apêndice da pequena-burguesia democrata; traído em 16 de abril, 15 de maio e massacrado em junho.'
+      },
+      {
+        label: 'Etapa 2',
+        rev1789: 'Girondinos (1792–1793): empurram a revolução adiante e proclamam a República, superando os constitucionalistas.',
+        rev1848: 'Pequena-Burguesia / Montanha (Jun 1848 – Jun 1849): apoia-se nos republicanos burgueses, é descartada e cai na armadilha de 13 de junho de 1849.'
+      },
+      {
+        label: 'Etapa 3',
+        rev1789: 'Jacobinos / Montanha de 1793: o aliado mais ousado envia os girondinos à guilhotina e leva a revolução burguesa ao ápice.',
+        rev1848: 'Republicanos Puros (Jun–Dez 1848): mal firmam os pés e se apoiam no Partido da Ordem, que logo os descarta e dissolve a Constituinte.'
+      },
+      {
+        label: 'Etapa 4',
+        rev1789: 'Trajetória Ascendente: cada partido apoia-se no mais avançado para impelir a revolução para a frente.',
+        rev1848: 'Partido da Ordem → Forças Armadas: encolhe os ombros e senta nos ombros do Exército, até descobrir numa bela manhã que "os ombros haviam se transformado em baionetas".'
+      }
+    ];
+
+    function renderCap3() {
+      const ch = CHAPTERS_META[2];
+      const step = CAP3_STEPS[widgetState.cap3Step];
+      const merged = widgetState.cap3FactionMode === 'merged';
+
+      return `
+        <div class="fade-in space-y-8">
+          ${renderChapterHeader(
+            ch,
+            'O Partido da Ordem encolheu os ombros, deixou os republicano-burgueses caírem e se jogou nos ombros das Forças Armadas. Ele ainda acreditava estar sentado sobre os ombros destas quando, numa bela manhã, deu-se conta de que os ombros haviam se transformado em baionetas.',
+            'Capítulo III'
+          )}
+
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-gold font-bold mb-1">01 • Nova Montanha (Social-Democracia)</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Coalizão entre pequena-burguesia e trabalhadores: busca atenuar a contradição entre capital e trabalho assalariado, nunca suprimi-la. Acredita estar "acima das classes".</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-crimson font-bold mb-1">02 • A Armadilha de 13 de Junho</p>
+              <p class="text-xs text-ink/80 leading-relaxed">O bombardeio francês a Roma (violando o Art. 52) atraiu Ledru-Rollin para as ruas. Com ameaças bélicas e marcha desarmada, a Montanha esvaziou-se como um balão furado.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-republic font-bold mb-1">03 • Fim do Talismã</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Ao mandar o Exército dispersar a Guarda Nacional pequeno-burguesa em 13 de junho, a burguesia destruiu o encanto do uniforme civil — sua última arma contra o militarismo.</p>
+            </div>
+          </section>
+
+          <!-- Infográfico 3.1: Simulador de Trajetória 1789 vs 1848 -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-crimson">Infográfico Exclusivo 3.1</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Simulador de Trajetória: 1789 (Ascendente) vs. 1848 (Descendente)</h3>
+            <p class="text-sm text-ink/70 mb-5">
+              Avance pelas etapas para observar o contraste estrutural entre a primeira Revolução Francesa e a marcha retrocessiva da Segunda República.
+            </p>
+
+            <!-- Gráfico SVG comparativo -->
+            <div class="bg-parchment/60 rounded-2xl border border-borderline p-4 mb-5 overflow-x-auto">
+              <svg viewBox="0 0 640 200" class="w-full h-44 sm:h-48" role="img" aria-label="Gráfico comparativo entre linha ascendente de 1789 e linha descendente de 1848">
+                <!-- Linhas guia -->
+                <line x1="40" y1="35" x2="600" y2="35" stroke="#E2DDD2" stroke-dasharray="4 4"/>
+                <line x1="40" y1="100" x2="600" y2="100" stroke="#E2DDD2" stroke-dasharray="4 4"/>
+                <line x1="40" y1="165" x2="600" y2="165" stroke="#E2DDD2" stroke-dasharray="4 4"/>
+
+                <!-- Linha Ascendente 1789 -->
+                <polyline points="70,155 230,115 390,75 550,35" fill="none" stroke="#2D6A4F" stroke-width="3.5" stroke-linecap="round"/>
+                <!-- Linha Descendente 1848 -->
+                <polyline points="70,40 230,80 390,120 550,162" fill="none" stroke="#9B1C1C" stroke-width="3.5" stroke-linecap="round"/>
+
+                <!-- Pontos 1789 -->
+                ${[
+                  {x:70, y:155, t:'Constit.'},
+                  {x:230, y:115, t:'Girondinos'},
+                  {x:390, y:75, t:'Jacobinos'},
+                  {x:550, y:35, t:'Ápice 1793'}
+                ].map((pt, i) => `
+                  <g onclick="widgetState.cap3Step=${i}; renderMainView();" class="cursor-pointer">
+                    <circle cx="${pt.x}" cy="${pt.y}" r="${widgetState.cap3Step===i ? 10 : 6}" fill="${widgetState.cap3Step===i ? '#2D6A4F' : '#FFFFFF'}" stroke="#2D6A4F" stroke-width="3"/>
+                    <text x="${pt.x}" y="${pt.y - 14}" text-anchor="middle" font-size="11" font-family="JetBrains Mono, monospace" fill="#2D6A4F" font-weight="${widgetState.cap3Step===i ? '700' : '500'}">${pt.t}</text>
+                  </g>
+                `).join('')}
+
+                <!-- Pontos 1848 -->
+                ${[
+                  {x:70, y:40, t:'Proletariado'},
+                  {x:230, y:80, t:'Montanha'},
+                  {x:390, y:120, t:'Rep. Puros'},
+                  {x:550, y:162, t:'Baionetas'}
+                ].map((pt, i) => `
+                  <g onclick="widgetState.cap3Step=${i}; renderMainView();" class="cursor-pointer">
+                    <circle cx="${pt.x}" cy="${pt.y}" r="${widgetState.cap3Step===i ? 10 : 6}" fill="${widgetState.cap3Step===i ? '#9B1C1C' : '#FFFFFF'}" stroke="#9B1C1C" stroke-width="3"/>
+                    <text x="${pt.x}" y="${pt.y + 22}" text-anchor="middle" font-size="11" font-family="JetBrains Mono, monospace" fill="#9B1C1C" font-weight="${widgetState.cap3Step===i ? '700' : '500'}">${pt.t}</text>
+                  </g>
+                `).join('')}
+              </svg>
+            </div>
+
+            <!-- Controles do Stepper -->
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div class="flex gap-1.5">
+                ${CAP3_STEPS.map((s, i) => `
+                  <button type="button" onclick="widgetState.cap3Step=${i}; renderMainView();" class="px-3 py-1.5 rounded-lg font-mono text-xs font-semibold border transition ${widgetState.cap3Step===i ? 'bg-ink text-white border-ink' : 'bg-parchment border-borderline text-ink/75 hover:bg-white'}">
+                    ${s.label}
+                  </button>
+                `).join('')}
+              </div>
+              <div class="flex gap-2">
+                <button type="button" onclick="widgetState.cap3Step=Math.max(0, widgetState.cap3Step-1); renderMainView();" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-borderline bg-white hover:bg-parchment disabled:opacity-40" ${widgetState.cap3Step===0?'disabled':''}>← Voltar</button>
+                <button type="button" onclick="widgetState.cap3Step=Math.min(3, widgetState.cap3Step+1); renderMainView();" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-crimson text-white hover:bg-crimson/90 disabled:opacity-40" ${widgetState.cap3Step===3?'disabled':''}>Avançar →</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="rounded-2xl p-4 bg-peasant/[0.06] border border-peasant/30">
+                <p class="font-mono text-[10px] font-bold uppercase text-peasant">1789 • Linha Ascendente</p>
+                <p class="text-xs sm:text-sm text-ink/85 mt-1.5 leading-relaxed">${step.rev1789}</p>
+              </div>
+              <div class="rounded-2xl p-4 bg-crimson/[0.06] border border-crimson/30">
+                <p class="font-mono text-[10px] font-bold uppercase text-crimson">1848 • Linha Descendente</p>
+                <p class="text-xs sm:text-sm text-ink/85 mt-1.5 leading-relaxed">${step.rev1848}</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Infográfico 3.2: Anatomia do Partido da Ordem -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-gold">Infográfico Exclusivo 3.2</span>
+                <h3 class="font-serif font-bold text-2xl text-ink mt-0.5">Anatomia do Partido da Ordem</h3>
+              </div>
+              <div class="inline-flex p-1 rounded-xl bg-parchment border border-borderline self-start">
+                <button type="button" onclick="widgetState.cap3FactionMode='split'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${!merged ? 'bg-ink text-white' : 'text-ink/70'}">
+                  Nos Bastidores (Facções)
+                </button>
+                <button type="button" onclick="widgetState.cap3FactionMode='merged'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${merged ? 'bg-republic text-white' : 'text-ink/70'}">
+                  No Palco (República / Capital)
+                </button>
+              </div>
+            </div>
+
+            ${!merged ? `
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="rounded-2xl p-5 bg-parchment/60 border border-borderline">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-serif font-bold text-lg text-ink">Legitimistas</h4>
+                    <span class="font-mono text-[11px] px-2.5 py-0.5 rounded bg-white border border-borderline text-gold font-semibold">Flor-de-Lis • Bourbon</span>
+                  </div>
+                  <ul class="space-y-2 text-xs text-ink/80 mt-3">
+                    <li>• <strong>Base Material:</strong> Grande propriedade fundiária (já aburguesada) e renda da terra.</li>
+                    <li>• <strong>Regime Histórico:</strong> Restauração (1814–1830); pretendente Henrique V (Conde de Chambord, em Ems/Veneza).</li>
+                    <li>• <strong>Séquito:</strong> Padrecos, lacaios, aristocracia rural e parte do barreau.</li>
+                  </ul>
+                </div>
+
+                <div class="rounded-2xl p-5 bg-republic/[0.05] border border-republic/30">
+                  <div class="flex items-center justify-between mb-2">
+                    <h4 class="font-serif font-bold text-lg text-republic">Orleanistas</h4>
+                    <span class="font-mono text-[11px] px-2.5 py-0.5 rounded bg-white border border-borderline text-republic font-semibold">Tricolor • Orléans</span>
+                  </div>
+                  <ul class="space-y-2 text-xs text-ink/80 mt-3">
+                    <li>• <strong>Base Material:</strong> Altas finanças, grande indústria e grande comércio (o Capital).</li>
+                    <li>• <strong>Regime Histórico:</strong> Monarquia de Julho (1830–1848, Luís Filipe; corte exilada em Claremont).</li>
+                    <li>• <strong>Séquito:</strong> Advogados, professores, banqueiros e oradores parlamentares (Thiers, Guizot).</li>
+                  </ul>
+                </div>
+              </div>
+            ` : `
+              <div class="rounded-2xl p-6 bg-republic text-white">
+                <span class="font-mono text-[10px] uppercase tracking-widest bg-white/15 px-2.5 py-1 rounded">Fusão Real na República Parlamentar</span>
+                <h4 class="font-serif font-bold text-2xl mt-3">Sob o Nome Anônimo de Capital</h4>
+                <p class="text-sm text-white/90 mt-2 leading-relaxed">
+                  O que separava legitimistas e orleanistas não eram princípios dinásticos, mas dois tipos de propriedade: terra e capital. Na <strong>República Parlamentar</strong>, sem o nome de Bourbon nem de Orléans, as duas facções puderam governar conjuntamente sobre todas as demais classes — exercendo um domínio mais duro e irrestrito do que sob qualquer monarquia.
+                </p>
+                <p class="mt-3 font-mono text-xs text-gold">
+                  Paradoxo: odiavam a República por expor o domínio de classe sem o véu da coroa, mas recorriam a ela sempre que Bonaparte ameaçava o Parlamento.
+                </p>
+              </div>
+            `}
+          </section>
+
+          ${renderChapterFooter('cap3')}
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       4. CAPÍTULO IV — PERDA DO EXECUTIVO, "TUDO É SOCIALISMO!" E 31 DE MAIO
+       ========================================================================= */
+
+    const CAP4_SOCIALISM_ITEMS = {
+      imprensa: {
+        label: 'Liberdade de Imprensa',
+        verdict: 'SOCIALISMO!',
+        why: 'A briga dos oradores na tribuna parlamentar provoca inevitavelmente a briga dos prelos. Se o Parlamento debate livremente, a imprensa leva o debate às ruas e ameaça a tranquilidade burguesa.'
+      },
+      peticao: {
+        label: 'Direito de Petição & Clubes',
+        verdict: 'SOCIALISMO!',
+        why: 'O clube de debates no Parlamento é complementado pelos clubes nos salões e bares. "Se vós que estais no topo do Estado tocais o violino, por acaso não esperais que os que estão lá embaixo dancem?"'
+      },
+      ferrovia: {
+        label: 'Construir Ferrovia onde há Canal',
+        verdict: 'SOCIALISMO!',
+        why: 'Marx ironiza o pânico absoluto da burguesia: até obras de infraestrutura ou defender-se com um bastão ao ser atacado com uma espada passaram a receber a sentença monossilábica "Socialismo!".'
+      },
+      financa: {
+        label: 'Reforma Financeira Burguesa',
+        verdict: 'SOCIALISMO!',
+        why: 'Qualquer reforma fiscal que tocasse nos privilégios da aristocracia financeira ou na dívida pública era estigmatizada como atentado contra a propriedade.'
+      },
+      vinho: {
+        label: 'Abolir o Imposto do Vinho',
+        verdict: 'SOCIALISMO!',
+        why: 'Ao restabelecer o detestado imposto sobre o vinho e entregar o ensino aos jesuítas, a burguesia declarou intocável o velho sistema fiscal e usou a religião para manter a resignação das massas.'
+      },
+      parlamento: {
+        label: 'O Próprio Regime Parlamentar',
+        verdict: 'SOCIALISMO!',
+        why: 'A consequência fatal que a burguesia não previu: o parlamentarismo vive da luta e da discussão. Para salvar sua bolsa e manter a "tranquilidade", sua própria coroa política teve de ser arrancada.'
+      }
+    };
+
+    function renderCap4() {
+      const ch = CHAPTERS_META[3];
+      const isAfter = widgetState.cap4LawMode === 'after';
+      const soc = CAP4_SOCIALISM_ITEMS[widgetState.cap4SocialismKey];
+
+      return `
+        <div class="fade-in space-y-8">
+          ${renderChapterHeader(
+            ch,
+            'Para salvar a sua bolsa, a coroa deveria ser arrancada da sua cabeça e a espada destinada a protegê-la deveria ser pendurada sobre a sua própria cabeça como espada de Dâmocles.',
+            'Capítulo IV'
+          )}
+
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-crimson font-bold mb-1">01 • 1º de Novembro de 1849</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Bonaparte demite o ministério parlamentar Barrot-Falloux e nomeia Hautpoul, com o banqueiro Fould nas Finanças e Carlier na Polícia. O Partido da Ordem perde o Executivo para sempre.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-republic font-bold mb-1">02 • 10 de Março de 1850</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Paris elege social-democratas, incluindo o insurgente de junho De Flotte, com votos até do Exército. Em vez de avançar, a Montanha desperdiça o ímpeto e prega "calma majestosa".</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-gold font-bold mb-1">03 • Prosperedade &amp; Abdicação</p>
+              <p class="text-xs text-ink/80 leading-relaxed">1850 foi ano de auge industrial e comercial. Guiado pelos democratas e absorvido pelo emprego temporário, o proletariado não se ergueu contra a abolição do sufrágio universal.</p>
+            </div>
+          </section>
+
+          <!-- Infográfico 4.1: Simulador da Lei de 31 de Maio de 1850 -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-crimson">Infográfico Exclusivo 4.1</span>
+                <h3 class="font-serif font-bold text-2xl text-ink mt-0.5">Simulador da Lei de 31 de Maio de 1850</h3>
+              </div>
+              <div class="inline-flex p-1 rounded-xl bg-parchment border border-borderline self-start">
+                <button type="button" onclick="widgetState.cap4LawMode='before'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${!isAfter ? 'bg-republic text-white' : 'text-ink/70'}">
+                  Antes (Constituição 1848)
+                </button>
+                <button type="button" onclick="widgetState.cap4LawMode='after'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${isAfter ? 'bg-crimson text-white' : 'text-ink/70'}">
+                  Depois (Lei de 31 de Maio)
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <div class="lg:col-span-7 space-y-4">
+                <div>
+                  <div class="flex justify-between text-xs mb-1.5">
+                    <span class="font-semibold text-ink">Corpo Eleitoral da França</span>
+                    <span class="font-mono font-bold ${isAfter ? 'text-crimson' : 'text-republic'}">${isAfter ? '7.000.000 eleitores (-30%)' : '10.000.000 eleitores (100%)'}</span>
+                  </div>
+                  <div class="w-full h-9 rounded-xl bg-parchment border border-borderline overflow-hidden flex">
+                    <div class="h-full bg-republic transition-all duration-500 flex items-center justify-center text-[11px] font-mono font-bold text-white" style="width: ${isAfter ? '70%' : '100%'}">
+                      ${isAfter ? '7M com voto' : '10M com sufrágio universal'}
+                    </div>
+                    ${isAfter ? `
+                      <div class="h-full bg-crimson/20 border-l-2 border-dashed border-crimson flex items-center justify-center text-[10px] font-mono font-bold text-crimson" style="width: 30%">
+                        3M riscados
+                      </div>
+                    ` : ''}
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex justify-between text-xs mb-1.5">
+                    <span class="font-semibold text-ink">Mínimo Legal para Eleger Presidente (2 milhões de votos)</span>
+                    <span class="font-mono font-bold text-gold">${isAfter ? '28,6% (~1/3 dos eleitores)' : '20,0% (1/5 dos eleitores)'}</span>
+                  </div>
+                  <div class="w-full h-5 rounded-full bg-parchment border border-borderline overflow-hidden">
+                    <div class="h-full bg-gold transition-all duration-500 rounded-full" style="width: ${isAfter ? '28.6%' : '20%'}"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="lg:col-span-5 rounded-2xl p-5 border ${isAfter ? 'bg-crimson/[0.05] border-crimson/35' : 'bg-republic/[0.04] border-republic/30'}">
+                <p class="font-mono text-[10px] uppercase font-bold ${isAfter ? 'text-crimson' : 'text-republic'}">
+                  ${isAfter ? 'O Coup d’État da Burguesia' : 'Regra Original de 1848'}
+                </p>
+                <p class="text-xs text-ink/85 mt-2 leading-relaxed">
+                  ${isAfter
+                    ? 'A lei redigida por Faucher exigiu <strong>3 anos de domicílio</strong> no local de votação — comprovados, no caso dos operários, por <strong>atestado do patrão</strong>. Riscando 3 milhões de trabalhadores, a Assembleia quis elevar a barreira de 2 milhões para ~1/3 e roubar a eleição presidencial para dentro do Parlamento.'
+                    : 'A Assembleia Constituinte havia fixado o sufrágio universal direto com 6 meses de residência. O piso de 2 milhões de votos representava apenas 1/5 dos 10 milhões de inscritos.'}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Infográfico 4.2: Detector Burguês do "Socialismo!" -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-gold">Infográfico Exclusivo 4.2</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Detector Burguês do “Socialismo!”</h3>
+            <p class="text-sm text-ink/70 mb-5">
+              Todas as armas forjadas pela burguesia contra o feudalismo voltaram-se contra ela. Clique em qualquer medida liberal abaixo para ver o veredito do Partido da Ordem.
+            </p>
+
+            <div class="flex flex-wrap gap-2 mb-5">
+              ${Object.entries(CAP4_SOCIALISM_ITEMS).map(([k, item]) => `
+                <button type="button" onclick="widgetState.cap4SocialismKey='${k}'; renderMainView();" class="px-3.5 py-2 rounded-xl text-xs font-semibold border transition ${widgetState.cap4SocialismKey===k ? 'bg-crimson text-white border-crimson shadow-xs' : 'bg-parchment/70 border-borderline text-ink hover:border-crimson/50'}">
+                  ${item.label}
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="rounded-2xl bg-ink text-parchment p-6 flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div class="flex-1">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-gold">Medida Analisada: ${soc.label}</p>
+                <p class="text-sm text-parchment/90 mt-2 leading-relaxed">${soc.why}</p>
+              </div>
+              <div class="shrink-0 px-5 py-3 rounded-xl bg-crimson border border-white/20 text-center">
+                <p class="font-mono text-[10px] uppercase tracking-widest text-white/80">Veredito da Ordem</p>
+                <p class="font-serif font-extrabold text-xl text-white tracking-wide mt-0.5">${soc.verdict}</p>
+              </div>
+            </div>
+          </section>
+
+          ${renderChapterFooter('cap4')}
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       5. CAPÍTULO V — SOCIEDADE 10 DE DEZEMBRO, SALSICHÕES E PERDA DO EXÉRCITO
+       ========================================================================= */
+
+    const CAP5_THERMO_STAGES = [
+      {
+        date: 'Nov 1849',
+        temp: 72,
+        type: 'Ministério Não Parlamentar',
+        cabinet: 'Ministério Hautpoul (Fould & Carlier)',
+        lost: ['Controle do Poder Executivo', 'Polícia de Paris (Carlier)', 'Bolsa ligada a Bonaparte (Fould)'],
+        note: 'Bonaparte abole o cargo de primeiro-ministro. O Partido da Ordem ainda mantém ilusão de supremacia legislativa.'
+      },
+      {
+        date: 'Jan 1851',
+        temp: 44,
+        type: 'Ministério Extraparlamentar',
+        cabinet: 'Ministério de Transição (sem deputados)',
+        lost: ['Comando das Forças Armadas (Changarnier deposto em 12 jan)', 'Guarda Nacional dividida', 'Maioria parlamentar autônoma (voto de 18 jan)'],
+        note: 'Após os piqueniques de Saint-Maur e Satory (champanhe, charutos e salsichões), Bonaparte demite Changarnier. O Parlamento reage com um voto de desconfiança aos ministros — auge do "cretinismo parlamentar".'
+      },
+      {
+        date: 'Abr 1851',
+        temp: 20,
+        type: 'Ministério Antiparlamentar',
+        cabinet: 'Faucher, Fould, Baroche, Rouher',
+        lost: ['Autoridade moral das duas Assembleias', 'Capacidade de resposta à crise comercial', 'Apoio da burguesia que clama por "governo forte"'],
+        note: 'Bonaparte reúne num só gabinete ministros censurados tanto pela Constituinte quanto pela Legislativa. Persigny já convida Changarnier para o golpe.'
+      },
+      {
+        date: 'Out 1851',
+        temp: 5,
+        type: 'Pseudoministério de Golpe',
+        cabinet: 'Ministério Thorigny + Maupas + Magnan',
+        lost: ['Qualquer controle sobre o Estado', 'Apoio das tropas concentradas em Paris', 'Existência prática do Parlamento'],
+        note: 'A intenção já não é aprovar nada no Parlamento, mas agir contra o Parlamento. A temperatura vital chegou a zero.'
+      }
+    ];
+
+    const CAP5_FORCES = {
+      soc10: {
+        title: 'Sociedade 10 de Dezembro → Luís Bonaparte',
+        badge: 'Lumpemproletariado ("la bohème")',
+        color: '#B78428',
+        desc: 'Criada em 1849 sob o pretexto de "sociedade beneficente" (beneficiar-se à custa da nação trabalhadora). Reuniu 10 mil lumpens em seções secretas comandadas por agentes e um general bonapartista: roués decadentes, vagabundos, soldados exonerados, ex-presidiários, gatunos, trapaceiros, cafetões, jogadores e literatos arruinados. Era o exército privado de Bonaparte até transformar o Exército público em uma Sociedade 10 de Dezembro.'
+      },
+      atelies: {
+        title: 'Ateliês Nacionais → Trabalhadores Socialistas',
+        badge: 'Fevereiro – Junho 1848',
+        color: '#9B1C1C',
+        desc: 'Instituídos em 27 de fevereiro de 1848 pelo Governo Provisório para operários desempregados. Seu fechamento em junho serviu de estopim para a Insurreição de Junho.'
+      },
+      movel: {
+        title: 'Guarda Móvel → Republicanos Puros',
+        badge: 'Junho 1848',
+        color: '#1E3A5F',
+        desc: '24 batalhões recrutados no lumpemproletariado parisiense e bem pagos pelo governo burguês republicano para esmagar os operários nas barricadas de junho.'
+      }
+    };
+
+    function renderCap5() {
+      const ch = CHAPTERS_META[4];
+      const stage = CAP5_THERMO_STAGES[widgetState.cap5ThermoStage];
+      const force = CAP5_FORCES[widgetState.cap5ForceTab];
+
+      return `
+        <div class="fade-in space-y-8">
+          ${renderChapterHeader(
+            ch,
+            'Cretinismo parlamentar, que prende os infectados dentro de um mundo imaginário e os priva de todo o senso, de toda a memória, de todo o entendimento para a crueza do mundo exterior.',
+            'Capítulo V'
+          )}
+
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-gold font-bold mb-1">01 • Chantagem &amp; Loteria</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Bonaparte extorque 2,16 milhões de francos da Assembleia (1 franco por eleitor cassado) e organiza a fraudulenta Loteria das Barras de Ouro da Califórnia com bilhetes duplicados.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-crimson font-bold mb-1">02 • Saint-Maur &amp; Satory</p>
+              <p class="text-xs text-ink/80 leading-relaxed">Com o dinheiro obtido, oferece champanhe, charutos, aves frias e salsichões ao alho às tropas. A cavalaria grita: “Vive Napoléon! Vivent les saucissons!”.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-republic font-bold mb-1">03 • Rixas Mesquinhas</p>
+              <p class="text-xs text-ink/80 leading-relaxed">A Assembleia recua nos grandes conflitos (por medo de agitar a nação) e se esfarela em chicanas: prisão por dívida de Mauguin e demissão do comissário de polícia parlamentar Yon.</p>
+            </div>
+          </section>
+
+          <!-- Infográfico 5.1: Termômetro do Calor Vital do Parlamento -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-republic">Infográfico Exclusivo 5.1</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Termômetro do Calor Vital do Parlamento</h3>
+            <p class="text-sm text-ink/70 mb-6">
+              Marx descreve a escalada dos ministérios de Bonaparte como o termômetro que media a queda da vitalidade parlamentar. Selecione cada estágio:
+            </p>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-6">
+              ${CAP5_THERMO_STAGES.map((st, i) => `
+                <button type="button" onclick="widgetState.cap5ThermoStage=${i}; renderMainView();" class="p-3.5 rounded-xl border text-left transition ${widgetState.cap5ThermoStage===i ? 'bg-republic text-white border-republic shadow-sm' : 'bg-parchment/60 border-borderline text-ink hover:bg-parchment'}">
+                  <p class="font-mono text-[10px] font-bold ${widgetState.cap5ThermoStage===i ? 'text-gold' : 'text-crimson'}">${st.date} • ${st.temp}°</p>
+                  <p class="text-xs font-semibold mt-1 leading-snug">${st.type}</p>
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-parchment/55 rounded-2xl p-5 border border-borderline">
+              <div class="lg:col-span-4 flex flex-col items-center justify-center p-4 bg-white rounded-xl border border-borderline">
+                <p class="font-mono text-[10px] uppercase tracking-wider text-ink/55 mb-2">Calor Vital Parlamentar</p>
+                <div class="w-10 h-36 rounded-full bg-parchment border-2 border-borderline p-1 flex flex-col justify-end overflow-hidden">
+                  <div class="w-full rounded-full transition-all duration-500" style="height: ${stage.temp}%; background-color: ${stage.temp > 50 ? '#1E3A5F' : stage.temp > 25 ? '#B78428' : '#9B1C1C'};"></div>
+                </div>
+                <p class="font-mono font-bold text-2xl mt-2" style="color: ${stage.temp > 50 ? '#1E3A5F' : stage.temp > 25 ? '#B78428' : '#9B1C1C'}">${stage.temp}%</p>
+                <p class="text-[11px] font-semibold text-ink/70 text-center">${stage.type}</p>
+              </div>
+
+              <div class="lg:col-span-8 space-y-3">
+                <div>
+                  <span class="font-mono text-xs font-bold text-crimson">${stage.date}</span>
+                  <h4 class="font-serif font-bold text-xl text-ink">${stage.cabinet}</h4>
+                  <p class="text-xs sm:text-sm text-ink/80 mt-1.5 leading-relaxed">${stage.note}</p>
+                </div>
+                <div class="pt-3 border-t border-borderline">
+                  <p class="font-mono text-[10px] uppercase font-bold text-republic mb-2">Poderes Perdidos nesta Etapa:</p>
+                  <div class="flex flex-wrap gap-2">
+                    ${stage.lost.map(l => `<span class="px-2.5 py-1 rounded-lg bg-white border border-crimson/25 text-xs text-crimson font-medium">✕ ${l}</span>`).join('')}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Infográfico 5.2: Anatomia da Sociedade 10 de Dezembro -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-gold">Infográfico Exclusivo 5.2</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Anatomia da Sociedade 10 de Dezembro</h3>
+            <p class="text-sm text-ink/70 mb-5">
+              Compare a força armada partidária criada por Bonaparte ("Bonaparte <em>sans phrase</em>") com as organizações das fases anteriores.
+            </p>
+
+            <div class="flex flex-wrap gap-2 mb-5">
+              <button type="button" onclick="widgetState.cap5ForceTab='soc10'; renderMainView();" class="px-3.5 py-2 rounded-xl text-xs font-semibold border ${widgetState.cap5ForceTab==='soc10' ? 'bg-gold text-white border-gold' : 'bg-parchment border-borderline text-ink'}">Sociedade 10 de Dezembro (Bonaparte)</button>
+              <button type="button" onclick="widgetState.cap5ForceTab='movel'; renderMainView();" class="px-3.5 py-2 rounded-xl text-xs font-semibold border ${widgetState.cap5ForceTab==='movel' ? 'bg-republic text-white border-republic' : 'bg-parchment border-borderline text-ink'}">Guarda Móvel (Rep. Puros)</button>
+              <button type="button" onclick="widgetState.cap5ForceTab='atelies'; renderMainView();" class="px-3.5 py-2 rounded-xl text-xs font-semibold border ${widgetState.cap5ForceTab==='atelies' ? 'bg-crimson text-white border-crimson' : 'bg-parchment border-borderline text-ink'}">Ateliês Nacionais (Proletariado)</button>
+            </div>
+
+            <div class="rounded-2xl p-6 border bg-parchment/50" style="border-color: ${force.color}55">
+              <span class="inline-block font-mono text-[10px] font-bold uppercase px-2.5 py-0.5 rounded text-white mb-2" style="background-color: ${force.color}">
+                ${force.badge}
+              </span>
+              <h4 class="font-serif font-bold text-xl text-ink">${force.title}</h4>
+              <p class="text-sm text-ink/85 mt-2 leading-relaxed">${force.desc}</p>
+            </div>
+          </section>
+
+          ${renderChapterFooter('cap5')}
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       6. CAPÍTULO VI — RUPTURA DA BURGUESIA, CRISE DE 1851 E 2 DE DEZEMBRO
+       ========================================================================= */
+
+    const CAP6_COUP_STEPS = [
+      {
+        step: '01 • Saque ao Banco',
+        title: 'Roubo de 25 Milhões de Francos',
+        desc: 'Sem modelo em Cromwell ou Napoleão I, mas nos anais da Sociedade 10 de Dezembro e da jurisprudência criminal, Bonaparte apropria-se de 25 milhões de francos do Banco da França.'
+      },
+      {
+        step: '02 • Suborno das Tropas',
+        title: 'General Magnan e Soldados Comprados',
+        desc: 'O general Magnan recebe 1 milhão de francos; cada soldado recebe 15 francos e cachaça. Os regimentos mais confiáveis já haviam sido concentrados em Paris.'
+      },
+      {
+        step: '03 • Prisões na Madrugada',
+        title: 'Sequestro dos Líderes Parlamentares',
+        desc: 'Como ladrões durante a noite de 1º para 2 de dezembro, agentes invadem as casas e prendem dormindo Cavaignac, Lamoricière, Le Flô, Changarnier, Charras, Thiers e Baze.'
+      },
+      {
+        step: '04 • Fim no 10º Arrondissement',
+        title: 'Cartazes, Estado de Sítio e Carruagens Prisionais',
+        desc: 'Cartazes anunciam a dissolução da Assembleia e a volta do sufrágio universal. O "torso do Parlamento" reúne-se na prefeitura do 10º arrondissement gritando "Viva a República!" e é levado preso para Mazas, Ham e Vincennes.'
+      }
+    ];
+
+    function renderCap6() {
+      const ch = CHAPTERS_META[5];
+      const coup = CAP6_COUP_STEPS[widgetState.cap6CoupStep];
+      const totalVotes = 724;
+      const yesVotes = 446;
+      const noVotes = 278;
+      const threshold = 543; // 3/4 de 724
+      const yesPct = ((yesVotes / totalVotes) * 100).toFixed(1);
+      const noPct = ((noVotes / totalVotes) * 100).toFixed(1);
+
+      return `
+        <div class="fade-in space-y-8">
+          ${renderChapterHeader(
+            ch,
+            'Antes um fim com terror do que um terror sem fim! [...] A burguesia declarou inequivocamente que estava ansiosa por desobrigar-se do seu próprio domínio político para livrar-se das dificuldades e dos perigos nele implicados.',
+            'Capítulo VI'
+          )}
+
+          <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-gold font-bold mb-1">01 • Fracasso da Fusão</p>
+              <p class="text-xs text-ink/80 leading-relaxed">A tentativa de fundir Bourbon (Henrique V) e Orléans (Joinville) fracassa: uma coroa só cabe numa cabeça. O Partido da Ordem fragmenta-se por completo.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-republic font-bold mb-1">02 • Ruptura Extraparlamentar</p>
+              <p class="text-xs text-ink/80 leading-relaxed">A bolsa (<em>The Economist</em> chama Bonaparte de "sentinela da ordem"), os industriais (aplaudindo no circo em 25 nov) e os júris burgueses abandonam seus próprios deputados e jornais.</p>
+            </div>
+            <div class="bg-white rounded-2xl p-5 border border-borderline">
+              <p class="font-mono text-[10px] uppercase tracking-wider text-crimson font-bold mb-1">03 • Asno de Buridano (Nov 1851)</p>
+              <p class="text-xs text-ink/80 leading-relaxed">A Assembleia rejeita restaurar o sufrágio (13 nov) e rejeita a Lei dos Questores (requisição direta de tropas): a Montanha decide entre duas pauladas — medo de Changarnier vs. medo de Bonaparte.</p>
+            </div>
+          </section>
+
+          <!-- Infográfico 6.1: Placar Interativo da Revisão Constitucional -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-republic">Infográfico Exclusivo 6.1</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Placar da Revisão Constitucional (19 de Julho de 1851)</h3>
+            <p class="text-sm text-ink/70 mb-5">
+              Para alterar o Art. 45 e permitir a reeleição de Bonaparte, o <strong>Art. 111</strong> exigia <strong>3/4 dos votos (543 de 724)</strong>. O resultado escancarou um paradoxo letal:
+            </p>
+
+            <!-- Barra com linha de corte de 75% -->
+            <div class="relative pt-7 pb-3">
+              <!-- Marcador 75% -->
+              <div class="absolute top-0 bottom-0 border-l-2 border-dashed border-ink z-10" style="left: 75%;">
+                <span class="absolute -top-0.5 -translate-x-1/2 bg-ink text-white font-mono text-[10px] font-bold px-2 py-0.5 rounded whitespace-nowrap">
+                  Corte Art. 111: 75% (543)
+                </span>
+              </div>
+
+              <div class="w-full h-12 rounded-xl overflow-hidden flex border border-borderline shadow-inner">
+                <button type="button" onclick="widgetState.cap6VoteHighlight='yes'; renderMainView();" class="h-full bg-gold hover:brightness-105 transition flex items-center justify-center text-white font-mono text-xs font-bold" style="width: ${yesPct}%">
+                  A Favor: 446 (${yesPct}%)
+                </button>
+                <button type="button" onclick="widgetState.cap6VoteHighlight='no'; renderMainView();" class="h-full bg-crimson hover:brightness-105 transition flex items-center justify-center text-white font-mono text-xs font-bold" style="width: ${noPct}%">
+                  Contra: 278 (${noPct}%)
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+              <div class="p-4 rounded-xl border ${widgetState.cap6VoteHighlight==='yes' ? 'bg-gold/15 border-gold' : 'bg-parchment/50 border-borderline'}">
+                <p class="font-mono text-[10px] uppercase font-bold text-gold">446 Votos a Favor (61,6%)</p>
+                <p class="text-xs text-ink/80 mt-1">Bonapartistas + Legitimistas (Berryer, Falloux) + Orleanistas cansados de guerra (Molé, Broglie, Barrot). Maioria simples, mas faltaram <strong>97 votos</strong>.</p>
+              </div>
+              <div class="p-4 rounded-xl border ${widgetState.cap6VoteHighlight==='no' ? 'bg-crimson/10 border-crimson' : 'bg-parchment/50 border-borderline'}">
+                <p class="font-mono text-[10px] uppercase font-bold text-crimson">278 Votos Contra (38,4%)</p>
+                <p class="text-xs text-ink/80 mt-1">Montanha + Republicanos puros + Orleanistas resolutos (Thiers, Changarnier). Bloquearam legalmente a revisão.</p>
+              </div>
+              <div class="p-4 rounded-xl bg-ink text-parchment">
+                <p class="font-mono text-[10px] uppercase font-bold text-gold">O Paradoxo Final</p>
+                <p class="text-xs text-parchment/90 mt-1">“O Parlamento se pronunciara a favor dele, mas a Constituição contra o Parlamento. Ele agiu no espírito do Parlamento ao rasgar a Constituição, e no da Constituição ao dispersar o Parlamento.”</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Infográfico 6.2: Crise de 1851 -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-gold">Infográfico Exclusivo 6.2</span>
+                <h3 class="font-serif font-bold text-2xl text-ink mt-0.5">Crise de 1851: Ilusão Política vs. Economia Global</h3>
+              </div>
+              <div class="inline-flex p-1 rounded-xl bg-parchment border border-borderline self-start">
+                <button type="button" onclick="widgetState.cap6CrisisTab='compare'; renderMainView();" class="px-3 py-1.5 rounded-lg text-xs font-semibold ${widgetState.cap6CrisisTab==='compare' ? 'bg-ink text-white' : 'text-ink/70'}">Lado a Lado</button>
+                <button type="button" onclick="widgetState.cap6CrisisTab='illusion'; renderMainView();" class="px-3 py-1.5 rounded-lg text-xs font-semibold ${widgetState.cap6CrisisTab==='illusion' ? 'bg-crimson text-white' : 'text-ink/70'}">Ilusão Burguesa</button>
+                <button type="button" onclick="widgetState.cap6CrisisTab='material'; renderMainView();" class="px-3 py-1.5 rounded-lg text-xs font-semibold ${widgetState.cap6CrisisTab==='material' ? 'bg-peasant text-white' : 'text-ink/70'}">Análise de Marx</button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div class="rounded-2xl p-5 border transition ${widgetState.cap6CrisisTab==='material' ? 'opacity-40 bg-parchment/40 border-borderline' : 'bg-crimson/[0.04] border-crimson/35'}">
+                <span class="font-mono text-[10px] font-bold uppercase text-crimson">Visão da Burguesia Francesa</span>
+                <h4 class="font-serif font-bold text-lg text-ink mt-1">“A culpa é dos debates do Parlamento!”</h4>
+                <ul class="mt-3 space-y-2 text-xs text-ink/80">
+                  <li>• Atribuía a paralisação das fábricas (março–setembro) às disputas entre Legislativo e Executivo.</li>
+                  <li>• Temia a incerteza do "estado provisório" e o fantasma do 2º domingo de maio de 1852.</li>
+                  <li>• <strong>Fato que refuta a ilusão:</strong> o comércio voltou a se recuperar justamente em meados de outubro, quando o horizonte político ficou mais sombrio e o golpe era iminente.</li>
+                </ul>
+              </div>
+
+              <div class="rounded-2xl p-5 border transition ${widgetState.cap6CrisisTab==='illusion' ? 'opacity-40 bg-parchment/40 border-borderline' : 'bg-peasant/[0.05] border-peasant/35'}">
+                <span class="font-mono text-[10px] font-bold uppercase text-peasant">Análise Materialista de Marx</span>
+                <h4 class="font-serif font-bold text-lg text-ink mt-1">Ciclo do Mercado Mundial &amp; Superprodução</h4>
+                <ul class="mt-3 space-y-2 text-xs text-ink/80">
+                  <li>• <strong>Superprodução de 1849–1850</strong> (estimulada pela Feira Industrial de Londres) gerou pausa no ciclo industrial.</li>
+                  <li>• <strong>Matérias-primas:</strong> quebra e oscilação da safra de algodão, desproporção no preço da lã bruta e retração da seda.</li>
+                  <li>• <strong>Crise simultânea na Inglaterra:</strong> bancarrotas comerciais em Liverpool e Londres ocorreram exatamente em abril–maio, provando causa global, não parisiense.</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Infográfico 6.3: Cronologia do Golpe (2 de Dezembro) -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-crimson">Infográfico Exclusivo 6.3</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-4">Cronologia do Golpe — 2 de Dezembro de 1851</h3>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-5">
+              ${CAP6_COUP_STEPS.map((s, i) => `
+                <button type="button" onclick="widgetState.cap6CoupStep=${i}; renderMainView();" class="p-3 rounded-xl border text-left transition ${widgetState.cap6CoupStep===i ? 'bg-crimson text-white border-crimson shadow-sm' : 'bg-parchment/60 border-borderline text-ink hover:bg-parchment'}">
+                  <p class="font-mono text-[10px] font-bold ${widgetState.cap6CoupStep===i ? 'text-white/80' : 'text-crimson'}">${s.step}</p>
+                  <p class="text-xs font-semibold mt-0.5">${s.title}</p>
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="rounded-2xl bg-parchment/70 border border-borderline p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <p class="font-mono text-xs font-bold text-crimson uppercase">${coup.step}</p>
+                <h4 class="font-serif font-bold text-xl text-ink mt-1">${coup.title}</h4>
+                <p class="text-sm text-ink/85 mt-2 leading-relaxed">${coup.desc}</p>
+              </div>
+              <div class="flex gap-2 shrink-0">
+                <button type="button" onclick="widgetState.cap6CoupStep=Math.max(0, widgetState.cap6CoupStep-1); renderMainView();" class="px-3 py-2 rounded-lg text-xs font-semibold bg-white border border-borderline disabled:opacity-40" ${widgetState.cap6CoupStep===0?'disabled':''}>←</button>
+                <button type="button" onclick="widgetState.cap6CoupStep=Math.min(3, widgetState.cap6CoupStep+1); renderMainView();" class="px-3 py-2 rounded-lg text-xs font-semibold bg-ink text-white disabled:opacity-40" ${widgetState.cap6CoupStep===3?'disabled':''}>→</button>
+              </div>
+            </div>
+          </section>
+
+          ${renderChapterFooter('cap6')}
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       7. CAPÍTULO VII — MÁQUINA ESTATAL, "SACO DE BATATAS" E BONAPARTISMO
+       ========================================================================= */
+
+    const CAP7_MACHINE_STAGES = [
+      { era: 'Monarquia Absoluta', label: 'Origem', desc: 'Nasce na decadência do feudalismo: privilégios senhoriais convertem-se em atributos do Estado; dignitários feudais viram funcionários remunerados.' },
+      { era: 'Revolução de 1789', label: 'Centralização', desc: 'Quebra os poderes locais, provinciais e municipais para criar a unidade nacional burguesa, ampliando o raio de ação do governo central.' },
+      { era: 'Napoleão I', label: 'Aperfeiçoamento', desc: 'Aperfeiçoa a máquina estatal burocrático-militar, organizando a administração como uma fábrica centralizada.' },
+      { era: 'Restauração & Julho', label: 'Divisão do Trabalho', desc: 'Acentua a divisão de trabalho estatal: cada interesse comum (pontes, escolas, ferrovias) é arrancado da sociedade e entregue ao Estado.' },
+      { era: 'República Parlamentar', label: 'Repressão', desc: 'Na luta contra a revolução, reforça ainda mais os meios repressivos e a centralização do Poder Executivo.' },
+      { era: 'Segundo Bonaparte', label: 'Autonomia Plena', desc: 'O Estado torna-se completamente independente face à sociedade civil: 500.000 funcionários + 500.000 soldados. Tese de Marx: “Todas as revoluções somente aperfeiçoaram a máquina em vez de quebrá-la.”' }
+    ];
+
+    const CAP7_IDEES = [
+      { key: 'i1', num: '01', title: 'Propriedade Parcelada', y1800: 'Condição de libertação do camponês feudal e enriquecimento no início do séc. XIX.', y1851: 'Deterioração da agricultura, hipoteca esmagadora (juros equivalentes à dívida nacional britânica) e 16 milhões vivendo em casebres.' },
+      { key: 'i2', num: '02', title: 'Governo Forte & Imposto', y1800: 'Napoleão compensava o imposto pilhando a Europa e abrindo mercados à baioneta.', y1851: 'Governo forte = imposto elevado que suga os últimos recursos da parcela para sustentar burocracia, corte e polícia.' },
+      { key: 'i3', num: '03', title: 'Burocracia Estatal', y1800: 'Meio de centralização contra poderes feudais intermediários.', y1851: 'Casta parasita artificial que vive de sinecuras e tem interesse existencial na preservação do regime bonapartista.' },
+      { key: 'i4', num: '04', title: 'Religião & Clero', y1800: 'A parcela jovem, dependente da natureza, era naturalmente religiosa; o céu complementava a terra.', y1851: 'A parcela endividada torna-se irreligiosa; o padreco vira o "sabujo ungido da polícia terrena".' },
+      { key: 'i5', num: '05', title: 'Preponderância do Exército', y1800: 'Questão de honra dos camponeses-heróis defendendo a pátria e revolucionando o mundo.', y1851: 'Exército de suplentes (lumpemproletariado camponês) caçando camponeses como veados; os inimigos agora são oficiais de justiça e o fisco.' }
+    ];
+
+    const CAP7_MIRROR = [
+      { weapon: 'Apoteose do Sabre', againstProl: 'Exaltou o Exército como salvador da ordem em junho de 1848 e junho de 1849.', againstBourg: 'O sabre passou a dominá-la: em 4 de dezembro, soldados bêbados fuzilaram burgueses nas janelas dos bulevares.' },
+      { weapon: 'Imprensa & Salões', againstProl: 'Destruiu a imprensa revolucionária e colocou clubes populares sob vigilância policial.', againstBourg: 'Sua própria imprensa foi amordaçada e seus salões culturais foram vigiados pela polícia.' },
+      { weapon: 'Guarda Nacional', againstProl: 'Dissolveu as Guardas Nacionais democráticas após 13 de junho de 1849.', againstBourg: 'Sua própria Guarda Nacional foi dissolvida e desarmada sarcasticamente por Bonaparte.' },
+      { weapon: 'Estado de Sítio & Comissões', againstProl: 'Decretou estado de sítio, trocou júris por comissões militares e deportou 15 mil sem julgamento.', againstBourg: 'Estado de sítio decretado sobre ela, júris substituídos por tribunais militares e deputados deportados.' },
+      { weapon: 'O Lema da Ordem', againstProl: 'Bradou sem cessar à Revolução: “Fuge, tace, quiesce!” (Foge, cala-te, aquieta-te!).', againstBourg: 'Bonaparte gritou exatamente o mesmo para a burguesia: “Fuge, tace, quiesce!” — e ainda saqueou sua bolsa.' }
+    ];
+
+    function renderCap7() {
+      const ch = CHAPTERS_META[6];
+      const mStage = CAP7_MACHINE_STAGES[widgetState.cap7MachineStage];
+      const isCons = widgetState.cap7PeasantMode === 'conservador';
+
+      return `
+        <div class="fade-in space-y-8">
+          ${renderChapterHeader(
+            ch,
+            'Todas as revoluções somente aperfeiçoaram a máquina em vez de quebrá-la. [...] Porém, quando o manto imperial finalmente cair sobre os ombros de Luís Bonaparte, a estátua de bronze de Napoleão despencará do alto da coluna de Vendôme.',
+            'Capítulo VII'
+          )}
+
+          <!-- Infográfico 7.1: Evolução da Máquina Estatal -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-peasant">Infográfico Exclusivo 7.1</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">Evolução da Máquina Estatal Burocrático-Militar</h3>
+            <p class="text-sm text-ink/70 mb-5">
+              Acompanhe como o "corpo de parasitas" que entope todos os poros da sociedade francesa cresceu até se emancipar sob Luís Bonaparte.
+            </p>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mb-5">
+              ${CAP7_MACHINE_STAGES.map((st, i) => `
+                <button type="button" onclick="widgetState.cap7MachineStage=${i}; renderMainView();" class="p-3 rounded-xl border text-left transition ${widgetState.cap7MachineStage===i ? 'bg-peasant text-white border-peasant shadow-sm' : 'bg-parchment/60 border-borderline text-ink hover:bg-parchment'}">
+                  <p class="font-mono text-[10px] font-bold ${widgetState.cap7MachineStage===i ? 'text-white/80' : 'text-peasant'}">0${i+1} • ${st.label}</p>
+                  <p class="text-xs font-semibold mt-1 leading-tight">${st.era}</p>
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="rounded-2xl bg-parchment/65 border border-borderline p-5 flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div class="flex-1">
+                <p class="font-mono text-xs font-bold text-peasant uppercase">${mStage.era} — ${mStage.label}</p>
+                <p class="text-sm text-ink/85 mt-2 leading-relaxed">${mStage.desc}</p>
+              </div>
+              <div class="shrink-0 grid grid-cols-2 gap-3 bg-white p-4 rounded-xl border border-borderline text-center">
+                <div>
+                  <p class="font-mono font-bold text-xl text-republic">500 mil</p>
+                  <p class="text-[10px] text-ink/60 uppercase">Funcionários</p>
+                </div>
+                <div>
+                  <p class="font-mono font-bold text-xl text-crimson">500 mil</p>
+                  <p class="text-[10px] text-ink/60 uppercase">Soldados</p>
+                </div>
+              </div>
+            </div>
+            <p class="mt-3 text-xs text-ink/65 italic">
+              Nota: Marx compara o trabalho subterrâneo da revolução, que concentra todo o Poder Executivo para então destruí-lo, à citação de Shakespeare: <strong>“Bem cavoucado, velha toupeira!”</strong>.
+            </p>
+          </section>
+
+          <!-- Infográfico 7.2: O "Saco de Batatas" -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-peasant">Infográfico Exclusivo 7.2</span>
+                <h3 class="font-serif font-bold text-2xl text-ink mt-0.5">O “Saco de Batatas” — Camponeses Parceleiros</h3>
+              </div>
+              <div class="inline-flex p-1 rounded-xl bg-parchment border border-borderline self-start">
+                <button type="button" onclick="widgetState.cap7PeasantMode='conservador'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${isCons ? 'bg-gold text-white' : 'text-ink/70'}">
+                  Conservador (Vendée)
+                </button>
+                <button type="button" onclick="widgetState.cap7PeasantMode='revolucionario'; renderMainView();" class="px-3.5 py-2 rounded-lg text-xs font-semibold transition ${!isCons ? 'bg-crimson text-white' : 'text-ink/70'}">
+                  Revolucionário (Cévennes)
+                </button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              <!-- Visual de parcelas isoladas -->
+              <div class="lg:col-span-5 bg-parchment/70 rounded-2xl p-5 border border-borderline">
+                <p class="font-mono text-[10px] uppercase font-bold text-peasant mb-3 text-center">Adição de Grandezas Homônimas (Sem Vínculo Nacional)</p>
+                <div class="grid grid-cols-3 gap-2">
+                  ${Array.from({length: 9}).map((_, idx) => `
+                    <div class="bg-white rounded-xl p-2.5 border border-peasant/30 text-center">
+                      <div class="w-4 h-4 mx-auto rounded-full bg-peasant/20 border border-peasant mb-1"></div>
+                      <p class="font-mono text-[9px] text-ink/70">Parcela ${idx+1}</p>
+                    </div>
+                  `).join('')}
+                </div>
+                <p class="text-[11px] text-ink/75 mt-3 text-center leading-snug">
+                  “Eles não são capazes de representar a si mesmos, necessitando ser representados. O seu representante precisa entrar em cena como seu senhor, mandando chuva e sol lá de cima.”
+                </p>
+              </div>
+
+              <!-- Explicação da dualidade -->
+              <div class="lg:col-span-7 rounded-2xl p-6 border ${isCons ? 'bg-gold/[0.08] border-gold/45' : 'bg-crimson/[0.05] border-crimson/35'}">
+                <span class="font-mono text-[10px] uppercase font-bold px-2.5 py-0.5 rounded text-white ${isCons ? 'bg-gold' : 'bg-crimson'}">
+                  ${isCons ? 'Base Social de Bonaparte' : 'Aliado Natural do Proletariado'}
+                </span>
+                <h4 class="font-serif font-bold text-xl text-ink mt-2.5">
+                  ${isCons ? 'O Camponês Conservador (Moderna Vendée)' : 'O Camponês Revolucionário (Moderna Cévennes)'}
+                </h4>
+                <p class="text-sm text-ink/85 mt-2 leading-relaxed">
+                  ${isCons
+                    ? 'A dinastia Bonaparte representa o camponês que quer consolidar sua parcela, encerrado na velha ordem, movido pela superstição, pelo preconceito e pelo passado — esperando que o fantasma do Império o salve das cidades.'
+                    : 'Esmagado pela hipoteca, pelo agiota citadino e pelo fisco, o camponês que se projeta para além da parcela descobre no proletariado citadino seu aliado e líder natural para subverter a ordem burguesa — o "coro" sem o qual o canto solo proletário vira lamento fúnebre.'}
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Infográfico 7.3: As 5 Idées Napoléoniennes -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+              <div>
+                <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-gold">Infográfico Exclusivo 7.3</span>
+                <h3 class="font-serif font-bold text-2xl text-ink mt-0.5">As 5 <em>Idées Napoléoniennes</em> (1800 vs. 1851)</h3>
+              </div>
+              <button type="button" onclick="toggleAllIdees()" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold border border-borderline bg-parchment hover:bg-ink hover:text-white transition">
+                Alternar Todas (1800 ↔ 1851)
+              </button>
+            </div>
+            <p class="text-sm text-ink/70 mb-5">
+              Clique em cada pilar para ver como as ideias ligadas à parcela jovem de 1800 viraram "alucinações de sua agonia" em 1851.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              ${CAP7_IDEES.map(item => {
+                const is1851 = !!widgetState.cap7Idees[item.key];
+                return `
+                  <button type="button" onclick="widgetState.cap7Idees['${item.key}']=!widgetState.cap7Idees['${item.key}']; renderMainView();" class="flip-state-card text-left rounded-2xl p-4 border flex flex-col justify-between ${is1851 ? 'bg-crimson/[0.05] border-crimson/40' : 'bg-peasant/[0.05] border-peasant/35'}">
+                    <div>
+                      <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded text-white ${is1851 ? 'bg-crimson' : 'bg-peasant'}">${is1851 ? '1851 (Agonia)' : '1800 (Viço)'}</span>
+                        <span class="font-mono text-[10px] text-ink/50">#${item.num}</span>
+                      </div>
+                      <h4 class="font-serif font-bold text-sm text-ink mb-1.5">${item.title}</h4>
+                      <p class="text-xs text-ink/80 leading-relaxed">${is1851 ? item.y1851 : item.y1800}</p>
+                    </div>
+                    <p class="mt-3 pt-2 border-t border-borderline/60 font-mono text-[10px] ${is1851 ? 'text-crimson' : 'text-peasant'}">↻ Virar época</p>
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </section>
+
+          <!-- Infográfico 7.4: O Espelho da Retaliação (4 de Dezembro) -->
+          <section class="bg-white rounded-3xl border border-borderline p-6 sm:p-8 shadow-xs">
+            <span class="font-mono text-[11px] font-semibold uppercase tracking-widest text-crimson">Infográfico Exclusivo 7.4</span>
+            <h3 class="font-serif font-bold text-2xl text-ink mt-0.5 mb-2">O Espelho da Retaliação (4 de Dezembro)</h3>
+            <p class="text-sm text-ink/70 mb-5">
+              A simetria irônica descrita por Marx: cada arma repressiva que a burguesia forjou contra o proletariado foi aplicada por Bonaparte contra a própria burguesia (“república cossaca”).
+            </p>
+
+            <div class="overflow-x-auto rounded-2xl border border-borderline">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-parchment border-b border-borderline font-mono text-[11px] uppercase tracking-wider text-ink/70">
+                    <th class="py-3 px-4">Instrumento</th>
+                    <th class="py-3 px-4 text-republic">O que a Burguesia fez (1848–50)</th>
+                    <th class="py-3 px-4 text-crimson">O que Bonaparte fez contra ela (Dez 1851)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-borderline text-xs">
+                  ${CAP7_MIRROR.map((row, idx) => `
+                    <tr onclick="widgetState.cap7MirrorIdx=${idx}; renderMainView();" class="cursor-pointer transition ${widgetState.cap7MirrorIdx===idx ? 'bg-gold/10' : 'hover:bg-parchment/50'}">
+                      <td class="py-3.5 px-4 font-serif font-bold text-ink whitespace-nowrap">${row.weapon}</td>
+                      <td class="py-3.5 px-4 text-ink/80 leading-relaxed">${row.againstProl}</td>
+                      <td class="py-3.5 px-4 text-ink/90 font-medium leading-relaxed">${row.againstBourg}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Nota final sobre contradições do Bonapartismo -->
+            <div class="mt-5 rounded-2xl bg-ink text-parchment p-5">
+              <p class="font-mono text-[10px] uppercase tracking-widest text-gold font-bold">Contradições do Bonapartismo</p>
+              <p class="text-xs sm:text-sm text-parchment/90 mt-1.5 leading-relaxed">
+                Bonaparte quer ser o benfeitor patriarcal de todas as classes — roubar toda a França para dá-la de presente à França —, mas não pode dar a uma sem tirar da outra. Como resumiu o cardeal Pierre d’Ailly no Concílio de Constança: <em>“O único que ainda pode salvar a Igreja é o diabo em pessoa”</em>. Assim, sob o chefe da Sociedade 10 de Dezembro, só a desordem salva a ordem — enquanto profana toda a máquina estatal e prepara a queda da Coluna de Vendôme.
+              </p>
+            </div>
+          </section>
+
+          ${renderChapterFooter('cap7')}
+        </div>
+      `;
+    }
+
+    function toggleAllIdees() {
+      const anyFalse = Object.values(widgetState.cap7Idees).some(v => !v);
+      Object.keys(widgetState.cap7Idees).forEach(k => { widgetState.cap7Idees[k] = anyFalse; });
+      renderMainView();
+    }
+
+    /* =========================================================================
+       RENDERIZADOR PRINCIPAL E INICIALIZAÇÃO
+       ========================================================================= */
+
+    function renderMainView() {
+      const container = document.getElementById('main-content');
+      if (!container) return;
+
+      switch (currentView) {
+        case 'cap1': container.innerHTML = renderCap1(); break;
+        case 'cap2': container.innerHTML = renderCap2(); break;
+        case 'cap3': container.innerHTML = renderCap3(); break;
+        case 'cap4': container.innerHTML = renderCap4(); break;
+        case 'cap5': container.innerHTML = renderCap5(); break;
+        case 'cap6': container.innerHTML = renderCap6(); break;
+        case 'cap7': container.innerHTML = renderCap7(); break;
+        default: container.innerHTML = renderOverview(); break;
+      }
+
+      updateCurrentStudiedButton();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        document.getElementById('mobile-menu-btn').addEventListener('click', openMobileSidebar);
+        document.getElementById('close-sidebar-btn').addEventListener('click', closeMobileSidebar);
+        document.getElementById('sidebar-overlay').addEventListener('click', closeMobileSidebar);
+        setupSearch();
+        renderSidebar();
+        renderMainView();
+      } catch (err) {
+        console.error('Erro ao inicializar o Atlas:', err);
+      }
+    });
+  </script>
+</body>
+</html>
