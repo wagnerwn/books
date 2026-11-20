@@ -1,0 +1,3222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Capital — Livro II: Atlas Infográfico Interativo</title>
+
+  <!-- Tipografia editorial com fallbacks seguros para uso offline -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================================
+       DESIGN TOKENS E BASE EDITORIAL AUTOCONTIDA
+       ========================================================================= */
+    :root {
+      --bg-paper: #FAF8F5;
+      --bg-surface: #FFFFFF;
+      --bg-subtle: #F3EFE9;
+      --ink: #1F1E1C;
+      --muted: #57534E;
+      --muted-light: #78716C;
+      --border: #E5E0D8;
+      --border-strong: #CFC7BC;
+
+      /* Cores temáticas por seção */
+      --sec1: #9E2A2B;
+      --sec1-soft: #FDF2F2;
+      --sec1-border: #F3C6C6;
+
+      --sec2: #B45309;
+      --sec2-soft: #FFFBEB;
+      --sec2-border: #FDE68A;
+
+      --sec3: #0F766E;
+      --sec3-soft: #F0FDFA;
+      --sec3-border: #99F6E4;
+
+      --active-accent: #9E2A2B;
+      --active-soft: #FDF2F2;
+      --active-border: #F3C6C6;
+
+      --font-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --shadow-xs: 0 1px 2px rgba(31, 30, 28, 0.04);
+      --shadow-sm: 0 2px 8px rgba(31, 30, 28, 0.06);
+      --shadow-md: 0 8px 24px rgba(31, 30, 28, 0.12);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-serif);
+      margin: 0;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    p { margin: 0; }
+
+    button, input, select {
+      font-family: inherit;
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+
+    .mono { font-family: var(--font-mono); }
+
+    /* Barra de rolagem sutil */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-paper); }
+    ::-webkit-scrollbar-thumb { background: #D6CFC5; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #A8A29E; }
+
+    /* =========================================================================
+       LAYOUT PRINCIPAL (SIDEBAR FIXA + ÁREA PRINCIPAL)
+       ========================================================================= */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Cabeçalho mobile */
+    .mobile-header {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mobile-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-paper);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink);
+      transition: background 0.15s, border-color 0.15s;
+      flex-shrink: 0;
+    }
+    .icon-btn:hover { background: var(--bg-subtle); border-color: var(--border-strong); }
+
+    /* Overlay mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(31, 30, 28, 0.45);
+      z-index: 45;
+      backdrop-filter: blur(1px);
+    }
+    .sidebar-overlay.open { display: block; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 320px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar-top {
+      padding: 20px 18px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(250, 248, 245, 0.65);
+    }
+
+    .brand-eyebrow {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sec1);
+      margin-bottom: 4px;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .sidebar-close-btn {
+      display: none;
+    }
+
+    /* Progresso */
+    .progress-wrap {
+      margin-top: 14px;
+    }
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      margin-bottom: 6px;
+    }
+    .progress-track {
+      width: 100%;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--sec1), var(--sec2), var(--sec3));
+      transition: width 0.3s ease;
+    }
+
+    /* Botão Mapa Geral */
+    .map-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      background: var(--ink);
+      color: var(--bg-paper);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .map-btn:hover { background: #33312E; }
+    .map-btn.active { box-shadow: inset 0 0 0 2px #F59E0B; }
+
+    /* Busca */
+    .search-box {
+      position: relative;
+      margin-top: 10px;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 8px 30px 8px 32px;
+      font-size: 12px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-surface);
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-box input:focus { border-color: var(--sec1); }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted-light);
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      padding: 2px;
+      display: none;
+    }
+    .search-clear.visible { display: inline-flex; }
+
+    /* Navegação por capítulos */
+    .chapter-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 12px 20px;
+    }
+
+    .nav-section { margin-bottom: 14px; }
+    .nav-section-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 8px;
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+      border: 1px solid transparent;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      margin-bottom: 2px;
+    }
+    .nav-item:hover { background: var(--bg-paper); }
+    .nav-item.active {
+      background: var(--active-soft);
+      border-color: var(--active-border);
+      color: var(--active-accent);
+      font-weight: 600;
+    }
+    .nav-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      width: 20px;
+      text-align: right;
+      color: var(--muted-light);
+      flex-shrink: 0;
+    }
+    .nav-item.active .nav-num { color: var(--active-accent); font-weight: 700; }
+    .nav-title {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .nav-check {
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      color: #15803D;
+    }
+    .nav-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--border);
+      flex-shrink: 0;
+      margin-right: 4px;
+    }
+
+    .sidebar-footer {
+      padding: 10px 16px;
+      border-top: 1px solid var(--border);
+      background: rgba(250, 248, 245, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .link-danger {
+      color: var(--sec1);
+      font-weight: 600;
+      font-size: 11px;
+    }
+    .link-danger:hover { text-decoration: underline; }
+
+    /* Área principal */
+    .main-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .desktop-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(250, 248, 245, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .breadcrumb {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+
+    .edition-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .content-container {
+      width: 100%;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 32px 56px;
+      flex: 1;
+    }
+
+    /* =========================================================================
+       COMPONENTES EDITORIAIS COMUNS
+       ========================================================================= */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px 28px;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .stack-lg { display: flex; flex-direction: column; gap: 24px; }
+    .stack-md { display: flex; flex-direction: column; gap: 16px; }
+    .stack-sm { display: flex; flex-direction: column; gap: 10px; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .badge-neutral {
+      background: var(--bg-paper);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .thesis-box {
+      margin-top: 18px;
+      padding: 14px 18px;
+      border-left: 4px solid var(--active-accent);
+      background: var(--bg-paper);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    }
+    .thesis-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--active-accent);
+      margin-bottom: 4px;
+    }
+    .thesis-text {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px 15px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg-paper);
+      color: var(--ink);
+      transition: all 0.15s ease;
+    }
+    .btn:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
+    .btn-primary {
+      background: var(--active-accent);
+      border-color: var(--active-accent);
+      color: #FFFFFF;
+    }
+    .btn-primary:hover { filter: brightness(0.92); background: var(--active-accent); }
+    .btn-studied {
+      background: #F0FDF4;
+      border-color: #86EFAC;
+      color: #166534;
+    }
+    .btn-studied:hover { background: #DCFCE7; }
+
+    /* Controles interativos (abas, segmentos, sliders) */
+    .seg-group {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 12px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+    }
+    .seg-btn {
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      transition: all 0.15s;
+    }
+    .seg-btn:hover { color: var(--ink); }
+    .seg-btn.active {
+      background: var(--active-accent);
+      color: #FFFFFF;
+      box-shadow: var(--shadow-xs);
+    }
+
+    .pill-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .pill-tab {
+      padding: 7px 13px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg-paper);
+      color: var(--ink);
+      transition: all 0.15s;
+    }
+    .pill-tab:hover { border-color: var(--active-accent); color: var(--active-accent); }
+    .pill-tab.active {
+      background: var(--active-accent);
+      border-color: var(--active-accent);
+      color: #FFFFFF;
+    }
+
+    /* Sliders editoriais */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--border);
+      outline: none;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--active-accent);
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--active-accent);
+      border: 2px solid #FFFFFF;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+    }
+
+    /* Grids utilitários */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+
+    .panel-soft {
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      text-align: center;
+    }
+    .metric-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-top: 4px;
+      color: var(--ink);
+    }
+    .metric-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* Cartões de ideias-chave e fórmulas */
+    .idea-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      transition: border-color 0.15s;
+    }
+    .idea-card:hover { border-color: var(--border-strong); }
+    .idea-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .idea-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: var(--active-soft);
+      color: var(--active-accent);
+      border: 1px solid var(--active-border);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .idea-title {
+      font-family: var(--font-serif);
+      font-size: 15.5px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .idea-body {
+      font-size: 13.5px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .formula-banner {
+      background: var(--ink);
+      color: var(--bg-paper);
+      border-radius: var(--radius-md);
+      padding: 16px 20px;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .formula-tag {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #FCD34D;
+    }
+
+    .concept-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+    .concept-item {
+      background: var(--bg-paper);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      font-size: 12.5px;
+    }
+    .concept-item strong {
+      display: block;
+      color: var(--active-accent);
+      margin-bottom: 3px;
+      font-size: 13px;
+    }
+
+    /* Rodapé de navegação entre capítulos */
+    .chapter-footer {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .nav-card-btn {
+      flex: 1;
+      min-width: 190px;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+      background: var(--bg-paper);
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .nav-card-btn:hover { border-color: var(--active-accent); background: var(--bg-surface); }
+    .nav-card-btn.right { text-align: right; }
+    .nav-card-dir { font-size: 11px; font-weight: 600; color: var(--muted); }
+    .nav-card-name { font-size: 13px; font-weight: 700; color: var(--ink); margin-top: 2px; }
+
+    /* Animações */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeUp 0.25s ease-out both; }
+
+    @keyframes dashFlow {
+      to { stroke-dashoffset: -24; }
+    }
+    .svg-flow {
+      stroke-dasharray: 6 6;
+      animation: dashFlow 1.3s linear infinite;
+    }
+
+    /* Barra composta horizontal */
+    .stacked-bar {
+      width: 100%;
+      height: 38px;
+      border-radius: 10px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .stacked-seg {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: width 0.25s ease;
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 0 4px;
+    }
+
+    /* Alertas contextuais */
+    .alert-box {
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      line-height: 1.5;
+      border: 1px solid var(--border);
+      background: var(--bg-paper);
+    }
+    .alert-ok { background: #F0FDF4; border-color: #86EFAC; color: #166534; }
+    .alert-warn { background: #FFFBEB; border-color: #FDE68A; color: #92400E; }
+    .alert-err { background: #FEF2F2; border-color: #FECACA; color: #991B1B; }
+
+    /* Toast e Modal */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 90;
+      background: var(--ink);
+      color: var(--bg-paper);
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 500;
+      box-shadow: var(--shadow-md);
+      display: none;
+    }
+    .toast.show { display: block; animation: fadeUp 0.2s ease-out; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(31, 30, 28, 0.5);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      max-width: 380px;
+      width: 100%;
+      padding: 24px;
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Tabelas limpas */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+    .data-table th, .data-table td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+    }
+    .data-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      background: var(--bg-paper);
+    }
+
+    /* Responsividade */
+    @media (max-width: 1024px) {
+      .mobile-header { display: flex; }
+      .desktop-topbar { display: none; }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        max-width: 88vw;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-close-btn { display: inline-flex; }
+      .content-container { padding: 20px 16px 48px; }
+      .card { padding: 18px 18px; }
+    }
+
+    @media (max-width: 720px) {
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .formula-banner { font-size: 12.5px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho Mobile -->
+  <header class="mobile-header">
+    <div class="mobile-header-left">
+      <button id="mobileMenuBtn" class="icon-btn" type="button" aria-label="Abrir menu de capítulos">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+      <div style="min-width:0">
+        <div style="font-family:var(--font-serif);font-weight:800;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">O Capital — Livro II</div>
+        <div style="font-size:11px;color:var(--muted);">Atlas Infográfico Interativo</div>
+      </div>
+    </div>
+    <button id="mobileMapBtn" class="btn btn-primary" type="button" style="padding:7px 12px;font-size:11.5px;">Mapa Geral</button>
+  </header>
+
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <div class="app-shell">
+    <!-- BARRA LATERAL -->
+    <aside id="sidebar" class="sidebar" aria-label="Navegação do Livro II">
+      <div class="sidebar-top">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div>
+            <span class="brand-eyebrow">Karl Marx • Ed. Engels (1885)</span>
+            <h1 class="brand-title">O Capital — Livro II</h1>
+            <p class="brand-sub">O processo de circulação do capital</p>
+          </div>
+          <button id="closeSidebarBtn" class="icon-btn sidebar-close-btn" type="button" aria-label="Fechar menu">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="progress-row">
+            <span style="color:var(--muted);font-weight:500;">Progresso de estudo</span>
+            <span id="progressText" class="mono" style="font-weight:700;color:var(--sec1);">0 / 21</span>
+          </div>
+          <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
+        </div>
+
+        <button id="mapViewBtn" type="button" class="map-btn">
+          <svg width="16" height="16" fill="none" stroke="#FCD34D" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
+          <span>Mapa Geral do Livro II</span>
+        </button>
+
+        <div class="search-box">
+          <svg class="search-icon" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M11 19a8 8 0 100-16 8 8 0 000 16z" />
+          </svg>
+          <input id="searchInput" type="text" placeholder="Buscar capítulo, Quesnay, faux frais, I(v+m)..." aria-label="Buscar capítulo ou conceito" />
+          <button id="clearSearchBtn" class="search-clear" type="button" aria-label="Limpar busca">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <nav id="chapterNav" class="chapter-nav" aria-label="Lista de capítulos"></nav>
+
+      <div class="sidebar-footer">
+        <span>Ed. Boitempo • Trad. R. Enderle</span>
+        <button id="resetProgressBtn" type="button" class="link-danger">Zerar progresso</button>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="main-area">
+      <div class="desktop-topbar">
+        <div class="topbar-left">
+          <button id="desktopToggleBtn" class="icon-btn" type="button" title="Recolher/Expandir barra lateral" aria-label="Alternar barra lateral">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h16" />
+            </svg>
+          </button>
+          <span id="breadcrumbText" class="breadcrumb">Mapa Geral do Livro II</span>
+        </div>
+        <span class="edition-pill">MEGA-2 • 3 Seções • 21 Capítulos</span>
+      </div>
+
+      <div id="mainContent" class="content-container"></div>
+    </main>
+  </div>
+
+  <!-- Toast discreto -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Modal de confirmação (substitui confirm()) -->
+  <div id="confirmModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <h3 id="modalTitle" style="font-size:1.15rem;">Zerar progresso de estudo?</h3>
+      <p style="font-size:13.5px;color:var(--muted);margin-top:8px;">Todos os capítulos do Livro II marcados como estudados serão desmarcados.</p>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;">
+        <button id="cancelResetBtn" type="button" class="btn">Cancelar</button>
+        <button id="confirmResetBtn" type="button" class="btn btn-primary" style="background:var(--sec1);border-color:var(--sec1);">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. ESTRUTURA COMPLETA DO LIVRO II (EDIÇÃO BOITEMPO / MEGA-2)
+    // =========================================================================
+    const SECTIONS = [
+      {
+        id: 'I',
+        num: 'Seção I',
+        title: 'As metamorfoses do capital e seu ciclo',
+        color: '#9E2A2B',
+        soft: '#FDF2F2',
+        border: '#F3C6C6',
+        chapters: [1, 2, 3, 4, 5, 6],
+        summary: 'Analisa as três formas funcionais do capital industrial (capital monetário, produtivo e mercadoria), a continuidade simultânea de seus ciclos, o tempo de curso e os custos de circulação.'
+      },
+      {
+        id: 'II',
+        num: 'Seção II',
+        title: 'A rotação do capital',
+        color: '#B45309',
+        soft: '#FFFBEB',
+        border: '#FDE68A',
+        chapters: [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+        summary: 'Estuda o ciclo como processo periódico (rotação), a distinção entre capital fixo e circulante, o impacto dos períodos de trabalho, produção e curso sobre o adiantamento, a taxa anual do mais-valor e a circulação monetária do mais-valor.'
+      },
+      {
+        id: 'III',
+        num: 'Seção III',
+        title: 'A reprodução e a circulação do capital social total',
+        color: '#0F766E',
+        soft: '#F0FDFA',
+        border: '#99F6E4',
+        chapters: [18, 19, 20, 21],
+        summary: 'Passa do capital individual ao entrelaçamento do capital social total em dois grandes setores (Meios de Produção e Meios de Consumo), formulando as condições de equilíbrio da reprodução simples e da reprodução ampliada.'
+      }
+    ];
+
+    const CHAPTERS = [
+      // ==================== SEÇÃO I ====================
+      {
+        id: 1, section: 'I',
+        title: 'O ciclo do capital monetário',
+        thesis: 'O ciclo D – M < T/Mp … P … M\' – D\' revela o capital industrial como movimento de autovalorização cujo ponto de partida e retorno é o dinheiro acrescido de mais-valor.',
+        formula: 'D – M < T / Mp … P … M\' (M + m) – D\' (D + d)',
+        concepts: [
+          { term: 'Capital industrial', def: 'Único modo de existência do capital que não apenas se apropria de mais-valor, mas o cria, assumindo sucessivamente as formas monetária, produtiva e mercadoria.' },
+          { term: 'Relação de classe em D – T', def: 'A compra da força de trabalho pressupõe a separação histórica entre trabalhadores livres e meios de produção.' },
+          { term: 'Indústria de transportes', def: 'Ramo produtivo sem produto material separado (D – M … P – D\'): vende-se o próprio deslocamento espacial, que gera valor e mais-valor.' }
+        ],
+        ideas: [
+          { title: 'Primeiro estágio (D – M < T/Mp)', body: 'O capital monetário compra no mercado meios de produção (Mp) e força de trabalho (T) em proporções qualitativas e quantitativas precisas para absorver o mais-trabalho.' },
+          { title: 'Segundo estágio (…P…)', body: 'A circulação é interrompida pelo consumo produtivo: os trabalhadores transferem o valor dos meios de produção (£372) e criam valor novo (£128 = £50 salário + £78 mais-valor).' },
+          { title: 'Terceiro estágio (M\' – D\')', body: 'O capital-mercadoria (10.000 libras de fio = £500) precisa ser vendido integralmente para realizar o valor de capital (£422) e o mais-valor (£78, taxa de 156%).' },
+          { title: 'Caráter unilateral e ilusório', body: 'Por começar e terminar em dinheiro, D…D\' expressa nitidamente o fim capitalista ("fazer dinheiro"), mas alimenta a ilusão mercantilista de valorização sem produção.' }
+        ]
+      },
+      {
+        id: 2, section: 'I',
+        title: 'O ciclo do capital produtivo',
+        thesis: 'O ciclo P … M\' – D\' – M … P expõe a função periodicamente renovada do capital produtivo como reprodução simples ou ampliada, reduzindo o dinheiro a mediador evanescente.',
+        formula: 'P … M\' – D\' (D + d) – M < T / Mp … P (ou P\')',
+        concepts: [
+          { term: 'Cisão de M\' – D\'', def: 'Na reprodução simples, o capital-mercadoria realizado divide-se em M–D–M (reposição do capital) e m–d–m (consumo individual do capitalista).' },
+          { term: 'Capital monetário latente', def: 'Mais-valor realizado que precisa ser entesourado durante vários ciclos até atingir o volume mínimo técnico para ampliar a produção.' },
+          { term: 'Fundo de reserva', def: 'Parcela monetária mantida para amortecer perturbações no tempo de venda ou oscilações de preço dos meios de produção.' }
+        ],
+        ideas: [
+          { title: 'Circulação como mediação da produção', body: 'Diferente de D…D\', aqui a circulação inteira (M\'–D\'–M) aparece apenas como etapa intermediária para renovar o processo produtivo.' },
+          { title: 'Reprodução simples e ilusão clássica', body: 'Como a forma geral da circulação é M–D–M, a economia política clássica tende a confundir a produção capitalista com produção voltada ao consumo.' },
+          { title: 'Acumulação e entesouramento', body: 'Para passar de P a P\', o capitalista muitas vezes precisa acumular dinheiro (tesouro) até dispor do montante técnico necessário (ex: novos fusos e cardadores).' },
+          { title: 'Falsa aparência de escoamento nas crises', body: 'Quando o produtor vende ao comerciante atacadista, seu ciclo P…P prossegue mesmo se a mercadoria ficar encalhada no varejo — preparando a eclosão súbita de crises.' }
+        ]
+      },
+      {
+        id: 3, section: 'I',
+        title: 'O ciclo do capital-mercadoria',
+        thesis: 'O ciclo M\' – D\' – M … P … M\' parte sempre do produto total já valorizado (M + m), revelando que a reprodução depende do consumo produtivo e individual e antecipando a análise do capital social total.',
+        formula: 'M\' – D\' – M < T / Mp … P … M\' (ou M\'\')',
+        concepts: [
+          { term: 'Ponto de partida valorizado', def: 'Ao contrário de D…D\' e P…P, M\'…M\' inicia sempre com capital + mais-valor, mesmo na reprodução simples.' },
+          { term: 'Consumo como precondição', def: 'O ciclo só se completa se toda a massa de mercadorias M\' encontrar escoamento no consumo produtivo (Mp) e no consumo individual (salários e renda).' },
+          { term: 'Tableau économique', def: 'Marx elogia o "grande tato" de François Quesnay por fundar seu quadro econômico sobre a forma M\'…M\' (reprises/colheita), em oposição ao mercantilismo.' }
+        ],
+        ideas: [
+          { title: 'Circulação abre o ciclo', body: 'As duas metamorfoses da circulação (M\'–D\' e D–M) ocorrem antes da produção, que encerra o ciclo gerando novo capital-mercadoria.' },
+          { title: 'Entrelaçamento com outros capitais', body: 'Em M\'…M\', os meios de produção comprados (Mp) já são pressupostos como capital-mercadoria (M\') de outros capitais industriais.' },
+          { title: 'Decomposição proporcional do produto', body: 'As 10.000 libras de fio (£500) podem ser decompostas em 7.440 lb (c = £372), 1.000 lb (v = £50) e 1.560 lb (m = £78) — ou a mesma proporção em cada libra individual.' },
+          { title: 'Ponte para a Seção III', body: 'Por abranger desde o início o destino produtivo e individual do produto total, M\'…M\' é a única forma adequada para analisar o capital social total.' }
+        ]
+      },
+      {
+        id: 4, section: 'I',
+        title: 'As três figuras do processo cíclico',
+        thesis: 'O capital não é uma coisa imóvel, mas um movimento contínuo que só se realiza porque frações do capital percorrem simultaneamente e em sucessão todas as três figuras cíclicas.',
+        formula: 'Unidade: (D…D\') + (P…P) + (M\'…M\') = Continuidade',
+        concepts: [
+          { term: 'Justaposição e sucessão', def: 'A continuidade da produção exige dividir o capital em frações que estejam simultaneamente em forma monetária, produtiva e mercadoria, sucedendo-se sem pausa.' },
+          { term: 'Autonomização do valor', def: 'Contra Samuel Bailey, Marx mostra que o valor como capital compara-se consigo mesmo ao longo de fases sucessivas — é uma abstração real in actu.' },
+          { term: 'Revoluções de valor', def: 'Quedas ou altas nos preços dos meios de produção liberam ou vinculam capital monetário de maneira distinta em D…D\' versus P…P e M\'…M\'.' }
+        ],
+        ideas: [
+          { title: 'O capital só existe como movimento', body: 'Se o capital se detém em D–M, enrijece em tesouro; se estaciona em P, meios de produção e trabalhadores ficam ociosos; se trava em M\'–D\', estoques bloqueiam a circulação.' },
+          { title: 'Efeito dominó dos gargalos', body: 'Qualquer estancamento na sucessão de uma fração desorganiza a justaposição das demais e paralisa o capital individual como um todo.' },
+          { title: 'Mercado mundial e modos de produção', body: 'Na circulação (D–M e M\'–D\'), o capital industrial entrelaça-se com mercadorias produzidas sob escravidão, campesinato ou comunidades, tendendo a mercantilizar tudo.' },
+          { title: 'Crítica à tríade natural/monetária/creditícia', body: 'Contra Bruno Hildebrand, Marx demonstra que a economia creditícia é apenas um estágio desenvolvido da monetária, e que o modo de produção determina o de intercâmbio.' }
+        ]
+      },
+      {
+        id: 5, section: 'I',
+        title: 'O tempo de curso',
+        thesis: 'O tempo de curso (circulação) exclui o tempo de produção e atua como limite negativo à criação de valor e mais-valor: quanto mais próximo de zero, maior a valorização do capital.',
+        formula: 'Tempo Total do Ciclo = Tempo de Produção + Tempo de Curso',
+        concepts: [
+          { term: 'Tempo de produção', def: 'Permanência do capital na esfera produtiva: inclui o tempo de trabalho ativo, pausas noturnas, estoques produtivos latentes e processos físico-químicos naturais.' },
+          { term: 'Tempo de curso (circulação)', def: 'Soma do tempo de venda (M\'–D\', a fase mais difícil) e do tempo de compra (D–M). Não cria valor nem mais-valor.' },
+          { term: 'Perecibilidade como limite absoluto', def: 'A deterioração física do valor de uso impõe um limite máximo ao tempo de curso do capital-mercadoria, restringindo mercados locais até o avanço dos transportes.' }
+        ],
+        ideas: [
+          { title: 'Exclusão mútua', body: 'Enquanto o capital permanece na esfera da circulação, não absorve trabalho vivo nem produz mais-valor; alongar o tempo de curso comprime a fração ativa na produção.' },
+          { title: 'Ilusão do lucro na circulação', body: 'A economia burguesa confunde o efeito negativo do tempo de curso com uma suposta fonte positiva de valorização independente da produção.' },
+          { title: 'A venda domina o tempo de curso', body: 'Transformar mercadoria em dinheiro (M\'–D\') é mais difícil do que comprar (D–M), pois além da mudança de forma realiza o mais-valor.' },
+          { title: 'Tendência ao tempo de curso zero', body: 'O capital busca incessantemente reduzir o tempo de curso ao mínimo (encomendas, logística rápida, comunicações) para maximizar sua produtividade.' }
+        ]
+      },
+      {
+        id: 6, section: 'I',
+        title: 'Os custos de circulação',
+        thesis: 'Os custos ligados à pura mudança de forma (compra/venda, contabilidade, dinheiro) são faux frais improdutivos que não criam valor; já o transporte (e parte do armazenamento normal) prolonga a produção na circulação.',
+        formula: 'Custos Líquidos = Faux Frais (0 valor) | Transporte = +Valor e +Mais-Valor',
+        concepts: [
+          { term: 'Custos líquidos de circulação', def: 'Despesas com compra/venda, contabilidade e desgaste do dinheiro. Não criam produto nem valor — deduzem-se do mais-valor social.' },
+          { term: 'Analogia da combustão do carvão', def: 'A energia gasta para romper moléculas do carvão e iniciar a queima é necessária, mas não gera calor útil; o mesmo ocorre com o tempo de compra e venda.' },
+          { term: 'Três formas do estoque', def: 'O estoque social assume três formas: estoque produtivo (capital latente), estoque de mercadorias (no mercado) e fundo individual de consumo.' }
+        ],
+        ideas: [
+          { title: 'Divisão do trabalho não cria valor do nada', body: 'Delegar compra, venda ou contabilidade a assalariados especializados reduz o tempo social improdutivo, mas não transforma funções improdutivas em criadoras de valor.' },
+          { title: 'O dinheiro como falso custo social', body: 'Ouro e prata imobilizados como moeda não entram no consumo produtivo nem individual; sua reposição anual representa um sacrifício de trabalho social.' },
+          { title: 'Armazenamento normal vs. encalhe', body: 'Custos de conservação do estoque normal entram no valor como transferência de gastos sociais; já os custos de estoque involuntário (encalhe) são perda líquida.' },
+          { title: 'Indústria de transportes é produtiva', body: 'Como o valor de uso só se realiza no consumo, o deslocamento espacial da mercadoria é continuação do processo produtivo e adiciona valor e mais-valor.' }
+        ]
+      },
+
+      // ==================== SEÇÃO II ====================
+      {
+        id: 7, section: 'II',
+        title: 'Tempo de rotação e número de rotações',
+        thesis: 'A rotação é o ciclo do capital considerado não como ato isolado, mas como processo periódico medido pelo ano, determinando quantas vezes o capital adiantado gira e retorna à sua forma inicial.',
+        formula: 'n = R / r  (n = 12 meses / tempo de rotação)  |  Capital Rodado = n × C',
+        concepts: [
+          { term: 'Rotação do capital', def: 'Periodicidade com que o valor de capital adiantado percorre seu ciclo completo (D…D\' ou P…P) e retorna à forma original para recomeçar.' },
+          { term: 'Tempo de rotação (r)', def: 'Soma do tempo de produção e do tempo de curso. É o prazo durante o qual o capitalista precisa adiantar seu capital antes do retorno.' },
+          { term: 'Número de rotações (n)', def: 'Razão entre o ano como unidade natural (R = 12 meses) e o tempo de rotação (r). Mede a velocidade de giro do capital.' }
+        ],
+        ideas: [
+          { title: 'O ano como unidade natural', body: 'Assim como a jornada mede o trabalho diário, o ano mede a rotação do capital — herdado do ciclo agrícola das zonas temperadas.' },
+          { title: 'D…D\' vs. P…P na análise da rotação', body: 'Usa-se D…D\' para examinar o efeito da rotação sobre o mais-valor, e P…P para analisar seu impacto sobre a formação do produto; M\'…M\' fica para a Seção III.' },
+          { title: 'Capital adiantado vs. capital rodado', body: 'Quando r < 12 meses (n > 1), o capital rodado no ano (n × C) excede o capital efetivamente adiantado (C).' },
+          { title: 'Diferenças entre ramos', body: 'Cada esfera de investimento possui tempos de rotação distintos conforme sua técnica e sua inserção na circulação.' }
+        ]
+      },
+      {
+        id: 8, section: 'II',
+        title: 'Capital fixo e capital circulante',
+        thesis: 'Apenas no interior do capital produtivo surge a distinção entre capital fixo (meios de trabalho que transferem valor gradualmente) e capital circulante (materiais e força de trabalho cujo valor gira integralmente a cada ciclo).',
+        formula: 'Capital Produtivo = Fixo (parte de c) + Circulante (resto de c + v)',
+        concepts: [
+          { term: 'Capital fixo', def: 'Parte do capital constante (máquinas, edifícios, trilhos) que permanece fisicamente na produção durante vários ciclos, transferindo valor em parcelas (desgaste).' },
+          { term: 'Capital circulante (líquido)', def: 'Matérias-primas, materiais auxiliares e força de trabalho cujo valor se incorpora integralmente ao produto de um ciclo e precisa ser reposto in natura.' },
+          { term: 'Desgaste físico vs. moral', def: 'Além do uso e da ação do tempo, o capital fixo sofre depreciação moral quando inovações técnicas barateiam sua reposição ou o tornam obsoleto.' }
+        ],
+        ideas: [
+          { title: 'Não é uma qualidade física da coisa', body: 'Um boi de carga é capital fixo; um boi de corte é capital circulante (matéria-prima). Uma máquina na fábrica do produtor é capital-mercadoria; na do usuário, capital fixo.' },
+          { title: 'Dupla existência do valor fixo', body: 'Enquanto a máquina funciona na fábrica com valor decrescente, seu desgaste reflui gradualmente em dinheiro, formando um fundo de amortização.' },
+          { title: 'Manutenção, reparos e seguros', body: 'Limpeza e reparos correntes integram o capital circulante calculado pela média social; seguros contra catástrofes deduzem-se do mais-valor.' },
+          { title: 'Distinção radical frente a c e v', body: 'Capital fixo/circulante refere-se ao modo de circulação do valor; constante/variável refere-se à criação de mais-valor. Confundi-los oculta a exploração.' }
+        ]
+      },
+      {
+        id: 9, section: 'II',
+        title: 'A rotação total do capital desembolsado. Ciclos de rotação',
+        thesis: 'A rotação total é a média ponderada em forma-dinheiro das rotações do capital fixo e circulante, mas a renovação em massa do capital fixo em ciclos decenais fornece a base material das crises periódicas.',
+        formula: 'Rotação Total = (Fixo Rodado + Circulante Rodado) / Capital Total',
+        concepts: [
+          { term: 'Redução à forma-dinheiro', def: 'Para somar rotações qualitativamente distintas (fixo e circulante), calcula-se tudo na forma homogênea de retorno monetário (D…D\').' },
+          { term: 'Ciclo de rotação decenal', def: 'Na grande indústria, o tempo médio de vida do capital fixo (~10 anos) impõe ciclos plurianuais de renovação maciça de equipamentos.' },
+          { term: 'Base material das crises', def: 'A crise força a substituição prematura de capital fixo obsoleto e inaugura um novo grande ciclo de investimentos (depressão → animação → hiperatividade → crise).' }
+        ],
+        ideas: [
+          { title: 'Exemplo clássico de Marx', body: 'Com £80.000 fixo (10 anos → £8.000/ano) e £20.000 circulante (5 giros/ano → £100.000/ano), rodam £108.000/ano (1,08 rotação), mas o capital fixo ainda dura 9 anos.' },
+          { title: 'Rotação de valor ≠ reprodução real', body: 'Mesmo quando o valor rodado anual ultrapassa o capital desembolsado, o capital fixo só se reproduz materialmente ao fim de seu ciclo de vida.' },
+          { title: 'Crítica a Scrope', body: 'Marx corrige Scrope por confundir prazos de pagamento e crédito comercial com as leis objetivas de rotação das partes do capital.' },
+          { title: 'Dinâmica das crises periódicas', body: 'O entrelaçamento entre desgaste físico, desgaste moral e investimentos concentrados após cada quebra explica a periodicidade dos ciclos industriais.' }
+        ]
+      },
+      {
+        id: 10, section: 'II',
+        title: 'Teorias sobre o capital fixo e o capital circulante. Os fisiocratas e Adam Smith',
+        thesis: 'Quesnay situou corretamente os avances primitives e annuelles dentro do capital produtivo; Adam Smith universalizou os termos, mas retrocedeu ao confundir capital circulante com capital de circulação e apagar a força de trabalho.',
+        formula: 'Quesnay (Produtivo) → Smith (Confunde Circulante = Circulação) → Marx (Restaura c/v)',
+        concepts: [
+          { term: 'Avances primitives & annuelles', def: 'Termos de Quesnay para o capital agrícola de vários anos vs. capital anual — corretos por se restringirem ao capital produtivo.' },
+          { term: 'Capital circulante vs. de circulação', def: 'Erro central de Smith: misturar a fração líquida do capital produtivo com o capital-mercadoria e o capital monetário (incluindo o capital comercial).' },
+          { term: 'Fetichismo das coisas', def: 'Smith enumera objetos físicos (casas, sementes, gado) como se fossem fixos ou circulantes por natureza, e não por sua função no processo produtivo.' }
+        ],
+        ideas: [
+          { title: 'O mérito e o limite de Quesnay', body: 'Quesnay derivou a distinção da reprodução real, mas restringiu o capital produtivo apenas à agricultura.' },
+          { title: 'O retrocesso de Adam Smith', body: 'Ao dizer que o capital fixo "gera lucro sem mudar de dono" e o circulante "mudando de dono", Smith confunde transformação produtiva com compra e venda.' },
+          { title: 'O esquecimento da força de trabalho', body: 'Por reduzir capital circulante a estoque de mercadorias, Smith substitui a força de trabalho pelos meios de subsistência do operário — apagando o capital variável.' },
+          { title: 'Soterramento do segredo da exploração', body: 'Ao agrupar salários e matérias-primas na mesma gaveta ("capital circulante"), Smith bloqueou aos economistas posteriores a compreensão do mais-valor.' }
+        ]
+      },
+      {
+        id: 11, section: 'II',
+        title: 'Teorias sobre o capital fixo e circulante. Ricardo',
+        thesis: 'Ricardo herda a confusão smithiana, reduzindo a distinção entre capital fixo e circulante ao grau de perecibilidade física e equiparando capital circulante a salários — o que faz desaparecer as matérias-primas.',
+        formula: 'Erro de Ricardo: Fixo = Durável (c) | Circulante = Perecível (v)',
+        concepts: [
+          { term: 'Critério da perecibilidade', def: 'Ricardo classifica capitais conforme se consomem lenta ou rapidamente (máquina > navio > roupa > comida), apagando o critério funcional.' },
+          { term: 'Desaparecimento das matérias-primas', def: 'Como Ricardo iguala circulante a salários (v) e fixo a meios de trabalho, o material de trabalho (matérias-primas e auxiliares) some de sua análise.' },
+          { term: 'Quiproquó do "adiantamento"', def: 'Na verdade, o trabalhador adianta seu trabalho durante a semana/mês antes de receber o salário; o capitalista só paga post festum.' }
+        ],
+        ideas: [
+          { title: 'Por que Ricardo tratou do tema', body: 'Ricardo só introduziu fixo/circulante para explicar exceções à lei do valor quando variações salariais alteram preços relativos (tema do Livro III).' },
+          { title: 'Neutralização do capital variável', body: 'Ao subordinar o salário à rubrica "capital circulante", apaga-se a diferença entre valor apenas transferido (matéria-prima) e valor novo criado pelo trabalho vivo.' },
+          { title: 'Fetichismo naturalista', body: 'Tratar "manter o trabalho" como virtude natural dos meios de subsistência converte uma relação social histórica em propriedade das coisas.' },
+          { title: 'Consequências na escola clássica', body: 'J. S. Mill, Ramsay e Macleod aprofundaram a confusão, chegando a reduzir capital fixo e circulante a depósitos bancários com ou sem aviso prévio.' }
+        ]
+      },
+      {
+        id: 12, section: 'II',
+        title: 'O período de trabalho',
+        thesis: 'O período de trabalho é o número de jornadas conexas necessárias para concluir um produto pronto; quanto mais longo, maior o capital circulante acumulado sem retorno e maior a dependência do crédito.',
+        formula: 'Período de Trabalho = Nº de jornadas conexas até o produto acabado',
+        concepts: [
+          { term: 'Produto discreto vs. contínuo', def: 'Na fiação, cada semana entrega fio acabado (discreto); na construção de locomotivas ou navios, dezenas de semanas formam um único ato contínuo.' },
+          { term: 'Acúmulo em camadas', def: 'Semana após semana, novos adiantamentos de salários e matérias-primas depositam-se no produto inacabado sem poderem circular.' },
+          { term: 'Efeito das crises', def: 'Interromper uma obra longa (ferrovia, navio, edifício) desperdiça todo o trabalho e material já imobilizados.' }
+        ],
+        ideas: [
+          { title: 'Fiação (1 sem.) vs. Locomotiva (12 sem.)', body: 'Com o mesmo desembolso semanal, o construtor de locomotivas precisa adiantar 12 vezes mais capital circulante antes do primeiro refluxo.' },
+          { title: 'Concentração e sociedades por ações', body: 'Obras gigantescas (ferrovias, bairros especulativos em Londres) só se tornam plenamente capitalistas com crédito bancário e capital associado.' },
+          { title: 'Encurtamento do período de trabalho', body: 'Cooperação em massa, divisão do trabalho e maquinaria abreviam o período de trabalho, mas costumam exigir maior desembolso em capital fixo.' },
+          { title: 'Limites naturais (agricultura e pecuária)', body: 'A maturação biológica limita o encurtamento, embora técnicas como a seleção de ovelhas de Bakewell ("New Leicesters") reduzam o abate de 5 para 2 anos.' }
+        ]
+      },
+      {
+        id: 13, section: 'II',
+        title: 'O tempo de produção',
+        thesis: 'O tempo de produção excede o tempo de trabalho sempre que o objeto precisa sofrer processos naturais (físicos, químicos ou biológicos); durante esses intervalos, não se cria valor, mas o capital fica retido.',
+        formula: 'Tempo de Produção = Tempo de Trabalho + Intervalos de Processos Naturais',
+        concepts: [
+          { term: 'Processos naturais', def: 'Fermentação do vinho, maturação do trigo, secagem da madeira (18 meses para fôrmas de calçados), curtimento de peles e crescimento florestal.' },
+          { term: 'Zero criação de valor nas pausas', def: 'Sem absorção de trabalho vivo não há criação de valor nem de mais-valor, embora os processos naturais sejam indispensáveis ao valor de uso.' },
+          { term: 'Indústria subsidiária rural', def: 'Na agricultura de invernos rigorosos (ex: Rússia), a divergência entre tempo de produção e trabalho serviu de base natural à indústria doméstica camponesa.' }
+        ],
+        ideas: [
+          { title: 'Encurtamento artificial pela ciência', body: 'O capitalismo busca reduzir os intervalos naturais via química e técnica: branqueamento químico, curtume com bomba de ar e processo Bessemer no aço.' },
+          { title: 'Silvicultura e incompatibilidade capitalista', body: 'Como florestas exigem 40 a 150 anos de rotação e grande estoque vivo, o empreendimento privado tende mais a destruir florestas do que a cultivá-las.' },
+          { title: 'Rotação de culturas e agricultura intensiva', body: 'Sistemas sem pousio e culturas intermediárias (Flandres) distribuem melhor o trabalho ao longo do ano, mas exigem maior capital circulante.' },
+          { title: 'Inatividade do capital fixo', body: 'Na agricultura, máquinas e gado de trabalho ficam ociosos parte do ano, mas continuam se desgastando ou exigindo forragem, encarecendo o produto.' }
+        ]
+      },
+      {
+        id: 14, section: 'II',
+        title: 'O tempo de curso',
+        thesis: 'Distâncias geográficas, meios de transporte, comunicações, contratos de entrega e sazonalidade dos mercados diferenciam o tempo de venda e de compra, alterando o tempo de rotação e o volume de capital monetário ocioso.',
+        formula: 'Tempo de Curso = Tempo de Venda (M\'–D\') + Tempo de Compra (D–M)',
+        concepts: [
+          { term: 'Distância relativa vs. natural', def: 'Ferrovias, navios a vapor e o Canal de Suez reconfiguram o espaço econômico: centros distantes com conexão rápida aproximam-se, enquanto antigos centros decaem.' },
+          { term: 'Contratos de entrega', def: 'Compromissos de entrega em lote (ex: 4–6 semanas de carvão) funcionam como um período contínuo de trabalho, atrasando o retorno do capital.' },
+          { term: 'Capital monetário permanente', def: 'O tempo de compra exige manter continuamente uma fração do capital na forma-dinheiro à espera da renovação de estoques e pagamentos.' }
+        ],
+        ideas: [
+          { title: 'Duplo efeito do progresso dos transportes', body: 'Encurta o tempo de viagem de cada mercadoria, mas expande a produção para o mercado mundial, aumentando a massa absoluta de capital em trânsito.' },
+          { title: 'Base material dos prazos de crédito', body: 'As viagens ultramarinas (ex: Inglaterra–Índia) determinavam os prazos das letras de câmbio (de 10 para 6 e 4 meses à vista com o telégrafo e o Suez).' },
+          { title: 'Especulação e prazos de compra', body: 'Leilões sazonais (como os de lã em Londres) e oscilações de preço estimulam retenções especulativas que alongam o tempo de curso.' },
+          { title: 'Risco de variação de preços', body: 'Quanto mais longo o tempo de curso, maior a exposição do capitalista a oscilações de preços no mercado de destino.' }
+        ]
+      },
+      {
+        id: 15, section: 'II',
+        title: 'Efeito do tempo de rotação sobre a grandeza do adiantamento de capital',
+        thesis: 'Para manter a produção contínua durante o tempo de curso, o capitalista precisa adiantar um capital adicional (Capital II), o que gera periodicamente a "liberação" (Freisetzung) de capital monetário.',
+        formula: 'Capital Total Adiantado = Capital I (Trabalho) + Capital II (Curso)',
+        concepts: [
+          { term: 'Modelo de continuidade', def: 'Sem capital adicional, a produção pararia durante todo o tempo de curso; "a continuidade é, ela mesma, uma força produtiva do trabalho".' },
+          { term: 'Liberação de capital (Freisetzung)', def: 'Sempre que o período de curso não é igual nem múltiplo exato do período de trabalho, parte do capital circulante reflui antes de ser necessária e fica livre em forma-dinheiro.' },
+          { term: 'Vinculação / Pletora monetária', def: 'Encurtar o tempo de curso ou baixar preços de insumos libera capital monetário para o mercado de crédito; alongá-lo ou encarecer insumos exige capital adicional.' }
+        ],
+        ideas: [
+          { title: 'Caso I (Trabalho = Curso)', body: 'Com 4,5 sem. de trabalho e 4,5 de curso, Capital I (£450) e Capital II (£450) alternam-se exatamente, sem entrecruzamento nem liberação de capital.' },
+          { title: 'Caso II (Trabalho > Curso)', body: 'Com 6 sem. de trabalho (£600) e 3 de curso (£300), os capitais se entrecruzam a partir do 2º ciclo, liberando £300 em dinheiro ao fim de cada período de trabalho.' },
+          { title: 'Caso III (Trabalho < Curso)', body: 'Se o curso é múltiplo do trabalho (3 e 6 sem.), há alternância sem liberação; se não é múltiplo (4 e 5 sem., Tabela IV), ocorre entrelaçamento e liberação de £100.' },
+          { title: 'Nota de Engels e impacto no crédito', body: 'Engels observa que a liberação de capital monetário ocorre ainda mais amplamente; Marx destaca que esse capital ocioso alimenta diretamente o sistema de crédito.' }
+        ]
+      },
+      {
+        id: 16, section: 'II',
+        title: 'A rotação do capital variável',
+        thesis: 'A taxa anual do mais-valor (M\' = m\' × n) varia na razão direta do número de rotações do capital variável, criando a aparência de que a circulação gera mais-valor — quando, na verdade, reduz o capital adiantado necessário.',
+        formula: 'M\' = m\' × n  (Taxa Anual = Taxa Efetiva × Nº de Rotações)',
+        concepts: [
+          { term: 'Taxa anual do mais-valor (M\')', def: 'Relação entre a massa total de mais-valor produzida no ano e o capital variável adiantado (não o capital rodado no ano).' },
+          { term: 'Capital adiantado vs. utilizado', def: 'Só o capital variável efetivamente gasto no processo de trabalho cria mais-valor; a rotação rápida permite usar menos capital adiantado para a mesma força de trabalho.' },
+          { term: 'Efeito macroeconômico (Caso B)', def: 'Obras de rotação longa (ferrovias) retiram trabalho, insumos e bens de consumo do mercado durante o ano sem devolver produtos, pressionando preços e crédito.' }
+        ],
+        ideas: [
+          { title: 'O paradoxo dos Capitais A e B', body: 'Capital A (£500, 10 giros/ano) e Capital B (£5.000, 1 giro/ano), ambos com m\'=100%, exploram 100 operários e geram £5.000/ano — mas M\' é 1.000% em A e 100% em B.' },
+          { title: 'Solução do enigma', body: 'A rotação não aumenta a exploração: A e B utilizam igualmente £5.000/ano em salários; A apenas consegue reutilizar o valor reproduzido a cada 5 semanas.' },
+          { title: 'Novo capital, não o mesmo', body: 'No 2º giro, o capitalista A paga os trabalhadores com a forma-dinheiro do valor que eles próprios produziram no 1º giro.' },
+          { title: 'Contradição do capitalismo (Nota de Marx)', body: 'Os trabalhadores são essenciais como compradores de mercadorias, mas o capital tende sempre a comprimir o preço de sua força de trabalho ao mínimo.' }
+        ]
+      },
+      {
+        id: 17, section: 'II',
+        title: 'A circulação do mais-valor',
+        thesis: 'O enigma "de onde vem o dinheiro para realizar o mais-valor?" resolve-se porque a própria classe capitalista lança dinheiro na circulação (como gasto de consumo ou investimento) e o recupera ao vender suas mercadorias.',
+        formula: 'Capitalistas lançam D (consumo) → realizam m → D reflui aos capitalistas',
+        concepts: [
+          { term: 'Refluxo monetário', def: 'O dinheiro gasto pelos capitalistas em consumo individual (não adiantado como capital) retorna às mãos da classe capitalista mediante a venda do mais-produto.' },
+          { term: 'Produção de ouro', def: 'O setor produtor de metais preciosos lança dinheiro diretamente na circulação (sem precisar vender mercadoria antes), repondo o desgaste e expandindo a base monetária.' },
+          { term: 'Crítica à inflação por salários', def: 'Marx refuta o "tiro de festim" burguês de que aumentos salariais causariam inflação geral: apenas redistribuem a demanda entre bens de subsistência e artigos de luxo.' }
+        ],
+        ideas: [
+          { title: 'A pergunta correta', body: 'Não se trata de "de onde vem o mais-valor" (resolvido no Livro I), mas de "de onde vem o dinheiro que o faz circular" quando a classe capitalista lança c + v e retira c + v + m.' },
+          { title: 'Reprodução simples', body: 'Os capitalistas financiam seu consumo inicial com reservas próprias; esse dinheiro realiza o mais-valor e retorna anualmente às suas mãos.' },
+          { title: 'Reprodução ampliada e entesouramento', body: 'Nem todos entesouram ao mesmo tempo: enquanto uns vendem sem comprar (acumulam dinheiro latente), outros compram para ampliar a produção; no crédito, bancos canalizam esses fundos.' },
+          { title: 'Citação de William Thompson', body: 'A riqueza acumulada é pequena diante da produção anual, mas o monopólio dos meios de produção garante aos capitalistas o controle perpétuo do produto futuro.' }
+        ]
+      },
+
+      // ==================== SEÇÃO III ====================
+      {
+        id: 18, section: 'III',
+        title: 'Introdução',
+        thesis: 'Na Seção III, a análise passa do capital individual ao capital social total: cada capital individual é uma fração entrelaçada cujo ciclo precisa garantir simultaneamente a reposição de valor e a reposição material (in natura).',
+        formula: 'Capital Social Total = Soma entrelaçada dos Capitais Individuais (M\'…M\')',
+        concepts: [
+          { term: 'Dupla exigência da reprodução', def: 'No plano social, não basta vender por dinheiro: é preciso que existam materialmente os meios de produção e de consumo nas proporções exatas.' },
+          { term: 'Primus motor (primeiro motor)', def: 'O capital monetário inaugura e impulsiona cada ciclo, mas a escala real da produção é elástica graças à natureza, à ciência, à intensidade e à centralização.' },
+          { term: 'Produção socializada (comunista)', def: 'Sem capital monetário, a sociedade ainda precisa planejar quantos recursos alocar em obras longas (ferrovias) sem prejudicar os bens de consumo imediatos.' }
+        ],
+        ideas: [
+          { title: 'Do individual ao social total', body: 'Nas Seções I e II o mercado era externo ao capital individual; na Seção III o mundo inteiro das mercadorias está dentro do movimento do capital social.' },
+          { title: 'Consumo produtivo e individual reunidos', body: 'A circulação do capital social abarca tanto o intercâmbio entre capitais quanto o gasto de salários e rendas em meios de consumo.' },
+          { title: 'Elasticidade do capital produtivo', body: 'Um mesmo capital monetário pode pôr em movimento escalas produtivas distintas conforme a exploração da força de trabalho, das forças naturais e da técnica.' },
+          { title: 'Necessidade estrutural do dinheiro', body: 'Na produção capitalista, o dinheiro é indispensável tanto pela forma-mercadoria quanto para sustentar obras de longo período de trabalho.' }
+        ]
+      },
+      {
+        id: 19, section: 'III',
+        title: 'Exposições anteriores do mesmo objeto',
+        thesis: 'Marx resgata o gênio do Tableau économique de Quesnay e desmonta o "dogma de Smith" — herdado por Ricardo, Say e Mill — que apaga o capital constante (c) ao reduzir todo o valor anual a rendas (v + m).',
+        formula: 'Dogma de Smith: Produto = v + m (erro!) | Marx: Produto = c + v + m',
+        concepts: [
+          { term: 'Dogma de Adam Smith', def: 'Tese ortodoxa segundo a qual o preço de toda mercadoria e do produto anual inteiro se decompõe "em última instância" apenas em salário, lucro e renda (v + m).' },
+          { term: 'Valor-produto vs. Produto de valor', def: 'Smith confunde o valor total do produto anual (c + v + m) com o valor novo criado pelo trabalho desse ano (v + m), ignorando o duplo caráter do trabalho.' },
+          { term: 'Renda bruta vs. líquida', def: 'Para escapar do absurdo de que a sociedade poderia comer suas próprias máquinas, Smith reintroduz o capital constante "de contrabando" sob o termo renda líquida.' }
+        ],
+        ideas: [
+          { title: 'Elogio crítico aos fisiocratas', body: 'O Tableau de Quesnay foi a primeira tentativa genial de mostrar a reprodução social anual entre grandes classes, reconhecendo o capital constante que não vira renda.' },
+          { title: 'A inversão vulgar de Smith', body: 'Após deduzir corretamente as rendas a partir do valor, Smith inverte o raciocínio e trata salário, lucro e renda como "fontes originárias" que compõem o valor.' },
+          { title: 'Confusão de valor de uso e valor', body: 'Todo o produto anual é obra do trabalho concreto do ano, mas seu valor contém trabalho passado (c) transferido dos meios de produção.' },
+          { title: 'Os sucessores (Ricardo, Say, Storch, Ramsay)', body: 'Ricardo manteve o erro; Say levou-o ao absurdo ("toda produção vira renda"); Storch percebeu o absurdo mas não o resolveu; Ramsay reduziu capital social a capital constante.' }
+        ]
+      },
+      {
+        id: 20, section: 'III',
+        title: 'Reprodução simples',
+        thesis: 'Na reprodução simples (sem acumulação), o equilíbrio entre o Setor I (Meios de Produção) e o Setor II (Meios de Consumo) exige a equação fundamental I(v + m) = IIc, cuja realização depende de delicados equilíbrios monetários e do capital fixo.',
+        formula: 'Equilíbrio da Reprodução Simples:  I(v + m) = IIc',
+        concepts: [
+          { term: 'Setor I e Setor II', def: 'Setor I produz meios de produção (4000c + 1000v + 1000m = 6000); Setor II produz meios de consumo (2000c + 500v + 500m = 3000).' },
+          { term: 'Subsetores IIa e IIb', def: 'IIa produz meios necessários de subsistência; IIb produz artigos de luxo (consumidos só por capitalistas). Na reprodução simples, IIb(v) troca-se por parte de IIa(m).' },
+          { term: 'Equilíbrio do capital fixo', def: 'O capital fixo de II que morre e precisa ser reposto in natura (Seção 1) deve igualar o desgaste acumulado em dinheiro pela Seção 2 — senão há crise mesmo sem crescimento.' }
+        ],
+        ideas: [
+          { title: 'Os 3 grandes pontos de apoio', body: '1) II(v + m) consome-se dentro de II; 2) I(v + m) = 2000 troca-se por IIc = 2000; 3) Ic = 4000 repõe-se por trocas internas no próprio Setor I.' },
+          { title: 'Crise mesmo na reprodução simples', body: 'Desequilíbrios entre a reposição física do capital fixo e o fundo monetário de depreciação geram superprodução ou déficit estrutural.' },
+          { title: 'Crítica às teorias subconsumistas', body: 'As crises são preparadas justamente em períodos de prosperidade e alta salarial — não bastando elevar salários para eliminar as contradições do capital.' },
+          { title: 'Ouro e crítica a Destutt de Tracy', body: 'Marx analisa a reprodução do material monetário (ouro em I) e ridiculariza Destutt de Tracy por achar que os capitalistas enriquecem vendendo mais caro uns aos outros.' }
+        ]
+      },
+      {
+        id: 21, section: 'III',
+        title: 'Acumulação e reprodução ampliada',
+        thesis: 'Na reprodução ampliada, o produto do Setor I destinado a renda deve superar o capital constante de II (I(v + m) > IIc) para fornecer meios de produção adicionais — revelando que o crescimento equilibrado capitalista é precário e propenso a crises.',
+        formula: 'Condição da Acumulação:  I(v + m) > IIc  |  I(v + m/x) + I(Δv) = II(c + Δc)',
+        concepts: [
+          { term: 'Rearranjo qualitativo', def: 'A acumulação exige que o mais-produto do Setor I já venha na forma material de meios de produção adicionais para I e II.' },
+          { term: 'Subordinação do Setor II', def: 'Nos esquemas de Marx, o Setor I comanda a taxa de acumulação (50%), forçando o Setor II a ajustar sua acumulação para manter o equilíbrio.' },
+          { term: 'Equilíbrio acidental e crises', def: 'Como compras unilaterais (quem amplia) e vendas unilaterais (quem entesoura) ocorrem sem plano social, o equilíbrio é acidental e toda ruptura gera crise.' }
+        ],
+        ideas: [
+          { title: 'Entesouramento e compras unilaterais', body: 'Enquanto capitalistas A(I) vendem sem comprar para acumular dinheiro latente, capitalistas B(I) gastam seus tesouros comprando meios de produção adicionais.' },
+          { title: 'Primeiro Exemplo de Marx (Ano 0 a Ano 5)', body: 'Partindo de I (4000c+1000v+1000m=6000) e II (1500c+750v+750m=3000), com composição 4:1 em I e 2:1 em II, o capital total salta de 7.250 para 11.566 em 4 anos.' },
+          { title: 'Segundo Exemplo (composição 5:1)', body: 'Mostra a acumulação em capitalismo mais avançado (I: 5000c+1000v+1000m; II: 1430c+285v+285m), onde I(v + ½m) já supera IIc desde o início.' },
+          { title: 'Fechamento do Livro II', body: 'Os esquemas de reprodução encerram o Livro II demonstrando as proporções técnicas e de valor da acumulação — preparando a análise do lucro e das crises no Livro III.' }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 2. ESTADO E PERSISTÊNCIA
+    // =========================================================================
+    const STORAGE_KEY = 'ocapital_livro2_atlas_v1';
+
+    const state = {
+      view: 'map', // 'map' ou 'chapter'
+      currentChapterId: 1,
+      searchQuery: '',
+      studied: loadStudied(),
+      sidebarCollapsedDesktop: false
+    };
+
+    function loadStudied() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) return new Set(arr);
+        }
+      } catch (e) {}
+      return new Set();
+    }
+
+    function saveStudied() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(state.studied)));
+      } catch (e) {}
+    }
+
+    function getSection(secId) { return SECTIONS.find(s => s.id === secId); }
+    function getChapter(id) { return CHAPTERS.find(c => c.id === id); }
+
+    function applySectionTheme(secId) {
+      const sec = getSection(secId) || SECTIONS[0];
+      const root = document.documentElement;
+      root.style.setProperty('--active-accent', sec.color);
+      root.style.setProperty('--active-soft', sec.soft);
+      root.style.setProperty('--active-border', sec.border);
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // =========================================================================
+    // 3. SIDEBAR E PROGRESSO
+    // =========================================================================
+    function updateProgress() {
+      const n = state.studied.size;
+      const pct = Math.round((n / CHAPTERS.length) * 100);
+      document.getElementById('progressText').textContent = `${n} / ${CHAPTERS.length}`;
+      document.getElementById('progressBar').style.width = `${pct}%`;
+    }
+
+    function renderSidebar() {
+      const nav = document.getElementById('chapterNav');
+      const q = state.searchQuery.trim().toLowerCase();
+      const mapBtn = document.getElementById('mapViewBtn');
+      mapBtn.classList.toggle('active', state.view === 'map');
+
+      let html = '';
+      let found = 0;
+
+      SECTIONS.forEach(sec => {
+        const list = sec.chapters.map(getChapter).filter(ch => {
+          if (!q) return true;
+          return (
+            String(ch.id) === q ||
+            `capítulo ${ch.id}`.includes(q) ||
+            `cap ${ch.id}`.includes(q) ||
+            ch.title.toLowerCase().includes(q) ||
+            ch.thesis.toLowerCase().includes(q) ||
+            ch.formula.toLowerCase().includes(q) ||
+            ch.concepts.some(c => c.term.toLowerCase().includes(q) || c.def.toLowerCase().includes(q)) ||
+            ch.ideas.some(it => it.title.toLowerCase().includes(q) || it.body.toLowerCase().includes(q))
+          );
+        });
+        if (!list.length) return;
+        found += list.length;
+
+        html += `
+          <div class="nav-section">
+            <div class="nav-section-header">
+              <span class="nav-dot" style="background:${sec.color}"></span>
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${sec.num} — ${sec.title}</span>
+            </div>
+            ${list.map(ch => {
+              const isActive = state.view === 'chapter' && state.currentChapterId === ch.id;
+              const done = state.studied.has(ch.id);
+              return `
+                <button type="button" class="nav-item ${isActive ? 'active' : ''}" data-ch="${ch.id}">
+                  <span class="nav-num">${String(ch.id).padStart(2, '0')}</span>
+                  <span class="nav-title">${ch.title}</span>
+                  ${done
+                    ? `<svg class="nav-check" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>`
+                    : `<span class="nav-bullet"></span>`
+                  }
+                </button>
+              `;
+            }).join('')}
+          </div>
+        `;
+      });
+
+      if (!found) {
+        html = `<div style="padding:24px 12px;text-align:center;font-size:12.5px;color:var(--muted);">Nenhum capítulo ou conceito encontrado para "<strong>${escapeHtml(state.searchQuery)}</strong>".</div>`;
+      }
+
+      nav.innerHTML = html;
+      nav.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+          openChapter(Number(btn.getAttribute('data-ch')));
+          closeMobileSidebar();
+        });
+      });
+
+      updateProgress();
+    }
+
+    // =========================================================================
+    // 4. MAPA GERAL DO LIVRO II (VISÃO PANORÂMICA)
+    // =========================================================================
+    function renderOverviewMap() {
+      state.view = 'map';
+      applySectionTheme('I');
+      document.getElementById('breadcrumbText').textContent = 'Mapa Geral do Livro II • O processo de circulação do capital';
+      renderSidebar();
+
+      const el = document.getElementById('mainContent');
+      el.innerHTML = `
+        <div class="stack-lg fade-in">
+          <!-- Cabeçalho panorâmico -->
+          <section class="card">
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
+              <span class="badge" style="background:var(--sec1-soft);color:var(--sec1);border:1px solid var(--sec1-border);">Karl Marx • Ed. Friedrich Engels</span>
+              <span class="badge badge-neutral">Edição Boitempo • Trad. Rubens Enderle • MEGA-2</span>
+            </div>
+            <h2 style="font-size:clamp(1.7rem, 3vw, 2.35rem);font-weight:800;">O processo de circulação do capital</h2>
+            <p style="margin-top:10px;font-size:14.5px;color:var(--muted);max-width:740px;">
+              Se o Livro I desvendou a produção do mais-valor no interior da fábrica, o Livro II revela o capital como <strong>unidade indissociável entre produção e circulação</strong> — do ciclo individual até os esquemas de reprodução do capital social total.
+            </p>
+
+            <!-- Fluxograma Panorâmico SVG -->
+            <div class="panel-soft" style="margin-top:20px;overflow-x:auto;">
+              <svg viewBox="0 0 880 205" style="width:100%;min-width:650px;height:auto;display:block;" role="img" aria-label="Arquitetura do Livro II de O Capital">
+                <defs>
+                  <marker id="arrDark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#57534E" />
+                  </marker>
+                  <marker id="arrRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                    <path d="M 0 1 L 10 5 L 0 9 z" fill="#9E2A2B" />
+                  </marker>
+                </defs>
+
+                <!-- Ponte Livro I -->
+                <rect x="12" y="54" width="122" height="84" rx="12" fill="#F3EFE9" stroke="#CFC7BC" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <text x="73" y="78" text-anchor="middle" font-size="10" font-weight="700" fill="#78716C">LIVRO I</text>
+                <text x="73" y="97" text-anchor="middle" font-size="12" font-weight="700" fill="#1F1E1C">Produção</text>
+                <text x="73" y="114" text-anchor="middle" font-size="10.5" fill="#57534E">Criação do</text>
+                <text x="73" y="127" text-anchor="middle" font-size="10.5" fill="#57534E">mais-valor</text>
+
+                <line x1="136" y1="96" x2="168" y2="96" stroke="#57534E" stroke-width="2" marker-end="url(#arrDark)" />
+
+                <!-- Seção I -->
+                <g class="map-node" data-go-ch="1" style="cursor:pointer;">
+                  <rect x="174" y="34" width="164" height="122" rx="14" fill="#FFFFFF" stroke="#9E2A2B" stroke-width="2.2"/>
+                  <rect x="174" y="34" width="164" height="28" rx="12" fill="#9E2A2B"/>
+                  <rect x="174" y="50" width="164" height="12" fill="#9E2A2B"/>
+                  <text x="256" y="53" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">SEÇÃO I • CAP. 1–6</text>
+                  <text x="256" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#1F1E1C">Ciclos Individuais</text>
+                  <text x="256" y="100" text-anchor="middle" font-size="10.5" fill="#57534E">D…D' | P…P | M'…M'</text>
+                  <text x="256" y="118" text-anchor="middle" font-size="10.5" fill="#57534E">Tempo de curso e</text>
+                  <text x="256" y="132" text-anchor="middle" font-size="10.5" fill="#57534E">custos de circulação</text>
+                  <text x="256" y="148" text-anchor="middle" font-size="9.5" font-weight="700" fill="#9E2A2B">Clique para abrir →</text>
+                </g>
+
+                <line x1="340" y1="96" x2="368" y2="96" stroke="#9E2A2B" stroke-width="2.2" class="svg-flow" marker-end="url(#arrRed)" />
+
+                <!-- Seção II -->
+                <g class="map-node" data-go-ch="7" style="cursor:pointer;">
+                  <rect x="374" y="34" width="164" height="122" rx="14" fill="#FFFFFF" stroke="#B45309" stroke-width="2.2"/>
+                  <rect x="374" y="34" width="164" height="28" rx="12" fill="#B45309"/>
+                  <rect x="374" y="50" width="164" height="12" fill="#B45309"/>
+                  <text x="456" y="53" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">SEÇÃO II • CAP. 7–17</text>
+                  <text x="456" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#1F1E1C">Rotação e Tempo</text>
+                  <text x="456" y="100" text-anchor="middle" font-size="10.5" fill="#57534E">Fixo vs. Circulante</text>
+                  <text x="456" y="118" text-anchor="middle" font-size="10.5" fill="#57534E">Taxa anual (M' = m'n)</text>
+                  <text x="456" y="132" text-anchor="middle" font-size="10.5" fill="#57534E">e circulação de m</text>
+                  <text x="456" y="148" text-anchor="middle" font-size="9.5" font-weight="700" fill="#B45309">Clique para abrir →</text>
+                </g>
+
+                <line x1="540" y1="96" x2="568" y2="96" stroke="#9E2A2B" stroke-width="2.2" class="svg-flow" marker-end="url(#arrRed)" />
+
+                <!-- Seção III -->
+                <g class="map-node" data-go-ch="18" style="cursor:pointer;">
+                  <rect x="574" y="34" width="164" height="122" rx="14" fill="#FFFFFF" stroke="#0F766E" stroke-width="2.2"/>
+                  <rect x="574" y="34" width="164" height="28" rx="12" fill="#0F766E"/>
+                  <rect x="574" y="50" width="164" height="12" fill="#0F766E"/>
+                  <text x="656" y="53" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">SEÇÃO III • CAP. 18–21</text>
+                  <text x="656" y="82" text-anchor="middle" font-size="13" font-weight="700" fill="#1F1E1C">Capital Social Total</text>
+                  <text x="656" y="100" text-anchor="middle" font-size="10.5" fill="#57534E">Setor I e Setor II</text>
+                  <text x="656" y="118" text-anchor="middle" font-size="10.5" fill="#57534E">Reprodução Simples</text>
+                  <text x="656" y="132" text-anchor="middle" font-size="10.5" fill="#57534E">e Ampliada (I(v+m)=IIc)</text>
+                  <text x="656" y="148" text-anchor="middle" font-size="9.5" font-weight="700" fill="#0F766E">Clique para abrir →</text>
+                </g>
+
+                <line x1="740" y1="96" x2="764" y2="96" stroke="#57534E" stroke-width="2" marker-end="url(#arrDark)" />
+
+                <!-- Ponte Livro III -->
+                <rect x="770" y="54" width="98" height="84" rx="12" fill="#F3EFE9" stroke="#CFC7BC" stroke-width="1.5" stroke-dasharray="4 3"/>
+                <text x="819" y="78" text-anchor="middle" font-size="10" font-weight="700" fill="#78716C">LIVRO III</text>
+                <text x="819" y="97" text-anchor="middle" font-size="12" font-weight="700" fill="#1F1E1C">Processo</text>
+                <text x="819" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#1F1E1C">Global</text>
+                <text x="819" y="128" text-anchor="middle" font-size="9.5" fill="#57534E">Lucro, Crédito</text>
+
+                <!-- Legenda inferior -->
+                <text x="456" y="188" text-anchor="middle" font-size="11" font-weight="600" fill="#57534E">
+                  Capital Individual (Seções I e II) ──▶ Entrelaçamento Macroeconômico do Capital Social Total (Seção III)
+                </text>
+              </svg>
+            </div>
+          </section>
+
+          <!-- História Editorial (Manuscritos II-VIII / Engels / MEGA-2) -->
+          <section class="card" style="background:linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;">
+              <h3 style="font-size:1.2rem;">História Editorial: Os Manuscritos de Marx (1868–1881) e a Edição de Engels</h3>
+              <span class="badge badge-neutral">MEGA-2 II/11–13</span>
+            </div>
+            <p style="font-size:13.5px;color:var(--muted);line-height:1.6;">
+              Publicado postumamente por <strong>Friedrich Engels em 1885</strong> (2ª ed. em 1893), o Livro II reúne os manuscritos mais tardios de Karl Marx — redigidos entre <strong>1868 e 1881</strong>, mais de uma década após o manuscrito principal do Livro III (1864–1865). Engels compilou sobretudo os <strong>manuscritos II, IV, V, VI, VII e VIII</strong>: a Seção I combina os manuscritos V–VII (Cap. 1–4) e IV (Cap. 5–6); a Seção II baseia-se no manuscrito II (com trechos do IV); e a Seção III entrelaça o manuscrito II com o manuscrito VIII (onde Marx desenvolveu os esquemas da reprodução ampliada e da reposição do capital fixo).
+            </p>
+          </section>
+
+          <!-- Cartões das 3 Seções com todos os 21 capítulos -->
+          <section class="stack-md">
+            ${SECTIONS.map(sec => {
+              const studiedCount = sec.chapters.filter(id => state.studied.has(id)).length;
+              return `
+                <article class="card" style="border-top:4px solid ${sec.color};">
+                  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;">
+                    <span class="badge" style="background:${sec.soft};color:${sec.color};border:1px solid ${sec.border};">${sec.num}</span>
+                    <span class="mono" style="font-size:11.5px;color:var(--muted);">${studiedCount}/${sec.chapters.length} estudados</span>
+                  </div>
+                  <h3 style="font-size:1.35rem;">${sec.title}</h3>
+                  <p style="font-size:13.5px;color:var(--muted);margin-top:6px;">${sec.summary}</p>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border);">
+                    ${sec.chapters.map(chId => {
+                      const ch = getChapter(chId);
+                      const done = state.studied.has(chId);
+                      return `
+                        <button type="button" class="pill-tab map-ch-btn" data-go-ch="${chId}"
+                          style="${done ? 'background:#F0FDF4;border-color:#86EFAC;color:#166534;' : ''}">
+                          <span class="mono" style="font-weight:700;margin-right:4px;">${chId}.</span>${ch.title}
+                        </button>
+                      `;
+                    }).join('')}
+                  </div>
+                </article>
+              `;
+            }).join('')}
+          </section>
+        </div>
+      `;
+
+      el.querySelectorAll('[data-go-ch]').forEach(node => {
+        node.addEventListener('click', () => openChapter(Number(node.getAttribute('data-go-ch'))));
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // 5. RENDERIZAÇÃO DE CADA CAPÍTULO (1 A 21)
+    // =========================================================================
+    function openChapter(chId) {
+      state.view = 'chapter';
+      state.currentChapterId = chId;
+      const ch = getChapter(chId);
+      const sec = getSection(ch.section);
+      const isStudied = state.studied.has(chId);
+
+      applySectionTheme(ch.section);
+      document.getElementById('breadcrumbText').textContent = `${sec.num}: ${sec.title}  /  Capítulo ${ch.id}`;
+      renderSidebar();
+
+      const prevCh = chId > 1 ? getChapter(chId - 1) : null;
+      const nextCh = chId < CHAPTERS.length ? getChapter(chId + 1) : null;
+
+      const el = document.getElementById('mainContent');
+      el.innerHTML = `
+        <article class="stack-lg fade-in">
+          <!-- 1. Cabeçalho do Capítulo -->
+          <header class="card">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;">
+              <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+                <span class="badge" style="background:${sec.soft};color:${sec.color};border:1px solid ${sec.border};">
+                  ${sec.num} — ${sec.title}
+                </span>
+                <span class="badge badge-neutral">Capítulo ${ch.id} de 21</span>
+              </div>
+              <button id="topStudiedBtn" type="button" class="btn ${isStudied ? 'btn-studied' : ''}">
+                ${isStudied ? '✓ Estudado' : 'Marcar como estudado'}
+              </button>
+            </div>
+
+            <h2 style="font-size:clamp(1.6rem, 3vw, 2.2rem);font-weight:800;">
+              <span style="color:var(--active-accent);margin-right:8px;">${ch.id}.</span>${ch.title}
+            </h2>
+
+            <div class="thesis-box">
+              <div class="thesis-label">Ideia-Chave Central</div>
+              <p class="thesis-text">${ch.thesis}</p>
+            </div>
+          </header>
+
+          <!-- 2. Infográfico Interativo Exclusivo -->
+          <section class="card">
+            <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid var(--border);">
+              <div>
+                <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--active-accent);">Infográfico Interativo</div>
+                <h3 id="widgetTitle" style="font-size:1.3rem;margin-top:2px;">Laboratório Visual</h3>
+              </div>
+              <span class="badge badge-neutral">Interativo</span>
+            </div>
+            <div id="widgetContainer"></div>
+          </section>
+
+          <!-- 3. Ideias-Chave do Capítulo -->
+          <section class="stack-md">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;">
+              <h3 style="font-size:1.35rem;">Ideias-Chave do Capítulo</h3>
+              <span class="mono" style="font-size:11.5px;color:var(--muted);">${ch.ideas.length} pontos essenciais</span>
+            </div>
+            <div class="grid-2">
+              ${ch.ideas.map((item, idx) => `
+                <div class="idea-card">
+                  <div class="idea-head">
+                    <span class="idea-num">0${idx + 1}</span>
+                    <div class="idea-title">${item.title}</div>
+                  </div>
+                  <p class="idea-body">${item.body}</p>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- 4. Fórmula / Conceitos Centrais -->
+          <section class="card stack-md">
+            <div>
+              <div style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-bottom:8px;">Fórmula e Conceitos Centrais</div>
+              <div class="formula-banner">
+                <div>
+                  <div class="formula-tag">Síntese Formal</div>
+                  <div style="margin-top:3px;font-weight:700;">${ch.formula}</div>
+                </div>
+              </div>
+            </div>
+            <div class="concept-grid">
+              ${ch.concepts.map(c => `
+                <div class="concept-item">
+                  <strong>${c.term}</strong>
+                  <span style="color:var(--muted);">${c.def}</span>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- 5. Navegação entre capítulos -->
+          <footer class="card">
+            <div class="chapter-footer">
+              ${prevCh ? `
+                <button id="prevChBtn" type="button" class="nav-card-btn">
+                  <div class="nav-card-dir">← Capítulo Anterior</div>
+                  <div class="nav-card-name">Cap. ${prevCh.id}: ${prevCh.title}</div>
+                </button>
+              ` : `<div style="flex:1;min-width:190px;"></div>`}
+
+              <button id="bottomStudiedBtn" type="button" class="btn ${isStudied ? 'btn-studied' : 'btn-primary'}" style="min-width:170px;">
+                ${isStudied ? '✓ Capítulo Estudado' : 'Marcar como estudado'}
+              </button>
+
+              ${nextCh ? `
+                <button id="nextChBtn" type="button" class="nav-card-btn right">
+                  <div class="nav-card-dir">Próximo Capítulo →</div>
+                  <div class="nav-card-name">Cap. ${nextCh.id}: ${nextCh.title}</div>
+                </button>
+              ` : `
+                <button id="backMapBtn" type="button" class="nav-card-btn right">
+                  <div class="nav-card-dir">Fim do Livro II →</div>
+                  <div class="nav-card-name">Voltar ao Mapa Geral</div>
+                </button>
+              `}
+            </div>
+          </footer>
+        </article>
+      `;
+
+      const toggleStudied = () => {
+        if (state.studied.has(chId)) {
+          state.studied.delete(chId);
+          showToast(`Capítulo ${chId} desmarcado.`);
+        } else {
+          state.studied.add(chId);
+          showToast(`Capítulo ${chId} marcado como estudado!`);
+        }
+        saveStudied();
+        openChapter(chId);
+      };
+      document.getElementById('topStudiedBtn').addEventListener('click', toggleStudied);
+      document.getElementById('bottomStudiedBtn').addEventListener('click', toggleStudied);
+
+      if (prevCh) document.getElementById('prevChBtn').addEventListener('click', () => openChapter(prevCh.id));
+      if (nextCh) document.getElementById('nextChBtn').addEventListener('click', () => openChapter(nextCh.id));
+      const backMap = document.getElementById('backMapBtn');
+      if (backMap) backMap.addEventListener('click', renderOverviewMap);
+
+      // Renderiza o infográfico exclusivo do capítulo
+      renderChapterWidget(chId, document.getElementById('widgetContainer'), document.getElementById('widgetTitle'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // =========================================================================
+    // 6. OS 21 INFOGRÁFICOS INTERATIVOS EXCLUSIVOS
+    // =========================================================================
+    function renderChapterWidget(chId, container, titleEl) {
+      const map = {
+        1: wCh1, 2: wCh2, 3: wCh3, 4: wCh4, 5: wCh5, 6: wCh6,
+        7: wCh7, 8: wCh8, 9: wCh9, 10: wCh10, 11: wCh11, 12: wCh12,
+        13: wCh13, 14: wCh14, 15: wCh15, 16: wCh16, 17: wCh17,
+        18: wCh18, 19: wCh19, 20: wCh20, 21: wCh21
+      };
+      if (map[chId]) map[chId](container, titleEl);
+    }
+
+    // --- CAPÍTULO 1: Ciclo do capital monetário (Fiação vs Transportes) ---
+    function wCh1(el, titleEl) {
+      titleEl.textContent = 'Animador dos 3 Estágios (Exemplo da Fiação) vs. Indústria de Transportes';
+      let mode = 'fiacao';
+      let stage = 0;
+
+      const stagesFiacao = [
+        {
+          code: '1º Estágio: D – M < T / Mp',
+          sphere: 'Esfera da Circulação (Compra)',
+          money: '£422',
+          detail: 'O capitalista entra no mercado com £422 em capital monetário: compra £372 em meios de produção (algodão, carvão, desgaste de fusos) e £50 em força de trabalho (50 fiandeiros).'
+        },
+        {
+          code: '2º Estágio: … P … (Capital Produtivo)',
+          sphere: 'Esfera da Produção (Consumo Produtivo)',
+          money: '£372c + £50v + £78m',
+          detail: 'A circulação é interrompida. Os trabalhadores transferem £372 de Mp e criam £128 de valor novo (£50 repõem o salário; £78 são mais-valor — taxa de exploração m/v = 156%).'
+        },
+        {
+          code: '3º Estágio: M\' – D\' (Realização)',
+          sphere: 'Esfera da Circulação (Venda)',
+          money: '£500 (£422 + £78)',
+          detail: 'As 10.000 libras de fio (£500) são vendidas integralmente. O valor de capital (£422) retorna à forma-dinheiro acompanhado de seu fruto, o mais-valor realizado (£78).'
+        }
+      ];
+
+      const draw = () => {
+        if (mode === 'transporte') {
+          el.innerHTML = `
+            <div class="stack-md">
+              <div class="seg-group">
+                <button type="button" id="c1Fiacao" class="seg-btn">Fiação (D – M … P … M' – D')</button>
+                <button type="button" id="c1Transp" class="seg-btn active">Indústria de Transportes (D – M … P – D')</button>
+              </div>
+              <div class="panel-soft stack-md">
+                <div class="mono" style="text-align:center;font-size:1.05rem;font-weight:700;color:var(--sec1);padding:12px;background:#fff;border-radius:10px;border:1px solid var(--sec1-border);">
+                  D – M &lt; T / Mp  …  P  –  D'
+                </div>
+                <div class="grid-3">
+                  <div class="metric-card">
+                    <div class="metric-label">Sem Produto Separado</div>
+                    <div class="metric-val" style="font-size:1rem;color:var(--sec1);">M' ausente</div>
+                    <div class="metric-sub">O que se vende é o próprio deslocamento espacial.</div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="metric-label">Consumo Simultâneo</div>
+                    <div class="metric-val" style="font-size:1rem;color:var(--sec2);">Produção = Consumo</div>
+                    <div class="metric-sub">O efeito útil (viagem/frete) é consumido durante P.</div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="metric-label">Criação de Valor</div>
+                    <div class="metric-val" style="font-size:1rem;color:var(--sec3);">+ Valor e + m</div>
+                    <div class="metric-sub">Transfere valor dos meios de transporte e gera mais-valor.</div>
+                  </div>
+                </div>
+                <p style="font-size:13px;color:var(--muted);">
+                  Citando A. Tchuprov, Marx mostra que na indústria de transportes e comunicações (ferrovias, navios, telégrafos) o processo de produção é pago diretamente (P – D'), sem objeto material separado que aguarde venda.
+                </p>
+              </div>
+            </div>
+          `;
+        } else {
+          const st = stagesFiacao[stage];
+          el.innerHTML = `
+            <div class="stack-md">
+              <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;align-items:center;">
+                <div class="seg-group">
+                  <button type="button" id="c1Fiacao" class="seg-btn active">Fiação (D – M … P … M' – D')</button>
+                  <button type="button" id="c1Transp" class="seg-btn">Indústria de Transportes (D – M … P – D')</button>
+                </div>
+                <div class="pill-tabs">
+                  <button type="button" class="pill-tab ${stage===0?'active':''}" data-st="0">1. D – M</button>
+                  <button type="button" class="pill-tab ${stage===1?'active':''}" data-st="1">2. …P…</button>
+                  <button type="button" class="pill-tab ${stage===2?'active':''}" data-st="2">3. M' – D'</button>
+                </div>
+              </div>
+
+              <!-- Diagrama SVG dos 3 estágios -->
+              <div class="panel-soft" style="overflow-x:auto;">
+                <svg viewBox="0 0 760 120" style="width:100%;min-width:540px;height:auto;display:block;">
+                  <rect x="10" y="20" width="210" height="80" rx="12" fill="${stage===0?'#FDF2F2':'#FFFFFF'}" stroke="${stage===0?'#9E2A2B':'#E5E0D8'}" stroke-width="${stage===0?2.5:1.5}"/>
+                  <text x="115" y="46" text-anchor="middle" font-size="12" font-weight="700" fill="#9E2A2B">1. D – M &lt; T / Mp</text>
+                  <text x="115" y="66" text-anchor="middle" font-size="11" fill="#1F1E1C">£372 Mp + £50 T = £422</text>
+                  <text x="115" y="84" text-anchor="middle" font-size="10" fill="#57534E">Capital Monetário → Produtivo</text>
+
+                  <line x1="224" y1="60" x2="268" y2="60" stroke="#9E2A2B" stroke-width="2" class="${stage>=1?'svg-flow':''}"/>
+
+                  <rect x="275" y="20" width="210" height="80" rx="12" fill="${stage===1?'#FDF2F2':'#FFFFFF'}" stroke="${stage===1?'#9E2A2B':'#E5E0D8'}" stroke-width="${stage===1?2.5:1.5}"/>
+                  <text x="380" y="46" text-anchor="middle" font-size="12" font-weight="700" fill="#9E2A2B">2. … P … (Fiação)</text>
+                  <text x="380" y="66" text-anchor="middle" font-size="11" fill="#1F1E1C">Valor novo: £128 (m' = 156%)</text>
+                  <text x="380" y="84" text-anchor="middle" font-size="10" fill="#57534E">10.000 lb de fio criadas</text>
+
+                  <line x1="489" y1="60" x2="533" y2="60" stroke="#9E2A2B" stroke-width="2" class="${stage===2?'svg-flow':''}"/>
+
+                  <rect x="540" y="20" width="210" height="80" rx="12" fill="${stage===2?'#FDF2F2':'#FFFFFF'}" stroke="${stage===2?'#9E2A2B':'#E5E0D8'}" stroke-width="${stage===2?2.5:1.5}"/>
+                  <text x="645" y="46" text-anchor="middle" font-size="12" font-weight="700" fill="#9E2A2B">3. M' – D'</text>
+                  <text x="645" y="66" text-anchor="middle" font-size="11" fill="#1F1E1C">£500 = £422 (D) + £78 (d)</text>
+                  <text x="645" y="84" text-anchor="middle" font-size="10" fill="#57534E">Capital-Mercadoria → Dinheiro</text>
+                </svg>
+              </div>
+
+              <div class="alert-box" style="border-left:4px solid var(--sec1);">
+                <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:4px;">
+                  <strong style="color:var(--sec1);">${st.code}</strong>
+                  <span class="mono" style="font-size:12px;font-weight:700;">${st.sphere} • ${st.money}</span>
+                </div>
+                <p style="color:var(--ink);">${st.detail}</p>
+              </div>
+            </div>
+          `;
+          el.querySelectorAll('[data-st]').forEach(b => b.addEventListener('click', () => { stage = Number(b.getAttribute('data-st')); draw(); }));
+        }
+        document.getElementById('c1Fiacao').addEventListener('click', () => { mode = 'fiacao'; draw(); });
+        document.getElementById('c1Transp').addEventListener('click', () => { mode = 'transporte'; draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 2: Ciclo do capital produtivo ---
+    function wCh2(el, titleEl) {
+      titleEl.textContent = 'Simulador de P … M\' – D\' – M … P: Reprodução Simples vs. Ampliada';
+      let mode = 'simples';
+      let cyclesHoarded = 3;
+
+      const draw = () => {
+        const latentMoney = cyclesHoarded * 78;
+        const readyToExpand = latentMoney >= 300;
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" id="c2Simp" class="seg-btn ${mode==='simples'?'active':''}">Reprodução Simples (P … P)</button>
+              <button type="button" id="c2Amp" class="seg-btn ${mode==='ampliada'?'active':''}">Reprodução Ampliada (P … P')</button>
+            </div>
+
+            ${mode === 'simples' ? `
+              <div class="grid-2">
+                <div class="panel-soft" style="border-left:4px solid var(--sec1);">
+                  <div class="mono" style="font-weight:700;color:var(--sec1);">M – D – M &lt; T / Mp (Reposição do Capital)</div>
+                  <p style="font-size:13px;color:var(--muted);margin-top:6px;">
+                    Das £500 obtidas com a venda de M', <strong>£422</strong> retornam à circulação do capital para recomprar meios de produção (£372) e força de trabalho (£50), reiniciando P na mesma escala.
+                  </p>
+                </div>
+                <div class="panel-soft" style="border-left:4px solid var(--sec2);">
+                  <div class="mono" style="font-weight:700;color:var(--sec2);">m – d – m (Renda do Capitalista)</div>
+                  <p style="font-size:13px;color:var(--muted);margin-top:6px;">
+                    O mais-valor realizado (<strong>£78</strong>) desgarra-se do ciclo do capital e entra na circulação geral como fundo de consumo privado do capitalista.
+                  </p>
+                </div>
+              </div>
+              <div class="alert-box">
+                <strong>Ponto-chave:</strong> Na reprodução simples, D' cinde-se integralmente em D (capital) e d (consumo). O dinheiro aparece apenas como mediador transitório entre P e P.
+              </div>
+            ` : `
+              <div class="panel-soft stack-sm">
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;">
+                  <span>Ciclos acumulados de mais-valor (£78/ciclo) para atingir mínimo técnico (£300)</span>
+                  <span class="mono" style="color:var(--sec1);">${cyclesHoarded} ciclo(s) = £${latentMoney}</span>
+                </div>
+                <input id="c2Slider" type="range" min="1" max="6" value="${cyclesHoarded}" />
+                <div class="stacked-bar">
+                  <div class="stacked-seg" style="width:${Math.min(100, (latentMoney/300)*100)}%;background:${readyToExpand?'#0F766E':'#B45309'};">
+                    Capital monetário latente: £${latentMoney}
+                  </div>
+                </div>
+                <div class="alert-box ${readyToExpand?'alert-ok':'alert-warn'}">
+                  ${readyToExpand
+                    ? `<strong>Limiar técnico atingido (£${latentMoney} ≥ £300):</strong> O tesouro acumulado converte-se em capital produtivo adicional (novos fusos, cardadores, algodão e força de trabalho), transformando <strong>P em P'</strong>!`
+                    : `<strong>Fase de Entesouramento (£${latentMoney} &lt; £300):</strong> Enquanto não atinge a escala mínima técnica, o mais-valor permanece como <em>capital monetário latente</em> (tesouro) e pode servir como <em>fundo de reserva</em> contra oscilações de preço.`
+                  }
+                </div>
+              </div>
+            `}
+          </div>
+        `;
+        document.getElementById('c2Simp').addEventListener('click', () => { mode = 'simples'; draw(); });
+        document.getElementById('c2Amp').addEventListener('click', () => { mode = 'ampliada'; draw(); });
+        const sl = document.getElementById('c2Slider');
+        if (sl) sl.addEventListener('input', e => { cyclesHoarded = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 3: Ciclo do capital-mercadoria ---
+    function wCh3(el, titleEl) {
+      titleEl.textContent = 'Decomposição de M\' (10.000 lb de fio) e Ligação com Quesnay';
+      let view = 'decomp';
+      let soldLb = 10000;
+
+      const draw = () => {
+        const valSold = (soldLb / 10000) * 500;
+        const cCovered = Math.min(valSold, 372);
+        const vCovered = Math.max(0, Math.min(valSold - 372, 50));
+        const mCovered = Math.max(0, valSold - 422);
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" id="c3Decomp" class="seg-btn ${view==='decomp'?'active':''}">Realização de M' = M + m</button>
+              <button type="button" id="c3Quesnay" class="seg-btn ${view==='quesnay'?'active':''}">Por que M'…M' fundamenta Quesnay</button>
+            </div>
+
+            ${view === 'decomp' ? `
+              <div class="panel-soft stack-sm">
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;">
+                  <span>Quantidade vendida de M' (10.000 libras de fio = £500)</span>
+                  <span class="mono" style="color:var(--sec1);">${soldLb.toLocaleString('pt-BR')} lb (£${valSold.toFixed(0)})</span>
+                </div>
+                <input id="c3Slider" type="range" min="2000" max="10000" step="200" value="${soldLb}" />
+                <div class="grid-3">
+                  <div class="metric-card">
+                    <div class="metric-label">Capital Constante (c)</div>
+                    <div class="metric-val" style="color:#475569;">£${cCovered.toFixed(0)} <span style="font-size:11px;font-weight:400;">/ £372</span></div>
+                    <div class="metric-sub">7.440 lb de fio</div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="metric-label">Capital Variável (v)</div>
+                    <div class="metric-val" style="color:var(--sec3);">£${vCovered.toFixed(0)} <span style="font-size:11px;font-weight:400;">/ £50</span></div>
+                    <div class="metric-sub">1.000 lb de fio</div>
+                  </div>
+                  <div class="metric-card">
+                    <div class="metric-label">Mais-Valor (m)</div>
+                    <div class="metric-val" style="color:var(--sec1);">£${mCovered.toFixed(0)} <span style="font-size:11px;font-weight:400;">/ £78</span></div>
+                    <div class="metric-sub">1.560 lb de fio</div>
+                  </div>
+                </div>
+                <div class="alert-box ${soldLb < 8440 ? 'alert-err' : soldLb < 10000 ? 'alert-warn' : 'alert-ok'}">
+                  ${soldLb < 8440
+                    ? 'A venda parcial não repõe sequer o capital adiantado (£422). O ciclo M\'…M\' sofre prejuízo.'
+                    : soldLb < 10000
+                      ? 'Capital adiantado (£422) reposto, mas apenas parte do mais-valor (£' + mCovered.toFixed(0) + ' de £78) foi realizada.'
+                      : 'Venda integral (10.000 lb): tanto o capital produtivo (£422) quanto o mais-valor (£78) se realizam, exigindo consumo produtivo e individual na sociedade.'
+                  }
+                </div>
+              </div>
+            ` : `
+              <div class="grid-2">
+                <div class="panel-soft">
+                  <strong style="color:var(--sec1);display:block;margin-bottom:6px;">O "grande tato" de François Quesnay</strong>
+                  <p style="font-size:13px;color:var(--muted);">
+                    Em oposição aos mercantilistas (presos em D…D') e aos clássicos (presos em P…P), Quesnay escolheu a colheita anual total (<strong>M'…M'</strong>, as <em>reprises</em>) como ponto de partida do <em>Tableau économique</em>.
+                  </p>
+                </div>
+                <div class="panel-soft">
+                  <strong style="color:var(--sec3);display:block;margin-bottom:6px;">Por que isso antecipa a Seção III</strong>
+                  <p style="font-size:13px;color:var(--muted);">
+                    Só em M'…M' o produto social total aparece desde o início contendo tanto os meios de produção (consumo produtivo) quanto os meios de consumo (consumo individual de trabalhadores e capitalistas).
+                  </p>
+                </div>
+              </div>
+            `}
+          </div>
+        `;
+        document.getElementById('c3Decomp').addEventListener('click', () => { view = 'decomp'; draw(); });
+        document.getElementById('c3Quesnay').addEventListener('click', () => { view = 'quesnay'; draw(); });
+        const sl = document.getElementById('c3Slider');
+        if (sl) sl.addEventListener('input', e => { soldLb = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 4: As três figuras do processo cíclico (Simulador de gargalo) ---
+    function wCh4(el, titleEl) {
+      titleEl.textContent = 'Simulador de Continuidade em 3 Trilhas Simultâneas (Teste de Gargalo)';
+      let blocked = 'none'; // 'none', 'compra', 'producao', 'venda'
+
+      const msgs = {
+        none: { cls: 'alert-ok', txt: 'Fluxo contínuo normal: enquanto a Fração A está em compra (D–M), a Fração B produz (…P…) e a Fração C vende (M\'–D\'). A justaposição garante a sucessão ininterrupta.' },
+        compra: { cls: 'alert-err', txt: 'GARGALO NA COMPRA (D – M): falta de matérias-primas ou greve. O capital monetário enrijece-se em tesouro; logo a produção (P) fica sem insumos e a venda (M\') seca.' },
+        producao: { cls: 'alert-err', txt: 'GARGALO NA PRODUÇÃO (… P …): quebra de máquinas ou paralisação fabril. Meios de produção e força de trabalho ficam ociosos; o fluxo de M\' para o mercado cessa.' },
+        venda: { cls: 'alert-err', txt: 'GARGALO NA VENDA (M\' – D\'): mercadorias encalham nos depósitos. O retorno de dinheiro (D\') trava, impedindo novas compras (D–M) e paralisando a produção inteira.' }
+      };
+
+      const draw = () => {
+        const m = msgs[blocked];
+        const phaseBox = (key, label, active) => `
+          <button type="button" data-blk="${key}" style="padding:12px;border-radius:10px;border:2px solid ${active?'#9E2A2B':'var(--border)'};background:${active?'#FDF2F2':'#FFFFFF'};text-align:center;transition:all 0.15s;">
+            <div class="mono" style="font-size:12px;font-weight:700;color:${active?'#9E2A2B':'var(--ink)'};">${label}</div>
+            <div style="font-size:11px;color:${active?'#9E2A2B':'var(--muted)'};margin-top:4px;">${active ? '✕ PARALISADO' : 'Clique para travar'}</div>
+          </button>
+        `;
+        el.innerHTML = `
+          <div class="stack-md">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+              <span style="font-size:12.5px;color:var(--muted);">Clique em qualquer fase para simular um gargalo no ciclo:</span>
+              <button type="button" id="c4Reset" class="btn" style="padding:5px 11px;font-size:11.5px;">Restaurar Fluxo Normal</button>
+            </div>
+
+            <div class="grid-3">
+              ${phaseBox('compra', 'Fase 1: Compra (D – M)', blocked==='compra')}
+              ${phaseBox('producao', 'Fase 2: Produção (… P …)', blocked==='producao')}
+              ${phaseBox('venda', 'Fase 3: Venda (M\' – D\')', blocked==='venda')}
+            </div>
+
+            <!-- 3 Trilhas Simultâneas -->
+            <div class="panel-soft stack-sm">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);">Estado das 3 Figuras Simultâneas do Capital Industrial</div>
+              ${[
+                { name: 'Trilha 1: D … D\' (Capital Monetário)', status: blocked==='none' ? 'Girando normalmente' : blocked==='compra' ? 'Imobilizado como tesouro' : 'Bloqueado na reposição' },
+                { name: 'Trilha 2: P … P (Capital Produtivo)', status: blocked==='none' ? 'Produção contínua' : blocked==='producao' ? 'Máquinas e operários parados' : 'Ameaçado por falta de fluxo' },
+                { name: 'Trilha 3: M\' … M\' (Capital-Mercadoria)', status: blocked==='none' ? 'Escoando ao mercado' : blocked==='venda' ? 'Estoques acumulados sem venda' : 'Interrupção na oferta' }
+              ].map(t => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;background:#fff;border:1px solid ${blocked==='none'?'#BBF7D0':'#FECACA'};font-size:12.5px;">
+                  <strong class="mono">${t.name}</strong>
+                  <span style="font-weight:600;color:${blocked==='none'?'#166534':'#9E2A2B'};">${t.status}</span>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="alert-box ${m.cls}">${m.txt}</div>
+          </div>
+        `;
+        el.querySelectorAll('[data-blk]').forEach(b => b.addEventListener('click', () => {
+          const k = b.getAttribute('data-blk');
+          blocked = (blocked === k) ? 'none' : k;
+          draw();
+        }));
+        document.getElementById('c4Reset').addEventListener('click', () => { blocked = 'none'; draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 5: O tempo de curso ---
+    function wCh5(el, titleEl) {
+      titleEl.textContent = 'Linha do Tempo Dividida: Tempo de Produção vs. Tempo de Curso';
+      let circWeeks = 4;
+      const prodWeeks = 6;
+
+      const draw = () => {
+        const total = prodWeeks + circWeeks;
+        const cyclesPerYear = (52 / total).toFixed(2);
+        const prodPct = Math.round((prodWeeks / total) * 100);
+        const circPct = 100 - prodPct;
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="panel-soft stack-sm">
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;">
+                <span>Ajuste o Tempo de Curso (Circulação) — Tempo de Produção fixo em ${prodWeeks} semanas</span>
+                <span class="mono" style="color:var(--sec1);">${circWeeks} semana(s)</span>
+              </div>
+              <input id="c5Slider" type="range" min="0" max="12" step="1" value="${circWeeks}" />
+              <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);">
+                <span>0 sem. (Ideal limite)</span><span>6 sem.</span><span>12 sem. (Lento)</span>
+              </div>
+            </div>
+
+            <div class="stacked-bar">
+              <div class="stacked-seg" style="width:${prodPct}%;background:#0F766E;">Produção: ${prodWeeks} sem. (${prodPct}%)</div>
+              ${circWeeks > 0 ? `<div class="stacked-seg" style="width:${circPct}%;background:#9E2A2B;">Curso: ${circWeeks} sem. (${circPct}%)</div>` : ''}
+            </div>
+
+            <div class="grid-3">
+              <div class="metric-card">
+                <div class="metric-label">Ciclo Total</div>
+                <div class="metric-val">${total} sem.</div>
+                <div class="metric-sub">Produção + Curso</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Ciclos por Ano (52 sem.)</div>
+                <div class="metric-val" style="color:var(--sec1);">${cyclesPerYear}×</div>
+                <div class="metric-sub">Mais ciclos = mais mais-valor/ano</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Tempo Produtivo Ativo</div>
+                <div class="metric-val" style="color:var(--sec3);">${prodPct}%</div>
+                <div class="metric-sub">${circWeeks === 0 ? 'Máxima valorização!' : 'Limitado pelo curso'}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.getElementById('c5Slider').addEventListener('input', e => { circWeeks = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 6: Os custos de circulação ---
+    function wCh6(el, titleEl) {
+      titleEl.textContent = 'Classificador Interativo dos Custos de Circulação (Cria Valor ou Faux Frais?)';
+      const cats = [
+        {
+          id: 0, title: 'I. Custos Líquidos de Circulação',
+          verdict: 'FAUX FRAIS — NÃO CRIA VALOR',
+          vClass: 'alert-err',
+          items: 'Tempo de compra e venda, contabilidade/escrituração, desgaste do dinheiro (ouro e prata).',
+          explain: 'Derivam apenas da mudança de forma (M–D e D–M). Tal como o trabalho de combustão do carvão consome energia sem produzir calor útil, esses custos são necessários, mas improdutivos — deduzidos do mais-valor social.'
+        },
+        {
+          id: 1, title: 'II. Custos de Armazenamento',
+          verdict: 'CONDICIONAL — CONSERVA VALOR (SE NORMAL)',
+          vClass: 'alert-warn',
+          items: 'Depósitos, armazéns, conservação contra deterioração (estoque produtivo, de mercadorias e de consumo).',
+          explain: 'Quando o estoque de mercadorias é condição normal do fluxo contínuo, seus custos transferem-se ao valor da mercadoria (conservando o valor de uso). Mas se o estoque cresce por encalhe/crise, os gastos são pura perda (faux frais).'
+        },
+        {
+          id: 2, title: 'III. Custos de Transporte',
+          verdict: 'PRODUTIVO — ADICIONA VALOR E MAIS-VALOR',
+          vClass: 'alert-ok',
+          items: 'Ferrovias, navios, frete e logística espacial da fábrica até o consumo.',
+          explain: 'O valor de uso só se efetiva no consumo, que exige o deslocamento espacial do produto. A indústria de transportes é a continuação de um processo produtivo dentro da circulação: transfere valor dos meios de transporte e gera novo valor e mais-valor.'
+        }
+      ];
+      let sel = 0;
+
+      const draw = () => {
+        const c = cats[sel];
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="grid-3">
+              ${cats.map(item => `
+                <button type="button" data-cat="${item.id}" style="padding:14px;border-radius:12px;border:2px solid ${sel===item.id?'var(--sec1)':'var(--border)'};background:${sel===item.id?'var(--sec1-soft)':'#FFFFFF'};text-align:left;transition:all 0.15s;">
+                  <div style="font-family:var(--font-serif);font-weight:700;font-size:14.5px;color:var(--ink);">${item.title}</div>
+                  <div style="font-size:11.5px;color:var(--muted);margin-top:4px;">Clique para classificar →</div>
+                </button>
+              `).join('')}
+            </div>
+
+            <div class="alert-box ${c.vClass}">
+              <div class="mono" style="font-size:12px;font-weight:700;margin-bottom:6px;">${c.verdict}</div>
+              <div style="font-size:13px;margin-bottom:6px;"><strong>Exemplos:</strong> ${c.items}</div>
+              <p style="font-size:13.5px;color:var(--ink);">${c.explain}</p>
+            </div>
+          </div>
+        `;
+        el.querySelectorAll('[data-cat]').forEach(b => b.addEventListener('click', () => { sel = Number(b.getAttribute('data-cat')); draw(); }));
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 7: Tempo de rotação e número de rotações ---
+    function wCh7(el, titleEl) {
+      titleEl.textContent = 'Calculadora de Rotação Anual (n = 12 / r) e Capital Rodado (n × C)';
+      let capC = 5000;
+      let rMonths = 3;
+
+      const draw = () => {
+        const n = 12 / rMonths;
+        const capRodado = Math.round(n * capC);
+        const fullTurns = Math.min(12, Math.floor(n));
+        const frac = n - Math.floor(n);
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="grid-2 panel-soft">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;margin-bottom:6px;">
+                  <span>Capital Adiantado (C)</span>
+                  <span class="mono" style="color:var(--sec2);">£${capC.toLocaleString('pt-BR')}</span>
+                </div>
+                <input id="c7C" type="range" min="1000" max="20000" step="1000" value="${capC}" />
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;margin-bottom:6px;">
+                  <span>Tempo de Rotação (r)</span>
+                  <span class="mono" style="color:var(--sec2);">${rMonths} ${rMonths===1?'mês':'meses'}</span>
+                </div>
+                <input id="c7R" type="range" min="1" max="24" step="1" value="${rMonths}" />
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="metric-card">
+                <div class="metric-label">Número de Rotações (n = 12/r)</div>
+                <div class="metric-val" style="color:var(--sec2);">${n.toFixed(2)}×</div>
+                <div class="metric-sub">${n > 1 ? 'Mais de 1 giro por ano' : n === 1 ? '1 giro exato ao ano' : 'Menos de 1 giro ao ano'}</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Capital Rodado no Ano (n × C)</div>
+                <div class="metric-val">£${capRodado.toLocaleString('pt-BR')}</div>
+                <div class="metric-sub">${capRodado > capC ? 'Maior que o capital adiantado' : capRodado === capC ? 'Igual ao adiantado' : 'Menor que o adiantado'}</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Giros Visuais no Ano</div>
+                <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:8px;">
+                  ${Array.from({length: Math.max(1, Math.min(12, Math.ceil(n)))}).map((_, i) => `
+                    <span style="width:16px;height:16px;border-radius:50%;display:inline-block;background:${i < fullTurns ? '#B45309' : 'linear-gradient(90deg, #B45309 ' + Math.round(frac*100) + '%, #E5E0D8 0%)'};"></span>
+                  `).join('')}
+                </div>
+                <div class="metric-sub">Unidade natural: R = 12 meses</div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.getElementById('c7C').addEventListener('input', e => { capC = Number(e.target.value); draw(); });
+        document.getElementById('c7R').addEventListener('input', e => { rMonths = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 8: Capital fixo e capital circulante ---
+    function wCh8(el, titleEl) {
+      titleEl.textContent = 'Matriz 2×2 (Fixo/Circulante × Constante/Variável) e Amortização em 10 Anos';
+      let year = 4;
+
+      const draw = () => {
+        const machineTotal = 10000;
+        const amort = year * 1000;
+        const residual = machineTotal - amort;
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <!-- Matriz 2x2 -->
+            <div style="overflow-x:auto;">
+              <table class="data-table" style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+                <thead>
+                  <tr>
+                    <th style="width:24%;">Critério</th>
+                    <th style="width:38%;color:var(--sec2);">Capital Fixo (Transferência gradual)</th>
+                    <th style="width:38%;color:var(--sec3);">Capital Circulante (Transferência total)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Capital Constante (c)</strong><br><span style="font-size:11px;color:var(--muted);">Apenas transfere valor</span></td>
+                    <td style="background:#FFFBEB;"><strong>Máquinas, Edifícios, Trilhos, Boi de carga</strong><br><span style="font-size:11.5px;color:var(--muted);">Permanecem na fábrica por vários ciclos; desgastam-se gradualmente.</span></td>
+                    <td><strong>Matérias-primas e Materiais auxiliares</strong><br><span style="font-size:11.5px;color:var(--muted);">Algodão, carvão, energia: consumidos integralmente a cada ciclo.</span></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Capital Variável (v)</strong><br><span style="font-size:11px;color:var(--muted);">Cria valor novo + m</span></td>
+                    <td style="background:#FAF8F5;color:var(--muted);"><em>Inexistente no trabalho assalariado</em><br><span style="font-size:11px;">(Só na escravidão o escravo é comprado como "capital fixo").</span></td>
+                    <td style="background:#F0FDFA;"><strong>Força de Trabalho (T)</strong><br><span style="font-size:11.5px;color:var(--muted);">Reproduz seu valor + mais-valor em cada ciclo; paga periodicamente.</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Simulador de desgaste/amortização -->
+            <div class="panel-soft stack-sm">
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;">
+                <span>Dupla existência do Capital Fixo (Máquina de £10.000, vida útil de 10 anos)</span>
+                <span class="mono" style="color:var(--sec2);">Ano ${year} de 10</span>
+              </div>
+              <input id="c8Year" type="range" min="0" max="10" step="1" value="${year}" />
+              <div class="stacked-bar">
+                ${residual > 0 ? `<div class="stacked-seg" style="width:${(residual/10000)*100}%;background:#B45309;">Valor na Máquina: £${residual.toLocaleString('pt-BR')}</div>` : ''}
+                ${amort > 0 ? `<div class="stacked-seg" style="width:${(amort/10000)*100}%;background:#0F766E;">Fundo de Amortização: £${amort.toLocaleString('pt-BR')}</div>` : ''}
+              </div>
+              <div style="font-size:12px;color:var(--muted);">
+                ${year === 10
+                  ? '<strong>Fim da vida útil (Ano 10):</strong> A máquina desgastou-se por completo e seu valor integral (£10.000) acumulou-se em dinheiro — pronta para reposição <em>in natura</em>.'
+                  : `No Ano ${year}, £${residual.toLocaleString('pt-BR')} permanecem fixados na máquina ativa, enquanto £${amort.toLocaleString('pt-BR')} já destilaram em dinheiro via venda das mercadorias.`
+                }
+              </div>
+            </div>
+          </div>
+        `;
+        document.getElementById('c8Year').addEventListener('input', e => { year = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 9: Rotação total e ciclos decenais ---
+    function wCh9(el, titleEl) {
+      titleEl.textContent = 'Calculadora de Rotação Média Ponderada e Onda do Ciclo Decenal';
+      let fixo = 80000;
+      let vidaFixo = 10;
+      let circ = 20000;
+      let girosCirc = 5;
+
+      const draw = () => {
+        const capTotal = fixo + circ;
+        const fixoAnual = Math.round(fixo / vidaFixo);
+        const circAnual = circ * girosCirc;
+        const totalRodado = fixoAnual + circAnual;
+        const rotMedia = (totalRodado / capTotal).toFixed(2);
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="grid-2 panel-soft">
+              <div class="stack-sm">
+                <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
+                  <span>Capital Fixo (£${fixo.toLocaleString('pt-BR')}) — Vida útil</span>
+                  <span class="mono" style="color:var(--sec2);">${vidaFixo} anos (£${fixoAnual.toLocaleString('pt-BR')}/ano)</span>
+                </div>
+                <input id="c9Vida" type="range" min="4" max="20" step="1" value="${vidaFixo}" />
+              </div>
+              <div class="stack-sm">
+                <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;">
+                  <span>Capital Circulante (£${circ.toLocaleString('pt-BR')}) — Giros/ano</span>
+                  <span class="mono" style="color:var(--sec3);">${girosCirc}× (£${circAnual.toLocaleString('pt-BR')}/ano)</span>
+                </div>
+                <input id="c9Giros" type="range" min="1" max="10" step="1" value="${girosCirc}" />
+              </div>
+            </div>
+
+            <div class="grid-3">
+              <div class="metric-card">
+                <div class="metric-label">Capital Total Adiantado</div>
+                <div class="metric-val">£${capTotal.toLocaleString('pt-BR')}</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Capital Rodado no Ano</div>
+                <div class="metric-val" style="color:var(--sec2);">£${totalRodado.toLocaleString('pt-BR')}</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Rotação Média Anual</div>
+                <div class="metric-val" style="color:var(--sec1);">${rotMedia}×</div>
+              </div>
+            </div>
+
+            <!-- Gráfico SVG da onda do ciclo decenal -->
+            <div class="panel-soft">
+              <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">
+                Ciclo Decenal de Renovação do Capital Fixo (Base Material das Crises Periódicas)
+              </div>
+              <svg viewBox="0 0 700 130" style="width:100%;height:auto;display:block;">
+                <line x1="20" y1="95" x2="680" y2="95" stroke="#CFC7BC" stroke-width="1" stroke-dasharray="4 4"/>
+                <path d="M 30 95 C 90 115, 160 75, 250 45 C 320 20, 390 15, 440 28 C 480 38, 505 112, 545 108 C 590 104, 635 72, 675 45"
+                  fill="none" stroke="#B45309" stroke-width="3" />
+                <circle cx="80" cy="102" r="5" fill="#57534E"/>
+                <text x="80" y="122" text-anchor="middle" font-size="10.5" fill="#57534E" font-weight="600">Depressão</text>
+
+                <circle cx="245" cy="47" r="5" fill="#0F766E"/>
+                <text x="245" y="34" text-anchor="middle" font-size="10.5" fill="#0F766E" font-weight="600">Animação Moderada</text>
+
+                <circle cx="425" cy="24" r="5" fill="#B45309"/>
+                <text x="425" y="14" text-anchor="middle" font-size="10.5" fill="#B45309" font-weight="700">Hiperatividade</text>
+
+                <circle cx="520" cy="102" r="6" fill="#9E2A2B"/>
+                <text x="520" y="122" text-anchor="middle" font-size="10.5" fill="#9E2A2B" font-weight="700">CRISE → Novo Investimento</text>
+              </svg>
+            </div>
+          </div>
+        `;
+        document.getElementById('c9Vida').addEventListener('input', e => { vidaFixo = Number(e.target.value); draw(); });
+        document.getElementById('c9Giros').addEventListener('input', e => { girosCirc = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 10: Fisiocratas e Adam Smith ---
+    function wCh10(el, titleEl) {
+      titleEl.textContent = 'Comparador Teórico: Quesnay vs. Adam Smith vs. Karl Marx';
+      let tab = 'quesnay';
+      const data = {
+        quesnay: {
+          title: 'Fisiocratas (François Quesnay)',
+          badge: 'Acerto Parcial • Base Agrícola',
+          points: [
+            'Distingue corretamente <strong>avances primitives</strong> (capital fixo de vários anos) e <strong>avances annuelles</strong> (capital circulante anual).',
+            'Situa a distinção rigorosamente <strong>no interior do capital produtivo</strong> — nunca inclui dinheiro nem mercadorias no mercado.',
+            '<strong>Limite:</strong> restringe a categoria apenas à agricultura, por acreditar que só a terra produz excedente (<em>produit net</em>).'
+          ]
+        },
+        smith: {
+          title: 'Adam Smith (A Riqueza das Nações)',
+          badge: 'Universalização com Retrocesso',
+          points: [
+            '<strong>Mérito:</strong> generaliza os conceitos para toda a indústria capitalista (capital fixo e capital circulante).',
+            '<strong>Erro 1:</strong> confunde capital circulante (fração do produtivo) com <em>capital de circulação</em> (dinheiro, mercadorias e capital comercial).',
+            '<strong>Erro 2:</strong> substitui a força de trabalho pelos meios de subsistência do operário, soterrando a distinção crucial entre capital constante (c) e variável (v).'
+          ]
+        },
+        marx: {
+          title: 'Correção Científica de Karl Marx',
+          badge: 'Rigor Funcional e Crítica do Valor',
+          points: [
+            'Fixo e circulante existem <strong>exclusivamente no capital produtivo</strong> e dependem da forma de transferência de valor ao produto.',
+            'Capital-mercadoria e capital monetário são <strong>capital de circulação</strong> (opostos ao produtivo), nunca "capital circulante".',
+            'Separa rigorosamente o plano da circulação (fixo vs. circulante) do plano da valorização (constante vs. variável).'
+          ]
+        }
+      };
+
+      const draw = () => {
+        const d = data[tab];
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" data-t="quesnay" class="seg-btn ${tab==='quesnay'?'active':''}">1. Fisiocratas (Quesnay)</button>
+              <button type="button" data-t="smith" class="seg-btn ${tab==='smith'?'active':''}">2. Adam Smith</button>
+              <button type="button" data-t="marx" class="seg-btn ${tab==='marx'?'active':''}">3. Correção de Marx</button>
+            </div>
+            <div class="panel-soft stack-sm">
+              <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;align-items:center;">
+                <h4 style="font-size:1.1rem;color:var(--sec2);">${d.title}</h4>
+                <span class="badge badge-neutral">${d.badge}</span>
+              </div>
+              <ul style="margin:6px 0 0;padding-left:18px;font-size:13.5px;color:var(--ink);display:flex;flex-direction:column;gap:8px;">
+                ${d.points.map(p => `<li>${p}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+        el.querySelectorAll('[data-t]').forEach(b => b.addEventListener('click', () => { tab = b.getAttribute('data-t'); draw(); }));
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 11: Ricardo ---
+    function wCh11(el, titleEl) {
+      titleEl.textContent = 'Diagrama Crítico: O Erro de Ricardo vs. A Análise de Marx';
+      let mode = 'ricardo';
+
+      const draw = () => {
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" id="c11Ric" class="seg-btn ${mode==='ricardo'?'active':''}">Visão de Ricardo (Perecibilidade)</button>
+              <button type="button" id="c11Marx" class="seg-btn ${mode==='marx'?'active':''}">Crítica de Marx (Função no Processo)</button>
+            </div>
+
+            ${mode === 'ricardo' ? `
+              <div class="grid-2">
+                <div class="panel-soft" style="border-left:4px solid #9E2A2B;">
+                  <strong style="color:#9E2A2B;">Capital Fixo = "Durável"</strong>
+                  <p style="font-size:13px;color:var(--muted);margin-top:6px;">Máquinas, edifícios, navios. Reduzido a uma propriedade física (lentidão do desgaste).</p>
+                </div>
+                <div class="panel-soft" style="border-left:4px solid #B45309;">
+                  <strong style="color:#B45309;">Capital Circulante = "Salários / Perecível"</strong>
+                  <p style="font-size:13px;color:var(--muted);margin-top:6px;">Comida e roupas do trabalhador. <strong>Matérias-primas desaparecem</strong> do esquema porque não cabem nessa divisão binária!</p>
+                </div>
+              </div>
+              <div class="alert-box alert-err">
+                <strong>Consequência teórica:</strong> Ao igualar "circulante" a "variável" e tratá-lo como meios de subsistência perecíveis, Ricardo apaga a diferença entre trabalho vivo criador de valor e valor apenas transferido — ocultando a fonte do mais-valor.
+              </div>
+            ` : `
+              <div class="grid-3">
+                <div class="panel-soft" style="border-top:3px solid #B45309;">
+                  <strong style="font-size:13px;">Meios de Trabalho</strong>
+                  <div class="mono" style="font-size:11px;color:#B45309;margin:4px 0;">Constante + Fixo</div>
+                  <p style="font-size:12px;color:var(--muted);">Transferem valor gradualmente (mesmo metal usado como máquina).</p>
+                </div>
+                <div class="panel-soft" style="border-top:3px solid #57534E;">
+                  <strong style="font-size:13px;">Matérias-Primas</strong>
+                  <div class="mono" style="font-size:11px;color:#57534E;margin:4px 0;">Constante + Circulante</div>
+                  <p style="font-size:12px;color:var(--muted);">Transferem valor integralmente de uma só vez (mesmo metal como insumo).</p>
+                </div>
+                <div class="panel-soft" style="border-top:3px solid #0F766E;">
+                  <strong style="font-size:13px;">Força de Trabalho</strong>
+                  <div class="mono" style="font-size:11px;color:#0F766E;margin:4px 0;">Variável + Circulante</div>
+                  <p style="font-size:12px;color:var(--muted);">Única fonte de valor novo e mais-valor no processo produtivo.</p>
+                </div>
+              </div>
+            `}
+          </div>
+        `;
+        document.getElementById('c11Ric').addEventListener('click', () => { mode = 'ricardo'; draw(); });
+        document.getElementById('c11Marx').addEventListener('click', () => { mode = 'marx'; draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 12: O período de trabalho ---
+    function wCh12(el, titleEl) {
+      titleEl.textContent = 'Comparador de Períodos de Trabalho: Fiação (1 sem.) vs. Locomotiva (12 sem.)';
+      let weeks = 12;
+
+      const draw = () => {
+        const weeklyOutlay = 100;
+        const locoCapital = weeks * weeklyOutlay;
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="panel-soft stack-sm">
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;">
+                <span>Duração do Período de Trabalho contínuo (£100/semana em salários + insumos)</span>
+                <span class="mono" style="color:var(--sec2);">${weeks} semana(s)</span>
+              </div>
+              <input id="c12Slider" type="range" min="1" max="12" step="1" value="${weeks}" />
+            </div>
+
+            <div class="grid-2">
+              <div class="panel-soft" style="border-left:4px solid var(--sec3);">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sec3);">Fiação (Produto Discreto — 1 semana)</div>
+                <div class="mono" style="font-size:1.5rem;font-weight:800;margin:6px 0;">£100 <span style="font-size:12px;font-weight:400;color:var(--muted);">adiantadas</span></div>
+                <p style="font-size:12.5px;color:var(--muted);">Entrega fio acabado toda semana e recupera o capital circulante imediatamente para reiniciar o ciclo.</p>
+              </div>
+              <div class="panel-soft" style="border-left:4px solid var(--sec2);">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sec2);">Locomotiva / Navio (Produto Contínuo — ${weeks} sem.)</div>
+                <div class="mono" style="font-size:1.5rem;font-weight:800;margin:6px 0;color:var(--sec2);">£${locoCapital.toLocaleString('pt-BR')} <span style="font-size:12px;font-weight:400;color:var(--muted);">acumuladas sem retorno</span></div>
+                <p style="font-size:12.5px;color:var(--muted);">Exige <strong>${weeks}× mais capital circulante</strong> antes da venda. Obras longas dependem de concentração de capital e crédito bancário.</p>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(12, 1fr);gap:4px;">
+              ${Array.from({length: 12}).map((_, i) => `
+                <div style="height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:10px;font-weight:700;background:${i < weeks ? '#B45309' : '#E5E0D8'};color:${i < weeks ? '#fff' : '#78716C'};">
+                  S${i+1}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        document.getElementById('c12Slider').addEventListener('input', e => { weeks = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 13: O tempo de produção ---
+    function wCh13(el, titleEl) {
+      titleEl.textContent = 'Tempo de Trabalho vs. Tempo de Produção em 4 Ramos Econômicos';
+      const branches = [
+        { name: 'Indústria Têxtil (Fiação)', work: 92, natural: 8, desc: 'Quase toda a permanência na fábrica é tempo de trabalho ativo (apenas pausas noturnas e estoques mínimos). Alta valorização contínua.' },
+        { name: 'Fermentação de Vinho / Secagem de Madeira', work: 25, natural: 75, desc: 'A madeira de fôrmas de calçados seca por 18 meses; o vinho repousa no porão. O capital fica imobilizado em processos físico-químicos sem criar valor.' },
+        { name: 'Agricultura (Trigo de Inverno)', work: 30, natural: 70, desc: 'Cerca de 9 meses até a colheita com trabalho concentrado na semeadura e colheita. Gera divergência sazonal e dependência de crédito.' },
+        { name: 'Silvicultura (Florestas)', work: 5, natural: 95, desc: 'Ciclo de 40 a 150 anos dominado pelo crescimento natural das árvores, com mínimas doses de trabalho — incompatível com o horizonte do capital privado.' }
+      ];
+      let active = 2;
+
+      const draw = () => {
+        const b = branches[active];
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="pill-tabs">
+              ${branches.map((br, i) => `
+                <button type="button" data-br="${i}" class="pill-tab ${i===active?'active':''}">${br.name}</button>
+              `).join('')}
+            </div>
+
+            <div class="panel-soft stack-sm">
+              <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;">
+                <span>${b.name}</span>
+                <span class="mono">Trabalho: ${b.work}% | Processos Naturais: ${b.natural}%</span>
+              </div>
+              <div class="stacked-bar">
+                <div class="stacked-seg" style="width:${b.work}%;background:#0F766E;">Trabalho (${b.work}%)</div>
+                <div class="stacked-seg" style="width:${b.natural}%;background:#B45309;">Pausa / Natureza (${b.natural}%)</div>
+              </div>
+              <p style="font-size:13px;color:var(--ink);margin-top:4px;">${b.desc}</p>
+            </div>
+          </div>
+        `;
+        el.querySelectorAll('[data-br]').forEach(btn => btn.addEventListener('click', () => { active = Number(btn.getAttribute('data-br')); draw(); }));
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 14: O tempo de curso (Distância, Transporte, Comunicação) ---
+    function wCh14(el, titleEl) {
+      titleEl.textContent = 'Simulador de Compressão do Tempo de Venda e Compra';
+      let dist = 'ultramar'; // local, nacional, ultramar
+      let transp = 'vela'; // vela, vapor
+      let comm = 'correio'; // correio, telegrafo
+
+      const draw = () => {
+        const baseDays = dist === 'local' ? 10 : dist === 'nacional' ? 45 : 210;
+        const transpFactor = transp === 'vela' ? 1 : 0.42;
+        const commFactor = comm === 'correio' ? 1 : 0.72;
+        const days = Math.max(2, Math.round(baseDays * transpFactor * commFactor));
+        const capitalEfficiency = Math.round((baseDays / days) * 100);
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="grid-3 panel-soft">
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">1. Distância do Mercado</div>
+                <div class="stack-sm">
+                  <button type="button" data-d="local" class="pill-tab ${dist==='local'?'active':''}">Mercado Local</button>
+                  <button type="button" data-d="nacional" class="pill-tab ${dist==='nacional'?'active':''}">Nacional / Regional</button>
+                  <button type="button" data-d="ultramar" class="pill-tab ${dist==='ultramar'?'active':''}">Ultramar (Ex: Índia)</button>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">2. Meio de Transporte</div>
+                <div class="stack-sm">
+                  <button type="button" data-tr="vela" class="pill-tab ${transp==='vela'?'active':''}">Veleiro / Estrada</button>
+                  <button type="button" data-tr="vapor" class="pill-tab ${transp==='vapor'?'active':''}">Vapor / Ferrovia / Suez</button>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">3. Comunicação / Pagamento</div>
+                <div class="stack-sm">
+                  <button type="button" data-cm="correio" class="pill-tab ${comm==='correio'?'active':''}">Correio / Letras longas</button>
+                  <button type="button" data-cm="telegrafo" class="pill-tab ${comm==='telegrafo'?'active':''}">Telégrafo / Letras curtas</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="metric-card">
+                <div class="metric-label">Tempo Estimado de Curso</div>
+                <div class="metric-val" style="color:var(--sec2);">${days} dias</div>
+                <div class="metric-sub">Base sem modernização: ${baseDays} dias</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Eficiência de Giro do Capital</div>
+                <div class="metric-val" style="color:var(--sec3);">${capitalEfficiency}%</div>
+                <div class="metric-sub">Menor capital imobilizado em trânsito</div>
+              </div>
+            </div>
+          </div>
+        `;
+        el.querySelectorAll('[data-d]').forEach(b => b.addEventListener('click', () => { dist = b.getAttribute('data-d'); draw(); }));
+        el.querySelectorAll('[data-tr]').forEach(b => b.addEventListener('click', () => { transp = b.getAttribute('data-tr'); draw(); }));
+        el.querySelectorAll('[data-cm]').forEach(b => b.addEventListener('click', () => { comm = b.getAttribute('data-cm'); draw(); }));
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 15: Efeito do tempo de rotação (3 Casos de Marx) ---
+    function wCh15(el, titleEl) {
+      titleEl.textContent = 'Simulador dos 3 Casos de Marx: Continuidade e Liberação de Capital (Freisetzung)';
+      let caso = 2; // 1, 2, 3
+
+      const cases = {
+        1: {
+          name: 'Caso I: Trabalho = Curso (4,5 + 4,5 sem.)',
+          capI: 450, capII: 450, released: 0,
+          verdict: 'Sem liberação de capital (Alternância pura)',
+          vClass: 'alert-ok',
+          rows: [
+            { label: 'Capital I (£450)', segs: [{ w: 4.5, t: 'Trab. (S1–4½)', c: '#0F766E' }, { w: 4.5, t: 'Curso (S4½–9)', c: '#B45309' }, { w: 4.5, t: 'Trab. (S10–13½)', c: '#0F766E' }, { w: 4.5, t: 'Curso (S13½–18)', c: '#B45309' }] },
+            { label: 'Capital II (£450)', segs: [{ w: 4.5, t: 'Aguarda', c: '#D6D3D1' }, { w: 4.5, t: 'Trab. (S4½–9)', c: '#0F766E' }, { w: 4.5, t: 'Curso (S10–13½)', c: '#B45309' }, { w: 4.5, t: 'Trab. (S13½–18)', c: '#0F766E' }] }
+          ],
+          note: 'Os dois capitais alternam-se exatamente como capitais independentes. Nenhuma fração fica liberada ao fim de cada período de trabalho.'
+        },
+        2: {
+          name: 'Caso II: Trabalho > Curso (6 + 3 sem.)',
+          capI: 600, capII: 300, released: 300,
+          verdict: 'LIBERAÇÃO (Freisetzung) de £300 a cada período!',
+          vClass: 'alert-warn',
+          rows: [
+            { label: 'Períodos de Trabalho', segs: [{ w: 6, t: '1º Período: Cap I (£600)', c: '#0F766E' }, { w: 3, t: 'Cap II (£300)', c: '#0284C7' }, { w: 3, t: '½ Cap I (£300)', c: '#0F766E' }, { w: 3, t: 'Liberado (£300)', c: '#9E2A2B' }, { w: 3, t: '½ Refluxo', c: '#0F766E' }] },
+            { label: 'Refluxo / Liberação', segs: [{ w: 6, t: 'Em produção', c: '#E5E0D8' }, { w: 3, t: 'Curso I → +£600', c: '#B45309' }, { w: 3, t: '£300 LIVRES!', c: '#9E2A2B' }, { w: 3, t: 'Curso II → +£600', c: '#B45309' }, { w: 3, t: '£300 LIVRES!', c: '#9E2A2B' }] }
+          ],
+          note: 'No fim da 9ª semana, refluem £600 de Cap I, mas o 2º período de trabalho só precisa de £300 para terminar — liberando £300 em forma monetária a cada ciclo.'
+        },
+        3: {
+          name: 'Caso III: Trabalho < Curso (4 + 5 sem.)',
+          capI: 400, capII: 500, released: 100,
+          verdict: 'Entrecruzamento (Tabela IV): Liberação de £100!',
+          vClass: 'alert-warn',
+          rows: [
+            { label: 'Capital I (£400)', segs: [{ w: 4, t: 'Trab. S1–4', c: '#0F766E' }, { w: 5, t: 'Curso S5–9', c: '#B45309' }, { w: 3, t: 'S10–12 (£300)', c: '#0F766E' }, { w: 6, t: 'Curso + £100 livres', c: '#9E2A2B' }] },
+            { label: 'Cap II (£400) + III (£100)', segs: [{ w: 4, t: 'Aguarda', c: '#E5E0D8' }, { w: 4, t: 'Cap II S5–8', c: '#0284C7' }, { w: 1, t: 'III', c: '#9E2A2B' }, { w: 5, t: 'Curso II S9–13', c: '#B45309' }, { w: 4, t: 'Entrecruza', c: '#0284C7' }] }
+          ],
+          note: 'Como o tempo de curso (5 sem.) não é múltiplo exato do período de trabalho (4 sem.), o Capital III (£100) preenche a 9ª semana e £100 são liberadas periodicamente.'
+        }
+      };
+
+      const draw = () => {
+        const c = cases[caso];
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" data-cs="1" class="seg-btn ${caso===1?'active':''}">Caso I (4,5 = 4,5)</button>
+              <button type="button" data-cs="2" class="seg-btn ${caso===2?'active':''}">Caso II (6 &gt; 3)</button>
+              <button type="button" data-cs="3" class="seg-btn ${caso===3?'active':''}">Caso III (4 &lt; 5)</button>
+            </div>
+
+            <div class="panel-soft stack-sm">
+              <div style="font-weight:700;font-size:13.5px;color:var(--ink);">${c.name} — Total Adiantado: £900 (£100/sem.)</div>
+              ${c.rows.map(r => `
+                <div>
+                  <div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:4px;">${r.label}</div>
+                  <div class="stacked-bar" style="height:32px;font-size:10px;">
+                    ${r.segs.map(s => `<div class="stacked-seg" style="width:${(s.w/18)*100}%;background:${s.c};color:${s.c==='#E5E0D8'||s.c==='#D6D3D1'?'#57534E':'#fff'};">${s.t}</div>`).join('')}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="alert-box ${c.vClass}">
+              <strong>${c.verdict}</strong> — ${c.note}
+            </div>
+          </div>
+        `;
+        el.querySelectorAll('[data-cs]').forEach(b => b.addEventListener('click', () => { caso = Number(b.getAttribute('data-cs')); draw(); }));
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 16: A rotação do capital variável (Capital A vs B) ---
+    function wCh16(el, titleEl) {
+      titleEl.textContent = 'Simulador da Taxa Anual do Mais-Valor (M\' = m\' × n): Capital A vs. Capital B';
+      let mRate = 100;
+      let nA = 10;
+
+      const draw = () => {
+        const vA = 500;
+        const vB = 5000;
+        const nB = 1;
+        const massA = Math.round(vA * (mRate / 100) * nA);
+        const massB = Math.round(vB * (mRate / 100) * nB);
+        const annualRateA = Math.round(mRate * nA);
+        const annualRateB = Math.round(mRate * nB);
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="grid-2 panel-soft">
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:5px;">
+                  <span>Taxa Efetiva de Mais-Valor (m' = m/v)</span>
+                  <span class="mono" style="color:var(--sec2);">${mRate}%</span>
+                </div>
+                <input id="c16M" type="range" min="50" max="200" step="25" value="${mRate}" />
+              </div>
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:5px;">
+                  <span>Rotações/Ano do Capital A (n)</span>
+                  <span class="mono" style="color:var(--sec2);">${nA}× / ano</span>
+                </div>
+                <input id="c16N" type="range" min="2" max="12" step="1" value="${nA}" />
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="panel-soft" style="border-top:4px solid var(--sec2);">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sec2);">Capital A (Rotação Rápida: ${nA}×/ano)</div>
+                <div style="font-size:12.5px;color:var(--muted);margin-top:4px;">Capital Variável Adiantado: <strong>£500</strong> | Rodado: £${(vA*nA).toLocaleString('pt-BR')}</div>
+                <div class="mono" style="font-size:1.7rem;font-weight:800;color:var(--sec2);margin-top:8px;">M' = ${annualRateA}%</div>
+                <div style="font-size:12.5px;margin-top:4px;">Massa anual de mais-valor: <strong class="mono">£${massA.toLocaleString('pt-BR')}</strong></div>
+              </div>
+              <div class="panel-soft" style="border-top:4px solid #57534E;">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted);">Capital B (Rotação Lenta: 1×/ano)</div>
+                <div style="font-size:12.5px;color:var(--muted);margin-top:4px;">Capital Variável Adiantado: <strong>£5.000</strong> | Rodado: £5.000</div>
+                <div class="mono" style="font-size:1.7rem;font-weight:800;color:var(--ink);margin-top:8px;">M' = ${annualRateB}%</div>
+                <div style="font-size:12.5px;margin-top:4px;">Massa anual de mais-valor: <strong class="mono">£${massB.toLocaleString('pt-BR')}</strong></div>
+              </div>
+            </div>
+
+            <div class="alert-box">
+              <strong>Desmistificação:</strong> ${nA === 10 ? 'Ambos geram exatamente £' + massA.toLocaleString('pt-BR') + ' de mais-valor anual com a mesma exploração (' + mRate + '%). ' : ''}A diferença de taxa anual não vem de um poder mágico da circulação, mas do fato de A adiantar <strong>10× menos capital monetário</strong> para explorar a mesma massa de trabalho.
+            </div>
+          </div>
+        `;
+        document.getElementById('c16M').addEventListener('input', e => { mRate = Number(e.target.value); draw(); });
+        document.getElementById('c16N').addEventListener('input', e => { nA = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 17: A circulação do mais-valor ---
+    function wCh17(el, titleEl) {
+      titleEl.textContent = 'Fluxograma: De Onde Vem o Dinheiro Para Realizar o Mais-Valor?';
+      let mode = 'simples';
+
+      const draw = () => {
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" id="c17S" class="seg-btn ${mode==='simples'?'active':''}">Na Reprodução Simples</button>
+              <button type="button" id="c17A" class="seg-btn ${mode==='ampliada'?'active':''}">Na Reprodução Ampliada</button>
+            </div>
+
+            ${mode === 'simples' ? `
+              <div class="grid-3">
+                <div class="panel-soft">
+                  <div class="mono" style="font-weight:700;color:var(--sec2);font-size:12px;">1. O Paradoxo Aparente</div>
+                  <p style="font-size:12.5px;color:var(--muted);margin-top:6px;">A classe capitalista lança £500 como capital (c+v), mas produz mercadorias de £600 (c+v+m). De onde vêm as £100 extras em dinheiro?</p>
+                </div>
+                <div class="panel-soft">
+                  <div class="mono" style="font-weight:700;color:var(--sec1);font-size:12px;">2. Gasto de Consumo Próprio</div>
+                  <p style="font-size:12.5px;color:var(--muted);margin-top:6px;">Os próprios capitalistas lançam £100 na circulação — <strong>não como capital</strong>, mas como compradores para seu consumo pessoal durante o ano.</p>
+                </div>
+                <div class="panel-soft">
+                  <div class="mono" style="font-weight:700;color:var(--sec3);font-size:12px;">3. Refluxo ao Ponto de Partida</div>
+                  <p style="font-size:12.5px;color:var(--muted);margin-top:6px;">Ao venderem o mais-produto de £100 uns aos outros, essas £100 retornam à classe capitalista. Eles obtêm o mais-produto gratuitamente e retêm o dinheiro.</p>
+                </div>
+              </div>
+            ` : `
+              <div class="grid-3">
+                <div class="panel-soft">
+                  <div class="mono" style="font-weight:700;color:var(--sec2);font-size:12px;">1. Economia de Moeda & Tesouros</div>
+                  <p style="font-size:12.5px;color:var(--muted);margin-top:6px;">Maior velocidade de curso do dinheiro, compensação de pagamentos e ativação de fundos de reserva estagnados.</p>
+                </div>
+                <div class="panel-soft">
+                  <div class="mono" style="font-weight:700;color:var(--sec1);font-size:12px;">2. Produção Adicional de Ouro</div>
+                  <p style="font-size:12.5px;color:var(--muted);margin-top:6px;">O setor produtor de metais preciosos lança ouro diretamente na circulação (sem precisar vendê-lo antes), expandindo a base monetária.</p>
+                </div>
+                <div class="panel-soft">
+                  <div class="mono" style="font-weight:700;color:var(--sec3);font-size:12px;">3. Sistema de Crédito</div>
+                  <p style="font-size:12.5px;color:var(--muted);margin-top:6px;">Depósitos bancários, letras e títulos transformam o mais-valor latente de uns em capital ativo de outros, rompendo a barreira metálica.</p>
+                </div>
+              </div>
+            `}
+          </div>
+        `;
+        document.getElementById('c17S').addEventListener('click', () => { mode = 'simples'; draw(); });
+        document.getElementById('c17A').addEventListener('click', () => { mode = 'ampliada'; draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 18: Introdução à Seção III ---
+    function wCh18(el, titleEl) {
+      titleEl.textContent = 'Ponte Micro–Macro: Capital Individual vs. Capital Social Total';
+      let lens = 'macro';
+
+      const draw = () => {
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" id="c18Micro" class="seg-btn ${lens==='micro'?'active':''}">Ótica Micro (Seções I–II)</button>
+              <button type="button" id="c18Macro" class="seg-btn ${lens==='macro'?'active':''}">Ótica Macro (Seção III)</button>
+            </div>
+            <div class="grid-2">
+              <div class="panel-soft" style="border-top:3px solid ${lens==='micro'?'#9E2A2B':'#0F766E'};">
+                <div style="font-weight:700;font-size:14px;color:var(--ink);">Relação com o Mercado</div>
+                <p style="font-size:13px;color:var(--muted);margin-top:6px;">
+                  ${lens === 'micro'
+                    ? 'Para o capital individual, o mercado é <strong>externo</strong>: pressupõe-se simplesmente que ele encontra compradores e insumos prontos.'
+                    : 'Para o capital social total, o mercado está <strong>dentro</strong> de seu próprio movimento: o produto social inteiro precisa realizar-se internamente.'
+                  }
+                </p>
+              </div>
+              <div class="panel-soft" style="border-top:3px solid ${lens==='micro'?'#9E2A2B':'#0F766E'};">
+                <div style="font-weight:700;font-size:14px;color:var(--ink);">Exigência de Reposição</div>
+                <p style="font-size:13px;color:var(--muted);margin-top:6px;">
+                  ${lens === 'micro'
+                    ? 'A forma material (máquina, fio ou pão) é indiferente: importa apenas o retorno do <strong>valor</strong> em dinheiro (D…D\').'
+                    : 'Exige simultaneamente <strong>Reposição de Valor</strong> (c, v, m) e <strong>Reposição Material in natura</strong> (meios de produção e de consumo) via M\'…M\'.'
+                  }
+                </p>
+              </div>
+            </div>
+            <div class="alert-box">
+              <strong>Papel do Capital Monetário (<em>Primus Motor</em>):</strong> Embora o dinheiro impulsione o início de cada ciclo, a escala produtiva real da sociedade depende também de forças naturais, ciência, intensidade do trabalho e centralização — e numa sociedade socializada desaparece o capital monetário, restando o planejamento direto dos recursos.
+            </div>
+          </div>
+        `;
+        document.getElementById('c18Micro').addEventListener('click', () => { lens = 'micro'; draw(); });
+        document.getElementById('c18Macro').addEventListener('click', () => { lens = 'macro'; draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 19: Exposições anteriores (Dogma de Smith) ---
+    function wCh19(el, titleEl) {
+      titleEl.textContent = 'Desconstrutor do "Dogma de Smith" (v + m) vs. Análise de Marx (c + v + m)';
+      let filter = 'smith';
+
+      const draw = () => {
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" id="c19Smith" class="seg-btn ${filter==='smith'?'active':''}">Ativar "Filtro de Smith" (Apaga c)</button>
+              <button type="button" id="c19Marx" class="seg-btn ${filter==='marx'?'active':''}">Ativar "Análise de Marx" (Restaura c)</button>
+            </div>
+
+            <div class="panel-soft stack-sm">
+              <div style="font-size:12px;font-weight:700;color:var(--muted);">Composição do Valor do Produto Anual Total (9.000)</div>
+              <div class="stacked-bar" style="height:44px;">
+                <div class="stacked-seg" style="width:${filter==='smith'?'0%':'66.6%'};background:#475569;opacity:${filter==='smith'?0:1};">
+                  Capital Constante (c = 6.000)
+                </div>
+                <div class="stacked-seg" style="width:${filter==='smith'?'50%':'16.7%'};background:#0F766E;">
+                  v = 1.500 (Salários)
+                </div>
+                <div class="stacked-seg" style="width:${filter==='smith'?'50%':'16.7%'};background:#9E2A2B;">
+                  m = 1.500 (Lucro + Renda)
+                </div>
+              </div>
+            </div>
+
+            <div class="alert-box ${filter==='smith'?'alert-err':'alert-ok'}">
+              ${filter === 'smith'
+                ? '<strong>Dogma de Smith:</strong> Ao reduzir todo preço "em última instância" a salários, lucros e rendas (v + m), Smith confunde <em>produto de valor</em> (3.000) com <em>valor-produto</em> (9.000). O capital constante (6.000) evapora — levando Say ao absurdo de afirmar que a nação poderia consumir toda sua produção anual como renda!'
+                : '<strong>Análise de Marx (resgatando Quesnay):</strong> Pelo duplo caráter do trabalho, o trabalho vivo do ano cria 3.000 (v + m) e, simultaneamente, como trabalho concreto, <strong>conserva e transfere 6.000 (c)</strong> dos meios de produção pretéritos. Apenas ⅓ (3.000) vira renda consumível; ⅔ (6.000) precisam repor capital constante.'
+              }
+            </div>
+          </div>
+        `;
+        document.getElementById('c19Smith').addEventListener('click', () => { filter = 'smith'; draw(); });
+        document.getElementById('c19Marx').addEventListener('click', () => { filter = 'marx'; draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 20: Reprodução simples (Simulador dos 2 Setores + IIa/IIb + Fixo) ---
+    function wCh20(el, titleEl) {
+      titleEl.textContent = 'Simulador dos Dois Setores: Equilíbrio I(v + m) = IIc, Luxo e Capital Fixo';
+      let tab = 'eq'; // 'eq', 'luxo', 'fixo'
+      let iVM = 2000;
+      let iiC = 2000;
+      let fixoInNatura = 200;
+      const fixoDesgaste = 200;
+
+      const draw = () => {
+        const diff = iVM - iiC;
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="seg-group">
+              <button type="button" data-tb="eq" class="seg-btn ${tab==='eq'?'active':''}">1. Equilíbrio I(v+m) = IIc</button>
+              <button type="button" data-tb="luxo" class="seg-btn ${tab==='luxo'?'active':''}">2. IIa (Subsistência) vs. IIb (Luxo)</button>
+              <button type="button" data-tb="fixo" class="seg-btn ${tab==='fixo'?'active':''}">3. Reposição do Capital Fixo</button>
+            </div>
+
+            ${tab === 'eq' ? `
+              <div class="grid-2 panel-soft">
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:4px;">
+                    <span>Setor I: Demanda por Consumo I(v + m)</span>
+                    <span class="mono" style="color:var(--sec3);">${iVM}</span>
+                  </div>
+                  <input id="c20IVM" type="range" min="1400" max="2600" step="100" value="${iVM}" />
+                  <div style="font-size:11px;color:var(--muted);margin-top:4px;">Setor I: 4.000c + ${iVM/2}v + ${iVM/2}m = ${4000 + iVM}</div>
+                </div>
+                <div>
+                  <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;margin-bottom:4px;">
+                    <span>Setor II: Demanda por Meios de Produção (IIc)</span>
+                    <span class="mono" style="color:var(--sec2);">${iiC}</span>
+                  </div>
+                  <input id="c20IIC" type="range" min="1400" max="2600" step="100" value="${iiC}" />
+                  <div style="font-size:11px;color:var(--muted);margin-top:4px;">Setor II: ${iiC}c + 500v + 500m = ${iiC + 1000}</div>
+                </div>
+              </div>
+
+              <div class="alert-box ${diff === 0 ? 'alert-ok' : 'alert-err'}">
+                ${diff === 0
+                  ? '<strong>✓ EQUILÍBRIO PERFEITO: I(v + m) = IIc = 2.000!</strong> Os trabalhadores e capitalistas de I compram exatamente os 2.000 em meios de consumo de II, que por sua vez repõem integralmente seu capital constante (2.000) em meios de produção de I.'
+                  : diff > 0
+                    ? `<strong>✕ DESEQUILÍBRIO (+${diff} em I):</strong> I(v + m) = ${iVM} &gt; IIc = ${iiC}. Há <strong>superprodução de meios de produção</strong> em I (encalhe de ${diff}) e <strong>subprodução de meios de consumo</strong> em II — a reprodução simples rompe-se (ou abre base para acumulação).`
+                    : `<strong>✕ DESEQUILÍBRIO (${Math.abs(diff)} em II):</strong> IIc = ${iiC} &gt; I(v + m) = ${iVM}. Há <strong>superprodução de meios de consumo</strong> em II (${Math.abs(diff)} invendáveis) e déficit de meios de produção para repor o capital constante de II!`
+                }
+              </div>
+            ` : tab === 'luxo' ? `
+              <div class="grid-2">
+                <div class="panel-soft" style="border-left:4px solid var(--sec3);">
+                  <strong style="color:var(--sec3);">IIa — Meios Necessários de Subsistência</strong>
+                  <div class="mono" style="font-size:12.5px;margin:6px 0;">1.600c + 400v + 400m = 2.400</div>
+                  <p style="font-size:12.5px;color:var(--muted);">400v são comprados diretamente pelos trabalhadores de IIa. Parte do mais-valor IIa (100m) troca-se pelos salários dos trabalhadores de luxo (IIb).</p>
+                </div>
+                <div class="panel-soft" style="border-left:4px solid var(--sec1);">
+                  <strong style="color:var(--sec1);">IIb — Artigos de Luxo (só capitalistas)</strong>
+                  <div class="mono" style="font-size:12.5px;margin:6px 0;">400c + 100v + 100m = 600</div>
+                  <p style="font-size:12.5px;color:var(--muted);">Os trabalhadores de IIb não consomem artigos de luxo: compram subsistência de IIa (100), e os capitalistas IIa usam esse dinheiro para comprar luxo (100v de IIb). Em crises, o corte no luxo desemprega IIb e retrai IIa.</p>
+                </div>
+              </div>
+            ` : `
+              <div class="panel-soft stack-sm">
+                <div style="display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;">
+                  <span>Capital Fixo de II reposto in natura este ano (Parte 1) vs. Desgaste em dinheiro (Parte 2 = 200)</span>
+                  <span class="mono" style="color:var(--sec3);">Parte 1: £${fixoInNatura} | Parte 2: £${fixoDesgaste}</span>
+                </div>
+                <input id="c20Fixo" type="range" min="140" max="260" step="20" value="${fixoInNatura}" />
+                <div class="alert-box ${fixoInNatura === fixoDesgaste ? 'alert-ok' : 'alert-err'}">
+                  ${fixoInNatura === fixoDesgaste
+                    ? '<strong>✓ Equilíbrio do Capital Fixo (£200 = £200):</strong> Os £200 em dinheiro que a Parte 1 de II gasta em máquinas novas (I) servem para I comprar os £200 de mercadorias que realizam o fundo de depreciação da Parte 2 de II.'
+                    : fixoInNatura > fixoDesgaste
+                      ? `<strong>✕ Crise por Excesso de Reposição (+£${fixoInNatura - fixoDesgaste}):</strong> Faltam máquinas ou sobra dinheiro não realizável em I — desequilíbrio mesmo na reprodução simples!`
+                      : `<strong>✕ Crise por Déficit de Reposição (-£${fixoDesgaste - fixoInNatura}):</strong> Sobram £${fixoDesgaste - fixoInNatura} em mercadorias invendáveis em I e em II. A mera manutenção do capital fixo já gera crises no capitalismo.`
+                  }
+                </div>
+              </div>
+            `}
+          </div>
+        `;
+        el.querySelectorAll('[data-tb]').forEach(b => b.addEventListener('click', () => { tab = b.getAttribute('data-tb'); draw(); }));
+        const s1 = document.getElementById('c20IVM');
+        if (s1) s1.addEventListener('input', e => { iVM = Number(e.target.value); draw(); });
+        const s2 = document.getElementById('c20IIC');
+        if (s2) s2.addEventListener('input', e => { iiC = Number(e.target.value); draw(); });
+        const s3 = document.getElementById('c20Fixo');
+        if (s3) s3.addEventListener('input', e => { fixoInNatura = Number(e.target.value); draw(); });
+      };
+      draw();
+    }
+
+    // --- CAPÍTULO 21: Acumulação e reprodução ampliada (Ano 0 a Ano 5) ---
+    function wCh21(el, titleEl) {
+      titleEl.textContent = 'Simulador Multianual da Reprodução Ampliada (Primeiro Exemplo de Marx: Ano 0 ao Ano 5)';
+      // Dados exatos do Primeiro Exemplo do Capítulo 21 (Boitempo, ed. Engels)
+      const years = [
+        { yr: 0, Ic: 4000, Iv: 1000, Im: 1000, Itot: 6000, IIc: 1500, IIv: 750, IIm: 750, IItot: 3000, total: 9000, note: 'Esquema inicial (Ano 0): I(v+m) = 2.000 > IIc = 1.500. Setor I acumula 50% de m (400c + 100v); Setor II ajusta acumulando 100c + 50v.' },
+        { yr: 1, Ic: 4400, Iv: 1100, Im: 1100, Itot: 6600, IIc: 1600, IIv: 800, IIm: 800, IItot: 3200, total: 9800, note: 'Fim do Ano 1: Setor I cresce +10% (6.600); Setor II cresce +6,7% (3.200). A partir daqui, ambos estabilizam o crescimento em +10%/ano.' },
+        { yr: 2, Ic: 4840, Iv: 1210, Im: 1210, Itot: 7260, IIc: 1760, IIv: 880, IIm: 880, IItot: 3520, total: 10780, note: 'Fim do Ano 2: Equilíbrio dinâmico atingido — tanto o Setor I quanto o Setor II expandem exatamente 10% ao ano, mantendo composições 4:1 e 2:1.' },
+        { yr: 3, Ic: 5324, Iv: 1331, Im: 1331, Itot: 7986, IIc: 1936, IIv: 968, IIm: 968, IItot: 3872, total: 11858, note: 'Fim do Ano 3: Produto social total chega a 11.858. O Setor II continua subordinado à taxa de acumulação decidida pelo Setor I.' },
+        { yr: 4, Ic: 5856, Iv: 1464, Im: 1464, Itot: 8784, IIc: 2129, IIv: 1065, IIm: 1065, IItot: 4259, total: 13043, note: 'Fim do Ano 4: Acumulação composta exige que compras e vendas unilaterais (entesouramento vs. expansão) se compensem exatamente.' },
+        { yr: 5, Ic: 6442, Iv: 1610, Im: 1610, Itot: 9662, IIc: 2342, IIv: 1172, IIm: 1172, IItot: 4686, total: 14348, note: 'Fim do Ano 5: Em 5 anos, o produto social salta de 9.000 para 14.348 (+59,4%). Qualquer desvio nas proporções intersetoriais deflagra crise.' }
+      ];
+      let activeYr = 0;
+
+      const draw = () => {
+        const d = years[activeYr];
+        const maxTotal = 14348;
+
+        el.innerHTML = `
+          <div class="stack-md">
+            <div class="pill-tabs">
+              ${years.map(y => `
+                <button type="button" data-yr="${y.yr}" class="pill-tab ${y.yr===activeYr?'active':''}">Ano ${y.yr}</button>
+              `).join('')}
+            </div>
+
+            <div class="grid-2">
+              <div class="panel-soft" style="border-top:4px solid var(--sec3);">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sec3);">Setor I — Meios de Produção (c:v = 4:1)</div>
+                <div class="mono" style="font-size:13.5px;font-weight:700;margin:8px 0;">
+                  ${d.Ic}c + ${d.Iv}v + ${d.Im}m = <span style="color:var(--sec3);">${d.Itot}</span>
+                </div>
+                <div class="stacked-bar" style="height:26px;font-size:10px;">
+                  <div class="stacked-seg" style="width:${(d.Ic/d.Itot)*100}%;background:#475569;">c</div>
+                  <div class="stacked-seg" style="width:${(d.Iv/d.Itot)*100}%;background:#0F766E;">v</div>
+                  <div class="stacked-seg" style="width:${(d.Im/d.Itot)*100}%;background:#9E2A2B;">m</div>
+                </div>
+              </div>
+              <div class="panel-soft" style="border-top:4px solid var(--sec2);">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--sec2);">Setor II — Meios de Consumo (c:v = 2:1)</div>
+                <div class="mono" style="font-size:13.5px;font-weight:700;margin:8px 0;">
+                  ${d.IIc}c + ${d.IIv}v + ${d.IIm}m = <span style="color:var(--sec2);">${d.IItot}</span>
+                </div>
+                <div class="stacked-bar" style="height:26px;font-size:10px;">
+                  <div class="stacked-seg" style="width:${(d.IIc/d.IItot)*100}%;background:#475569;">c</div>
+                  <div class="stacked-seg" style="width:${(d.IIv/d.IItot)*100}%;background:#0F766E;">v</div>
+                  <div class="stacked-seg" style="width:${(d.IIm/d.IItot)*100}%;background:#9E2A2B;">m</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráfico de evolução Ano 0 a Ano 5 -->
+            <div class="panel-soft">
+              <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:10px;">
+                <span>Evolução do Produto Social Total (Setor I + Setor II)</span>
+                <span class="mono" style="color:var(--ink);">Ano ${d.yr}: ${d.total.toLocaleString('pt-BR')}</span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(6, 1fr);gap:10px;align-items:end;height:125px;padding-top:10px;">
+                ${years.map(y => {
+                  const hI = Math.round((y.Itot / maxTotal) * 100);
+                  const hII = Math.round((y.IItot / maxTotal) * 100);
+                  const isCur = y.yr === activeYr;
+                  return `
+                    <button type="button" data-yr="${y.yr}" style="display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;opacity:${isCur?1:0.65};">
+                      <span class="mono" style="font-size:10px;font-weight:700;color:${isCur?'var(--sec3)':'var(--muted)'};">${y.total}</span>
+                      <div style="width:100%;max-width:44px;display:flex;flex-direction:column;border-radius:6px 6px 0 0;overflow:hidden;border:${isCur?'2px solid #1F1E1C':'1px solid transparent'};">
+                        <div style="height:${hII}px;background:#B45309;" title="Setor II: ${y.IItot}"></div>
+                        <div style="height:${hI}px;background:#0F766E;" title="Setor I: ${y.Itot}"></div>
+                      </div>
+                      <span class="mono" style="font-size:10.5px;font-weight:${isCur?700:500};">A${y.yr}</span>
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <div class="alert-box alert-ok">${d.note}</div>
+          </div>
+        `;
+        el.querySelectorAll('[data-yr]').forEach(b => b.addEventListener('click', () => { activeYr = Number(b.getAttribute('data-yr')); draw(); }));
+      };
+      draw();
+    }
+
+    // =========================================================================
+    // 7. EVENTOS GLOBAIS E INICIALIZAÇÃO
+    // =========================================================================
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+
+    function openMobileSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.add('open');
+    }
+    function closeMobileSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+
+    document.getElementById('mobileMenuBtn').addEventListener('click', openMobileSidebar);
+    document.getElementById('closeSidebarBtn').addEventListener('click', closeMobileSidebar);
+    overlay.addEventListener('click', closeMobileSidebar);
+
+    document.getElementById('desktopToggleBtn').addEventListener('click', () => {
+      state.sidebarCollapsedDesktop = !state.sidebarCollapsedDesktop;
+      sidebar.style.display = state.sidebarCollapsedDesktop ? 'none' : 'flex';
+    });
+
+    document.getElementById('mapViewBtn').addEventListener('click', () => {
+      renderOverviewMap();
+      closeMobileSidebar();
+    });
+    document.getElementById('mobileMapBtn').addEventListener('click', renderOverviewMap);
+
+    // Busca instantânea
+    const searchInput = document.getElementById('searchInput');
+    const clearBtn = document.getElementById('clearSearchBtn');
+    searchInput.addEventListener('input', e => {
+      state.searchQuery = e.target.value;
+      clearBtn.classList.toggle('visible', state.searchQuery.length > 0);
+      renderSidebar();
+    });
+    clearBtn.addEventListener('click', () => {
+      state.searchQuery = '';
+      searchInput.value = '';
+      clearBtn.classList.remove('visible');
+      renderSidebar();
+    });
+
+    // Modal de zerar progresso
+    const confirmModal = document.getElementById('confirmModal');
+    document.getElementById('resetProgressBtn').addEventListener('click', () => confirmModal.classList.add('open'));
+    document.getElementById('cancelResetBtn').addEventListener('click', () => confirmModal.classList.remove('open'));
+    document.getElementById('confirmResetBtn').addEventListener('click', () => {
+      state.studied.clear();
+      saveStudied();
+      confirmModal.classList.remove('open');
+      if (state.view === 'map') renderOverviewMap();
+      else openChapter(state.currentChapterId);
+      showToast('Progresso de estudo zerado.');
+    });
+
+    // Inicia exibindo o Mapa Geral do Livro II
+    window.addEventListener('DOMContentLoaded', () => {
+      renderOverviewMap();
+    });
+  </script>
+</body>
+</html>
