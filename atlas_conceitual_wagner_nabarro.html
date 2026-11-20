@@ -1,0 +1,2844 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Atlas Conceitual — Wagner Nabarro: Geografia das Finanças</title>
+  <!-- Fontes web opcionais com fallback elegante -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS & TEMAS (ESCURO CARTOGRÁFICO / CLARO EDITORIAL)
+       ========================================================================== */
+    :root {
+      --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      /* Paleta de acentos cartográficos */
+      --gold: #d4a853;
+      --gold-soft: rgba(212, 168, 83, 0.16);
+      --cyan: #38bdf8;
+      --cyan-soft: rgba(56, 189, 248, 0.14);
+      --emerald: #10b981;
+      --emerald-soft: rgba(16, 185, 129, 0.14);
+      --coral: #f43f5e;
+      --coral-soft: rgba(244, 63, 94, 0.14);
+
+      /* Raios e transições */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --transition: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    [data-theme="dark"] {
+      --bg-body: #0b1220;
+      --bg-surface: #111a2e;
+      --bg-surface-2: #16223b;
+      --bg-elevated: #1c2a47;
+      --border: rgba(212, 168, 83, 0.2);
+      --border-subtle: rgba(148, 163, 184, 0.16);
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --grid-line: rgba(148, 163, 184, 0.06);
+      --shadow-card: 0 14px 36px rgba(0, 0, 0, 0.42);
+      --svg-bg: #0d1628;
+      --svg-node-bg: #15223c;
+      --svg-text: #f1f5f9;
+      --svg-subtext: #94a3b8;
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f5f1e8;
+      --bg-surface: #ffffff;
+      --bg-surface-2: #faf7f0;
+      --bg-elevated: #efe9dc;
+      --border: rgba(161, 120, 42, 0.28);
+      --border-subtle: rgba(15, 23, 42, 0.1);
+      --text-primary: #141d2e;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      --grid-line: rgba(15, 23, 42, 0.05);
+      --shadow-card: 0 10px 30px rgba(20, 29, 46, 0.08);
+      --svg-bg: #fcfaf5;
+      --svg-node-bg: #ffffff;
+      --svg-text: #141d2e;
+      --svg-subtext: #475569;
+      --gold: #a67c2e;
+      --gold-soft: rgba(166, 124, 46, 0.14);
+      --cyan: #0284c7;
+      --cyan-soft: rgba(2, 132, 199, 0.12);
+      --emerald: #059669;
+      --emerald-soft: rgba(5, 150, 105, 0.12);
+      --coral: #e11d48;
+      --coral-soft: rgba(225, 29, 72, 0.12);
+    }
+
+    /* ==========================================================================
+       RESET & BASE
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image:
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      transition: background-color var(--transition), color var(--transition);
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: inherit;
+    }
+
+    /* ==========================================================================
+       CABEÇALHO EDITORIAL-CARTOGRÁFICO
+       ========================================================================== */
+    .atlas-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: color-mix(in srgb, var(--bg-surface) 92%, transparent);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      max-width: 780px;
+    }
+
+    .brand-emblem {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      border-radius: var(--radius-md);
+      background: var(--gold-soft);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      margin-top: 2px;
+    }
+
+    .brand-kicker {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 0.15rem;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+
+    .brand-subtitle {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    /* Barra de busca rápida */
+    .search-wrapper {
+      position: relative;
+      width: 270px;
+      max-width: 100%;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 0.55rem 2.1rem 0.55rem 2.3rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface-2);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .search-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px var(--gold-soft);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-clear {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: none;
+      place-items: center;
+      font-size: 0.85rem;
+    }
+
+    .search-clear.visible {
+      display: grid;
+    }
+
+    .search-results {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      width: min(380px, 92vw);
+      max-height: 390px;
+      overflow-y: auto;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-card);
+      display: none;
+      z-index: 100;
+      padding: 0.45rem;
+    }
+
+    .search-results.open {
+      display: block;
+    }
+
+    .search-group-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      padding: 0.45rem 0.65rem 0.25rem;
+      font-weight: 600;
+    }
+
+    .search-item {
+      width: 100%;
+      text-align: left;
+      padding: 0.55rem 0.65rem;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      font-size: 0.84rem;
+      color: var(--text-primary);
+      transition: background var(--transition);
+    }
+
+    .search-item:hover {
+      background: var(--bg-elevated);
+    }
+
+    .search-item-meta {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    .search-empty {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    /* Botão alternar tema */
+    .theme-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.85rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface-2);
+      color: var(--text-secondary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+
+    .theme-btn:hover {
+      border-color: var(--gold);
+      color: var(--text-primary);
+    }
+
+    /* Abas principais */
+    .main-tabs {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+      scrollbar-width: none;
+    }
+
+    .main-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.62rem 1.05rem;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      transition: all var(--transition);
+    }
+
+    .tab-btn:hover {
+      background: var(--bg-surface-2);
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      background: var(--gold-soft);
+      border-color: var(--gold);
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    .tab-count {
+      font-size: 0.72rem;
+      padding: 0.1rem 0.45rem;
+      border-radius: 999px;
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+    }
+
+    .tab-btn.active .tab-count {
+      background: var(--gold);
+      color: #0b1220;
+    }
+
+    /* ==========================================================================
+       ÁREA PRINCIPAL E SEÇÕES
+       ========================================================================== */
+    .atlas-main {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+
+    .tab-panel {
+      display: none;
+      animation: fadeSlide 280ms ease;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       ABA 1: MAPA CONCEITUAL (REDE SVG)
+       ========================================================================== */
+    .network-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.25rem;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .network-stage {
+      padding: 1.15rem;
+      overflow: hidden;
+    }
+
+    .stage-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .stage-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .stage-hint {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .legend-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      font-size: 0.74rem;
+    }
+
+    .legend-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.6rem;
+      border-radius: 999px;
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .network-svg-wrap {
+      width: 100%;
+      border-radius: var(--radius-md);
+      background: var(--svg-bg);
+      border: 1px solid var(--border-subtle);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .network-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+    }
+
+    /* Estilos dos nós e arestas na rede */
+    .net-edge {
+      stroke-width: 1.6;
+      fill: none;
+      opacity: 0.35;
+      transition: opacity var(--transition), stroke-width var(--transition), stroke var(--transition);
+    }
+
+    .net-edge.highlighted {
+      opacity: 0.95;
+      stroke-width: 2.6;
+    }
+
+    .net-edge.dimmed {
+      opacity: 0.08;
+    }
+
+    .net-edge-label-group {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--transition);
+    }
+
+    .net-edge-label-group.visible {
+      opacity: 1;
+    }
+
+    .net-node {
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+
+    .net-node.dimmed {
+      opacity: 0.28;
+    }
+
+    .net-node-ring {
+      transition: transform var(--transition), stroke-width var(--transition);
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .net-node:hover .net-node-ring,
+    .net-node.selected .net-node-ring {
+      transform: scale(1.08);
+      stroke-width: 3;
+    }
+
+    /* Painel lateral da rede (Mini-card) */
+    .network-inspector {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      position: sticky;
+      top: 140px;
+    }
+
+    .inspector-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      width: fit-content;
+    }
+
+    .inspector-title {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      line-height: 1.25;
+    }
+
+    .inspector-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .inspector-subtitle {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.45rem;
+    }
+
+    .edge-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .edge-chip {
+      width: 100%;
+      text-align: left;
+      padding: 0.55rem 0.7rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      transition: all var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .edge-chip:hover {
+      border-color: var(--gold);
+      background: var(--bg-elevated);
+    }
+
+    .edge-chip-rel {
+      font-size: 0.7rem;
+      color: var(--gold);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .edge-chip-target {
+      font-size: 0.83rem;
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      background: var(--gold);
+      color: #0b1220;
+      font-weight: 600;
+      font-size: 0.88rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: filter var(--transition), transform var(--transition);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all var(--transition);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold);
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       ABAS 2 & 3: LAYOUT COM MENU LATERAL FIXO + PAINEL DETALHADO
+       ========================================================================== */
+    .split-layout {
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: 1.35rem;
+      align-items: start;
+    }
+
+    .sidebar-menu {
+      position: sticky;
+      top: 140px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      max-height: calc(100vh - 165px);
+      overflow-y: auto;
+    }
+
+    .sidebar-heading {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      font-weight: 600;
+      padding: 0.35rem 0.6rem 0.55rem;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 0.3rem;
+    }
+
+    .menu-item {
+      width: 100%;
+      text-align: left;
+      padding: 0.68rem 0.75rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      transition: all var(--transition);
+    }
+
+    .menu-item:hover {
+      background: var(--bg-surface-2);
+    }
+
+    .menu-item.active {
+      background: var(--gold-soft);
+      border-color: var(--border);
+    }
+
+    .menu-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      font-size: 0.74rem;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+      margin-top: 1px;
+    }
+
+    .menu-item.active .menu-num {
+      background: var(--gold);
+      color: #0b1220;
+    }
+
+    .menu-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .menu-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .menu-meta {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    /* Painel de detalhe */
+    .detail-panel {
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .detail-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .detail-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .tag-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.28rem 0.7rem;
+      border-radius: 999px;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-gold { background: var(--gold-soft); color: var(--gold); }
+    .tag-cyan { background: var(--cyan-soft); color: var(--cyan); }
+    .tag-emerald { background: var(--emerald-soft); color: var(--emerald); }
+    .tag-coral { background: var(--coral-soft); color: var(--coral); }
+
+    .detail-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.45rem, 2.5vw, 2rem);
+      font-weight: 700;
+      line-height: 1.22;
+    }
+
+    .detail-definition {
+      font-size: 0.98rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    /* Caixa do Esquema Visual */
+    .visual-box {
+      background: var(--svg-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .visual-box-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .visual-box-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--gold);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .visual-box-caption {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .diagram-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--radius-md);
+    }
+
+    /* Ficha técnica das obras */
+    .ficha-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .ficha-item {
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 0.9rem;
+    }
+
+    .ficha-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .ficha-value {
+      font-size: 0.86rem;
+      color: var(--text-primary);
+      font-weight: 500;
+      line-height: 1.35;
+    }
+
+    /* Esquema estruturado dos capítulos/eixos da Obra */
+    .book-schema-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.95rem;
+      position: relative;
+    }
+
+    .schema-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-top: 3px solid var(--gold);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+
+    .schema-block:hover {
+      transform: translateY(-2px);
+      border-color: var(--gold);
+    }
+
+    .schema-block.accent-cyan { border-top-color: var(--cyan); }
+    .schema-block.accent-emerald { border-top-color: var(--emerald); }
+    .schema-block.accent-coral { border-top-color: var(--coral); }
+
+    .schema-block-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .schema-step {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .schema-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: var(--bg-surface-2);
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+    }
+
+    .schema-block.accent-cyan .schema-icon { color: var(--cyan); }
+    .schema-block.accent-emerald .schema-icon { color: var(--emerald); }
+    .schema-block.accent-coral .schema-icon { color: var(--coral); }
+
+    .schema-block-title {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+
+    .schema-block-desc {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    .schema-flow-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      padding-top: 0.35rem;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    /* Seções de vínculos cruzados */
+    .cross-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.1rem;
+    }
+
+    .cross-card {
+      background: var(--bg-surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .cross-card-title {
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    .link-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .cross-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      font-size: 0.81rem;
+      font-weight: 500;
+      text-align: left;
+      transition: all var(--transition);
+    }
+
+    .cross-pill:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-1px);
+    }
+
+    .cross-pill.work-pill:hover {
+      border-color: var(--emerald);
+      color: var(--emerald);
+    }
+
+    .contribution-box {
+      background: var(--gold-soft);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.15rem;
+    }
+
+    .contribution-label {
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .contribution-text {
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      line-height: 1.65;
+    }
+
+    /* Navegação anterior/próximo no rodapé do detalhe */
+    .detail-nav-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+    }
+
+    /* Rodapé geral */
+    .atlas-footer {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2.5rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE (TABLET & MOBILE)
+       ========================================================================== */
+    @media (max-width: 1040px) {
+      .network-layout {
+        grid-template-columns: 1fr;
+      }
+      .network-inspector {
+        position: static;
+      }
+      .split-layout {
+        grid-template-columns: 1fr;
+      }
+      .sidebar-menu {
+        position: static;
+        max-height: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 0.45rem;
+      }
+      .sidebar-heading {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        padding: 0.85rem 0.9rem 0.65rem;
+      }
+      .search-wrapper {
+        width: 100%;
+      }
+      .header-controls {
+        width: 100%;
+      }
+      .detail-panel {
+        padding: 1.15rem;
+      }
+      .sidebar-menu {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================================================
+       CABEÇALHO FIXO COM IDENTIDADE, BUSCA RÁPIDA, TEMA E ABAS
+       ====================================================================== -->
+  <header class="atlas-header">
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="brand">
+          <div class="brand-emblem" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9.5"></circle>
+              <path d="M2.5 12h19"></path>
+              <path d="M12 2.5a14.5 14.5 0 0 1 0 19"></path>
+              <path d="M12 2.5a14.5 14.5 0 0 0 0 19"></path>
+              <circle cx="12" cy="12" r="2.2" fill="currentColor"></circle>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-kicker">Atlas Conceitual Interativo</div>
+            <h1 class="brand-title">Wagner Nabarro: Geografia das Finanças, Território Usado e Espaço do Mercado de Capitais</h1>
+            <p class="brand-subtitle">Pesquisador em Geografia Humana e das Finanças — Unicamp, USP, UFES, UFRGS</p>
+          </div>
+        </div>
+
+        <div class="header-controls">
+          <div class="search-wrapper">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              id="globalSearch"
+              class="search-input"
+              placeholder="Buscar conceito, obra ou tema..."
+              autocomplete="off"
+              aria-label="Buscar conceito ou obra"
+            />
+            <button id="clearSearch" class="search-clear" aria-label="Limpar busca">✕</button>
+            <div id="searchResults" class="search-results" role="listbox"></div>
+          </div>
+
+          <button id="themeToggle" class="theme-btn" aria-label="Alternar tema claro ou escuro">
+            <span id="themeIcon">☀️</span>
+            <span id="themeLabel">Modo Editorial</span>
+          </button>
+        </div>
+      </div>
+
+      <nav class="main-tabs" role="tablist" aria-label="Navegação do Atlas">
+        <button class="tab-btn active" data-tab="network" role="tab" aria-selected="true">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="6" cy="6" r="3"></circle>
+            <circle cx="18" cy="6" r="3"></circle>
+            <circle cx="12" cy="18" r="3"></circle>
+            <line x1="8.5" y1="7.5" x2="15.5" y2="7.5"></line>
+            <line x1="7.5" y1="8.6" x2="10.8" y2="15.4"></line>
+            <line x1="16.5" y1="8.6" x2="13.2" y2="15.4"></line>
+          </svg>
+          Mapa Conceitual (Rede)
+        </button>
+
+        <button class="tab-btn" data-tab="concepts" role="tab" aria-selected="false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+          Universo Conceitual
+          <span class="tab-count">10</span>
+        </button>
+
+        <button class="tab-btn" data-tab="works" role="tab" aria-selected="false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          Principais Obras
+          <span class="tab-count">8</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ======================================================================
+       CONTEÚDO PRINCIPAL (3 ABAS)
+       ====================================================================== -->
+  <main class="atlas-main">
+
+    <!-- ABA 1: MAPA CONCEITUAL (REDE INTERATIVA) -->
+    <section id="panel-network" class="tab-panel active" role="tabpanel">
+      <div class="network-layout">
+        <div class="card network-stage">
+          <div class="stage-header">
+            <div>
+              <h2 class="stage-title">Cartografia das Relações Conceituais</h2>
+              <p class="stage-hint">Passe o mouse ou clique em um nó para destacar suas conexões diretas e abrir sua explicação visual.</p>
+            </div>
+            <div class="legend-pills">
+              <span class="legend-pill"><span class="dot" style="background: var(--gold)"></span>Base Teórica</span>
+              <span class="legend-pill"><span class="dot" style="background: var(--cyan)"></span>Mercado &amp; Informação</span>
+              <span class="legend-pill"><span class="dot" style="background: var(--emerald)"></span>Território &amp; Escalas</span>
+              <span class="legend-pill"><span class="dot" style="background: var(--coral)"></span>Método &amp; História</span>
+            </div>
+          </div>
+
+          <div class="network-svg-wrap">
+            <svg id="networkSvg" class="network-svg" viewBox="0 0 980 600" role="img" aria-label="Grafo interativo dos 10 conceitos de Wagner Nabarro"></svg>
+          </div>
+        </div>
+
+        <aside class="card network-inspector" id="networkInspector" aria-live="polite">
+          <!-- Preenchido dinamicamente via JS -->
+        </aside>
+      </div>
+    </section>
+
+    <!-- ABA 2: UNIVERSO CONCEITUAL (10 CONCEITOS) -->
+    <section id="panel-concepts" class="tab-panel" role="tabpanel">
+      <div class="split-layout">
+        <aside class="card sidebar-menu" id="conceptsMenu" aria-label="Lista dos 10 conceitos"></aside>
+        <article class="card detail-panel" id="conceptDetail" aria-live="polite"></article>
+      </div>
+    </section>
+
+    <!-- ABA 3: PRINCIPAIS OBRAS (8 OBRAS) -->
+    <section id="panel-works" class="tab-panel" role="tabpanel">
+      <div class="split-layout">
+        <aside class="card sidebar-menu" id="worksMenu" aria-label="Lista das 8 principais obras"></aside>
+        <article class="card detail-panel" id="workDetail" aria-live="polite"></article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="atlas-footer">
+    <span><strong>Atlas Conceitual — Wagner Nabarro</strong> · Geografia das Finanças, Território Usado e Espaço do Mercado de Capitais</span>
+    <span>Síntese cartográfica interativa · 10 Conceitos-Chave · 8 Obras de Referência</span>
+  </footer>
+
+  <!-- ======================================================================
+       DADOS ESTRUTURADOS E LÓGICA INTERATIVA
+       ====================================================================== -->
+  <script>
+    /* ========================================================================
+       1. BASE DE DADOS DOS 10 CONCEITOS-CHAVE
+       ======================================================================== */
+    const CONCEPTS = [
+      {
+        id: 'territorio-usado',
+        num: '01',
+        shortTitle: 'Território Usado & Uso Corporativo',
+        title: 'Território Usado e Uso Corporativo do Território',
+        axis: 'Fundamento Miltoniano & Conflito Espacial',
+        axisColor: 'gold',
+        summary: 'Tensão estrutural entre o território como abrigo da vida coletiva e o território como recurso seletivo para agentes financeiros hegemônicos.',
+        definition: 'Ancorado na teoria social crítica de Milton Santos e María Laura Silveira, o conceito de território usado supera a visão do espaço como mero palco inerte. Na pesquisa de Wagner Nabarro, ele revela a disputa permanente entre o uso corporativo — conduzido por bolsas de valores, bancos, corretoras e fintechs que selecionam parcelas rentáveis do espaço como recurso — e o território como abrigo, vivido pelos agentes hegemonizados no cotidiano.',
+        diagramCaption: 'Diagrama dialético: forças assimétricas operando simultaneamente sobre o mesmo território usado.',
+        pos: { x: 490, y: 88 },
+        relatedConcepts: ['tecnosfera-psicosfera', 'centralidade-financeira', 'financa-plataformizada', 'financeirizacao-periferica'],
+        relatedWorks: ['tese-2022', 'dissertacao-2016', 'picpay-pix-2025', 'informacao-2012-2022']
+      },
+      {
+        id: 'tecnosfera-psicosfera',
+        num: '02',
+        shortTitle: 'Tecnosfera & Psicosfera dos Investimentos',
+        title: 'Tecnosfera e Psicosfera dos Investimentos',
+        axis: 'Núcleo Teórico da Tese (2022)',
+        axisColor: 'gold',
+        summary: 'Acoplamento entre infraestrutura técnica financeira (B3, fibra óptica, datacenters, algoritmos) e a produção simbólica do sujeito-investidor.',
+        definition: 'Desenvolvido como eixo central da tese de doutorado (2022), o par dialético demonstra que a expansão do mercado de capitais no Brasil depende de duas dimensões indissociáveis: a tecnosfera (sistemas técnicos de alta velocidade, cabos de fibra óptica, datacenters, home brokers e plataformas da B3) e a psicosfera (discursos de educação financeira, influenciadores digitais, campanhas de corretoras e normas culturais que moldam o indivíduo como investidor).',
+        diagramCaption: 'Arquitetura em duas camadas espelhadas conectadas por fluxos contínuos de capital e informação.',
+        pos: { x: 245, y: 165 },
+        relatedConcepts: ['territorio-usado', 'espaco-mercado-capitais', 'circulos-informacao', 'financa-plataformizada'],
+        relatedWorks: ['tese-2022', 'picpay-pix-2025']
+      },
+      {
+        id: 'centralidade-financeira',
+        num: '03',
+        shortTitle: 'Centralidade Financeira & Centros Transacionais',
+        title: 'Centralidade Financeira e Centros Transacionais',
+        axis: 'Hierarquia Urbana & Metrópole Financeira',
+        axisColor: 'cyan',
+        summary: 'Macrocefalia financeira de São Paulo e consolidação da B3: a aparente desmaterialização digital reforça a concentração espacial do comando.',
+        definition: 'Em diálogo direto com Jean Gottmann ("centros transacionais") e Jean Labasse, Nabarro analisa como a fusão das bolsas brasileiras na BM&FBovespa/B3 consolidou a macrocefalia financeira de São Paulo (SP). Contrariando a tese de dispersão geográfica pela internet, a digitalização das finanças intensifica a concentração de sedes, decisões estratégicas, expertise jurídica e infraestrutura crítica na metrópole paulista.',
+        diagramCaption: 'Diagrama radial centro-periferia: São Paulo como nó transacional irradiando comando sobre o território brasileiro.',
+        pos: { x: 735, y: 165 },
+        relatedConcepts: ['territorio-usado', 'espaco-mercado-capitais', 'geografia-historica', 'cartografia-financas'],
+        relatedWorks: ['dissertacao-2016', 'traducoes-2023-2024', 'tese-2022']
+      },
+      {
+        id: 'espaco-mercado-capitais',
+        num: '04',
+        shortTitle: 'Espaço do Mercado de Capitais',
+        title: 'Espaço do Mercado de Capitais',
+        axis: 'Totalidade Socioespacial das Finanças',
+        axisColor: 'cyan',
+        summary: 'Totalidade articulada de bolsa única (B3), corretoras, gestoras, bancos de investimento, emissores e investidores na passagem ao pregão eletrônico.',
+        definition: 'Longe de ser uma abstração numérica, o mercado de capitais constitui uma totalidade socioespacial formada por fixos e fluxos concretos: a bolsa única (B3), bancos de investimento, corretoras, gestoras de recursos, empresas listadas e milhões de investidores. A transição do pregão viva-voz ao pregão eletrônico em rede reconfigurou a divisão territorial do trabalho financeiro sem eliminar sua materialidade geográfica.',
+        diagramCaption: 'Ecossistema em camadas concêntricas: circuito de emissão, intermediação e negociação na era eletrônica.',
+        pos: { x: 490, y: 270 },
+        relatedConcepts: ['tecnosfera-psicosfera', 'centralidade-financeira', 'circulos-informacao', 'circulos-financeiros-produtivos'],
+        relatedWorks: ['tese-2022', 'dissertacao-2016', 'cartografia-2022']
+      },
+      {
+        id: 'circulos-informacao',
+        num: '05',
+        shortTitle: 'Círculos de Informação Financeira',
+        title: 'Círculos de Informação Financeira',
+        axis: 'Comunicação, Tempo Real & Assimetria',
+        axisColor: 'cyan',
+        summary: 'A informação especializada (AFP, terminais Bloomberg, dados em tempo real) constitui o próprio mercado e produz hierarquias temporais entre lugares.',
+        definition: 'A partir de investigações pioneiras sobre a atuação da Agence France-Presse (AFP) e da Bloomberg no Brasil, o conceito evidencia que a informação financeira especializada não apenas "notícia" o mercado — ela o constitui. Terminais proprietários, feeds de baixa latência e agências globais criam hierarquias temporais (frações de segundo) e espaciais entre praças centrais e periféricas.',
+        diagramCaption: 'Fluxo informacional em tempo real: dos centros financeiros globais à decisão de investimento localizada.',
+        pos: { x: 145, y: 315 },
+        relatedConcepts: ['tecnosfera-psicosfera', 'espaco-mercado-capitais', 'cartografia-financas'],
+        relatedWorks: ['informacao-2012-2022', 'tese-2022']
+      },
+      {
+        id: 'circulos-financeiros-produtivos',
+        num: '06',
+        shortTitle: 'Círculos Financeiros & Circuitos Produtivos',
+        title: 'Círculos Financeiros e Circuitos Produtivos',
+        axis: 'Imbricação Produção–Finança (Caso Petrobras)',
+        axisColor: 'emerald',
+        summary: 'Articulação entre circuitos espaciais produtivos materiais (extração, refino) e círculos de cooperação financeira (ações, debêntures, fundos).',
+        definition: 'Desenvolvido em coautoria com Luciano Duarte a partir do circuito do petróleo e da Petrobras, o conceito demonstra como atividades produtivas intensivas em território (extração offshore, refinarias, logística e rede de fornecedores) estão organicamente imbricadas a círculos de cooperação financeiros (emissão de ações, debêntures, fundos de investimento e pagamento de dividendos) que capturam valor e condicionam decisões produtivas.',
+        diagramCaption: 'Dois anéis entrelaçados: circuito produtivo material e círculo financeiro conectados por pontos de captura de valor.',
+        pos: { x: 835, y: 315 },
+        relatedConcepts: ['espaco-mercado-capitais', 'financeirizacao-periferica', 'territorio-usado'],
+        relatedWorks: ['petroleo-2021', 'tese-2022']
+      },
+      {
+        id: 'financa-plataformizada',
+        num: '07',
+        shortTitle: 'Finança Plataformizada & Soberania Territorial',
+        title: 'Finança Plataformizada e Soberania Territorial',
+        axis: 'Fintechs, PIX & Geopolítica Digital (2025)',
+        axisColor: 'emerald',
+        summary: 'Capilaridade via smartphone (PicPay), papel estratégico do PIX como infraestrutura pública e disputa geopolítica pela soberania de pagamentos e dados.',
+        definition: 'Nos estudos recentes de 2025 sobre aplicativos financeiros (como o PicPay) e o sistema PIX (em parceria com Caio Zarino Jorge Alves), Nabarro examina a plataformização das finanças cotidianas. A mediação por smartphones amplia drasticamente a capilaridade financeira, mas abre uma disputa geopolítica e regulatória em torno da soberania monetária, da infraestrutura pública de pagamentos e do controle sobre dados populacionais.',
+        diagramCaption: 'Tríade tensional: Big Techs/Fintechs, Infraestrutura Pública (PIX) e Cotidiano Popular.',
+        pos: { x: 245, y: 455 },
+        relatedConcepts: ['territorio-usado', 'tecnosfera-psicosfera', 'financeirizacao-periferica'],
+        relatedWorks: ['picpay-pix-2025', 'tese-2022']
+      },
+      {
+        id: 'financeirizacao-periferica',
+        num: '08',
+        shortTitle: 'Financeirização Periférica & Cooperativismo',
+        title: 'Financeirização Periférica e Cooperativismo de Crédito',
+        axis: 'Agenda Atual (UFRGS) & Escalas Regionais',
+        axisColor: 'emerald',
+        summary: 'Especificidades da financeirização na periferia capitalista e o papel territorial de cooperativas (Sicoob, Sicredi, Cresol) entre enraizamento e escala.',
+        definition: 'Na agenda de pesquisa desenvolvida na UFRGS, Nabarro investiga as particularidades da financeirização em economias periféricas e o protagonismo territorial das cooperativas de crédito (Sicoob, Sicredi, Cresol). Essas instituições vivem uma tensão estrutural: preservam o enraizamento regional e a presença em municípios desassistidos pelos grandes bancos, ao mesmo tempo em que enfrentam pressões de escala, digitalização e competitividade bancária.',
+        diagramCaption: 'Espectro territorial comparativo entre grandes bancos/mercado de capitais e o cooperativismo de crédito.',
+        pos: { x: 735, y: 455 },
+        relatedConcepts: ['territorio-usado', 'circulos-financeiros-produtivos', 'financa-plataformizada'],
+        relatedWorks: ['picpay-pix-2025', 'petroleo-2021', 'atlas-2024']
+      },
+      {
+        id: 'cartografia-financas',
+        num: '09',
+        shortTitle: 'Cartografia dos Fenômenos Financeiros',
+        title: 'Cartografia dos Fenômenos Financeiros',
+        axis: 'Teoria & Metodologia Cartográfica',
+        axisColor: 'coral',
+        summary: 'Refutação do mito da "morte da geografia" por meio do mapeamento crítico de topologias, sedes, fluxos, redes e densidade de investidores.',
+        definition: 'Publicado no Boletim Campineiro de Geografia (2022), este eixo enfrenta o desafio teórico-metodológico de representar espacialmente fenômenos aparentemente imateriais e hiper-líquidos. Ao cruzar bases públicas (CVM, Banco Central, B3) com novas linguagens de redes e topologias, a cartografia crítica desmistifica a suposta "morte da geografia" e torna visível a seletividade espacial das finanças.',
+        diagramCaption: 'Pipeline metodológico em 4 etapas: dos dados brutos de instituições reguladoras à cartografia crítica.',
+        pos: { x: 375, y: 545 },
+        relatedConcepts: ['centralidade-financeira', 'circulos-informacao', 'geografia-historica'],
+        relatedWorks: ['cartografia-2022', 'atlas-2024', 'tese-2022']
+      },
+      {
+        id: 'geografia-historica',
+        num: '10',
+        shortTitle: 'Geografia Histórica & Pensamento Geográfico',
+        title: 'Geografia Histórica Econômica e História do Pensamento Geográfico',
+        axis: 'Formação Sócio-Espacial & Matrizes Clássicas',
+        axisColor: 'coral',
+        summary: 'Formação territorial e econômica do Brasil no século XIX (Atlas) e resgate tradutório de Jean Labasse, Jean Gottmann e Milton Santos.',
+        definition: 'A obra de Wagner Nabarro alia o estudo das finanças contemporâneas a uma sólida base histórica e epistemológica. Isso se expressa tanto na reconstrução cartográfica da formação sócio-espacial e bancária do Brasil no século XIX (Atlas Histórico-Econômico, 2024) quanto no resgate e tradução de autores fundadores da geografia das finanças e do planejamento regional — especialmente Jean Labasse e Jean Gottmann — em diálogo com Milton Santos.',
+        diagramCaption: 'Genealogia intelectual: das matrizes clássicas e da formação do século XIX à agenda contemporânea.',
+        pos: { x: 615, y: 545 },
+        relatedConcepts: ['centralidade-financeira', 'cartografia-financas', 'territorio-usado'],
+        relatedWorks: ['atlas-2024', 'traducoes-2023-2024', 'dissertacao-2016']
+      }
+    ];
+
+    /* Arestas rotuladas do Mapa Conceitual */
+    const NETWORK_EDGES = [
+      { source: 'territorio-usado', target: 'tecnosfera-psicosfera', label: 'fundamenta dialeticamente' },
+      { source: 'territorio-usado', target: 'centralidade-financeira', label: 'expressa uso seletivo' },
+      { source: 'territorio-usado', target: 'financa-plataformizada', label: 'disputa abrigo vs. recurso' },
+      { source: 'territorio-usado', target: 'financeirizacao-periferica', label: 'enquadra assimetrias' },
+      { source: 'tecnosfera-psicosfera', target: 'espaco-mercado-capitais', label: 'estrutura o mercado' },
+      { source: 'tecnosfera-psicosfera', target: 'circulos-informacao', label: 'alimenta sistemas técnicos' },
+      { source: 'tecnosfera-psicosfera', target: 'financa-plataformizada', label: 'capilariza via apps' },
+      { source: 'centralidade-financeira', target: 'espaco-mercado-capitais', label: 'comanda via São Paulo/B3' },
+      { source: 'centralidade-financeira', target: 'geografia-historica', label: 'dialoga com Gottmann & Labasse' },
+      { source: 'espaco-mercado-capitais', target: 'circulos-informacao', label: 'opera em tempo real' },
+      { source: 'espaco-mercado-capitais', target: 'circulos-financeiros-produtivos', label: 'conecta capital e produção' },
+      { source: 'circulos-informacao', target: 'cartografia-financas', label: 'exige mapear redes' },
+      { source: 'circulos-financeiros-produtivos', target: 'financeirizacao-periferica', label: 'repercute nas regiões' },
+      { source: 'financa-plataformizada', target: 'financeirizacao-periferica', label: 'tensiona crédito local' },
+      { source: 'cartografia-financas', target: 'geografia-historica', label: 'une método e cartografia histórica' },
+      { source: 'cartografia-financas', target: 'centralidade-financeira', label: 'revela macrocefalia' }
+    ];
+
+    /* ========================================================================
+       2. BASE DE DADOS DAS 8 PRINCIPAIS OBRAS
+       ======================================================================== */
+    const WORKS = [
+      {
+        id: 'atlas-2024',
+        num: '01',
+        year: '2024',
+        type: 'Livro Organizado (Atlas)',
+        title: 'Atlas Histórico-Econômico do Brasil no Século XIX',
+        institution: 'Eduff / Senado Federal',
+        authors: 'Luiz Fernando Saraiva, Wagner Nabarro e Pérola Goldfeder (Orgs.)',
+        thesis: 'Reconstruir cartograficamente a formação sócio-espacial, demográfica, produtiva e financeira do Brasil imperial, demonstrando como infraestruturas de transporte, bancos nascentes e a economia agroexportadora escravista moldaram desigualdades territoriais duradouras.',
+        contribution: 'Consolida uma referência monumental de geografia histórica econômica no Brasil, integrando pesquisa arquivística rigorosa e cartografia temática de alta legibilidade para compreender as raízes espaciais do capitalismo brasileiro.',
+        concepts: ['geografia-historica', 'cartografia-financas', 'financeirizacao-periferica'],
+        schemaFlow: 'Base Territorial & Demográfica → Economia Agroexportadora → Infraestrutura & Bancos → Síntese Cartográfica',
+        blocks: [
+          {
+            step: 'Bloco 01',
+            accent: 'gold',
+            icon: 'map',
+            title: 'Formação Territorial e Demografia',
+            desc: 'Mapeamento da ocupação populacional, províncias imperiais, fronteiras internas e dinâmica demográfica livre e escravizada ao longo do Oitocentos.'
+          },
+          {
+            step: 'Bloco 02',
+            accent: 'coral',
+            icon: 'layers',
+            title: 'Economia Agroexportadora e Escravidão',
+            desc: 'Espacialização dos grandes complexos produtivos (café, açúcar, algodão, charque, borracha) e sua dependência estrutural do trabalho escravizado.'
+          },
+          {
+            step: 'Bloco 03',
+            accent: 'cyan',
+            icon: 'network',
+            title: 'Infraestruturas, Transportes e Bancos/Finanças',
+            desc: 'Expansão ferroviária, portos, telégrafos e a gênese do sistema bancário e creditício no Império como vetores de integração seletiva.'
+          },
+          {
+            step: 'Bloco 04',
+            accent: 'emerald',
+            icon: 'compass',
+            title: 'Síntese Cartográfica Histórica',
+            desc: 'Articulação visual de séries estatísticas e mapas históricos que evidenciam a gênese das centralidades e disparidades regionais brasileiras.'
+          }
+        ]
+      },
+      {
+        id: 'tese-2022',
+        num: '02',
+        year: '2022',
+        type: 'Tese de Doutorado',
+        title: 'O espaço do mercado de capitais: tecnosfera e psicosfera dos investimentos no território brasileiro',
+        institution: 'FFLCH-USP (Programa de Pós-Graduação em Geografia Humana)',
+        authors: 'Wagner Nabarro',
+        thesis: 'O avanço recente do mercado de capitais no Brasil — culminando na entrada massiva de investidores pessoa física — resulta da combinação indissociável entre uma tecnosfera financeira de alta densidade (B3, plataformas digitais, fibra óptica) e uma psicosfera persuasiva (educação financeira, influenciadores e corretoras) que reconfigura o território usado.',
+        contribution: 'Obra seminal que formula o par conceitual "tecnosfera e psicosfera dos investimentos", oferecendo a interpretação geográfica mais abrangente sobre a plataformização e a expansão da bolsa de valores no Brasil contemporâneo.',
+        concepts: ['tecnosfera-psicosfera', 'espaco-mercado-capitais', 'territorio-usado', 'centralidade-financeira', 'cartografia-financas'],
+        schemaFlow: 'Fundamentos Teóricos → Infraestrutura & B3 → Rede de Intermediários → Psicosfera & Pessoa Física',
+        blocks: [
+          {
+            step: 'Eixo 01',
+            accent: 'gold',
+            icon: 'book',
+            title: 'Fundamentos Teóricos (Tecnosfera / Psicosfera)',
+            desc: 'Atualização da teoria do território usado de Milton Santos para decifrar a materialidade e a ideologia do mercado de capitais contemporâneo.'
+          },
+          {
+            step: 'Eixo 02',
+            accent: 'cyan',
+            icon: 'cpu',
+            title: 'Infraestrutura Técnica e Consolidação da B3',
+            desc: 'Análise do monopólio bursátil (B3), datacenters, redes de fibra óptica e transição definitiva para o pregão eletrônico de alta frequência.'
+          },
+          {
+            step: 'Eixo 03',
+            accent: 'emerald',
+            icon: 'network',
+            title: 'Rede de Corretoras, Fintechs e Intermediários',
+            desc: 'Mapeamento da capilaridade de corretoras digitais, agentes autônomos de investimento e plataformas que redefinem a intermediação financeira.'
+          },
+          {
+            step: 'Eixo 04',
+            accent: 'coral',
+            icon: 'users',
+            title: 'Psicosfera, Educação Financeira e Pessoa Física',
+            desc: 'Produção discursiva do sujeito-investidor nas redes sociais e cartografia da expansão desigual dos CPFs na bolsa pelo território nacional.'
+          }
+        ]
+      },
+      {
+        id: 'dissertacao-2016',
+        num: '03',
+        year: '2016',
+        type: 'Dissertação de Mestrado',
+        title: 'O mercado de capitais no território brasileiro: ascensão da BM&FBovespa e centralidade financeira de São Paulo (SP)',
+        institution: 'FFLCH-USP (Programa de Pós-Graduação em Geografia Humana)',
+        authors: 'Wagner Nabarro',
+        thesis: 'A trajetória histórica de fusões institucionais que extinguiu as bolsas regionais e gerou a BM&FBovespa não dispersou o poder financeiro pelo país; ao contrário, consolidou a macrocefalia financeira de São Paulo e acentuou a seletividade territorial dos fluxos acionários.',
+        contribution: 'Estabelece o marco empírico e histórico para compreender como a unificação bursátil brasileira reforçou a hierarquia urbana e transformou São Paulo no principal centro transacional da América do Sul.',
+        concepts: ['centralidade-financeira', 'espaco-mercado-capitais', 'territorio-usado', 'geografia-historica'],
+        schemaFlow: 'Bolsas Regionais → Fusões & BM&FBovespa → Centralidade de São Paulo → Seletividade Territorial',
+        blocks: [
+          {
+            step: 'Parte 01',
+            accent: 'gold',
+            icon: 'clock',
+            title: 'Evolução Histórica das Bolsas Regionais',
+            desc: 'Reconstrução da rede pretérita de bolsas estaduais (Rio de Janeiro, Porto Alegre, Minas-Espírito Santo-Brasília, Pernambuco) e sua perda gradual de autonomia.'
+          },
+          {
+            step: 'Parte 02',
+            accent: 'cyan',
+            icon: 'layers',
+            title: 'Fusões e Concentração (Bovespa + BM&F)',
+            desc: 'Processo de desmutualização, abertura de capital e fusão institucional que originou a BM&FBovespa (futura B3) como bolsa única nacional.'
+          },
+          {
+            step: 'Parte 03',
+            accent: 'emerald',
+            icon: 'compass',
+            title: 'Centralidade Financeira de São Paulo (SP)',
+            desc: 'Concentração de sedes bancárias, escritórios especializados e infraestrutura decisória na metrópole paulista em escala nacional e internacional.'
+          },
+          {
+            step: 'Parte 04',
+            accent: 'coral',
+            icon: 'map',
+            title: 'Seletividade Territorial dos Fluxos Acionários',
+            desc: 'Evidências empíricas da concentração geográfica de empresas listadas, volume negociado e origem dos investidores no Brasil.'
+          }
+        ]
+      },
+      {
+        id: 'petroleo-2021',
+        num: '04',
+        year: '2021',
+        type: 'Artigo Científico',
+        title: 'Círculos financeiros e circuito do petróleo',
+        institution: 'GEOUSP — Espaço e Tempo, v. 25, n. 3',
+        authors: 'Wagner Nabarro e Luciano Duarte',
+        thesis: 'O circuito espacial produtivo do petróleo brasileiro — estruturado em torno da Petrobras — está profundamente subordinado a círculos de cooperação financeiros que drenam renda, orientam investimentos e produzem vulnerabilidades territoriais nos municípios petrolíferos.',
+        contribution: 'Demonstra empiricamente como a categoria miltoniana de circuitos espaciais produtivos precisa ser lida em conjunto com os círculos financeiros para explicar a dinâmica contemporânea das commodities e estatais de capital aberto.',
+        concepts: ['circulos-financeiros-produtivos', 'espaco-mercado-capitais', 'financeirizacao-periferica'],
+        schemaFlow: 'Conceitos-Base → Cadeia da Petrobras → Instrumentos Financeiros → Repercussões Territoriais',
+        blocks: [
+          {
+            step: 'Seção 01',
+            accent: 'gold',
+            icon: 'book',
+            title: 'Circuito Produtivo e Círculo Financeiro',
+            desc: 'Articulação teórico-metodológica entre a circulação material de mercadorias e os círculos intangíveis de comando e financiamento.'
+          },
+          {
+            step: 'Seção 02',
+            accent: 'emerald',
+            icon: 'layers',
+            title: 'Cadeia da Petrobras e Fornecedores',
+            desc: 'Análise espacial da exploração, refino, logística e rede de empresas fornecedoras articuladas pela companhia no território nacional.'
+          },
+          {
+            step: 'Seção 03',
+            accent: 'cyan',
+            icon: 'network',
+            title: 'Instrumentos Financeiros (Ações, Debêntures, Fundos)',
+            desc: 'Mapeamento dos mecanismos de captação no mercado de capitais, participação de fundos internacionais e política de dividendos.'
+          },
+          {
+            step: 'Seção 04',
+            accent: 'coral',
+            icon: 'map',
+            title: 'Repercussões Territoriais e Dependência',
+            desc: 'Impactos de desinvestimentos, oscilações de mercado e subordinação financeira sobre economias regionais e cadeias locais.'
+          }
+        ]
+      },
+      {
+        id: 'cartografia-2022',
+        num: '05',
+        year: '2022',
+        type: 'Artigo Científico',
+        title: 'Novas dinâmicas das finanças e os desafios para a cartografia dos fenômenos financeiros',
+        institution: 'Boletim Campineiro de Geografia (BCG), v. 12, n. 2',
+        authors: 'Wagner Nabarro',
+        thesis: 'A aceleração e a digitalização das finanças não decretam a "morte da geografia", mas expõem os limites da cartografia euclidiana tradicional, exigindo novas soluções metodológicas para visualizar topologias, redes, fluxos e escalas financeiras.',
+        contribution: 'Oferece um manifesto metodológico indispensável para pesquisadores que desejam mapear fenômenos financeiros com rigor técnico e criticidade geográfica.',
+        concepts: ['cartografia-financas', 'espaco-mercado-capitais', 'centralidade-financeira', 'circulos-informacao'],
+        schemaFlow: 'Crise da Representação → Limites Tradicionais → Redes & Topologias → Agenda Metodológica',
+        blocks: [
+          {
+            step: 'Eixo 01',
+            accent: 'coral',
+            icon: 'compass',
+            title: 'Crise da Representação Diante da Liquidez',
+            desc: 'Debate sobre a aparente invisibilidade do capital financeiro e o desafio de espacializar fluxos que operam em milissegundos.'
+          },
+          {
+            step: 'Eixo 02',
+            accent: 'gold',
+            icon: 'map',
+            title: 'Limites da Cartografia Tradicional',
+            desc: 'Crítica aos mapas estáticos baseados apenas em áreas contíguas que ocultam conexões em rede, nós transacionais e hierarquias multiescalares.'
+          },
+          {
+            step: 'Eixo 03',
+            accent: 'cyan',
+            icon: 'network',
+            title: 'Visualização de Redes, Topologias e Escalas',
+            desc: 'Propostas gráficas para representar sedes, fluxos de ordens, densidade de investidores e conectividade entre praças financeiras.'
+          },
+          {
+            step: 'Eixo 04',
+            accent: 'emerald',
+            icon: 'cpu',
+            title: 'Agenda Metodológica para a Geografia das Finanças',
+            desc: 'Integração entre bases públicas (CVM, BC, B3), geoprocessamento crítico e teoria espacial para novas gerações de estudos.'
+          }
+        ]
+      },
+      {
+        id: 'picpay-pix-2025',
+        num: '06',
+        year: '2025',
+        type: 'Dossiê & Ensaio Crítico',
+        title: 'Transações, aplicativos e o território brasileiro: PicPay & Finança Plataformizada',
+        institution: 'Dossiê LabCit/GEDRI (2025) & Le Monde Diplomatique Brasil (2025)',
+        authors: 'Wagner Nabarro; ensaio sobre soberania e PIX em coautoria com Caio Zarino Jorge Alves',
+        thesis: 'A plataformização financeira via smartphones (caso PicPay) e a consolidação do PIX como infraestrutura pública colocam os meios de pagamento no centro de uma disputa geopolítica por dados, regulação e soberania monetária e territorial.',
+        contribution: 'Atualiza a Geografia das Finanças para a fronteira contemporânea das plataformas digitais, conectando o cotidiano popular dos aplicativos às grandes disputas geopolíticas e regulatórias do sistema de pagamentos.',
+        concepts: ['financa-plataformizada', 'territorio-usado', 'tecnosfera-psicosfera', 'financeirizacao-periferica'],
+        schemaFlow: 'Digitalização & PicPay → PIX como Infraestrutura Pública → Tensões Geopolíticas → Soberania Territorial',
+        blocks: [
+          {
+            step: 'Bloco 01',
+            accent: 'cyan',
+            icon: 'cpu',
+            title: 'Digitalização do Cotidiano (Caso PicPay)',
+            desc: 'Estudo da rápida capilarização de carteiras digitais e superapps que transformam o smartphone em agência financeira permanente.'
+          },
+          {
+            step: 'Bloco 02',
+            accent: 'emerald',
+            icon: 'network',
+            title: 'O PIX como Infraestrutura Pública Estratégica',
+            desc: 'Papel do Banco Central na criação de um arranjo público de pagamentos instantâneos que remodela a circulação monetária no território.'
+          },
+          {
+            step: 'Bloco 03',
+            accent: 'coral',
+            icon: 'layers',
+            title: 'Tensões Geopolíticas e Regulação',
+            desc: 'Conflitos entre Big Techs, bandeiras internacionais de cartões, fintechs e Estados nacionais pelo controle das camadas de pagamento e dados.'
+          },
+          {
+            step: 'Bloco 04',
+            accent: 'gold',
+            icon: 'compass',
+            title: 'Soberania Monetária e Territorial',
+            desc: 'Proposição de que a autonomia tecnológica e regulatória dos sistemas de pagamento é condição vital para a soberania na era das plataformas.'
+          }
+        ]
+      },
+      {
+        id: 'informacao-2012-2022',
+        num: '07',
+        year: '2012–2022',
+        type: 'Pesquisas Pioneiras & Capítulo',
+        title: 'Informação, Comunicação e Território: AFP (2012), Bloomberg (2013) e Fronteiras Comunicativas (2022)',
+        institution: 'Unicamp / Boletim Campineiro de Geografia / Capítulo com André Pasti',
+        authors: 'Wagner Nabarro (e coautoria com André Pasti em 2022)',
+        thesis: 'Agências globais de notícias (AFP) e sistemas proprietários de dados financeiros (Bloomberg) operam como círculos seletivos de informação que produzem assimetrias temporais, redefinem fronteiras comunicativas e organizam o uso corporativo do território.',
+        contribution: 'Funda a ponte entre Geografia da Comunicação e Geografia das Finanças na trajetória de Nabarro, mostrando que informação especializada é infraestrutura de poder territorial.',
+        concepts: ['circulos-informacao', 'territorio-usado', 'tecnosfera-psicosfera'],
+        schemaFlow: 'Agências Globais (AFP) → Terminais Financeiros (Bloomberg) → Fronteiras Comunicativas & Território',
+        blocks: [
+          {
+            step: 'Estudo 01',
+            accent: 'gold',
+            icon: 'book',
+            title: 'Agências Internacionais de Notícias (AFP, 2012)',
+            desc: 'Investigação sobre a atuação da Agence France-Presse no Brasil e a circulação desigual da informação jornalística internacional.'
+          },
+          {
+            step: 'Estudo 02',
+            accent: 'cyan',
+            icon: 'cpu',
+            title: 'Terminais Bloomberg e Informação Financeira (2013)',
+            desc: 'Análise dos terminais Bloomberg como nós privilegiados dos círculos de informação financeira em tempo real e formação de preços.'
+          },
+          {
+            step: 'Estudo 03',
+            accent: 'emerald',
+            icon: 'map',
+            title: 'Fronteiras Comunicativas e Território Usado (2022)',
+            desc: 'Reflexão em parceria com André Pasti sobre como fluxos comunicativos e redes informacionais reconfiguram fronteiras e usos do território.'
+          }
+        ]
+      },
+      {
+        id: 'traducoes-2023-2024',
+        num: '08',
+        year: '2023–2024',
+        type: 'Traduções Comentadas & Ensaios',
+        title: 'Centros Transacionais e Planejamento Regional: Traduções de Jean Gottmann (2023) e Jean Labasse (2024)',
+        institution: 'Boletim Campineiro de Geografia (BCG) & Revista Geopolítica Transfronteiriça',
+        authors: 'Wagner Nabarro e Victor Iamonti',
+        thesis: 'O resgate crítico e a tradução comentada de textos clássicos de Jean Gottmann e Jean Labasse enriquecem a geografia brasileira contemporânea com conceitos rigorosos sobre metrópoles transacionais, organização bancária do espaço e planejamento regional.',
+        contribution: 'Amplia o repertório epistemológico em língua portuguesa da Geografia das Finanças, conectando diretamente a tradição clássica francesa à escola crítica brasileira.',
+        concepts: ['geografia-historica', 'centralidade-financeira', 'territorio-usado'],
+        schemaFlow: 'Jean Gottmann (Centros Transacionais) → Jean Labasse (Finanças & Manaus) → Diálogo França–Brasil',
+        blocks: [
+          {
+            step: 'Eixo 01',
+            accent: 'cyan',
+            icon: 'network',
+            title: 'Jean Gottmann e os "Centros Transacionais" (2023)',
+            desc: 'Tradução e análise do papel das metrópoles como nós de atividades quaternárias, transações informacionais e comando financeiro global.'
+          },
+          {
+            step: 'Eixo 02',
+            accent: 'emerald',
+            icon: 'map',
+            title: 'Jean Labasse, Finanças e "Manaus, Cidade Fluvial" (2024)',
+            desc: 'Resgate da obra pioneira de Labasse sobre geografia financeira, planejamento regional e seu olhar sobre a urbanização brasileira na Amazônia.'
+          },
+          {
+            step: 'Eixo 03',
+            accent: 'gold',
+            icon: 'book',
+            title: 'Diálogo Escola Francesa & Geografia Brasileira',
+            desc: 'Articulação entre o legado de Gottmann e Labasse e a teoria do território usado, fortalecendo a história do pensamento geográfico.'
+          }
+        ]
+      }
+    ];
+
+    /* ========================================================================
+       3. GERADORES DE DIAGRAMAS SVG EXCLUSIVOS PARA OS 10 CONCEITOS
+       ======================================================================== */
+    function getConceptDiagramSVG(id) {
+      switch (id) {
+        /* 01: Território Usado e Uso Corporativo (Diagrama Dialético) */
+        case 'territorio-usado':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 340" role="img" aria-label="Diagrama dialético do Território Usado">
+              <defs>
+                <marker id="arr-coral" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--coral)"/>
+                </marker>
+                <marker id="arr-emerald" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--emerald)"/>
+                </marker>
+              </defs>
+              <!-- Lado Esquerdo: Uso Corporativo -->
+              <rect x="24" y="34" width="250" height="272" rx="14" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="1.5"/>
+              <text x="149" y="66" text-anchor="middle" fill="var(--coral)" font-size="12" font-weight="700" letter-spacing="1.2">TERRITÓRIO COMO RECURSO</text>
+              <text x="149" y="90" text-anchor="middle" fill="var(--svg-text)" font-size="16" font-weight="700" font-family="var(--font-serif)">Uso Corporativo</text>
+              <line x1="54" y1="106" x2="244" y2="106" stroke="var(--coral)" stroke-opacity="0.35"/>
+              <g font-size="12.5" fill="var(--svg-text)">
+                <rect x="44" y="122" width="210" height="34" rx="8" fill="var(--svg-node-bg)" stroke="var(--coral)" stroke-opacity="0.45"/>
+                <text x="149" y="144" text-anchor="middle">Bolsas (B3) &amp; Grandes Bancos</text>
+                <rect x="44" y="166" width="210" height="34" rx="8" fill="var(--svg-node-bg)" stroke="var(--coral)" stroke-opacity="0.45"/>
+                <text x="149" y="188" text-anchor="middle">Corretoras, Gestoras &amp; Fintechs</text>
+                <rect x="44" y="210" width="210" height="34" rx="8" fill="var(--svg-node-bg)" stroke="var(--coral)" stroke-opacity="0.45"/>
+                <text x="149" y="232" text-anchor="middle">Seletividade &amp; Liquidez Espacial</text>
+              </g>
+              <text x="149" y="276" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Agentes Hegemônicos · Tempo Rápido</text>
+
+              <!-- Núcleo Central: Território Usado -->
+              <circle cx="410" cy="170" r="88" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2" stroke-dasharray="6 4"/>
+              <circle cx="410" cy="170" r="68" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="2"/>
+              <text x="410" y="156" text-anchor="middle" fill="var(--gold)" font-size="11" font-weight="700" letter-spacing="1.2">ARENA DIALÉTICA</text>
+              <text x="410" y="179" text-anchor="middle" fill="var(--svg-text)" font-size="16" font-weight="700" font-family="var(--font-serif)">Território</text>
+              <text x="410" y="199" text-anchor="middle" fill="var(--svg-text)" font-size="16" font-weight="700" font-family="var(--font-serif)">Usado</text>
+
+              <!-- Setas convergentes -->
+              <line x1="278" y1="170" x2="316" y2="170" stroke="var(--coral)" stroke-width="2.5" marker-end="url(#arr-coral)"/>
+              <line x1="542" y1="170" x2="504" y2="170" stroke="var(--emerald)" stroke-width="2.5" marker-end="url(#arr-emerald)"/>
+              <text x="410" y="305" text-anchor="middle" fill="var(--svg-subtext)" font-size="12">Base Miltoniana: Fixos + Fluxos + Ações em Disputa</text>
+
+              <!-- Lado Direito: Território como Abrigo -->
+              <rect x="546" y="34" width="250" height="272" rx="14" fill="var(--emerald-soft)" stroke="var(--emerald)" stroke-width="1.5"/>
+              <text x="671" y="66" text-anchor="middle" fill="var(--emerald)" font-size="12" font-weight="700" letter-spacing="1.2">TERRITÓRIO COMO ABRIGO</text>
+              <text x="671" y="90" text-anchor="middle" fill="var(--svg-text)" font-size="16" font-weight="700" font-family="var(--font-serif)">Vida Coletiva</text>
+              <line x1="576" y1="106" x2="766" y2="106" stroke="var(--emerald)" stroke-opacity="0.35"/>
+              <g font-size="12.5" fill="var(--svg-text)">
+                <rect x="566" y="122" width="210" height="34" rx="8" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-opacity="0.45"/>
+                <text x="671" y="144" text-anchor="middle">Cotidiano &amp; Reprodução Social</text>
+                <rect x="566" y="166" width="210" height="34" rx="8" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-opacity="0.45"/>
+                <text x="671" y="188" text-anchor="middle">Economias Populares &amp; Locais</text>
+                <rect x="566" y="210" width="210" height="34" rx="8" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-opacity="0.45"/>
+                <text x="671" y="232" text-anchor="middle">Resistências &amp; Cooperativismo</text>
+              </g>
+              <text x="671" y="276" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Agentes Hegemonizados · Tempo Lento</text>
+            </svg>
+          `;
+
+        /* 02: Tecnosfera e Psicosfera dos Investimentos (Duas Camadas Espelhadas) */
+        case 'tecnosfera-psicosfera':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 350" role="img" aria-label="Arquitetura em duas camadas: Psicosfera e Tecnosfera dos Investimentos">
+              <defs>
+                <marker id="arr-gold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--gold)"/>
+                </marker>
+                <marker id="arr-cyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--cyan)"/>
+                </marker>
+              </defs>
+              <!-- Camada Superior: Psicosfera -->
+              <rect x="24" y="22" width="772" height="114" rx="14" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="1.6"/>
+              <text x="44" y="48" fill="var(--gold)" font-size="12" font-weight="700" letter-spacing="1.2">CAMADA SIMBÓLICA · PSICOSFERA DOS INVESTIMENTOS</text>
+              <g font-size="12.5" fill="var(--svg-text)">
+                <rect x="44" y="64" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-opacity="0.5"/>
+                <text x="128" y="88" text-anchor="middle" font-weight="600">Educação Financeira</text>
+                <text x="128" y="106" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Discursos &amp; Normas</text>
+
+                <rect x="232" y="64" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-opacity="0.5"/>
+                <text x="316" y="88" text-anchor="middle" font-weight="600">Influenciadores</text>
+                <text x="316" y="106" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Redes &amp; Mídia Digital</text>
+
+                <rect x="420" y="64" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-opacity="0.5"/>
+                <text x="504" y="88" text-anchor="middle" font-weight="600">Corretoras &amp; Marketing</text>
+                <text x="504" y="106" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Gamificação do Risco</text>
+
+                <rect x="608" y="64" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-opacity="0.5"/>
+                <text x="692" y="88" text-anchor="middle" font-weight="600">Sujeito-Investidor</text>
+                <text x="692" y="106" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Subjetividade Financeira</text>
+              </g>
+
+              <!-- Faixa Central de Fluxos Bidirecionais -->
+              <rect x="190" y="154" width="440" height="42" rx="21" fill="var(--svg-node-bg)" stroke="var(--border)" stroke-width="1.5"/>
+              <text x="410" y="180" text-anchor="middle" fill="var(--svg-text)" font-size="12.5" font-weight="600">Fluxos Contínuos de Capital, Ordens e Informação</text>
+              <line x1="128" y1="138" x2="128" y2="210" stroke="var(--gold)" stroke-width="2" marker-end="url(#arr-gold)"/>
+              <line x1="316" y1="212" x2="316" y2="140" stroke="var(--cyan)" stroke-width="2" marker-end="url(#arr-cyan)"/>
+              <line x1="504" y1="138" x2="504" y2="210" stroke="var(--gold)" stroke-width="2" marker-end="url(#arr-gold)"/>
+              <line x1="692" y1="212" x2="692" y2="140" stroke="var(--cyan)" stroke-width="2" marker-end="url(#arr-cyan)"/>
+
+              <!-- Camada Inferior: Tecnosfera -->
+              <rect x="24" y="214" width="772" height="114" rx="14" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="1.6"/>
+              <text x="44" y="240" fill="var(--cyan)" font-size="12" font-weight="700" letter-spacing="1.2">CAMADA MATERIAL · TECNOSFERA DOS INVESTIMENTOS</text>
+              <g font-size="12.5" fill="var(--svg-text)">
+                <rect x="44" y="256" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--cyan)" stroke-opacity="0.5"/>
+                <text x="128" y="280" text-anchor="middle" font-weight="600">Bolsa Única (B3)</text>
+                <text x="128" y="298" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Núcleo de Liquidação</text>
+
+                <rect x="232" y="256" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--cyan)" stroke-opacity="0.5"/>
+                <text x="316" y="280" text-anchor="middle" font-weight="600">Fibra &amp; Datacenters</text>
+                <text x="316" y="298" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Baixa Latência</text>
+
+                <rect x="420" y="256" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--cyan)" stroke-opacity="0.5"/>
+                <text x="504" y="280" text-anchor="middle" font-weight="600">Home Brokers &amp; Apps</text>
+                <text x="504" y="298" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Acesso Capilarizado</text>
+
+                <rect x="608" y="256" width="168" height="54" rx="9" fill="var(--svg-node-bg)" stroke="var(--cyan)" stroke-opacity="0.5"/>
+                <text x="692" y="280" text-anchor="middle" font-weight="600">Algoritmos (HFT)</text>
+                <text x="692" y="298" text-anchor="middle" font-size="11" fill="var(--svg-subtext)">Automação de Ordens</text>
+              </g>
+            </svg>
+          `;
+
+        /* 03: Centralidade Financeira e Centros Transacionais (Diagrama Radial) */
+        case 'centralidade-financeira':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 350" role="img" aria-label="Diagrama radial da Centralidade Financeira de São Paulo">
+              <!-- Anéis concêntricos de comando -->
+              <circle cx="310" cy="175" r="150" fill="none" stroke="var(--cyan)" stroke-opacity="0.22" stroke-dasharray="5 5"/>
+              <circle cx="310" cy="175" r="102" fill="none" stroke="var(--cyan)" stroke-opacity="0.38" stroke-dasharray="4 4"/>
+              <circle cx="310" cy="175" r="56" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="2.2"/>
+
+              <!-- Linhas radiais para regiões -->
+              <line x1="310" y1="175" x2="180" y2="80" stroke="var(--gold)" stroke-opacity="0.6" stroke-width="1.5"/>
+              <line x1="310" y1="175" x2="170" y2="255" stroke="var(--gold)" stroke-opacity="0.6" stroke-width="1.5"/>
+              <line x1="310" y1="175" x2="435" y2="95" stroke="var(--gold)" stroke-opacity="0.6" stroke-width="1.5"/>
+              <line x1="310" y1="175" x2="440" y2="250" stroke="var(--gold)" stroke-opacity="0.6" stroke-width="1.5"/>
+              <line x1="310" y1="175" x2="310" y2="38" stroke="var(--gold)" stroke-opacity="0.6" stroke-width="1.5"/>
+
+              <!-- Nós periféricos/regionais -->
+              <g font-size="11.5" fill="var(--svg-text)">
+                <circle cx="180" cy="80" r="7" fill="var(--gold)"/>
+                <text x="166" y="75" text-anchor="end">Capitais Regionais</text>
+                <text x="166" y="91" text-anchor="end" font-size="10.5" fill="var(--svg-subtext)">(Ex-bolsas absorvidas)</text>
+
+                <circle cx="170" cy="255" r="7" fill="var(--emerald)"/>
+                <text x="156" y="252" text-anchor="end">Interior Produtivo</text>
+                <text x="156" y="268" text-anchor="end" font-size="10.5" fill="var(--svg-subtext)">(Agro, Indústria, Energia)</text>
+
+                <circle cx="435" cy="95" r="7" fill="var(--cyan)"/>
+                <text x="448" y="99">Praças Globais (NY/Londres)</text>
+
+                <circle cx="440" cy="250" r="7" fill="var(--coral)"/>
+                <text x="453" y="254">Investidores Dispersos</text>
+
+                <circle cx="310" cy="38" r="6" fill="var(--gold)"/>
+                <text x="310" y="24" text-anchor="middle">Regulação (Brasília / RJ)</text>
+              </g>
+
+              <!-- Núcleo São Paulo -->
+              <circle cx="310" cy="175" r="46" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="2.2"/>
+              <text x="310" y="168" text-anchor="middle" fill="var(--gold)" font-size="14" font-weight="700" font-family="var(--font-serif)">São Paulo</text>
+              <text x="310" y="185" text-anchor="middle" fill="var(--svg-text)" font-size="11" font-weight="600">B3 · Faria Lima</text>
+              <text x="310" y="200" text-anchor="middle" fill="var(--svg-subtext)" font-size="10">Nó Transacional</text>
+
+              <!-- Painel lateral explicativo -->
+              <rect x="595" y="42" width="205" height="266" rx="12" fill="var(--svg-node-bg)" stroke="var(--border)"/>
+              <text x="613" y="70" fill="var(--gold)" font-size="11.5" font-weight="700" letter-spacing="0.9">PARADOXO ESPACIAL</text>
+              <text x="613" y="96" fill="var(--svg-text)" font-size="13" font-weight="600">Desmaterialização ≠</text>
+              <text x="613" y="114" fill="var(--svg-text)" font-size="13" font-weight="600">Dispersão do Comando</text>
+              <line x1="613" y1="128" x2="782" y2="128" stroke="var(--border-subtle)"/>
+              <text x="613" y="150" fill="var(--svg-subtext)" font-size="11.5">• Fusão BM&amp;F + Bovespa → B3</text>
+              <text x="613" y="174" fill="var(--svg-subtext)" font-size="11.5">• Extinção das bolsas regionais</text>
+              <text x="613" y="198" fill="var(--svg-subtext)" font-size="11.5">• Macrocefalia de sedes e dados</text>
+              <text x="613" y="222" fill="var(--svg-subtext)" font-size="11.5">• Diálogo com Jean Gottmann</text>
+              <text x="623" y="238" fill="var(--svg-subtext)" font-size="11.5">e Jean Labasse</text>
+              <rect x="613" y="258" width="169" height="32" rx="8" fill="var(--cyan-soft)"/>
+              <text x="697" y="278" text-anchor="middle" fill="var(--cyan)" font-size="11" font-weight="600">Centro Transacional Único</text>
+            </svg>
+          `;
+
+        /* 04: Espaço do Mercado de Capitais (Camadas Concêntricas) */
+        case 'espaco-mercado-capitais':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 350" role="img" aria-label="Ecossistema em camadas concêntricas do Espaço do Mercado de Capitais">
+              <!-- Camada Externa: Emissores e Investidores -->
+              <ellipse cx="410" cy="170" rx="360" ry="138" fill="var(--emerald-soft)" stroke="var(--emerald)" stroke-width="1.4" stroke-dasharray="5 4"/>
+              <text x="410" y="54" text-anchor="middle" fill="var(--emerald)" font-size="11.5" font-weight="700" letter-spacing="1.1">CAMADA 3 · EMISSORES (EMPRESAS LISTADAS) &amp; INVESTIDORES (PF / INSTITUCIONAIS)</text>
+
+              <!-- Camada Média: Intermediação -->
+              <ellipse cx="410" cy="175" rx="250" ry="96" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="1.6"/>
+              <text x="410" y="102" text-anchor="middle" fill="var(--cyan)" font-size="11.5" font-weight="700" letter-spacing="1">CAMADA 2 · INTERMEDIAÇÃO (CORRETORAS, GESTORAS, BANCOS DE INVESTIMENTO)</text>
+
+              <!-- Núcleo: Bolsa Única B3 -->
+              <ellipse cx="410" cy="182" rx="125" ry="52" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="2.4"/>
+              <text x="410" y="176" text-anchor="middle" fill="var(--gold)" font-size="15" font-weight="700" font-family="var(--font-serif)">Bolsa Única (B3)</text>
+              <text x="410" y="196" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Negociação · Registro · Liquidação</text>
+
+              <!-- Etiquetas laterais -->
+              <rect x="64" y="156" width="126" height="40" rx="8" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-opacity="0.6"/>
+              <text x="127" y="180" text-anchor="middle" fill="var(--svg-text)" font-size="12" font-weight="600">Emissão Primária</text>
+
+              <rect x="630" y="156" width="126" height="40" rx="8" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-opacity="0.6"/>
+              <text x="693" y="180" text-anchor="middle" fill="var(--svg-text)" font-size="12" font-weight="600">Mercado Secundário</text>
+
+              <!-- Barra inferior de transição histórica -->
+              <rect x="110" y="294" width="600" height="38" rx="19" fill="var(--svg-node-bg)" stroke="var(--border)"/>
+              <text x="235" y="318" text-anchor="middle" fill="var(--svg-subtext)" font-size="12">Pregão Viva-Voz (Físico)</text>
+              <text x="410" y="318" text-anchor="middle" fill="var(--gold)" font-size="13" font-weight="700">━━━▶</text>
+              <text x="585" y="318" text-anchor="middle" fill="var(--cyan)" font-size="12" font-weight="600">Pregão Eletrônico em Rede</text>
+            </svg>
+          `;
+
+        /* 05: Círculos de Informação Financeira (Fluxograma em 4 estágios) */
+        case 'circulos-informacao':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 320" role="img" aria-label="Fluxo informacional em tempo real dos Círculos de Informação Financeira">
+              <defs>
+                <marker id="arr-info" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--cyan)"/>
+                </marker>
+              </defs>
+              <!-- 4 Estágios -->
+              <g>
+                <rect x="24" y="54" width="166" height="148" rx="12" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="1.8"/>
+                <text x="107" y="82" text-anchor="middle" fill="var(--gold)" font-size="11" font-weight="700">ESTÁGIO 01</text>
+                <text x="107" y="110" text-anchor="middle" fill="var(--svg-text)" font-size="14.5" font-weight="700" font-family="var(--font-serif)">Centros Globais</text>
+                <text x="107" y="136" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Nova York, Londres,</text>
+                <text x="107" y="154" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Paris, Frankfurt</text>
+                <text x="107" y="182" text-anchor="middle" fill="var(--gold)" font-size="11">Origem dos Sinais</text>
+
+                <line x1="192" y1="128" x2="220" y2="128" stroke="var(--cyan)" stroke-width="2.2" marker-end="url(#arr-info)"/>
+
+                <rect x="226" y="54" width="166" height="148" rx="12" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="1.8"/>
+                <text x="309" y="82" text-anchor="middle" fill="var(--cyan)" font-size="11" font-weight="700">ESTÁGIO 02</text>
+                <text x="309" y="110" text-anchor="middle" fill="var(--svg-text)" font-size="14.5" font-weight="700" font-family="var(--font-serif)">Agências &amp; Terminais</text>
+                <text x="309" y="136" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">AFP &amp; Bloomberg</text>
+                <text x="309" y="154" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Dados em Tempo Real</text>
+                <text x="309" y="182" text-anchor="middle" fill="var(--cyan)" font-size="11">Filtro &amp; Precificação</text>
+
+                <line x1="394" y1="128" x2="422" y2="128" stroke="var(--cyan)" stroke-width="2.2" marker-end="url(#arr-info)"/>
+
+                <rect x="428" y="54" width="166" height="148" rx="12" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-width="1.8"/>
+                <text x="511" y="82" text-anchor="middle" fill="var(--emerald)" font-size="11" font-weight="700">ESTÁGIO 03</text>
+                <text x="511" y="110" text-anchor="middle" fill="var(--svg-text)" font-size="14.5" font-weight="700" font-family="var(--font-serif)">Praças Nacionais</text>
+                <text x="511" y="136" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">São Paulo (B3),</text>
+                <text x="511" y="154" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Mesas &amp; Corretoras</text>
+                <text x="511" y="182" text-anchor="middle" fill="var(--emerald)" font-size="11">Recepção Privilegiada</text>
+
+                <line x1="596" y1="128" x2="624" y2="128" stroke="var(--cyan)" stroke-width="2.2" marker-end="url(#arr-info)"/>
+
+                <rect x="630" y="54" width="166" height="148" rx="12" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="1.8"/>
+                <text x="713" y="82" text-anchor="middle" fill="var(--coral)" font-size="11" font-weight="700">ESTÁGIO 04</text>
+                <text x="713" y="110" text-anchor="middle" fill="var(--svg-text)" font-size="14.5" font-weight="700" font-family="var(--font-serif)">Decisão de Capital</text>
+                <text x="713" y="136" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Compra, Venda,</text>
+                <text x="713" y="154" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Alocação Territorial</text>
+                <text x="713" y="182" text-anchor="middle" fill="var(--coral)" font-size="11">Efeito no Território</text>
+              </g>
+
+              <!-- Barra de Assimetria Temporal e Espacial -->
+              <rect x="24" y="232" width="772" height="58" rx="12" fill="var(--svg-node-bg)" stroke="var(--border)"/>
+              <text x="410" y="256" text-anchor="middle" fill="var(--gold)" font-size="11.5" font-weight="700" letter-spacing="1">HIERARQUIA TEMPORAL &amp; ESPACIAL DA INFORMAÇÃO</text>
+              <text x="410" y="276" text-anchor="middle" fill="var(--svg-subtext)" font-size="12">Quem acessa a informação milissegundos antes comanda a formação de preços e aprofunda desigualdades entre lugares.</text>
+            </svg>
+          `;
+
+        /* 06: Círculos Financeiros e Circuitos Produtivos (Dois Anéis Entrelaçados) */
+        case 'circulos-financeiros-produtivos':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 340" role="img" aria-label="Dois anéis entrelaçados: Circuito Produtivo e Círculo Financeiro">
+              <!-- Anel Esquerdo: Circuito Produtivo -->
+              <circle cx="290" cy="170" r="134" fill="var(--emerald-soft)" stroke="var(--emerald)" stroke-width="2.2"/>
+              <text x="235" y="92" text-anchor="middle" fill="var(--emerald)" font-size="11.5" font-weight="700" letter-spacing="1">CIRCUITO PRODUTIVO</text>
+              <text x="235" y="114" text-anchor="middle" fill="var(--svg-text)" font-size="15" font-weight="700" font-family="var(--font-serif)">Base Material (Petrobras)</text>
+              <text x="235" y="148" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Extração &amp; Pré-Sal</text>
+              <text x="235" y="172" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Refino &amp; Petroquímica</text>
+              <text x="235" y="196" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Dutos, Portos &amp; Logística</text>
+              <text x="235" y="220" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Rede de Fornecedores</text>
+
+              <!-- Anel Direito: Círculo Financeiro -->
+              <circle cx="530" cy="170" r="134" fill="var(--cyan-soft)" stroke="var(--cyan)" stroke-width="2.2"/>
+              <text x="585" y="92" text-anchor="middle" fill="var(--cyan)" font-size="11.5" font-weight="700" letter-spacing="1">CÍRCULO FINANCEIRO</text>
+              <text x="585" y="114" text-anchor="middle" fill="var(--svg-text)" font-size="15" font-weight="700" font-family="var(--font-serif)">Cooperação Financeira</text>
+              <text x="585" y="148" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Ações (B3 / NYSE)</text>
+              <text x="585" y="172" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Debêntures &amp; Títulos</text>
+              <text x="585" y="196" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Fundos de Investimento</text>
+              <text x="585" y="220" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">• Remessa de Dividendos</text>
+
+              <!-- Interseção Central -->
+              <rect x="342" y="128" width="136" height="84" rx="12" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="2.2"/>
+              <text x="410" y="155" text-anchor="middle" fill="var(--gold)" font-size="11" font-weight="700">INTERSEÇÃO</text>
+              <text x="410" y="176" text-anchor="middle" fill="var(--svg-text)" font-size="13" font-weight="700">Captura de Valor</text>
+              <text x="410" y="195" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Governança &amp; Renda</text>
+
+              <text x="410" y="324" text-anchor="middle" fill="var(--svg-subtext)" font-size="12">Coautoria com Luciano Duarte (2021): decisões financeiras condicionam investimentos produtivos no território.</text>
+            </svg>
+          `;
+
+        /* 07: Finança Plataformizada e Soberania Territorial (Tríade Tensional) */
+        case 'financa-plataformizada':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 350" role="img" aria-label="Tríade tensional da Finança Plataformizada e Soberania Territorial">
+              <!-- Triângulo de tensões -->
+              <polygon points="410,68 170,278 650,278" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="1.8" stroke-dasharray="6 4"/>
+
+              <!-- Núcleo central -->
+              <circle cx="410" cy="202" r="64" fill="var(--svg-node-bg)" stroke="var(--coral)" stroke-width="2.2"/>
+              <text x="410" y="188" text-anchor="middle" fill="var(--coral)" font-size="10.5" font-weight="700" letter-spacing="0.8">DISPUTA CENTRAL</text>
+              <text x="410" y="207" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700" font-family="var(--font-serif)">Soberania</text>
+              <text x="410" y="224" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700" font-family="var(--font-serif)">Territorial</text>
+
+              <!-- Vértice Superior: Infraestrutura Pública / PIX -->
+              <rect x="275" y="18" width="270" height="72" rx="12" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-width="2"/>
+              <text x="410" y="42" text-anchor="middle" fill="var(--emerald)" font-size="11" font-weight="700">INFRAESTRUTURA PÚBLICA</text>
+              <text x="410" y="62" text-anchor="middle" fill="var(--svg-text)" font-size="14" font-weight="700">Sistema PIX &amp; Banco Central</text>
+              <text x="410" y="79" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Autonomia Monetária e Regulação</text>
+
+              <!-- Vértice Inferior Esquerdo: Big Techs & Fintechs -->
+              <rect x="34" y="246" width="260" height="78" rx="12" fill="var(--svg-node-bg)" stroke="var(--cyan)" stroke-width="2"/>
+              <text x="164" y="270" text-anchor="middle" fill="var(--cyan)" font-size="11" font-weight="700">INTERMEDIAÇÃO PRIVADA</text>
+              <text x="164" y="290" text-anchor="middle" fill="var(--svg-text)" font-size="14" font-weight="700">Big Techs &amp; Fintechs (PicPay)</text>
+              <text x="164" y="309" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Extração de Dados &amp; Superapps</text>
+
+              <!-- Vértice Inferior Direito: Cotidiano Popular -->
+              <rect x="526" y="246" width="260" height="78" rx="12" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="2"/>
+              <text x="656" y="270" text-anchor="middle" fill="var(--gold)" font-size="11" font-weight="700">CAPILARIDADE SOCIAL</text>
+              <text x="656" y="290" text-anchor="middle" fill="var(--svg-text)" font-size="14" font-weight="700">Cotidiano Popular</text>
+              <text x="656" y="309" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Smartphones · Inclusão vs. Controle</text>
+            </svg>
+          `;
+
+        /* 08: Financeirização Periférica e Cooperativismo de Crédito (Balança/Espectro) */
+        case 'financeirizacao-periferica':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 340" role="img" aria-label="Espectro territorial comparando bancos tradicionais e cooperativas de crédito">
+              <!-- Barra superior de contexto -->
+              <rect x="140" y="18" width="540" height="36" rx="18" fill="var(--gold-soft)" stroke="var(--gold)"/>
+              <text x="410" y="41" text-anchor="middle" fill="var(--gold)" font-size="12" font-weight="700" letter-spacing="0.8">FINANCEIRIZAÇÃO PERIFÉRICA · TENSÃO DE ESCALAS NO BRASIL</text>
+
+              <!-- Lado Esquerdo: Bancos Tradicionais & Mercado de Capitais -->
+              <rect x="28" y="84" width="320" height="190" rx="14" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="1.6"/>
+              <text x="188" y="112" text-anchor="middle" fill="var(--coral)" font-size="11.5" font-weight="700">POLO CENTRALIZADOR</text>
+              <text x="188" y="136" text-anchor="middle" fill="var(--svg-text)" font-size="15.5" font-weight="700" font-family="var(--font-serif)">Bancos Tradicionais &amp; Bolsa</text>
+              <text x="52" y="168" fill="var(--svg-text)" font-size="12.5">• Alta concentração decisória nas metrópoles</text>
+              <text x="52" y="194" fill="var(--svg-text)" font-size="12.5">• Fechamento de agências físicas no interior</text>
+              <text x="52" y="220" fill="var(--svg-text)" font-size="12.5">• Drenagem de poupança regional para liquidez</text>
+              <text x="52" y="246" fill="var(--svg-text)" font-size="12.5">• Foco em rentabilidade acionária de curto prazo</text>
+
+              <!-- Pivot Central (Balança) -->
+              <polygon points="410,145 384,215 436,215" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2"/>
+              <line x1="352" y1="158" x2="468" y2="158" stroke="var(--gold)" stroke-width="2.5"/>
+              <circle cx="410" cy="158" r="7" fill="var(--gold)"/>
+              <text x="410" y="238" text-anchor="middle" fill="var(--gold)" font-size="11" font-weight="700">ESCALA vs.</text>
+              <text x="410" y="253" text-anchor="middle" fill="var(--gold)" font-size="11" font-weight="700">ENRAIZAMENTO</text>
+
+              <!-- Lado Direito: Cooperativas de Crédito -->
+              <rect x="472" y="84" width="320" height="190" rx="14" fill="var(--emerald-soft)" stroke="var(--emerald)" stroke-width="1.6"/>
+              <text x="632" y="112" text-anchor="middle" fill="var(--emerald)" font-size="11.5" font-weight="700">POLO ENRAIZADO</text>
+              <text x="632" y="136" text-anchor="middle" fill="var(--svg-text)" font-size="15.5" font-weight="700" font-family="var(--font-serif)">Cooperativas de Crédito</text>
+              <text x="496" y="168" fill="var(--svg-text)" font-size="12.5">• Sicoob, Sicredi, Cresol em rede capilar</text>
+              <text x="496" y="194" fill="var(--svg-text)" font-size="12.5">• Presença ativa em pequenos municípios</text>
+              <text x="496" y="220" fill="var(--svg-text)" font-size="12.5">• Retenção local de crédito e sobras</text>
+              <text x="496" y="246" fill="var(--svg-text)" font-size="12.5">• Pressão por competitividade bancária</text>
+
+              <!-- Eixo inferior -->
+              <text x="410" y="310" text-anchor="middle" fill="var(--svg-subtext)" font-size="12">Pesquisa UFRGS: como o cooperativismo negocia sua identidade territorial sob a lógica da financeirização.</text>
+            </svg>
+          `;
+
+        /* 09: Cartografia dos Fenômenos Financeiros (Pipeline em 4 Etapas) */
+        case 'cartografia-financas':
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 320" role="img" aria-label="Pipeline metodológico da Cartografia dos Fenômenos Financeiros">
+              <defs>
+                <marker id="arr-pipe" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="var(--gold)"/>
+                </marker>
+              </defs>
+              <!-- Etapa 1 -->
+              <rect x="20" y="48" width="172" height="172" rx="12" fill="var(--svg-node-bg)" stroke="var(--cyan)" stroke-width="1.8"/>
+              <circle cx="106" cy="78" r="16" fill="var(--cyan-soft)"/>
+              <text x="106" y="83" text-anchor="middle" fill="var(--cyan)" font-size="12" font-weight="700">01</text>
+              <text x="106" y="114" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Dados Públicos</text>
+              <text x="106" y="140" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">CVM · Banco Central</text>
+              <text x="106" y="158" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">B3 · IBGE · Relatórios</text>
+              <text x="106" y="195" text-anchor="middle" fill="var(--cyan)" font-size="11">Coleta Empírica</text>
+
+              <line x1="194" y1="134" x2="218" y2="134" stroke="var(--gold)" stroke-width="2.2" marker-end="url(#arr-pipe)"/>
+
+              <!-- Etapa 2 -->
+              <rect x="224" y="48" width="172" height="172" rx="12" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-width="1.8"/>
+              <circle cx="310" cy="78" r="16" fill="var(--emerald-soft)"/>
+              <text x="310" y="83" text-anchor="middle" fill="var(--emerald)" font-size="12" font-weight="700">02</text>
+              <text x="310" y="114" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Tratamento Espacial</text>
+              <text x="310" y="140" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Geocodificação de Sedes</text>
+              <text x="310" y="158" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Matrizes Origem–Destino</text>
+              <text x="310" y="195" text-anchor="middle" fill="var(--emerald)" font-size="11">SIG &amp; Escalas</text>
+
+              <line x1="398" y1="134" x2="422" y2="134" stroke="var(--gold)" stroke-width="2.2" marker-end="url(#arr-pipe)"/>
+
+              <!-- Etapa 3 -->
+              <rect x="428" y="48" width="172" height="172" rx="12" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="1.8"/>
+              <circle cx="514" cy="78" r="16" fill="var(--gold-soft)"/>
+              <text x="514" y="83" text-anchor="middle" fill="var(--gold)" font-size="12" font-weight="700">03</text>
+              <text x="514" y="114" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Tipologia Topológica</text>
+              <text x="514" y="140" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Redes, Nós &amp; Fluxos</text>
+              <text x="514" y="158" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Densidade de Investidores</text>
+              <text x="514" y="195" text-anchor="middle" fill="var(--gold)" font-size="11">Visualização de Redes</text>
+
+              <line x1="602" y1="134" x2="626" y2="134" stroke="var(--gold)" stroke-width="2.2" marker-end="url(#arr-pipe)"/>
+
+              <!-- Etapa 4 -->
+              <rect x="632" y="48" width="168" height="172" rx="12" fill="var(--coral-soft)" stroke="var(--coral)" stroke-width="1.8"/>
+              <circle cx="716" cy="78" r="16" fill="var(--svg-node-bg)"/>
+              <text x="716" y="83" text-anchor="middle" fill="var(--coral)" font-size="12" font-weight="700">04</text>
+              <text x="716" y="114" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Cartografia Crítica</text>
+              <text x="716" y="140" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Torna Visível o Invisível</text>
+              <text x="716" y="158" text-anchor="middle" fill="var(--svg-subtext)" font-size="11.5">Refuta a "Morte da Geografia"</text>
+              <text x="716" y="195" text-anchor="middle" fill="var(--coral)" font-size="11">Interpretação Crítica</text>
+
+              <!-- Rodapé -->
+              <rect x="130" y="246" width="560" height="44" rx="10" fill="var(--svg-node-bg)" stroke="var(--border)"/>
+              <text x="410" y="273" text-anchor="middle" fill="var(--svg-text)" font-size="12.5">Objetivo: revelar a materialidade e a seletividade geográfica por trás da aparente abstração financeira.</text>
+            </svg>
+          `;
+
+        /* 10: Geografia Histórica Econômica e História do Pensamento Geográfico (Árvore Genealógica) */
+        case 'geografia-historica':
+        default:
+          return `
+            <svg class="diagram-svg" viewBox="0 0 820 350" role="img" aria-label="Genealogia intelectual da Geografia Histórica e do Pensamento Geográfico em Wagner Nabarro">
+              <!-- Conexões da Árvore -->
+              <path d="M 135 126 C 135 190, 410 175, 410 228" fill="none" stroke="var(--coral)" stroke-width="2" stroke-opacity="0.75"/>
+              <path d="M 320 126 C 320 185, 410 185, 410 228" fill="none" stroke="var(--cyan)" stroke-width="2" stroke-opacity="0.75"/>
+              <path d="M 500 126 C 500 185, 410 185, 410 228" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-opacity="0.75"/>
+              <path d="M 685 126 C 685 190, 410 175, 410 228" fill="none" stroke="var(--gold)" stroke-width="2" stroke-opacity="0.75"/>
+
+              <!-- 4 Matrizes Superiores -->
+              <rect x="35" y="34" width="200" height="92" rx="12" fill="var(--svg-node-bg)" stroke="var(--coral)" stroke-width="1.6"/>
+              <text x="135" y="60" text-anchor="middle" fill="var(--coral)" font-size="10.5" font-weight="700">SÉCULO XIX · BRASIL</text>
+              <text x="135" y="82" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Formação Sócio-Espacial</text>
+              <text x="135" y="103" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Atlas Histórico-Econômico</text>
+
+              <rect x="245" y="34" width="150" height="92" rx="12" fill="var(--svg-node-bg)" stroke="var(--cyan)" stroke-width="1.6"/>
+              <text x="320" y="60" text-anchor="middle" fill="var(--cyan)" font-size="10.5" font-weight="700">ESCOLA FRANCESA</text>
+              <text x="320" y="82" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Jean Gottmann</text>
+              <text x="320" y="103" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Centros Transacionais</text>
+
+              <rect x="425" y="34" width="150" height="92" rx="12" fill="var(--svg-node-bg)" stroke="var(--emerald)" stroke-width="1.6"/>
+              <text x="500" y="60" text-anchor="middle" fill="var(--emerald)" font-size="10.5" font-weight="700">ESCOLA FRANCESA</text>
+              <text x="500" y="82" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Jean Labasse</text>
+              <text x="500" y="103" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Finanças &amp; Planejamento</text>
+
+              <rect x="595" y="34" width="190" height="92" rx="12" fill="var(--svg-node-bg)" stroke="var(--gold)" stroke-width="1.6"/>
+              <text x="690" y="60" text-anchor="middle" fill="var(--gold)" font-size="10.5" font-weight="700">GEOGRAFIA BRASILEIRA</text>
+              <text x="690" y="82" text-anchor="middle" fill="var(--svg-text)" font-size="13.5" font-weight="700">Milton Santos</text>
+              <text x="690" y="103" text-anchor="middle" fill="var(--svg-subtext)" font-size="11">Território Usado &amp; Técnica</text>
+
+              <!-- Convergência: Agenda Contemporânea -->
+              <rect x="175" y="228" width="470" height="96" rx="16" fill="var(--gold-soft)" stroke="var(--gold)" stroke-width="2.2"/>
+              <text x="410" y="256" text-anchor="middle" fill="var(--gold)" font-size="11.5" font-weight="700" letter-spacing="1.2">CONVERGÊNCIA EPISTEMOLÓGICA</text>
+              <text x="410" y="281" text-anchor="middle" fill="var(--svg-text)" font-size="16" font-weight="700" font-family="var(--font-serif)">Agenda Contemporânea de Wagner Nabarro</text>
+              <text x="410" y="305" text-anchor="middle" fill="var(--svg-subtext)" font-size="12">Geografia das Finanças · Mercado de Capitais · Plataformas · Cartografia Crítica</text>
+            </svg>
+          `;
+      }
+    }
+
+    /* Ícones SVG pequenos para os blocos das Obras */
+    function getSmallIconSVG(name) {
+      const icons = {
+        map: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></svg>',
+        layers: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>',
+        network: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"></line><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"></line></svg>',
+        compass: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>',
+        book: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
+        cpu: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><line x1="9" y1="1" x2="9" y2="4"></line><line x1="15" y1="1" x2="15" y2="4"></line><line x1="9" y1="20" x2="9" y2="23"></line><line x1="15" y1="20" x2="15" y2="23"></line></svg>',
+        users: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+        clock: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>'
+      };
+      return icons[name] || icons.book;
+    }
+
+    /* ========================================================================
+       4. ESTADO DA APLICAÇÃO
+       ======================================================================== */
+    const state = {
+      activeTab: 'network',
+      selectedNetworkNode: 'espaco-mercado-capitais',
+      selectedConceptId: 'territorio-usado',
+      selectedWorkId: 'atlas-2024'
+    };
+
+    const colorVarMap = {
+      gold: 'var(--gold)',
+      cyan: 'var(--cyan)',
+      emerald: 'var(--emerald)',
+      coral: 'var(--coral)'
+    };
+
+    function getConceptById(id) {
+      return CONCEPTS.find(c => c.id === id) || CONCEPTS[0];
+    }
+
+    function getWorkById(id) {
+      return WORKS.find(w => w.id === id) || WORKS[0];
+    }
+
+    /* ========================================================================
+       5. RENDERIZAÇÃO DO MAPA CONCEITUAL (REDE SVG INTERATIVA)
+       ======================================================================== */
+    function renderNetworkGraph() {
+      const svg = document.getElementById('networkSvg');
+      const selectedId = state.selectedNetworkNode;
+
+      // Identifica conexões diretas do nó selecionado
+      const connectedEdges = NETWORK_EDGES.filter(
+        e => e.source === selectedId || e.target === selectedId
+      );
+      const neighborIds = new Set([selectedId]);
+      connectedEdges.forEach(e => {
+        neighborIds.add(e.source);
+        neighborIds.add(e.target);
+      });
+
+      let html = `
+        <!-- Grade cartográfica sutil -->
+        <g stroke="var(--grid-line)" stroke-width="1">
+          <circle cx="490" cy="300" r="130" fill="none" stroke-dasharray="4 6"/>
+          <circle cx="490" cy="300" r="245" fill="none" stroke-dasharray="4 6"/>
+          <line x1="490" y1="20" x2="490" y2="580"/>
+          <line x1="40" y1="300" x2="940" y2="300"/>
+        </g>
+        <text x="24" y="28" fill="var(--svg-subtext)" font-size="10.5" letter-spacing="1.4" opacity="0.7">LAT. TEÓRICA · GEOGRAFIA DAS FINANÇAS</text>
+        <text x="956" y="582" text-anchor="end" fill="var(--svg-subtext)" font-size="10.5" letter-spacing="1.2" opacity="0.7">10 CONCEITOS · 16 CONEXÕES</text>
+      `;
+
+      // Arestas
+      NETWORK_EDGES.forEach((edge, idx) => {
+        const s = getConceptById(edge.source);
+        const t = getConceptById(edge.target);
+        const isHighlighted = edge.source === selectedId || edge.target === selectedId;
+        const edgeClass = isHighlighted ? 'net-edge highlighted' : 'net-edge dimmed';
+        const strokeColor = isHighlighted ? colorVarMap[getConceptById(selectedId).axisColor] : 'var(--text-muted)';
+
+        // Ponto médio ligeiramente deslocado para leitura limpa
+        const mx = (s.pos.x + t.pos.x) / 2;
+        const my = (s.pos.y + t.pos.y) / 2;
+
+        html += `
+          <line
+            x1="${s.pos.x}" y1="${s.pos.y}"
+            x2="${t.pos.x}" y2="${t.pos.y}"
+            class="${edgeClass}"
+            stroke="${strokeColor}"
+          />
+        `;
+
+        // Rótulo da aresta aparece apenas quando conectada ao nó ativo (sem sobreposição!)
+        if (isHighlighted) {
+          const labelWidth = Math.max(96, edge.label.length * 6.2 + 16);
+          html += `
+            <g class="net-edge-label-group visible">
+              <rect
+                x="${mx - labelWidth / 2}" y="${my - 11}"
+                width="${labelWidth}" height="20" rx="10"
+                fill="var(--svg-bg)" stroke="${strokeColor}" stroke-width="1"
+              />
+              <text x="${mx}" y="${my + 3}" text-anchor="middle" fill="var(--svg-text)" font-size="10" font-weight="500">
+                ${edge.label}
+              </text>
+            </g>
+          `;
+        }
+      });
+
+      // Nós (10 conceitos)
+      CONCEPTS.forEach(c => {
+        const isSelected = c.id === selectedId;
+        const isNeighbor = neighborIds.has(c.id);
+        const nodeClass = isSelected
+          ? 'net-node selected'
+          : (isNeighbor ? 'net-node' : 'net-node dimmed');
+        const accent = colorVarMap[c.axisColor];
+
+        // Quebra de título em 2 linhas para nunca estourar
+        const words = c.shortTitle.split(' ');
+        const mid = Math.ceil(words.length / 2);
+        const line1 = words.slice(0, mid).join(' ');
+        const line2 = words.slice(mid).join(' ');
+
+        html += `
+          <g class="${nodeClass}" data-node-id="${c.id}" tabindex="0" role="button" aria-label="${c.title}">
+            ${isSelected ? `<circle cx="${c.pos.x}" cy="${c.pos.y}" r="39" fill="${accent}" opacity="0.18"/>` : ''}
+            <circle
+              class="net-node-ring"
+              cx="${c.pos.x}" cy="${c.pos.y}" r="${isSelected ? 30 : 25}"
+              fill="var(--svg-node-bg)"
+              stroke="${accent}"
+              stroke-width="${isSelected ? 3 : 2}"
+            />
+            <text x="${c.pos.x}" y="${c.pos.y + 4}" text-anchor="middle" fill="${accent}" font-size="12.5" font-weight="700">
+              ${c.num}
+            </text>
+            <rect
+              x="${c.pos.x - 86}" y="${c.pos.y + 33}"
+              width="172" height="34" rx="8"
+              fill="var(--svg-bg)" fill-opacity="0.88"
+              stroke="${isSelected ? accent : 'transparent'}" stroke-width="1"
+            />
+            <text x="${c.pos.x}" y="${c.pos.y + 47}" text-anchor="middle" fill="var(--svg-text)" font-size="11" font-weight="600">
+              ${line1}
+            </text>
+            <text x="${c.pos.x}" y="${c.pos.y + 61}" text-anchor="middle" fill="var(--svg-subtext)" font-size="10.5">
+              ${line2}
+            </text>
+          </g>
+        `;
+      });
+
+      svg.innerHTML = html;
+
+      // Eventos de clique e teclado nos nós
+      svg.querySelectorAll('.net-node').forEach(node => {
+        const id = node.getAttribute('data-node-id');
+        node.addEventListener('click', () => {
+          state.selectedNetworkNode = id;
+          renderNetworkGraph();
+          renderNetworkInspector();
+        });
+        node.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            state.selectedNetworkNode = id;
+            renderNetworkGraph();
+            renderNetworkInspector();
+          }
+        });
+      });
+    }
+
+    function renderNetworkInspector() {
+      const container = document.getElementById('networkInspector');
+      const concept = getConceptById(state.selectedNetworkNode);
+
+      const directEdges = NETWORK_EDGES.filter(
+        e => e.source === concept.id || e.target === concept.id
+      );
+
+      const edgesHtml = directEdges.map(edge => {
+        const targetId = edge.source === concept.id ? edge.target : edge.source;
+        const targetConcept = getConceptById(targetId);
+        return `
+          <button class="edge-chip" data-jump-node="${targetId}">
+            <span class="edge-chip-rel">${edge.label}</span>
+            <span class="edge-chip-target">${targetConcept.num}. ${targetConcept.title}</span>
+          </button>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <span class="inspector-badge tag-${concept.axisColor}">Conceito ${concept.num} · ${concept.axis}</span>
+        <h3 class="inspector-title">${concept.title}</h3>
+        <p class="inspector-desc">${concept.summary}</p>
+
+        <button class="btn-primary" id="openFullConceptBtn">
+          Ver explicação visual completa
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+
+        <div>
+          <div class="inspector-subtitle">Conexões Diretas (${directEdges.length})</div>
+          <div class="edge-list">${edgesHtml}</div>
+        </div>
+      `;
+
+      document.getElementById('openFullConceptBtn').addEventListener('click', () => {
+        navigateToConcept(concept.id);
+      });
+
+      container.querySelectorAll('[data-jump-node]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedNetworkNode = btn.getAttribute('data-jump-node');
+          renderNetworkGraph();
+          renderNetworkInspector();
+        });
+      });
+    }
+
+    /* ========================================================================
+       6. RENDERIZAÇÃO DA ABA 2: UNIVERSO CONCEITUAL (10 CONCEITOS)
+       ======================================================================== */
+    function renderConceptsMenu() {
+      const menu = document.getElementById('conceptsMenu');
+      const itemsHtml = CONCEPTS.map(c => `
+        <button class="menu-item ${c.id === state.selectedConceptId ? 'active' : ''}" data-concept-id="${c.id}">
+          <span class="menu-num">${c.num}</span>
+          <span class="menu-text">
+            <span class="menu-title">${c.shortTitle}</span>
+            <span class="menu-meta">${c.axis}</span>
+          </span>
+        </button>
+      `).join('');
+
+      menu.innerHTML = `
+        <div class="sidebar-heading">10 Conceitos-Chave</div>
+        ${itemsHtml}
+      `;
+
+      menu.querySelectorAll('[data-concept-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedConceptId = btn.getAttribute('data-concept-id');
+          renderConceptsMenu();
+          renderConceptDetail();
+          if (window.innerWidth <= 1040) {
+            document.getElementById('conceptDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    }
+
+    function renderConceptDetail() {
+      const panel = document.getElementById('conceptDetail');
+      const c = getConceptById(state.selectedConceptId);
+      const currentIdx = CONCEPTS.findIndex(item => item.id === c.id);
+      const prev = CONCEPTS[(currentIdx - 1 + CONCEPTS.length) % CONCEPTS.length];
+      const next = CONCEPTS[(currentIdx + 1) % CONCEPTS.length];
+
+      const relatedConceptButtons = c.relatedConcepts.map(rcId => {
+        const rc = getConceptById(rcId);
+        return `<button class="cross-pill" data-goto-concept="${rc.id}"><span>${rc.num}.</span> ${rc.shortTitle}</button>`;
+      }).join('');
+
+      const relatedWorkButtons = c.relatedWorks.map(rwId => {
+        const rw = getWorkById(rwId);
+        return `<button class="cross-pill work-pill" data-goto-work="${rw.id}"><span>${rw.year}</span> · ${rw.title}</button>`;
+      }).join('');
+
+      panel.innerHTML = `
+        <div class="detail-header">
+          <div class="detail-meta-row">
+            <span class="tag-pill tag-${c.axisColor}">Conceito ${c.num} de 10</span>
+            <span class="tag-pill tag-gold">${c.axis}</span>
+          </div>
+          <h2 class="detail-title">${c.title}</h2>
+          <p class="detail-definition">${c.definition}</p>
+        </div>
+
+        <div class="visual-box">
+          <div class="visual-box-header">
+            <span class="visual-box-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+                <line x1="3" y1="9" x2="21" y2="9"></line>
+                <line x1="9" y1="21" x2="9" y2="9"></line>
+              </svg>
+              Esquema Visual Exclusivo
+            </span>
+            <span class="visual-box-caption">${c.diagramCaption}</span>
+          </div>
+          ${getConceptDiagramSVG(c.id)}
+        </div>
+
+        <div class="cross-links-grid">
+          <div class="cross-card">
+            <div class="cross-card-title">Conceitos Interligados (Navegação Direta)</div>
+            <div class="link-pills">${relatedConceptButtons}</div>
+          </div>
+          <div class="cross-card">
+            <div class="cross-card-title">Obras Associadas (Ir para Principais Obras)</div>
+            <div class="link-pills">${relatedWorkButtons}</div>
+          </div>
+        </div>
+
+        <div class="detail-nav-footer">
+          <button class="btn-secondary" data-goto-concept="${prev.id}">← ${prev.num}. ${prev.shortTitle}</button>
+          <button class="btn-secondary" id="viewInNetworkBtn">Ver na Rede Conceitual</button>
+          <button class="btn-secondary" data-goto-concept="${next.id}">${next.num}. ${next.shortTitle} →</button>
+        </div>
+      `;
+
+      panel.querySelectorAll('[data-goto-concept]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navigateToConcept(btn.getAttribute('data-goto-concept'));
+        });
+      });
+
+      panel.querySelectorAll('[data-goto-work]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navigateToWork(btn.getAttribute('data-goto-work'));
+        });
+      });
+
+      document.getElementById('viewInNetworkBtn').addEventListener('click', () => {
+        state.selectedNetworkNode = c.id;
+        switchTab('network');
+        renderNetworkGraph();
+        renderNetworkInspector();
+      });
+    }
+
+    /* ========================================================================
+       7. RENDERIZAÇÃO DA ABA 3: PRINCIPAIS OBRAS (8 OBRAS)
+       ======================================================================== */
+    function renderWorksMenu() {
+      const menu = document.getElementById('worksMenu');
+      const itemsHtml = WORKS.map(w => `
+        <button class="menu-item ${w.id === state.selectedWorkId ? 'active' : ''}" data-work-id="${w.id}">
+          <span class="menu-num">${w.num}</span>
+          <span class="menu-text">
+            <span class="menu-title">${w.title}</span>
+            <span class="menu-meta">${w.year} · ${w.type}</span>
+          </span>
+        </button>
+      `).join('');
+
+      menu.innerHTML = `
+        <div class="sidebar-heading">8 Obras de Referência</div>
+        ${itemsHtml}
+      `;
+
+      menu.querySelectorAll('[data-work-id]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.selectedWorkId = btn.getAttribute('data-work-id');
+          renderWorksMenu();
+          renderWorkDetail();
+          if (window.innerWidth <= 1040) {
+            document.getElementById('workDetail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    }
+
+    function renderWorkDetail() {
+      const panel = document.getElementById('workDetail');
+      const w = getWorkById(state.selectedWorkId);
+      const currentIdx = WORKS.findIndex(item => item.id === w.id);
+      const prev = WORKS[(currentIdx - 1 + WORKS.length) % WORKS.length];
+      const next = WORKS[(currentIdx + 1) % WORKS.length];
+
+      const blocksHtml = w.blocks.map(b => `
+        <div class="schema-block accent-${b.accent}">
+          <div class="schema-block-top">
+            <span class="schema-step">${b.step}</span>
+            <span class="schema-icon">${getSmallIconSVG(b.icon)}</span>
+          </div>
+          <h4 class="schema-block-title">${b.title}</h4>
+          <p class="schema-block-desc">${b.desc}</p>
+        </div>
+      `).join('');
+
+      const conceptButtons = w.concepts.map(cId => {
+        const c = getConceptById(cId);
+        return `<button class="cross-pill" data-goto-concept="${c.id}"><span>${c.num}.</span> ${c.title}</button>`;
+      }).join('');
+
+      panel.innerHTML = `
+        <div class="detail-header">
+          <div class="detail-meta-row">
+            <span class="tag-pill tag-gold">Obra ${w.num} de 8</span>
+            <span class="tag-pill tag-cyan">${w.year}</span>
+            <span class="tag-pill tag-emerald">${w.type}</span>
+          </div>
+          <h2 class="detail-title">${w.title}</h2>
+          <p class="detail-definition"><strong>Tese central:</strong> ${w.thesis}</p>
+        </div>
+
+        <!-- Ficha Técnica -->
+        <div class="ficha-grid">
+          <div class="ficha-item">
+            <div class="ficha-label">Ano / Período</div>
+            <div class="ficha-value">${w.year}</div>
+          </div>
+          <div class="ficha-item">
+            <div class="ficha-label">Tipo de Obra</div>
+            <div class="ficha-value">${w.type}</div>
+          </div>
+          <div class="ficha-item">
+            <div class="ficha-label">Instituição / Editora</div>
+            <div class="ficha-value">${w.institution}</div>
+          </div>
+          <div class="ficha-item">
+            <div class="ficha-label">Autoria / Coautoria</div>
+            <div class="ficha-value">${w.authors}</div>
+          </div>
+        </div>
+
+        <!-- Esquema Visual Estruturado do Conteúdo da Obra -->
+        <div class="visual-box">
+          <div class="visual-box-header">
+            <span class="visual-box-label">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                <polyline points="2 17 12 22 22 17"></polyline>
+                <polyline points="2 12 12 17 22 12"></polyline>
+              </svg>
+              Esquema Visual do Conteúdo da Obra
+            </span>
+            <span class="visual-box-caption">${w.blocks.length} eixos estruturantes</span>
+          </div>
+
+          <div class="book-schema-grid">${blocksHtml}</div>
+
+          <div class="schema-flow-bar">
+            <span>Encadeamento estrutural:</span>
+            <strong style="color: var(--text-primary);">${w.schemaFlow}</strong>
+          </div>
+        </div>
+
+        <!-- Contribuição para a Geografia -->
+        <div class="contribution-box">
+          <div class="contribution-label">Contribuição para a Geografia</div>
+          <p class="contribution-text">${w.contribution}</p>
+        </div>
+
+        <!-- Conceitos Mobilizados -->
+        <div class="cross-card">
+          <div class="cross-card-title">Conceitos Mobilizados nesta Obra (Clique para explorar)</div>
+          <div class="link-pills">${conceptButtons}</div>
+        </div>
+
+        <div class="detail-nav-footer">
+          <button class="btn-secondary" data-goto-work="${prev.id}">← Obra ${prev.num} (${prev.year})</button>
+          <button class="btn-secondary" data-goto-work="${next.id}">Obra ${next.num} (${next.year}) →</button>
+        </div>
+      `;
+
+      panel.querySelectorAll('[data-goto-concept]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navigateToConcept(btn.getAttribute('data-goto-concept'));
+        });
+      });
+
+      panel.querySelectorAll('[data-goto-work]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navigateToWork(btn.getAttribute('data-goto-work'));
+        });
+      });
+    }
+
+    /* ========================================================================
+       8. NAVEGAÇÃO ENTRE ABAS, LINKS CRUZADOS, BUSCA E TEMA
+       ======================================================================== */
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        const isActive = btn.getAttribute('data-tab') === tabName;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-selected', String(isActive));
+      });
+
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === `panel-${tabName}`);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function navigateToConcept(conceptId) {
+      state.selectedConceptId = conceptId;
+      state.selectedNetworkNode = conceptId;
+      switchTab('concepts');
+      renderConceptsMenu();
+      renderConceptDetail();
+    }
+
+    function navigateToWork(workId) {
+      state.selectedWorkId = workId;
+      switchTab('works');
+      renderWorksMenu();
+      renderWorkDetail();
+    }
+
+    /* Busca rápida global */
+    function initSearch() {
+      const input = document.getElementById('globalSearch');
+      const clearBtn = document.getElementById('clearSearch');
+      const resultsBox = document.getElementById('searchResults');
+
+      function normalize(str) {
+        return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      }
+
+      function renderResults(query) {
+        const q = normalize(query.trim());
+        clearBtn.classList.toggle('visible', q.length > 0);
+
+        if (!q) {
+          resultsBox.classList.remove('open');
+          resultsBox.innerHTML = '';
+          return;
+        }
+
+        const matchedConcepts = CONCEPTS.filter(c =>
+          normalize(`${c.title} ${c.axis} ${c.definition}`).includes(q)
+        );
+        const matchedWorks = WORKS.filter(w =>
+          normalize(`${w.title} ${w.year} ${w.authors} ${w.institution} ${w.thesis}`).includes(q)
+        );
+
+        if (!matchedConcepts.length && !matchedWorks.length) {
+          resultsBox.innerHTML = '<div class="search-empty">Nenhum conceito ou obra encontrado para essa busca.</div>';
+          resultsBox.classList.add('open');
+          return;
+        }
+
+        let html = '';
+        if (matchedConcepts.length) {
+          html += '<div class="search-group-label">Conceitos</div>';
+          html += matchedConcepts.map(c => `
+            <button class="search-item" data-search-concept="${c.id}">
+              <span>${c.num}. ${c.title}</span>
+              <span class="search-item-meta">Conceito</span>
+            </button>
+          `).join('');
+        }
+        if (matchedWorks.length) {
+          html += '<div class="search-group-label">Principais Obras</div>';
+          html += matchedWorks.map(w => `
+            <button class="search-item" data-search-work="${w.id}">
+              <span>${w.title}</span>
+              <span class="search-item-meta">${w.year}</span>
+            </button>
+          `).join('');
+        }
+
+        resultsBox.innerHTML = html;
+        resultsBox.classList.add('open');
+
+        resultsBox.querySelectorAll('[data-search-concept]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            navigateToConcept(btn.getAttribute('data-search-concept'));
+            resultsBox.classList.remove('open');
+          });
+        });
+
+        resultsBox.querySelectorAll('[data-search-work]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            navigateToWork(btn.getAttribute('data-search-work'));
+            resultsBox.classList.remove('open');
+          });
+        });
+      }
+
+      input.addEventListener('input', e => renderResults(e.target.value));
+      input.addEventListener('focus', e => {
+        if (e.target.value.trim()) renderResults(e.target.value);
+      });
+
+      clearBtn.addEventListener('click', () => {
+        input.value = '';
+        renderResults('');
+        input.focus();
+      });
+
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.search-wrapper')) {
+          resultsBox.classList.remove('open');
+        }
+      });
+    }
+
+    /* Alternância de tema (Escuro Cartográfico / Claro Editorial) */
+    function initThemeToggle() {
+      const btn = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+
+      btn.addEventListener('click', () => {
+        const htmlEl = document.documentElement;
+        const current = htmlEl.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        htmlEl.setAttribute('data-theme', next);
+        icon.textContent = next === 'dark' ? '☀️' : '🌙';
+        label.textContent = next === 'dark' ? 'Modo Editorial' : 'Modo Escuro';
+      });
+    }
+
+    /* Inicialização geral */
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.getAttribute('data-tab')));
+      });
+
+      initSearch();
+      initThemeToggle();
+      renderNetworkGraph();
+      renderNetworkInspector();
+      renderConceptsMenu();
+      renderConceptDetail();
+      renderWorksMenu();
+      renderWorkDetail();
+    });
+  </script>
+</body>
+</html>
