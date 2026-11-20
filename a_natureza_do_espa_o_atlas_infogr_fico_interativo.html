@@ -1,0 +1,2988 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Natureza do Espaço — Atlas Infográfico Interativo | Milton Santos</title>
+
+  <!-- Fontes opcionais Google Fonts com fallback editorial elegante -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,700;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================================
+       TOKENS DE DESIGN — PALETA DA CAPA EDUSP / COLEÇÃO MILTON SANTOS
+       ========================================================================= */
+    :root {
+      --bg-paper: #F6F3EB;
+      --bg-surface: #FFFFFF;
+      --border-soft: #E2DDD0;
+      --border-strong: #CCC5B3;
+
+      --teal: #1A4A4F;
+      --teal-dark: #123539;
+      --teal-soft: #E6F0F0;
+
+      --terracotta: #B85D3B;
+      --terracotta-soft: #FDF1EC;
+
+      --amber: #C68B2C;
+      --amber-soft: #FBF4E4;
+
+      --olive: #3F6A4E;
+      --olive-soft: #EAF2EC;
+
+      --text-main: #1D2322;
+      --text-muted: #4F5957;
+
+      --font-serif: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
+      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --sidebar-w: 290px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 2px 8px rgba(26, 74, 79, 0.05);
+      --shadow-md: 0 8px 24px rgba(29, 35, 34, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-paper);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(rgba(26, 74, 79, 0.045) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    button, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    /* =========================================================================
+       LAYOUT PRINCIPAL & BARRA LATERAL
+       ========================================================================= */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Cabeçalho Mobile */
+    .mobile-topbar {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(246, 243, 235, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 12px 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+      background: var(--bg-surface);
+      color: var(--teal);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.18s ease, border-color 0.18s ease;
+    }
+    .icon-btn:hover {
+      background: var(--teal-soft);
+      border-color: var(--teal);
+    }
+
+    .mobile-brand {
+      text-align: center;
+      flex: 1;
+      min-width: 0;
+    }
+    .mobile-brand strong {
+      display: block;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--teal);
+      line-height: 1.15;
+    }
+    .mobile-brand span {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--terracotta);
+    }
+
+    .progress-pill {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--teal-soft);
+      color: var(--teal);
+      border: 1px solid rgba(26, 74, 79, 0.2);
+      white-space: nowrap;
+    }
+
+    /* Sidebar fixa desktop / Drawer mobile */
+    .sidebar {
+      width: var(--sidebar-w);
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      z-index: 50;
+      transition: transform 0.24s ease;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(29, 35, 34, 0.45);
+      z-index: 45;
+    }
+    .sidebar-overlay.open {
+      display: block;
+    }
+
+    .sidebar-header {
+      padding: 20px 18px 16px;
+      background: linear-gradient(155deg, var(--teal) 0%, var(--teal-dark) 100%);
+      color: #F6F3EB;
+      position: relative;
+    }
+
+    .sidebar-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #FBF4E4;
+      background: rgba(198, 139, 44, 0.28);
+      border: 1px solid rgba(251, 244, 228, 0.25);
+      padding: 2px 8px;
+      border-radius: 999px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-serif);
+      font-size: 1.32rem;
+      font-weight: 700;
+      line-height: 1.15;
+      color: #FFFFFF;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.76rem;
+      color: rgba(246, 243, 235, 0.85);
+      margin-top: 3px;
+    }
+
+    .sidebar-author {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: #F4D59A;
+      margin-top: 6px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .close-drawer-btn {
+      display: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.1);
+      color: #FFFFFF;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Mini barra de progresso */
+    .study-progress-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+    }
+    .study-progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+      margin-bottom: 6px;
+      color: rgba(246, 243, 235, 0.9);
+    }
+    .study-progress-meta span:last-child {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      color: #F4D59A;
+    }
+    .progress-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--amber), #E8B85B);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    /* Busca instantânea */
+    .search-box {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border-soft);
+      background: #FAF8F3;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      padding: 9px 32px 9px 34px;
+      font-size: 0.8rem;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .search-input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(26, 74, 79, 0.12);
+    }
+    .search-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .search-clear {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding: 2px 6px;
+      display: none;
+    }
+    .search-clear.visible {
+      display: block;
+    }
+
+    /* Navegação da Sidebar */
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 10px 20px;
+    }
+
+    .nav-item {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      color: var(--text-main);
+      transition: all 0.16s ease;
+      margin-bottom: 3px;
+    }
+    .nav-item:hover {
+      background: var(--bg-paper);
+      border-color: var(--border-soft);
+    }
+    .nav-item.active {
+      background: var(--teal-soft);
+      border-color: rgba(26, 74, 79, 0.35);
+    }
+
+    .nav-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-paper);
+      color: var(--text-muted);
+      border: 1px solid var(--border-soft);
+      margin-top: 1px;
+    }
+    .nav-item.active .nav-num {
+      background: var(--teal);
+      color: #FFFFFF;
+      border-color: var(--teal);
+    }
+
+    .nav-label {
+      flex: 1;
+      min-width: 0;
+    }
+    .nav-label-title {
+      display: block;
+      font-size: 0.79rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text-main);
+    }
+    .nav-item.active .nav-label-title {
+      color: var(--teal-dark);
+    }
+    .nav-label-sub {
+      display: block;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .nav-check {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: transparent;
+      margin-top: 3px;
+      transition: all 0.16s ease;
+    }
+    .nav-check.done {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .part-group {
+      margin-top: 14px;
+    }
+    .part-group-header {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 8px 6px;
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .part-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border-soft);
+      background: #FAF8F3;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .reset-btn {
+      background: transparent;
+      border: none;
+      color: var(--terracotta);
+      font-weight: 600;
+      font-size: 0.7rem;
+      text-decoration: underline;
+    }
+
+    /* =========================================================================
+       ÁREA PRINCIPAL DE CONTEÚDO
+       ========================================================================= */
+    .main-area {
+      flex: 1;
+      min-width: 0;
+      padding: 32px 40px 64px;
+    }
+
+    .content-container {
+      max-width: 980px;
+      margin: 0 auto;
+      animation: fadeUp 0.28s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cabeçalho de Capítulo */
+    .chapter-header {
+      margin-bottom: 24px;
+    }
+    .chapter-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .part-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border-radius: 999px;
+      color: #FFFFFF;
+    }
+
+    .study-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      transition: all 0.18s ease;
+    }
+    .study-toggle-btn:hover {
+      border-color: var(--olive);
+      color: var(--olive);
+    }
+    .study-toggle-btn.studied {
+      background: var(--olive);
+      border-color: var(--olive);
+      color: #FFFFFF;
+    }
+
+    .chapter-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 3vw, 2.45rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+    .chapter-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+      max-width: 780px;
+    }
+
+    .editorial-divider {
+      height: 4px;
+      width: 100%;
+      margin: 20px 0 24px;
+      border-radius: 4px;
+      background: repeating-linear-gradient(
+        -45deg,
+        rgba(26, 74, 79, 0.14),
+        rgba(26, 74, 79, 0.14) 3px,
+        transparent 3px,
+        transparent 7px
+      );
+    }
+
+    /* Cards Base */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-lg);
+      padding: 24px 26px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 24px;
+    }
+
+    .thesis-card {
+      border-left: 5px solid var(--teal);
+    }
+    .section-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--teal);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .section-heading {
+      font-family: var(--font-serif);
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .thesis-text {
+      font-size: 0.96rem;
+      color: var(--text-main);
+      line-height: 1.68;
+    }
+
+    /* Infográfico Container */
+    .infographic-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      padding: 26px;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .infographic-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .infographic-lead {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      max-width: 720px;
+    }
+
+    /* Controles Interativos Comuns */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .ctrl-btn {
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-paper);
+      color: var(--text-main);
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.16s ease;
+    }
+    .ctrl-btn:hover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+    .ctrl-btn.active {
+      background: var(--teal);
+      color: #FFFFFF;
+      border-color: var(--teal);
+      box-shadow: 0 2px 8px rgba(26, 74, 79, 0.22);
+    }
+    .ctrl-btn.active-terracotta {
+      background: var(--terracotta);
+      color: #FFFFFF;
+      border-color: var(--terracotta);
+    }
+    .ctrl-btn.active-amber {
+      background: var(--amber);
+      color: #FFFFFF;
+      border-color: var(--amber);
+    }
+    .ctrl-btn.active-olive {
+      background: var(--olive);
+      color: #FFFFFF;
+      border-color: var(--olive);
+    }
+
+    .panel-soft {
+      background: #FAF8F3;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 18px;
+    }
+
+    /* Sliders */
+    input[type="range"].atlas-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 7px;
+      background: var(--border-soft);
+      border-radius: 999px;
+      outline: none;
+    }
+    input[type="range"].atlas-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(26, 74, 79, 0.35);
+      cursor: pointer;
+    }
+    input[type="range"].atlas-slider::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: 3px solid #FFFFFF;
+      box-shadow: 0 2px 6px rgba(26, 74, 79, 0.35);
+      cursor: pointer;
+    }
+
+    /* Grids utilitários */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    /* Conceitos-chave */
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .concept-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.16s ease, border-color 0.16s ease;
+    }
+    .concept-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--border-strong);
+    }
+    .concept-tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--terracotta);
+      margin-bottom: 5px;
+      display: block;
+    }
+    .concept-card h4 {
+      font-family: var(--font-serif);
+      font-size: 1.06rem;
+      font-weight: 700;
+      color: var(--teal-dark);
+      margin-bottom: 6px;
+      line-height: 1.25;
+    }
+    .concept-card p {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Blockquote Editorial */
+    .editorial-quote {
+      margin: 26px 0;
+      background: var(--teal-soft);
+      border-left: 4px solid var(--teal);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 20px 24px;
+    }
+    .editorial-quote p {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.12rem;
+      color: var(--teal-dark);
+      line-height: 1.55;
+    }
+    .editorial-quote footer {
+      margin-top: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    /* Navegação Inferior */
+    .chapter-footer-nav {
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: stretch;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .nav-step-btn {
+      flex: 1;
+      min-width: 220px;
+      max-width: 380px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-soft);
+      background: var(--bg-surface);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.18s ease;
+      text-align: left;
+    }
+    .nav-step-btn:hover {
+      border-color: var(--teal);
+      background: var(--teal-soft);
+    }
+    .nav-step-btn.next {
+      margin-left: auto;
+      justify-content: flex-end;
+      text-align: right;
+      background: var(--teal);
+      border-color: var(--teal);
+      color: #FFFFFF;
+    }
+    .nav-step-btn.next:hover {
+      background: var(--teal-dark);
+    }
+    .nav-step-meta {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.72;
+      display: block;
+    }
+    .nav-step-title {
+      font-size: 0.86rem;
+      font-weight: 600;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* Barras de Medição Visual */
+    .meter-row {
+      margin-bottom: 12px;
+    }
+    .meter-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    .meter-head span:last-child {
+      font-family: var(--font-mono);
+    }
+    .meter-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-paper);
+      border: 1px solid var(--border-soft);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+
+    /* Tabelas comparativas */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+    .compare-table th, .compare-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border-soft);
+      text-align: left;
+      vertical-align: top;
+    }
+    .compare-table th {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--bg-paper);
+      color: var(--teal-dark);
+    }
+
+    /* SVGs responsivos */
+    .svg-stage {
+      width: 100%;
+      background: #FAF8F3;
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      overflow: hidden;
+    }
+    .svg-stage svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Tag chips */
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 500;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-surface);
+      color: var(--text-main);
+    }
+    .chip-teal { background: var(--teal-soft); border-color: rgba(26,74,79,0.28); color: var(--teal-dark); }
+    .chip-terra { background: var(--terracotta-soft); border-color: rgba(184,93,59,0.3); color: #8B3F23; }
+    .chip-amber { background: var(--amber-soft); border-color: rgba(198,139,44,0.35); color: #875B14; }
+    .chip-olive { background: var(--olive-soft); border-color: rgba(63,106,78,0.3); color: #284A34; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 90;
+      background: var(--teal-dark);
+      color: #F6F3EB;
+      padding: 11px 16px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+      border: 1px solid rgba(244, 213, 154, 0.35);
+      display: none;
+      align-items: center;
+      gap: 9px;
+    }
+    .toast.show {
+      display: flex;
+    }
+    .toast-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--amber);
+    }
+
+    /* Responsividade */
+    @media (max-width: 960px) {
+      .mobile-topbar {
+        display: flex;
+      }
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .close-drawer-btn {
+        display: inline-flex;
+      }
+      .main-area {
+        padding: 20px 16px 48px;
+      }
+      .card, .infographic-card {
+        padding: 18px;
+      }
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra Superior Mobile -->
+  <header class="mobile-topbar">
+    <button id="open-drawer-btn" class="icon-btn" type="button" aria-label="Abrir sumário">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/>
+      </svg>
+    </button>
+    <div class="mobile-brand">
+      <strong>A Natureza do Espaço</strong>
+      <span>Atlas Infográfico • Milton Santos</span>
+    </div>
+    <div id="mobile-progress-pill" class="progress-pill">0/15</div>
+  </header>
+
+  <div id="sidebar-overlay" class="sidebar-overlay" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <!-- Barra Lateral Fixa -->
+    <aside id="sidebar" class="sidebar" aria-label="Navegação da obra">
+      <div class="sidebar-header">
+        <button id="close-drawer-btn" class="close-drawer-btn" type="button" aria-label="Fechar menu">✕</button>
+        <span class="sidebar-badge">Coleção Milton Santos • Vol. 1</span>
+        <h1 class="sidebar-title">A Natureza do Espaço</h1>
+        <p class="sidebar-subtitle">Técnica e Tempo. Razão e Emoção</p>
+        <p class="sidebar-author">Milton Santos • 4ª ed., Edusp</p>
+
+        <div class="study-progress-box">
+          <div class="study-progress-meta">
+            <span>Progresso de Estudo</span>
+            <span id="sidebar-progress-label">0 / 15</span>
+          </div>
+          <div class="progress-track">
+            <div id="sidebar-progress-fill" class="progress-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Busca Instantânea -->
+      <div class="search-box">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="M20 20l-3.5-3.5"/>
+          </svg>
+          <input id="search-input" class="search-input" type="text" placeholder="Filtrar capítulo ou conceito..." autocomplete="off">
+          <button id="search-clear" class="search-clear" type="button" aria-label="Limpar busca">✕</button>
+        </div>
+      </div>
+
+      <!-- Lista de Capítulos -->
+      <nav id="sidebar-nav" class="sidebar-nav"></nav>
+
+      <div class="sidebar-footer">
+        <span>Atlas Interativo</span>
+        <button id="reset-progress-btn" class="reset-btn" type="button">Reiniciar progresso</button>
+      </div>
+    </aside>
+
+    <!-- Área Principal -->
+    <main class="main-area">
+      <div id="main-content" class="content-container"></div>
+    </main>
+  </div>
+
+  <!-- Toast de Feedback -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span class="toast-dot"></span>
+    <span id="toast-msg"></span>
+  </div>
+
+  <script>
+    /* =========================================================================
+       BASE DE DADOS FIDEDIGNA — A NATUREZA DO ESPAÇO (MILTON SANTOS, EDUSP)
+       ========================================================================= */
+
+    const STORAGE_KEY = 'milton_santos_natureza_espaco_v1';
+
+    const PARTS = {
+      p1: {
+        id: 'p1',
+        roman: 'Parte I',
+        title: 'Uma Ontologia do Espaço: Noções Fundadoras',
+        color: '#1A4A4F',
+        soft: '#E6F0F0',
+        chapters: [1, 2, 3]
+      },
+      p2: {
+        id: 'p2',
+        roman: 'Parte II',
+        title: 'A Produção das Formas-Conteúdo',
+        color: '#B85D3B',
+        soft: '#FDF1EC',
+        chapters: [4, 5, 6]
+      },
+      p3: {
+        id: 'p3',
+        roman: 'Parte III',
+        title: 'Por uma Geografia do Presente',
+        color: '#C68B2C',
+        soft: '#FBF4E4',
+        chapters: [7, 8, 9, 10, 11, 12, 13]
+      },
+      p4: {
+        id: 'p4',
+        roman: 'Parte IV',
+        title: 'A Força do Lugar',
+        color: '#3F6A4E',
+        soft: '#EAF2EC',
+        chapters: [14, 15]
+      }
+    };
+
+    const CHAPTERS = [
+      {
+        id: 1,
+        part: 'p1',
+        title: 'As Técnicas, o Tempo e o Espaço Geográfico',
+        subtitle: 'A técnica como meio, a empiricização do tempo e a idade de um lugar.',
+        thesis: 'A técnica é o principal elo entre o homem e o meio e permite superar o dualismo entre tempo e espaço. Ao se materializar em sistemas técnicos datados, a técnica empiriciza o tempo e permite datar cada fração do território — revelando que o lugar não recebe técnicas de forma passiva, mas as redefine em conjunto.',
+        keywords: ['técnica', 'empiricização do tempo', 'idade de um lugar', 'tempo espacial', 'rugosidades', 'reverse salient', 'meio associado', 'hipertelia', 'Simondon'],
+        concepts: [
+          { tag: 'Conceito Central', name: 'Empiricização do Tempo', desc: 'Tornar o tempo material por intermédio das técnicas e do trabalho, equiparando-o ao espaço geográfico e superando a separação abstrata entre tempo e espaço.' },
+          { tag: 'Datação', name: 'Idade Científica vs. Idade Histórica', desc: 'A idade científica é a data de invenção no laboratório; a idade histórica é quando a técnica se incorpora à vida social de um lugar — só então ela existe como técnica.' },
+          { tag: 'Herança Territorial', name: 'Rugosidades vs. Reverse Salient', desc: 'Enquanto o reverse salient (T. Hughes) aponta atrasos técnicos em si, as rugosidades são heranças socioterritoriais com "inércia dinâmica", cujo valor é relativo ao todo social.' },
+          { tag: 'Síntese Local', name: 'Tempo Espacial', desc: 'Em um mesmo lugar operam simultaneamente técnicas de idades distintas; seu cruzamento gera um tempo próprio do lugar, redefinindo o valor de cada objeto.' }
+        ],
+        quote: 'A técnica é tempo congelado e revela uma história. É o lugar que atribui às técnicas o princípio de realidade histórica, relativizando o seu uso e integrando-as num conjunto de vida.',
+        quoteRef: 'Capítulo 1 — As Técnicas, o Tempo e o Espaço Geográfico'
+      },
+      {
+        id: 2,
+        part: 'p1',
+        title: 'O Espaço: Sistemas de Objetos, Sistemas de Ação',
+        subtitle: 'A definição definitiva do espaço geográfico e a natureza das ações humanas.',
+        thesis: 'Após aproximações sucessivas (fixos e fluxos; configuração territorial e relações sociais), Milton Santos propõe a definição central da obra: o espaço geográfico é um conjunto indissociável, solidário e também contraditório de sistemas de objetos e sistemas de ações, que interagem continuamente e constituem o quadro único da história.',
+        keywords: ['fixos e fluxos', 'configuração territorial', 'sistemas de objetos', 'sistemas de ações', 'agir técnico', 'agir formal', 'agir simbólico', 'alienação local', 'corporeidade', 'Werlen'],
+        concepts: [
+          { tag: 'Definição Central', name: 'Sistemas de Objetos & Ações', desc: 'Objetos condicionam como as ações se realizam; ações criam novos objetos ou se exercem sobre objetos preexistentes. Um não tem realidade filosófica sem o outro.' },
+          { tag: 'Evolução', name: 'Das Coisas aos Objetos', desc: 'No início tudo eram coisas (dádivas naturais); hoje tudo tende a ser objeto técnico, carregado de intenção social e informação — até a natureza ecologicamente valorizada.' },
+          { tag: 'Escalas de Comando', name: 'Alienação Local', desc: 'Separação crescente entre a escala de comando das ações (global/externa) e a escala de sua realização (local), tornando ações cada vez mais estranhas aos fins dos habitantes.' },
+          { tag: 'Três Ordens', name: 'Agir Técnico, Formal e Simbólico', desc: 'No cotidiano convivem a ordem técnica (instrumento), a ordem formal (normas jurídicas/econômicas) e o agir simbólico (afetividade e criatividade — fonte de mudança).' }
+        ],
+        quote: 'O espaço é formado por um conjunto indissociável, solidário e também contraditório, de sistemas de objetos e sistemas de ações, não considerados isoladamente, mas como o quadro único no qual a história se dá.',
+        quoteRef: 'Capítulo 2 — O Espaço: Sistemas de Objetos, Sistemas de Ação'
+      },
+      {
+        id: 3,
+        part: 'p1',
+        title: 'O Espaço Geográfico, um Híbrido',
+        subtitle: 'Intencionalidade, forma-conteúdo e a distinção epistemológica entre paisagem e espaço.',
+        thesis: 'Superando as dicotomias purificadoras da modernidade (natureza/cultura, sujeito/objeto), o espaço geográfico afirma-se como um híbrido — uma forma-conteúdo unida pela intencionalidade. Por isso, é indispensável distinguir paisagem (materialidade congelada, palimpsesto) de espaço (essas formas animadas pela vida social presente).',
+        keywords: ['híbrido', 'intencionalidade', 'forma-conteúdo', 'paisagem', 'espaço', 'bomba de nêutrons', 'palimpsesto', 'Latour', 'dialética sociedade-espaço'],
+        concepts: [
+          { tag: 'Ponte Sujeito-Objeto', name: 'Intencionalidade', desc: 'Corredor entre sujeito e objeto (Husserl, Brentano): a ação projeta-se sobre o meio, mas o meio também deforma a ação ("a flecha do tempo entorta ao encontrar o espaço").' },
+          { tag: 'Epistemologia', name: 'O Espaço como Híbrido', desc: 'Em diálogo com Bruno Latour, o espaço é um misto inseparável de materialidade e relações sociais — uma forma-conteúdo onde forma e função não existem separadas.' },
+          { tag: 'Distinção Crucial', name: 'Paisagem vs. Espaço', desc: 'A paisagem é transtemporal, acúmulo material e palimpsesto de passados; o espaço é sempre presente, sistema de valores em transformação contínua pela intrusão da sociedade.' },
+          { tag: 'Dialética', name: 'Sociedade e Espaço', desc: 'Não há dialética entre sociedade e paisagem inerte, mas entre sociedade e espaço: a sociedade age sobre objetos já socialmente valorizados (formas-conteúdo).' }
+        ],
+        quote: 'A paisagem é o conjunto de formas que, num dado momento, exprimem as heranças das sucessivas relações entre homem e natureza. O espaço são essas formas mais a vida que as anima.',
+        quoteRef: 'Capítulo 3 — O Espaço Geográfico, um Híbrido'
+      },
+      {
+        id: 4,
+        part: 'p2',
+        title: 'O Espaço e a Noção de Totalidade',
+        subtitle: 'Totalização, cisão, essência/existência e o papel dos símbolos e da ideologia.',
+        thesis: 'O mundo atual oferece pela primeira vez uma universalidade empírica. A totalidade não é soma estática das partes, mas um processo permanente de totalização (Sartre) que se cinde e se espacializa em formas-conteúdo particulares. Nessa dinâmica, a ideologia e os símbolos são reais, mas ficam fixos quando o todo se move.',
+        keywords: ['totalidade', 'totalização', 'cisão', 'integral', 'diferencial', 'essência', 'existência', 'potência', 'ato', 'ideologia', 'símbolo', 'inércia dinâmica'],
+        concepts: [
+          { tag: 'Dialética', name: 'Totalidade e Totalização', desc: 'A totalidade produzida (perfeita/acabada, como a paisagem) convive com a totalidade em produção (in-fieri, o espaço). O todo explica as partes, nunca o inverso.' },
+          { tag: 'Movimento', name: 'Integral → Cisão → Diferencial', desc: 'A totalidade una (integral, real-abstrato, potência) cinde-se para realizar-se concretamente nos lugares (diferenciais, real-concreto, ato) antes de recompor-se em nova totalidade.' },
+          { tag: 'Espacialização', name: 'Objetos Perfeitos vs. Existências', desc: 'No todo das essências existem possibilidades plenas (latências); ao se geografizarem nos lugares, tornam-se relativas, condicionadas pelo contexto preexistente.' },
+          { tag: 'Representação', name: 'Símbolo e Ideologia', desc: 'A ideologia é real e cria o real; porém, quando a totalidade se cinde e avança, o símbolo mantém o mesmo sentido e se descola do movimento, revelando sua distância do real.' }
+        ],
+        quote: 'A sociedade seria o Ser e o espaço, a Existência. É o espaço que, afinal, permite à sociedade global realizar-se como fenômeno.',
+        quoteRef: 'Capítulo 4 — O Espaço e a Noção de Totalidade'
+      },
+      {
+        id: 5,
+        part: 'p2',
+        title: 'Da Diversificação da Natureza à Divisão Territorial do Trabalho',
+        subtitle: 'Repartição de recursos, hierarquia financeira, tempos sobrepostos e rugosidades.',
+        thesis: 'O que a "diversificação da natureza" (Whitehead) representa no mundo natural, a divisão do trabalho representa na história: é o motor que distribui recursos — materiais, financeiros e imateriais — entre os lugares. Em cada lugar sobrepõem-se divisões do trabalho sucessivas, onde o trabalho morto (rugosidades) condiciona o trabalho vivo.',
+        keywords: ['diversificação da natureza', 'divisão territorial do trabalho', 'recursos', 'formação socioespacial', 'dinheiro', 'hierarquia financeira', 'trabalho morto', 'prático-inerte', 'rugosidades'],
+        concepts: [
+          { tag: 'Motor Espacial', name: 'Divisão Territorial do Trabalho', desc: 'Processo progressivo que distribui atividades e recursos de forma desigual e combinada, conferindo a cada lugar seu valor relativo na formação socioespacial.' },
+          { tag: 'Geografia do Dinheiro', name: 'Hierarquia Financeira dos Lugares', desc: 'Nem todos os lugares possuem todos os instrumentos financeiros. Os dinheiros drenam todas as noites para as metrópoles (como São Paulo), criando hierarquias de poder de ação.' },
+          { tag: 'Temporalidades', name: 'Tempos Sobrepostos', desc: 'Em cada lugar coexistem o Tempo do Mundo (multinacionais), o Tempo do Estado-Nação e os tempos regionais e locais, interpretados como "temporalizações práticas".' },
+          { tag: 'Prático-Inerte', name: 'Trabalho Morto & Rugosidades', desc: 'O meio ambiente construído (rugosidades) traz restos de divisões passadas do trabalho e impõe-se como condição ativa — inércia dinâmica — sobre o trabalho vivo a fazer.' }
+        ],
+        quote: 'Fora dos lugares, produtos, inovações, populações, dinheiro, por mais concretos que pareçam, são abstrações. O trabalho já feito se impõe sobre o trabalho a fazer.',
+        quoteRef: 'Capítulo 5 — Da Diversificação da Natureza à Divisão Territorial do Trabalho'
+      },
+      {
+        id: 6,
+        part: 'p2',
+        title: 'O Tempo (Os Eventos) e o Espaço',
+        subtitle: 'Eventos como vetores da metamorfose, diacronia/sincronia e o acontecer solidário.',
+        thesis: 'Os eventos são o tempo empiricizado, sempre presentes e irrepetíveis, que se depositam obrigatoriamente nos lugares e alteram o valor dos objetos. A geografia estuda o cruzamento entre o eixo das sucessões (diacronia) e o eixo das coexistências (sincronia), revelando três formas de acontecer solidário: homólogo, complementar e hierárquico.',
+        keywords: ['eventos', 'diacronia', 'sincronia', 'eixo das sucessões', 'eixo das coexistências', 'acontecer solidário', 'homólogo', 'complementar', 'hierárquico', 'escala', 'duração'],
+        concepts: [
+          { tag: 'Vetor do Tempo', name: 'Natureza dos Eventos', desc: 'Ponto no espaço-tempo (hic et nunc), sempre novo e irreversível. Podem ser naturais ou históricos, finitos ou infinitos, com duração natural ou organizacional.' },
+          { tag: 'Dupla Escala', name: 'Origem vs. Área de Ocorrência', desc: 'A escala de origem refere-se à força emissora (global, nacional, local); a escala de realização é a área de ocorrência — dado temporal que varia conforme a extensão dos eventos.' },
+          { tag: 'Dois Eixos', name: 'Sucessões × Coexistências', desc: 'O eixo das sucessões (diacronia) distingue períodos; o eixo das coexistências (sincronia) mostra temporalidades diferentes vivendo simultaneamente no mesmo lugar.' },
+          { tag: 'Recortes', name: 'Três Formas de Acontecer Solidário', desc: 'Homólogo (áreas contíguas de produção moderna), Complementar (cidade-campo e interurbano) e Hierárquico (ordens e informação privilegiada comandando à distância).' }
+        ],
+        quote: 'A simultaneidade das diversas temporalidades sobre um pedaço da crosta da Terra é que constitui o domínio propriamente dito da Geografia. Cada evento é um fruto do Mundo e do Lugar ao mesmo tempo.',
+        quoteRef: 'Capítulo 6 — O Tempo (Os Eventos) e o Espaço'
+      },
+      {
+        id: 7,
+        part: 'p3',
+        title: 'O Sistema Técnico Atual',
+        subtitle: 'Sucessão de sistemas técnicos, tecnociência e o papel unificador da informação.',
+        thesis: 'As técnicas nunca funcionam isoladas: surgem como sistemas técnicos integrados que marcam períodos históricos. O sistema técnico atual, fundado na tecnociência e nas técnicas da informação (microeletrônica, computadores, satélites), é invasor, rápido, auto-expansivo e caracteriza-se pela racionalidade instrumental e artificialidade extrema.',
+        keywords: ['períodos técnicos', 'sistemas técnicos', 'tecnociência', 'macrossistemas', 'técnicas da informação', 'computador', 'tempo real', 'pensamento calculante', 'técnicas duras', 'técnicas doces'],
+        concepts: [
+          { tag: 'Periodização', name: 'Ferramenta → Máquina → Autômato', desc: 'Da força humana (ferramenta) à energia não-humana controlada (máquina) até os sistemas cibernéticos (autômatos), acompanhando as 5 fases de Fu-chen Lo até a era informacional.' },
+          { tag: 'Infraestrutura', name: 'Macro e Microssistemas Técnicos', desc: 'Macrossistemas (energia, telecomunicações, aeroportos) sustentam as redes de poder e convivem com a miniaturização dos microssistemas no cotidiano.' },
+          { tag: 'Cimento Atual', name: 'Técnicas da Informação', desc: 'A informação é a substância vital que integra todos os demais subsistemas técnicos, viabiliza o tempo real e substitui a máquina-ferramenta pelo computador como símbolo da época.' },
+          { tag: 'Paradoxo', name: 'Endurecimento Organizacional', desc: 'Apesar do discurso da "flexibilidade", os sistemas integrados atuais são "técnicas duras" que impõem normas rígidas e o "pensamento calculante" sobre o território.' }
+        ],
+        quote: 'A racionalidade resultante se impõe às expensas da espontaneidade e da criatividade. Esse rigor matemático vai também inscrever-se no território.',
+        quoteRef: 'Capítulo 7 — O Sistema Técnico Atual'
+      },
+      {
+        id: 8,
+        part: 'p3',
+        title: 'As Unicidades: A Produção da Inteligência Planetária',
+        subtitle: 'Unicidade técnica, convergência dos momentos e o motor único da mais-valia universal.',
+        thesis: 'A globalização contemporânea e a "inteligência planetária" assentam-se sobre três unicidades inéditas na história: a unicidade técnica (um único sistema técnico hegemônico global), a unicidade do tempo (convergência dos momentos em tempo real) e a unicidade do motor econômico (a mais-valia universal movida pela competitividade e pelas finanças).',
+        keywords: ['unicidades', 'unicidade técnica', 'afunilamento da escolha', 'convergência dos momentos', 'tempo real', 'motor único', 'mais-valia universal', 'globalização financeira', 'competitividade', 'inteligência planetária'],
+        concepts: [
+          { tag: 'Unicidade 1', name: 'Unicidade Técnica', desc: 'Afunilamento histórico das escolhas técnicas até a hegemonia planetária de um único sistema integrado ("mecano universal"), permitindo dispersar a produção e concentrar o comando.' },
+          { tag: 'Unicidade 2', name: 'Convergência dos Momentos', desc: 'Pela primeira vez podemos conhecer instantaneamente eventos simultâneos em qualquer ponto do globo (satélites, telecomunicações). Não suprime o espaço, mas cria novo comando da distância.' },
+          { tag: 'Unicidade 3', name: 'O Motor Único (Mais-Valia Global)', desc: 'Grandes empresas-rede e finanças globais (40 dólares financeiros para cada 1 dólar de mercadoria) operam 24h unificando a mais-valia mundial sob o dogma da competitividade.' },
+          { tag: 'Crítica', name: 'Mito da "Aldeia Global"', desc: 'A informação que circula em tempo real é concentrada, seletiva e pragmática. As finanças não eliminam a geografia: escolhem os melhores lugares e deixam os demais como residuais.' }
+        ],
+        quote: 'A partir da segunda metade do século XX, a escolha de tal forma se afunila que cedo há apenas um modelo. Essas três unicidades são a base do fenômeno de globalização.',
+        quoteRef: 'Capítulo 8 — As Unicidades: A Produção da Inteligência Planetária'
+      },
+      {
+        id: 9,
+        part: 'p3',
+        title: 'Objetos e Ações Hoje. As Normas e o Território',
+        subtitle: 'Objetos informacionais hipertélicos, ações exógenas just-in-place e a regulação normativa.',
+        thesis: 'Hoje, os objetos nascem da ciência com extrema intencionalidade e informação embarcada, enquanto as ações tornam-se pragmáticas, codificadas e frequentemente comandadas de fora (teleação). Para articular esse sistema produtivo disperso, proliferam normas técnicas e jurídicas (lex mercatoria) que regulam o território.',
+        keywords: ['objetos hoje', 'informação nos objetos', 'ações hoje', 'just-in-time', 'just-in-place', 'retórica', 'normas', 'lex mercatoria', 'espaços inteligentes', 'pontos de cálculo'],
+        concepts: [
+          { tag: 'Materialidade Atual', name: 'Objetos Científico-Informacionais', desc: 'Dotados de universalidade, vida sistêmica, concretude, informação (para e nos objetos) e intencionalidade extrema. Envelhecem rapidamente não pela técnica, mas pela competitividade.' },
+          { tag: 'Ação Pragmática', name: 'Ação Just-in-Time e Just-in-Place', desc: 'Ação instrumental e teleagida que busca eficácia máxima no momento e lugar exatos, acompanhada de retórica legitimadora que cria cotidianamente o "homem ignorante".' },
+          { tag: 'Regulação', name: 'Normas Técnicas e Políticas', desc: 'A ordem mundial é normativa e normada: normas internas de empresas, infraestruturas coletivas e a lex mercatoria articulam pontos de cálculo (autonomia) e pontos de controle (dependência).' },
+          { tag: 'Resistência', name: 'Materialidade Herdada & Emoção', desc: 'Em parcelas menos rígidas das cidades, velhos objetos e ações menos racionais abrigam relações diretas, emoção e criatividade, dissolvendo parcialmente o tempo do mundo.' }
+        ],
+        quote: 'Não é a técnica em si que leva ao envelhecimento rápido das situações, mas a política. Os espaços inteligentes coincidem com as frações do território marcadas pela ciência, tecnologia e informação.',
+        quoteRef: 'Capítulo 9 — Objetos e Ações Hoje. As Normas e o Território'
+      },
+      {
+        id: 10,
+        part: 'p3',
+        title: 'Do Meio Natural ao Meio Técnico-Científico-Informacional',
+        subtitle: 'As três fases do meio geográfico, tecnosfera/psicosfera, guerra dos lugares e crise ambiental.',
+        thesis: 'A história do meio geográfico divide-se em três grandes etapas: meio natural, meio técnico (mecanizado) e meio técnico-científico-informacional — a cara geográfica da globalização. Nele, o conhecimento vira recurso, os lugares entram em guerra por investimentos, a fluidez exige mais rigidez e convivem uma tecnosfera e uma psicosfera.',
+        keywords: ['meio natural', 'meio técnico', 'meio técnico-científico-informacional', 'tecnosfera', 'psicosfera', 'guerra dos lugares', 'produtividade espacial', 'fluidez e rigidez', 'crise ambiental', 'densidades'],
+        concepts: [
+          { tag: 'Três Etapas', name: 'Evolução do Meio Geográfico', desc: 'Do meio natural (simbiose com a natureza) ao meio técnico (próteses mecânicas) e ao meio técnico-científico-informacional (ciência, tecnologia e informação sob a égide do mercado global).' },
+          { tag: 'Dois Pilares', name: 'Tecnosfera e Psicosfera', desc: 'A tecnosfera é o mundo dos objetos técnicos; a psicosfera é o reino das ideias, crenças, paixões e sentidos que prepara e sustenta a aceitação social da modernização.' },
+          { tag: 'Três Densidades', name: 'Técnica, Informacional e Comunicacional', desc: 'As duas primeiras trazem o reino da necessidade e intervenções verticais; a densidade comunicacional (copresença cara a cara) aponta para o reino da liberdade.' },
+          { tag: 'Conflito Territorial', name: 'Guerra dos Lugares & Fluidez/Rigidez', desc: 'Os lugares disputam investimentos pela produtividade espacial. Paradoxalmente, obter mais fluidez exige implantar mais capital fixo — isto é, mais rigidez e corporatização do território.' }
+        ],
+        quote: 'O meio técnico-científico-informacional é a cara geográfica da globalização. A fluidez somente se alcança através da produção de mais capital fixo, isto é, de mais rigidez.',
+        quoteRef: 'Capítulo 10 — Do Meio Natural ao Meio Técnico-Científico-Informacional'
+      },
+      {
+        id: 11,
+        part: 'p3',
+        title: 'Por uma Geografia das Redes',
+        subtitle: 'Tempos rápidos e lentos, seletividade espacial, fluidez e ambiguidades da rede.',
+        thesis: 'A rede não é apenas infraestrutura material (nós e arcos), mas um híbrido técnico e social. Longe de homogeneizar o planeta, as redes são seletivas, instáveis e sobrepostas: ativam pontos em "tempos rápidos" para agentes hegemônicos enquanto deixam extensos "magmas" e "tempos lentos", integrando e desintegrando territórios simultaneamente.',
+        keywords: ['redes', 'tempos rápidos', 'tempos lentos', 'fluidez', 'seletividade', 'desregulação', 'espaço não-homogêneo', 'magmas', 'comando técnico', 'comando político'],
+        concepts: [
+          { tag: 'Natureza Híbrida', name: 'Rede Técnica e Social', desc: 'Virtual como infraestrutura à espera de uso, a rede só se torna real quando animada por pessoas, mensagens, valores e ações sociais. Une fixos e fluxos indissociavelmente.' },
+          { tag: 'Temporalidades', name: 'Tempos Rápidos × Tempos Lentos', desc: 'Superando a oposição braudeliana longo/curto, Milton Santos propõe tempos rápidos (hegemônicos) e lentos — categorias relativas que coexistem no mesmo espaço.' },
+          { tag: 'Assimetria', name: 'Comando Técnico vs. Comando Político', desc: 'A sociedade local comanda os aspectos técnicos da produção direta, mas o comando político (ordens, finanças, circulação) desloca-se para cidades globais distantes.' },
+          { tag: 'Paradoxo', name: 'Desregulação = Mais Normas', desc: 'O imperativo da fluidez exige formas perfeitas, informação universal e "desregulação" — que não elimina normas, mas multiplica normas privadas e globais seletivas.' }
+        ],
+        quote: 'A homogeneização é um mito. As redes são, ao mesmo tempo, concentradoras e dispersoras, criadoras paralelas da ordem e da desordem no território.',
+        quoteRef: 'Capítulo 11 — Por uma Geografia das Redes'
+      },
+      {
+        id: 12,
+        part: 'p3',
+        title: 'Horizontalidades e Verticalidades',
+        subtitle: 'Os dois novos recortes territoriais da globalização e a ação política a partir do lugar.',
+        thesis: 'O espaço contemporâneo compõe-se inseparavelmente de dois arranjos: as horizontalidades (domínios da contiguidade, do cotidiano compartilhado e da produção direta) e as verticalidades (pontos descontínuos ligados por fluxos reguladores e ordens distantes). As cidades são o ponto de interseção onde essa tensão pode gerar ação política.',
+        keywords: ['horizontalidades', 'verticalidades', 'forças centrípetas', 'forças centrífugas', 'solidariedade organizacional', 'solidariedade orgânica', 'entropia', 'ação política', 'cotidiano homólogo'],
+        concepts: [
+          { tag: 'Recorte 1', name: 'Verticalidades', desc: 'Constelações de pontos descontínuos ligados por redes que asseguram circulação, controle e ordens hegemônicas. Criam solidariedade organizacional e trazem entropia ao lugar.' },
+          { tag: 'Recorte 2', name: 'Horizontalidades', desc: 'Extensões contínuas e contíguas do trabalho direto e da vida cotidiana. São o teatro tanto da finalidade imposta de fora quanto da contrafinalidade gerada localmente.' },
+          { tag: 'Dinâmica', name: 'Forças Centrípetas × Centrífugas', desc: 'Forças centrípetas promovem agregação, coesão cidade-campo e horizontalização; forças centrífugas retiram o comando local para fora, gerando verticalização e desestruturação.' },
+          { tag: 'Política', name: 'Reconstrução Horizontal', desc: 'A partir do cotidiano homólogo e da mídia/associações locais, preocupações econômicas podem transformar-se em ação política coletiva para confrontar a globalização perversa.' }
+        ],
+        quote: 'As verticalidades são vetores de uma racionalidade superior criando um cotidiano obediente. As horizontalidades são o teatro da cegueira e da descoberta, da complacência e da revolta.',
+        quoteRef: 'Capítulo 12 — Horizontalidades e Verticalidades'
+      },
+      {
+        id: 13,
+        part: 'p3',
+        title: 'Os Espaços da Racionalidade',
+        subtitle: 'Racionalização do território, espaços luminosos vs. opacos e contra-racionalidades.',
+        thesis: 'A racionalização capitalista atinge seu limite ao instalar-se no próprio território, criando "espaços racionais" (áreas luminosas) estruturados como máquinas de precisão. Contudo, essa produção limitada de racionalidade gera uma produção ampla de escassez, fazendo emergir nas zonas "opacas" outras racionalidades — as contra-racionalidades.',
+        keywords: ['racionalidade do espaço', 'espaço racional', 'espaços luminosos', 'espaços opacos', 'contra-racionalidades', 'irracionalidade', 'diversidade socioespacial', 'escassez', 'campo e cronômetro'],
+        concepts: [
+          { tag: 'Conceito Central', name: 'Racionalidade do Espaço', desc: 'Com os objetos técnico-informacionais, a racionalidade deixa de estar apenas na economia ou nos sujeitos e inscreve-se na materialidade do território como campo de ação instrumental.' },
+          { tag: 'Geografia Desigual', name: 'Espaços Luminosos vs. Opacos', desc: 'Áreas luminosas recebem investimentos públicos, ciência e fluidez para atores hegemônicos; áreas opacas, menos modernas, escapam à regulação rígida e abrigam outras lógicas.' },
+          { tag: 'Campo & Cidade', name: 'O Campo e o Cronômetro', desc: 'No campo modernizado, biotecnologia e ciência impõem ritmos fabris; na cidade, a rigidez do capital fixo gera alta diversidade socioespacial e coexistência de múltiplos subcircuitos.' },
+          { tag: 'Ruptura', name: 'Contra-Racionalidades', desc: 'Entre pobres, migrantes e atividades marginalizadas nas áreas opacas, a experiência da escassez produz adaptações criadoras: racionalidades paralelas que apontam um novo sentido.' }
+        ],
+        quote: 'Há uma produção limitada de racionalidade associada a uma produção ampla de escassez. A racionalidade dominante e cega acaba por produzir os seus próprios limites.',
+        quoteRef: 'Capítulo 13 — Os Espaços da Racionalidade'
+      },
+      {
+        id: 14,
+        part: 'p4',
+        title: 'O Lugar e o Cotidiano',
+        subtitle: 'A quinta dimensão do espaço banal, os homens lentos e os migrantes da memória à descoberta.',
+        thesis: 'O cotidiano partilhado na proximidade e na copresença constitui a quinta dimensão do espaço banal. Nas grandes cidades, são os pobres — os "homens lentos" — e os migrantes que, livres da submissão cega às imagens prefabricadas da velocidade e obrigados a reinventar sua existência, produzem novas consciências e olham para o futuro.',
+        keywords: ['lugar', 'cotidiano', 'quinta dimensão', 'proximidade', 'copresença', 'homens lentos', 'pobres na cidade', 'flexibilidade tropical', 'migrantes', 'memória', 'descoberta', 'cultura popular'],
+        concepts: [
+          { tag: 'Cotidiano', name: 'A Quinta Dimensão do Espaço', desc: 'No lugar superpõem-se o eixo das sucessões e o das coexistências. A proximidade física e a copresença geram densidade social, comunicação, emoção ("emorazão") e territorialização da política.' },
+          { tag: 'Inversão', name: 'A Força dos Homens Lentos', desc: 'Ao contrário do elogio da velocidade (Virilio), quem tem muita mobilidade vê pouco da cidade. Os homens lentos descobrem as fabulações da racionalidade e criam a "flexibilidade tropical".' },
+          { tag: 'Cultura', name: 'Cultura de Massas vs. Cultura Popular', desc: 'A cultura de massas uniformiza e amolece a consciência; a cultura popular tem raízes na terra vivida, nasce do desconforto criador da carência e impulsiona uma práxis inventiva.' },
+          { tag: 'Consciência', name: 'Migrantes: Da Memória à Descoberta', desc: 'Para o migrante, a memória trazida de outro lugar torna-se inútil na luta diária; obrigado a reaprender o entorno novo, desenvolve a consciência pelo lugar — olhando para o futuro.' }
+        ],
+        quote: 'Agora estamos descobrindo que, nas cidades, o tempo que comanda, ou vai comandar, é o tempo dos homens lentos. A memória olha para o passado. A nova consciência olha para o futuro.',
+        quoteRef: 'Capítulo 14 — O Lugar e o Cotidiano'
+      },
+      {
+        id: 15,
+        part: 'p4',
+        title: 'Ordem Universal, Ordem Local: Resumo e Conclusão',
+        subtitle: 'Ação globalizada como norma, território local como norma e a dialética entre duas razões.',
+        thesis: 'Não existe um espaço global único, mas espaços da globalização ligados por redes. Enquanto a ordem global atua como norma desterritorializada — movida pela razão técnica, pela informação e pela competitividade —, o território local atua também como norma orgânica. Do confronto dialético entre essas duas ordens nasce a possibilidade de um novo destino.',
+        keywords: ['ordem universal', 'ordem local', 'razão global', 'razão local', 'território como norma', 'ação globalizada como norma', 'formação socioespacial', 'globalização perversa', 'espaço banal'],
+        concepts: [
+          { tag: 'Síntese Espacial', name: 'Espaços da Globalização', desc: 'Assim como não há tempo global único (apenas um relógio mundial despótico), não há espaço global homogêneo, mas pontos mundializados em rede articulados a espaços banais.' },
+          { tag: 'Mediação', name: 'Formação Socioespacial', desc: 'Enquanto no "mundo" só conta o global, no território nacional tudo conta. O Estado e a formação socioespacial mediam o conflito de normas entre empresas gigantes e a sociedade local.' },
+          { tag: 'Duas Normas', name: 'Mundo como Norma vs. Território como Norma', desc: 'O universal (Mundo) é norma que busca espacializar-se; o particular (País) é território normado; o individual (Lugar) é o território como norma, oferecendo as condições reais de efetivação.' },
+          { tag: 'Horizonte', name: 'Razão Organizacional vs. Razão Orgânica', desc: 'Na ordem global prima a organização e a informação; na ordem local prima a solidariedade, a comunicação, a emoção e a copresença — sede de sentido e de um novo futuro.' }
+        ],
+        quote: 'A ordem global busca impor a todos os lugares uma única racionalidade. E os lugares respondem ao Mundo segundo os diversos modos de sua própria racionalidade. É nesse sentido que o lugar defronta o Mundo, mas também o confronta.',
+        quoteRef: 'Capítulo 15 — Ordem Universal, Ordem Local'
+      }
+    ];
+
+    /* =========================================================================
+       ESTADO GLOBAL DA APLICAÇÃO E DOS 16 INFOGRÁFICOS
+       ========================================================================= */
+
+    let currentView = 'overview'; // 'overview' ou número 1..15
+    let searchTerm = '';
+    let studied = loadStudied();
+
+    const uiState = {
+      // Mapa Geral
+      overviewPart: 'p1',
+      overviewCatTab: 'internas',
+      // Cap 1
+      c1Layers: { pre: true, ind: true, info: true },
+      c1CompareTab: 'idade',
+      // Cap 2
+      c2Approx: 2, // 0, 1, 2
+      c2Act: 'simbolico',
+      // Cap 3
+      c3Mode: 'espaco', // 'paisagem' | 'espaco'
+      // Cap 4
+      c4Step: 0, // 0..3
+      c4ShowIdeology: true,
+      // Cap 5
+      c5City: 'metropole', // 'metropole' | 'media' | 'pequena'
+      c5Scale: 'mundo',
+      // Cap 6
+      c6Solid: 'homologo', // 'homologo' | 'complementar' | 'hierarquico'
+      c6ScaleMode: 'origem',
+      // Cap 7
+      c7Period: 3, // 0..3
+      // Cap 8
+      c8Unit: 'tecnica', // 'tecnica' | 'tempo' | 'motor'
+      // Cap 9
+      c9Era: 'presente', // 'passado' | 'presente'
+      // Cap 10
+      c10Stage: 2, // 0..2
+      c10Sphere: 'tecnosfera',
+      // Cap 11
+      c11Fluidity: 75, // 10..100
+      // Cap 12
+      c12Layer: 'ambos', // 'vertical' | 'horizontal' | 'ambos'
+      // Cap 13
+      c13Zone: 'luminoso', // 'luminoso' | 'transicao' | 'opaco'
+      // Cap 14
+      c14Profile: 'lento', // 'rapido' | 'lento'
+      c14MigrantStep: 0, // 0..2
+      // Cap 15
+      c15Balance: 50 // 0 (Global) .. 100 (Local)
+    };
+
+    /* =========================================================================
+       PERSISTÊNCIA & UTILITÁRIOS
+       ========================================================================= */
+
+    function loadStudied() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveStudied() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(studied));
+      } catch (e) { /* ambiente sem localStorage */ }
+    }
+
+    let toastTimer = null;
+    function showToast(message) {
+      const el = document.getElementById('toast');
+      const msg = document.getElementById('toast-msg');
+      if (!el || !msg) return;
+      msg.textContent = message;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    function normalizeText(str) {
+      return String(str || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function toggleChapterStudied(chId, evt) {
+      if (evt) evt.stopPropagation();
+      studied[chId] = !studied[chId];
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      showToast(studied[chId] ? `Capítulo ${chId} marcado como estudado.` : `Capítulo ${chId} desmarcado.`);
+    }
+
+    function resetProgress() {
+      studied = {};
+      saveStudied();
+      renderSidebar();
+      renderMain();
+      showToast('Progresso de estudo reiniciado.');
+    }
+
+    function navigateTo(view) {
+      currentView = view;
+      renderSidebar();
+      renderMain();
+      closeDrawer();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openDrawer() {
+      document.getElementById('sidebar').classList.add('open');
+      document.getElementById('sidebar-overlay').classList.add('open');
+    }
+
+    function closeDrawer() {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('sidebar-overlay').classList.remove('open');
+    }
+
+    /* =========================================================================
+       RENDERIZAÇÃO DA BARRA LATERAL & PROGRESSO
+       ========================================================================= */
+
+    function renderSidebar() {
+      const nav = document.getElementById('sidebar-nav');
+      const q = normalizeText(searchTerm.trim());
+
+      // Atualizar barra de progresso
+      const doneCount = CHAPTERS.filter(c => studied[c.id]).length;
+      const pct = Math.round((doneCount / CHAPTERS.length) * 100);
+      document.getElementById('sidebar-progress-label').textContent = `${doneCount} / ${CHAPTERS.length} (${pct}%)`;
+      document.getElementById('sidebar-progress-fill').style.width = `${pct}%`;
+      document.getElementById('mobile-progress-pill').textContent = `${doneCount}/${CHAPTERS.length}`;
+
+      let html = '';
+
+      // Item Mapa Geral
+      const showOverview = !q || normalizeText('mapa geral prefacio introducao categorias ontologia').includes(q);
+      if (showOverview) {
+        html += `
+          <button type="button" class="nav-item ${currentView === 'overview' ? 'active' : ''}" onclick="navigateTo('overview')">
+            <span class="nav-num">§0</span>
+            <span class="nav-label">
+              <span class="nav-label-title">Mapa Geral da Obra</span>
+              <span class="nav-label-sub">Prefácio, Introdução &amp; Arquitetura</span>
+            </span>
+          </button>
+        `;
+      }
+
+      // Agrupamento pelas 4 Partes Oficiais
+      let totalMatches = showOverview ? 1 : 0;
+
+      Object.values(PARTS).forEach(part => {
+        const partChapters = CHAPTERS.filter(ch => {
+          if (ch.part !== part.id) return false;
+          if (!q) return true;
+          const hay = normalizeText(`${ch.id} ${ch.title} ${ch.subtitle} ${ch.keywords.join(' ')}`);
+          return hay.includes(q);
+        });
+
+        if (partChapters.length === 0) return;
+        totalMatches += partChapters.length;
+
+        html += `
+          <div class="part-group">
+            <div class="part-group-header">
+              <span class="part-dot" style="background:${part.color}"></span>
+              <span>${part.roman} — ${part.title}</span>
+            </div>
+        `;
+
+        partChapters.forEach(ch => {
+          const isActive = currentView === ch.id;
+          const isDone = !!studied[ch.id];
+          html += `
+            <button type="button" class="nav-item ${isActive ? 'active' : ''}" onclick="navigateTo(${ch.id})">
+              <span class="nav-num" style="${isActive ? `background:${part.color};border-color:${part.color};color:#fff;` : `border-left:3px solid ${part.color};`}">${ch.id}</span>
+              <span class="nav-label">
+                <span class="nav-label-title">${ch.title}</span>
+              </span>
+              <span class="nav-check ${isDone ? 'done' : ''}" title="${isDone ? 'Estudado' : 'Marcar como estudado'}" onclick="toggleChapterStudied(${ch.id}, event)">✓</span>
+            </button>
+          `;
+        });
+
+        html += `</div>`;
+      });
+
+      if (totalMatches === 0) {
+        html = `<div style="padding:16px;font-size:0.8rem;color:var(--text-muted);text-align:center;">Nenhum capítulo ou conceito encontrado para "<strong>${searchTerm}</strong>".</div>`;
+      }
+
+      nav.innerHTML = html;
+    }
+
+    /* =========================================================================
+       INFOGRÁFICO 0 — MAPA GERAL DA OBRA (PREFÁCIO & INTRODUÇÃO)
+       ========================================================================= */
+
+    function renderOverview() {
+      const selPart = PARTS[uiState.overviewPart];
+      const partChs = CHAPTERS.filter(c => c.part === selPart.id);
+      const isInternas = uiState.overviewCatTab === 'internas';
+
+      const internas = [
+        { n: 'Paisagem', d: 'Porção visível da configuração territorial; heranças materiais congeladas.' },
+        { n: 'Configuração Territorial', d: 'Sistemas naturais mais acréscimos técnicos construídos pelo homem.' },
+        { n: 'Divisão Territorial do Trabalho', d: 'Motor que distribui recursos e diferencia lugares.' },
+        { n: 'Espaço Produzido / Produtivo', d: 'Trabalho morto e produtividade geográfica dos lugares.' },
+        { n: 'Rugosidades', d: 'Formas herdadas do passado que exercem inércia dinâmica.' },
+        { n: 'Formas-Conteúdo', d: 'União indissociável entre forma material e conteúdo social.' },
+        { n: 'Região & Lugar', d: 'Recortes do acontecer solidário; funcionalização do mundo.' },
+        { n: 'Redes & Escalas', d: 'Vetores de fluidez, verticalidades e horizontalidades.' },
+        { n: 'Tecnosfera & Psicosfera', d: 'Base técnica material e esfera de ideias, crenças e sentidos.' },
+        { n: 'Racionalidade & Cotidiano', d: 'Espaços racionais, contra-racionalidades e ordem local.' }
+      ];
+
+      const externas = [
+        { n: 'Técnica', d: 'Elo central que reúne categorias internas e externas; método unitário.' },
+        { n: 'Ação & Objetos', d: 'Sistemas indissociáveis que constituem a ontologia do espaço.' },
+        { n: 'Norma & Eventos', d: 'Regulação territorial e vetores concretos do tempo presente.' },
+        { n: 'Universalidade & Particularidade', d: 'Movimento do mundo (integral) para os lugares (diferenciais).' },
+        { n: 'Totalidade & Totalização', d: 'O todo em movimento contínuo de cisão e recomposição.' },
+        { n: 'Temporalização & Temporalidade', d: 'Usos sociais diferenciados do tempo em cada lugar.' },
+        { n: 'Idealização & Objetivação', d: 'Passagem da potência (essência) ao ato (existência espacial).' },
+        { n: 'Símbolos & Ideologia', d: 'Dimensões reais e motoras no movimento da totalidade.' }
+      ];
+
+      return `
+        <div class="chapter-header">
+          <div class="chapter-meta-row">
+            <span class="part-pill" style="background: var(--teal);">Mapa Geral • Prefácio &amp; Introdução</span>
+            <span class="chip chip-amber">15 Capítulos • 4 Partes • 1996 / 2006 (Edusp)</span>
+          </div>
+          <h2 class="chapter-title">A Natureza do Espaço: Arquitetura de um Sistema</h2>
+          <p class="chapter-subtitle">
+            Resultado de quase um quarto de século de pesquisas (USP, França e EUA), a obra propõe uma teoria social crítica a partir do espaço geográfico — superando o discurso metafórico por meio de categorias coerentes e operacionais.
+          </p>
+          <div class="editorial-divider"></div>
+        </div>
+
+        <section class="card thesis-card">
+          <span class="section-kicker">Ponto de Partida Epistemológico</span>
+          <h3 class="section-heading">O Objeto da Geografia é o Espaço — e Não a Geografia</h3>
+          <p class="thesis-text">
+            Milton Santos parte da insatisfação com respostas tautológicas ("geografia é o que fazem os geógrafos") e com a separação prática entre tempo e espaço. Ao definir o espaço como um <strong>conjunto indissociável de sistemas de objetos e sistemas de ações</strong> e colocar a <strong>técnica</strong> no centro do método, ele constrói uma teoria unitária capaz de iluminar tanto a ontologia do espaço quanto os dilemas da globalização e a força transformadora do lugar.
+          </p>
+        </section>
+
+        <!-- Infográfico Interativo do Mapa Geral -->
+        <section class="infographic-card">
+          <div class="infographic-header">
+            <div>
+              <span class="section-kicker">Infográfico Interativo • Arquitetura da Obra</span>
+              <h3 class="section-heading">As 4 Partes de <em>A Natureza do Espaço</em></h3>
+              <p class="infographic-lead">Clique em qualquer bloco do diagrama abaixo para inspecionar a lógica de cada parte e acessar diretamente seus capítulos.</p>
+            </div>
+          </div>
+
+          <div class="svg-stage" style="margin-bottom:16px;">
+            <svg viewBox="0 0 880 175" role="img" aria-label="Diagrama arquitetônico das 4 partes da obra">
+              <defs>
+                <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#4F5957"/>
+                </marker>
+              </defs>
+
+              <!-- Setas conectoras -->
+              <line x1="205" y1="88" x2="232" y2="88" stroke="#4F5957" stroke-width="2" marker-end="url(#arrowHead)"/>
+              <line x1="425" y1="88" x2="452" y2="88" stroke="#4F5957" stroke-width="2" marker-end="url(#arrowHead)"/>
+              <line x1="645" y1="88" x2="672" y2="88" stroke="#4F5957" stroke-width="2" marker-end="url(#arrowHead)"/>
+
+              ${[
+                { id: 'p1', x: 15, label: 'PARTE I', name1: 'Ontologia do Espaço', name2: 'Noções Fundadoras', caps: 'Caps. 1 a 3', color: '#1A4A4F' },
+                { id: 'p2', x: 235, label: 'PARTE II', name1: 'Produção das', name2: 'Formas-Conteúdo', caps: 'Caps. 4 a 6', color: '#B85D3B' },
+                { id: 'p3', x: 455, label: 'PARTE III', name1: 'Por uma Geografia', name2: 'do Presente', caps: 'Caps. 7 a 13', color: '#C68B2C' },
+                { id: 'p4', x: 675, label: 'PARTE IV', name1: 'A Força', name2: 'do Lugar', caps: 'Caps. 14 e 15', color: '#3F6A4E' }
+              ].map(b => {
+                const active = uiState.overviewPart === b.id;
+                return `
+                  <g onclick="uiState.overviewPart='${b.id}'; renderMain();" style="cursor:pointer;">
+                    <rect x="${b.x}" y="18" width="190" height="140" rx="14"
+                      fill="${active ? b.color : '#FFFFFF'}"
+                      stroke="${b.color}" stroke-width="${active ? 3 : 1.6}"/>
+                    <text x="${b.x + 16}" y="44" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700"
+                      fill="${active ? '#FBF4E4' : b.color}">${b.label}</text>
+                    <text x="${b.x + 16}" y="74" font-family="Newsreader, Georgia, serif" font-size="16" font-weight="700"
+                      fill="${active ? '#FFFFFF' : '#1D2322'}">${b.name1}</text>
+                    <text x="${b.x + 16}" y="95" font-family="Newsreader, Georgia, serif" font-size="16" font-weight="700"
+                      fill="${active ? '#FFFFFF' : '#1D2322'}">${b.name2}</text>
+                    <rect x="${b.x + 16}" y="114" width="90" height="24" rx="12"
+                      fill="${active ? 'rgba(255,255,255,0.2)' : '#F6F3EB'}"/>
+                    <text x="${b.x + 61}" y="130" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" font-weight="600"
+                      fill="${active ? '#FFFFFF' : '#4F5957'}">${b.caps}</text>
+                  </g>
+                `;
+              }).join('')}
+            </svg>
+          </div>
+
+          <!-- Painel da Parte Selecionada -->
+          <div class="panel-soft" style="border-left: 4px solid ${selPart.color}; margin-bottom: 22px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+              <strong style="font-family:var(--font-serif);font-size:1.15rem;color:${selPart.color};">${selPart.roman}: ${selPart.title}</strong>
+              <span class="chip" style="border-color:${selPart.color};color:${selPart.color};">${partChs.length} capítulos</span>
+            </div>
+            <div class="grid-3">
+              ${partChs.map(c => `
+                <button type="button" onclick="navigateTo(${c.id})" style="text-align:left;background:#fff;border:1px solid var(--border-soft);border-radius:12px;padding:12px 14px;transition:border-color 0.15s;">
+                  <span style="font-family:var(--font-mono);font-size:0.68rem;font-weight:700;color:${selPart.color};">CAPÍTULO ${c.id}</span>
+                  <div style="font-family:var(--font-serif);font-size:0.95rem;font-weight:700;color:var(--text-main);margin:3px 0 4px;">${c.title}</div>
+                  <div style="font-size:0.75rem;color:var(--text-muted);">${c.subtitle}</div>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Painel Comparativo: Categorias Internas vs. Processos Externos -->
+          <div>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+              <div>
+                <span class="section-kicker" style="margin-bottom:2px;">Sistema Conceitual (Introdução)</span>
+                <strong style="font-family:var(--font-serif);font-size:1.15rem;">Categorias Internas ao Espaço × Processos Básicos Externos</strong>
+              </div>
+              <div class="btn-group" style="margin-bottom:0;">
+                <button type="button" class="ctrl-btn ${isInternas ? 'active' : ''}" onclick="uiState.overviewCatTab='internas'; renderMain();">Categorias Internas (10)</button>
+                <button type="button" class="ctrl-btn ${!isInternas ? 'active-terracotta' : ''}" onclick="uiState.overviewCatTab='externas'; renderMain();">Processos Externos (8)</button>
+              </div>
+            </div>
+            <div class="concepts-grid" style="margin-top:8px;">
+              ${(isInternas ? internas : externas).map(item => `
+                <div class="concept-card" style="padding:12px 14px;">
+                  <span class="concept-tag" style="color:${isInternas ? 'var(--teal)' : 'var(--terracotta)'};">${isInternas ? 'Categoria Analítica Interna' : 'Processo Externo'}</span>
+                  <h4 style="font-size:0.95rem;">${item.n}</h4>
+                  <p style="font-size:0.78rem;">${item.d}</p>
+                </div>
+              `).join('')}
+            </div>
+            <p style="margin-top:12px;font-size:0.8rem;color:var(--text-muted);">
+              <strong>Papel de união:</strong> A <em>centralidade da técnica</em> reúne coerência interna e coerência externa — reveladora da história, inspiradora de um método unitário e garantia da conquista do futuro.
+            </p>
+          </div>
+        </section>
+
+        <blockquote class="editorial-quote">
+          <p>“A técnica deve ser vista sob um tríplice aspecto: como reveladora da produção histórica da realidade; como inspiradora de um método unitário (afastando dualismos e ambigüidades) e, finalmente, como garantia da conquista do futuro.”</p>
+          <footer>— Milton Santos, Introdução (A Natureza do Espaço, Edusp)</footer>
+        </blockquote>
+
+        <div class="chapter-footer-nav">
+          <div></div>
+          <button type="button" class="nav-step-btn next" onclick="navigateTo(1)">
+            <div>
+              <span class="nav-step-meta">Iniciar Leitura Interativa</span>
+              <span class="nav-step-title">Cap. 1 — As Técnicas, o Tempo e o Espaço Geográfico</span>
+            </div>
+            <span style="font-size:1.2rem;">→</span>
+          </button>
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       INFOGRÁFICOS EXCLUSIVOS DOS 15 CAPÍTULOS
+       ========================================================================= */
+
+    function renderInfographic(id) {
+      switch (id) {
+        case 1: return renderInfoCap1();
+        case 2: return renderInfoCap2();
+        case 3: return renderInfoCap3();
+        case 4: return renderInfoCap4();
+        case 5: return renderInfoCap5();
+        case 6: return renderInfoCap6();
+        case 7: return renderInfoCap7();
+        case 8: return renderInfoCap8();
+        case 9: return renderInfoCap9();
+        case 10: return renderInfoCap10();
+        case 11: return renderInfoCap11();
+        case 12: return renderInfoCap12();
+        case 13: return renderInfoCap13();
+        case 14: return renderInfoCap14();
+        case 15: return renderInfoCap15();
+        default: return '';
+      }
+    }
+
+    /* --- CAPÍTULO 1: Corte Estratigráfico de Idades Técnicas --- */
+    function renderInfoCap1() {
+      const L = uiState.c1Layers;
+      const activeCount = [L.pre, L.ind, L.info].filter(Boolean).length;
+      const statusText = activeCount === 3
+        ? 'Coexistência plena de três idades técnicas: o lugar combina técnicas antigas e atuais, gerando um "tempo espacial" singular onde os objetos antigos são redefinidos pelos novos.'
+        : activeCount === 2
+        ? 'Sobreposição parcial: duas gerações técnicas interagem. Os resíduos da camada anterior atuam como rugosidades que modulam a eficácia da camada mais recente.'
+        : activeCount === 1
+        ? 'Camada isolada (abstração): na realidade histórica, raramente um lugar apresenta uma única geração técnica pura.'
+        : 'Nenhuma camada ativa: ative ao menos uma camada técnica acima para observar a formação do tempo espacial.';
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 1</span>
+            <h3 class="section-heading">A Idade de um Lugar &amp; Empiricização do Tempo</h3>
+            <p class="infographic-lead">Ative ou desative as camadas técnicas sobrepostas em um mesmo corte geográfico para observar como a técnica data a materialidade e constrói o <strong>tempo espacial</strong>.</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="ctrl-btn ${L.pre ? 'active-olive' : ''}" onclick="uiState.c1Layers.pre=!uiState.c1Layers.pre; renderMain();">
+            ${L.pre ? '✓' : '+'} Camada 1: Técnicas Pré-Mecânicas (Pousio, Traçado Antigo)
+          </button>
+          <button type="button" class="ctrl-btn ${L.ind ? 'active-terracotta' : ''}" onclick="uiState.c1Layers.ind=!uiState.c1Layers.ind; renderMain();">
+            ${L.ind ? '✓' : '+'} Camada 2: Ferrovia &amp; Indústria (Séc. XIX–XX)
+          </button>
+          <button type="button" class="ctrl-btn ${L.info ? 'active' : ''}" onclick="uiState.c1Layers.info=!uiState.c1Layers.info; renderMain();">
+            ${L.info ? '✓' : '+'} Camada 3: Informática &amp; Telecomunicações (Atual)
+          </button>
+        </div>
+
+        <div class="svg-stage" style="margin-bottom:14px;">
+          <svg viewBox="0 0 780 230" role="img" aria-label="Corte estratigráfico das camadas técnicas de um lugar">
+            <!-- Base do solo -->
+            <rect x="20" y="180" width="740" height="34" rx="8" fill="#E2DDD0"/>
+            <text x="40" y="201" font-family="JetBrains Mono, monospace" font-size="11" fill="#4F5957">SUBSTRATO NATURAL / SÍTIO GEOGRÁFICO (BASE FÍSICA)</text>
+
+            <!-- Camada 1: Pré-mecânica -->
+            <g opacity="${L.pre ? 1 : 0.16}">
+              <rect x="20" y="132" width="740" height="42" rx="8" fill="#EAF2EC" stroke="#3F6A4E" stroke-width="1.6"/>
+              <text x="40" y="150" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#3F6A4E">CAMADA I • TÉCNICAS PRÉ-MECÂNICAS (TEMPO LENTO / HERANÇAS)</text>
+              <text x="40" y="166" font-family="Inter, sans-serif" font-size="11" fill="#1D2322">Casario histórico, caminhos antigos, cultivos tradicionais → permanecem como rugosidades socioterritoriais.</text>
+            </g>
+
+            <!-- Camada 2: Ferrovia e Indústria -->
+            <g opacity="${L.ind ? 1 : 0.16}">
+              <rect x="20" y="80" width="740" height="44" rx="8" fill="#FDF1EC" stroke="#B85D3B" stroke-width="1.6"/>
+              <text x="40" y="99" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#B85D3B">CAMADA II • MEIO TÉCNICO: FERROVIA, INDÚSTRIA &amp; ENERGIA</text>
+              <text x="40" y="115" font-family="Inter, sans-serif" font-size="11" fill="#1D2322">Estações, fábricas, pontes, rodovias → introduzem tempos mecânicos e aceleram a circulação.</text>
+            </g>
+
+            <!-- Camada 3: Informática -->
+            <g opacity="${L.info ? 1 : 0.16}">
+              <rect x="20" y="26" width="740" height="46" rx="8" fill="#E6F0F0" stroke="#1A4A4F" stroke-width="2"/>
+              <text x="40" y="45" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#1A4A4F">CAMADA III • TÉCNICAS DA INFORMAÇÃO (FIBRA ÓTICA, SATÉLITES, REDES)</text>
+              <text x="40" y="62" font-family="Inter, sans-serif" font-size="11" fill="#1D2322">Comandos em tempo real → redefinem o valor relativo de todas as camadas abaixo.</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:14px;">
+          <strong style="font-size:0.84rem;color:var(--teal-dark);">Diagnóstico do Tempo Espacial (${activeCount}/3 camadas ativas):</strong>
+          <p style="font-size:0.84rem;color:var(--text-main);margin-top:4px;">${statusText}</p>
+        </div>
+
+        <div class="btn-group" style="margin-bottom:10px;">
+          <button type="button" class="ctrl-btn ${uiState.c1CompareTab==='idade' ? 'active' : ''}" onclick="uiState.c1CompareTab='idade'; renderMain();">Idade Científica vs. Idade Histórica</button>
+          <button type="button" class="ctrl-btn ${uiState.c1CompareTab==='rugosidade' ? 'active-terracotta' : ''}" onclick="uiState.c1CompareTab='rugosidade'; renderMain();">Rugosidades vs. Reverse Salient</button>
+        </div>
+
+        ${uiState.c1CompareTab === 'idade' ? `
+          <div class="grid-2">
+            <div class="panel-soft">
+              <span class="chip chip-amber" style="margin-bottom:6px;">Idade Científica</span>
+              <p style="font-size:0.82rem;color:var(--text-main);">Data em que a técnica é concebida no laboratório. Sem uso social concreto, é apenas virtualidade ou máquina isolada — interessa à cronologia da ciência.</p>
+            </div>
+            <div class="panel-soft">
+              <span class="chip chip-teal" style="margin-bottom:6px;">Idade Histórica (Geográfica)</span>
+              <p style="font-size:0.82rem;color:var(--text-main);">Data em que a técnica se incorpora à vida social de um lugar. É a sua "certidão de batismo" real: ganha significação relativa ao tecido preexistente.</p>
+            </div>
+          </div>
+        ` : `
+          <div class="grid-2">
+            <div class="panel-soft">
+              <span class="chip chip-terra" style="margin-bottom:6px;">Reverse Salient (Thomas Hughes)</span>
+              <p style="font-size:0.82rem;color:var(--text-main);">Anomalia ou componente envelhecido dentro de um sistema técnico em expansão desigual. Enxerga o valor da técnica quase como um dado absoluto em si.</p>
+            </div>
+            <div class="panel-soft">
+              <span class="chip chip-teal" style="margin-bottom:6px;">Rugosidades (Milton Santos)</span>
+              <p style="font-size:0.82rem;color:var(--text-main);">Heranças não apenas físicas, mas <strong>socioterritoriais</strong>. Na geografia não há valores em si: o valor de um objeto herdado é dado pelo conjunto da sociedade no espaço.</p>
+            </div>
+          </div>
+        `}
+      `;
+    }
+
+    /* --- CAPÍTULO 2: Fixos & Fluxos + Três Ordens do Agir --- */
+    function renderInfoCap2() {
+      const approxs = [
+        {
+          title: '1ª Aproximação: Fixos e Fluxos',
+          leftTitle: 'Fixos',
+          leftDesc: 'Elementos fixados ao solo (fábricas, portos, cidades, estradas) cada vez mais artificiais; permitem ações que modificam o lugar.',
+          rightTitle: 'Fluxos',
+          rightDesc: 'Resultado direto ou indireto das ações (mercadorias, pessoas, dinheiro, ordens); atravessam os fixos e modificam sua significação e valor.'
+        },
+        {
+          title: '2ª Aproximação: Configuração Territorial & Relações Sociais',
+          leftTitle: 'Configuração Territorial',
+          leftDesc: 'Conjunto dos sistemas naturais mais as próteses humanas (plantações, casas, usinas). Tem existência material própria, mas ainda não é o espaço.',
+          rightTitle: 'Relações Sociais',
+          rightDesc: 'A vida social que anima a materialidade, dando existência real e histórica à configuração geográfica.'
+        },
+        {
+          title: '3ª Aproximação (Definitiva): Sistemas de Objetos & Sistemas de Ações',
+          leftTitle: 'Sistemas de Objetos',
+          leftDesc: 'Objetos técnicos e naturais articulados em sistema contínuo no território; condicionam a forma como as ações se realizam.',
+          rightTitle: 'Sistemas de Ações',
+          rightDesc: 'Atos orientados por propósito, normas e graus distintos de intencionalidade; criam objetos novos ou ressignificam objetos preexistentes.'
+        }
+      ];
+      const ap = approxs[uiState.c2Approx];
+
+      const acts = {
+        tecnico: {
+          title: 'Agir Técnico (Ordem da Forma Técnica)',
+          color: '#1A4A4F',
+          desc: 'Interações formalmente exigidas pelo funcionamento dos objetos técnicos e máquinas. Busca precisão, eficiência instrumental e rendimento.',
+          example: 'Ex.: Operação coordenada de um porto automatizado, logística just-in-time e controle aéreo.'
+        },
+        formal: {
+          title: 'Agir Formal (Ordem da Forma Jurídica / Normativa)',
+          color: '#C68B2C',
+          desc: 'Obediência a formalismos jurídicos, econômicos e científicos — leis, contratos, regras fiscais e protocolos empresariais que codificam o campo relacional.',
+          example: 'Ex.: Regulamentação bancária, zoneamento urbano, normas da OMC e contratos corporativos.'
+        },
+        simbolico: {
+          title: 'Agir Simbólico (Ordem do Simbólico & Afetivo)',
+          color: '#B85D3B',
+          desc: 'Não regulado pelo cálculo: compreende formas afetivas, emotivas, rituais e culturais de apropriação da técnica. É daqui que vêm a surpresa, a recusa ao passado e a força de transformação.',
+          example: 'Ex.: Festas populares em praças, solidariedade de bairro, usos criativos e não previstos da rua.'
+        }
+      };
+      const curAct = acts[uiState.c2Act];
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 2</span>
+            <h3 class="section-heading">Aproximações Sucessivas &amp; Três Ordens do Agir</h3>
+            <p class="infographic-lead">Navegue pela evolução conceitual de Milton Santos (inspirada em Jean Brunhes) e explore as três ordens do agir que animam o cotidiano.</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          ${approxs.map((a, i) => `
+            <button type="button" class="ctrl-btn ${uiState.c2Approx===i ? 'active' : ''}" onclick="uiState.c2Approx=${i}; renderMain();">
+              ${i + 1}ª Aproximação
+            </button>
+          `).join('')}
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:20px;">
+          <div style="font-family:var(--font-serif);font-weight:700;font-size:1.08rem;color:var(--teal-dark);margin-bottom:12px;">${ap.title}</div>
+          <div class="grid-2">
+            <div style="background:#fff;border:1px solid var(--border-soft);border-radius:12px;padding:14px;">
+              <span class="chip chip-teal" style="margin-bottom:6px;">Polos Materiais</span>
+              <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:4px;">${ap.leftTitle}</h4>
+              <p style="font-size:0.82rem;color:var(--text-muted);">${ap.leftDesc}</p>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border-soft);border-radius:12px;padding:14px;">
+              <span class="chip chip-terra" style="margin-bottom:6px;">Polos Dinâmicos</span>
+              <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:4px;">${ap.rightTitle}</h4>
+              <p style="font-size:0.82rem;color:var(--text-muted);">${ap.rightDesc}</p>
+            </div>
+          </div>
+        </div>
+
+        <span class="section-kicker" style="color:var(--terracotta);">As Três Ordens do Agir no Cotidiano (Braun &amp; Joerges / Santos)</span>
+        <div class="btn-group" style="margin-top:6px;">
+          <button type="button" class="ctrl-btn ${uiState.c2Act==='tecnico' ? 'active' : ''}" onclick="uiState.c2Act='tecnico'; renderMain();">Agir Técnico</button>
+          <button type="button" class="ctrl-btn ${uiState.c2Act==='formal' ? 'active-amber' : ''}" onclick="uiState.c2Act='formal'; renderMain();">Agir Formal</button>
+          <button type="button" class="ctrl-btn ${uiState.c2Act==='simbolico' ? 'active-terracotta' : ''}" onclick="uiState.c2Act='simbolico'; renderMain();">Agir Simbólico</button>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${curAct.color};">
+          <h4 style="font-family:var(--font-serif);font-size:1.05rem;color:${curAct.color};margin-bottom:4px;">${curAct.title}</h4>
+          <p style="font-size:0.84rem;color:var(--text-main);margin-bottom:8px;">${curAct.desc}</p>
+          <p style="font-family:var(--font-mono);font-size:0.74rem;color:var(--text-muted);">${curAct.example}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 3: Paisagem vs. Espaço (Experimento da Bomba de Nêutrons) --- */
+    function renderInfoCap3() {
+      const isEspaco = uiState.c3Mode === 'espaco';
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 3</span>
+            <h3 class="section-heading">Paisagem vs. Espaço: O Experimento da Bomba de Nêutrons</h3>
+            <p class="infographic-lead">Milton Santos usa a imagem da bomba de nêutrons (que eliminaria a vida humana preservando os prédios) para ilustrar a diferença radical entre <strong>Paisagem</strong> e <strong>Espaço Geográfico</strong>.</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="ctrl-btn ${isEspaco ? 'active' : ''}" onclick="uiState.c3Mode='espaco'; renderMain();">
+            ● Espaço Geográfico (Formas + Vida Social)
+          </button>
+          <button type="button" class="ctrl-btn ${!isEspaco ? 'active-terracotta' : ''}" onclick="uiState.c3Mode='paisagem'; renderMain();">
+            ○ Apenas Paisagem (Após Bomba de Nêutrons / Sem Vida)
+          </button>
+        </div>
+
+        <div class="svg-stage" style="margin-bottom:16px;">
+          <svg viewBox="0 0 780 210" role="img" aria-label="Cenário urbano alternando entre espaço vivo e paisagem inerte">
+            <!-- Céu -->
+            <rect x="0" y="0" width="780" height="165" fill="${isEspaco ? '#E6F0F0' : '#ECE9E0'}"/>
+            <!-- Chão -->
+            <rect x="0" y="165" width="780" height="45" fill="${isEspaco ? '#D7D1C2' : '#DCD8CE'}"/>
+
+            <!-- Prédios / Formas herdadas (sempre presentes) -->
+            <rect x="45" y="70" width="85" height="95" rx="4" fill="${isEspaco ? '#1A4A4F' : '#8E9492'}"/>
+            <rect x="150" y="42" width="95" height="123" rx="4" fill="${isEspaco ? '#29656B' : '#9DA2A0'}"/>
+            <rect x="275" y="95" width="110" height="70" rx="4" fill="${isEspaco ? '#B85D3B' : '#A6A49E'}"/>
+            <rect x="420" y="55" width="120" height="110" rx="4" fill="${isEspaco ? '#1A4A4F' : '#8B908E'}"/>
+            <rect x="575" y="88" width="145" height="77" rx="4" fill="${isEspaco ? '#3F6A4E' : '#999E9B'}"/>
+
+            <!-- Janelas iluminadas se Espaço -->
+            ${[62, 85, 108, 168, 195, 222, 440, 470, 500].map(x => `
+              <rect x="${x}" y="82" width="12" height="16" rx="2" fill="${isEspaco ? '#FBF4E4' : '#C9C6BE'}"/>
+              <rect x="${x}" y="110" width="12" height="16" rx="2" fill="${isEspaco ? '#F4D59A' : '#C9C6BE'}"/>
+            `).join('')}
+
+            <!-- Fluxos e vida social (visíveis apenas no modo Espaço) -->
+            ${isEspaco ? `
+              <path d="M 85 65 Q 200 18 330 88 T 640 82" fill="none" stroke="#C68B2C" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <circle cx="120" cy="182" r="6" fill="#B85D3B"/>
+              <circle cx="145" cy="186" r="6" fill="#1A4A4F"/>
+              <circle cx="310" cy="184" r="6" fill="#C68B2C"/>
+              <circle cx="480" cy="182" r="6" fill="#B85D3B"/>
+              <circle cx="510" cy="187" r="6" fill="#3F6A4E"/>
+              <circle cx="620" cy="183" r="6" fill="#1A4A4F"/>
+              <rect x="515" y="14" width="245" height="28" rx="14" fill="#1A4A4F"/>
+              <text x="637" y="32" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#FFFFFF">FORMA-CONTEÚDO ATIVA (ESPAÇO)</text>
+            ` : `
+              <rect x="515" y="14" width="245" height="28" rx="14" fill="#767A78"/>
+              <text x="637" y="32" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="11" fill="#FFFFFF">MATERIALIDADE INERTE (PAISAGEM)</text>
+            `}
+          </svg>
+        </div>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>Dimensão</th>
+              <th style="${!isEspaco ? 'background:var(--terracotta-soft);color:var(--terracotta);' : ''}">Paisagem</th>
+              <th style="${isEspaco ? 'background:var(--teal-soft);color:var(--teal);' : ''}">Espaço Geográfico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Temporalidade</strong></td>
+              <td>Transtemporal: junta objetos de passados diversos (palimpsesto).</td>
+              <td>Sempre presente: construção horizontal, situação única e viva.</td>
+            </tr>
+            <tr>
+              <td><strong>Natureza</strong></td>
+              <td>Sistema material relativamente imutável; história congelada.</td>
+              <td>Sistema de valores em transformação permanente pela intrusão social.</td>
+            </tr>
+            <tr>
+              <td><strong>Relação Dialética</strong></td>
+              <td>Formas puras não têm movimento próprio nem dialética.</td>
+              <td>Dialética real entre sociedade e espaço (formas-conteúdo valorizadas).</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
+
+    /* --- CAPÍTULO 4: Ciclo Totalidade -> Cisão -> Totalização --- */
+    function renderInfoCap4() {
+      const steps = [
+        {
+          k: 'Etapa 1 • Totalidade A (Integral)',
+          title: 'Essência, Real-Abstrato e Potência',
+          desc: 'O Todo como unidade una e integral: conjunto de "Objetos Perfeitos" e possibilidades reais (latências) ainda não geografizadas. A sociedade é o Ser em potência.'
+        },
+        {
+          k: 'Etapa 2 • Cisão da Totalidade',
+          title: 'Análise, Divisão e Movimento',
+          desc: 'Pensar a totalidade sem sua cisão é esvaziá-la de movimento. O real opera por cissiparidade: a totalidade se cinde para poder se realizar concretamente.'
+        },
+        {
+          k: 'Etapa 3 • Individuação & Espacialização (Diferencial)',
+          title: 'Existência, Real-Concreto e Formas-Conteúdo',
+          desc: 'Por impactos seletivos, a ação leva o universal ao lugar. As possibilidades plenas tornam-se relativas ao contexto preexistente (inércia dinâmica das formas-conteúdo).'
+        },
+        {
+          k: 'Etapa 4 • Nova Totalidade B (Totalização)',
+          title: 'Recomposição do Todo em Movimento',
+          desc: 'Não são as partes antigas (a1, a2) que viram (b1, b2), mas a Totalidade A que se transforma na Totalidade B — pronta para uma nova cisão no instante seguinte.'
+        }
+      ];
+      const st = steps[uiState.c4Step];
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 4</span>
+            <h3 class="section-heading">Ciclo Dialético: Totalidade → Cisão → Totalização</h3>
+            <p class="infographic-lead">Avance pelas etapas do movimento do Todo e observe o descolamento do <strong>Símbolo e da Ideologia</strong> quando a sociedade muda.</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          ${steps.map((s, i) => `
+            <button type="button" class="ctrl-btn ${uiState.c4Step===i ? 'active-terracotta' : ''}" onclick="uiState.c4Step=${i}; renderMain();">
+              ${i + 1}. ${s.k.split('•')[1]}
+            </button>
+          `).join('')}
+          <button type="button" class="ctrl-btn ${uiState.c4ShowIdeology ? 'active-amber' : ''}" onclick="uiState.c4ShowIdeology=!uiState.c4ShowIdeology; renderMain();">
+            ${uiState.c4ShowIdeology ? '✓' : '+'} Mostrar Símbolo / Ideologia
+          </button>
+        </div>
+
+        <div class="svg-stage" style="margin-bottom:14px;">
+          <svg viewBox="0 0 780 190" role="img" aria-label="Diagrama cíclico de totalidade, cisão, espacialização e totalização">
+            <rect x="20" y="50" width="160" height="86" rx="12" fill="${uiState.c4Step===0 ? '#B85D3B' : '#fff'}" stroke="#B85D3B" stroke-width="2" onclick="uiState.c4Step=0; renderMain();" style="cursor:pointer;"/>
+            <text x="100" y="84" text-anchor="middle" font-family="Newsreader, serif" font-size="14" font-weight="700" fill="${uiState.c4Step===0 ? '#fff' : '#1D2322'}">Totalidade A</text>
+            <text x="100" y="106" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="${uiState.c4Step===0 ? '#FDF1EC' : '#4F5957'}">Integral / Potência</text>
+
+            <rect x="215" y="50" width="150" height="86" rx="12" fill="${uiState.c4Step===1 ? '#B85D3B' : '#fff'}" stroke="#B85D3B" stroke-width="2" onclick="uiState.c4Step=1; renderMain();" style="cursor:pointer;"/>
+            <text x="290" y="84" text-anchor="middle" font-family="Newsreader, serif" font-size="14" font-weight="700" fill="${uiState.c4Step===1 ? '#fff' : '#1D2322'}">Cisão</text>
+            <text x="290" y="106" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="${uiState.c4Step===1 ? '#FDF1EC' : '#4F5957'}">Divisão / Processo</text>
+
+            <rect x="400" y="50" width="175" height="86" rx="12" fill="${uiState.c4Step===2 ? '#1A4A4F' : '#fff'}" stroke="#1A4A4F" stroke-width="2" onclick="uiState.c4Step=2; renderMain();" style="cursor:pointer;"/>
+            <text x="487" y="84" text-anchor="middle" font-family="Newsreader, serif" font-size="14" font-weight="700" fill="${uiState.c4Step===2 ? '#fff' : '#1D2322'}">Espacialização</text>
+            <text x="487" y="106" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="${uiState.c4Step===2 ? '#E6F0F0' : '#4F5957'}">Formas-Conteúdo (Ato)</text>
+
+            <rect x="610" y="50" width="150" height="86" rx="12" fill="${uiState.c4Step===3 ? '#3F6A4E' : '#fff'}" stroke="#3F6A4E" stroke-width="2" onclick="uiState.c4Step=3; renderMain();" style="cursor:pointer;"/>
+            <text x="685" y="84" text-anchor="middle" font-family="Newsreader, serif" font-size="14" font-weight="700" fill="${uiState.c4Step===3 ? '#fff' : '#1D2322'}">Totalidade B</text>
+            <text x="685" y="106" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="${uiState.c4Step===3 ? '#EAF2EC' : '#4F5957'}">Nova Totalização</text>
+
+            <!-- Setas -->
+            <line x1="180" y1="93" x2="213" y2="93" stroke="#4F5957" stroke-width="2"/>
+            <line x1="365" y1="93" x2="398" y2="93" stroke="#4F5957" stroke-width="2"/>
+            <line x1="575" y1="93" x2="608" y2="93" stroke="#4F5957" stroke-width="2"/>
+            <path d="M 685 136 Q 390 184 100 136" fill="none" stroke="#3F6A4E" stroke-width="1.6" stroke-dasharray="5 4"/>
+
+            ${uiState.c4ShowIdeology ? `
+              <rect x="205" y="8" width="370" height="28" rx="14" fill="#FBF4E4" stroke="#C68B2C" stroke-width="1.4"/>
+              <text x="390" y="26" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#875B14">SÍMBOLO / IDEOLOGIA (permanece estático enquanto o Todo se cinde)</text>
+            ` : ''}
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--terracotta);">
+          <span class="chip chip-terra" style="margin-bottom:6px;">${st.k}</span>
+          <h4 style="font-family:var(--font-serif);font-size:1.08rem;margin-bottom:4px;">${st.title}</h4>
+          <p style="font-size:0.85rem;color:var(--text-main);">${st.desc}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 5: Escalas dos Tempos & Hierarquia Financeira --- */
+    function renderInfoCap5() {
+      const cities = {
+        metropole: {
+          name: 'Metrópole Global / Nacional (ex.: São Paulo)',
+          instruments: ['Moeda Nacional', 'Cheques & Cartões Internacionais', 'Bolsas & Ações', 'Debêntures & Warrants', 'Open / Over & Derivativos', 'Centros de Inteligência Bancária'],
+          drain: 'Recebe todas as noites o dreno financeiro de todo o país, metaboliza a mais-valia e redistribui seletivamente os investimentos.',
+          rugosity: 92
+        },
+        media: {
+          name: 'Cidade Média Regional',
+          instruments: ['Moeda Nacional', 'Cheques & Cartões', 'Crédito Agrícola / Industrial', 'Agências Relé'],
+          drain: 'Atua como centro-relé intermediário: capta recursos locais e regionais e os transfere às metrópoles superiores.',
+          rugosity: 60
+        },
+        pequena: {
+          name: 'Pequena Localidade / Área Rarefeita',
+          instruments: ['Moeda Nacional (forma banal)', 'Crédito Local Limitado'],
+          drain: 'Acesso restrito aos instrumentos financeiros modernos, limitando a capacidade de agir de pessoas e empresas locais.',
+          rugosity: 35
+        }
+      };
+      const cur = cities[uiState.c5City];
+
+      const scales = [
+        { id: 'mundo', label: 'Tempo do Mundo', actor: 'Empresas multinacionais e instituições supranacionais (FMI, Banco Mundial).' },
+        { id: 'nacao', label: 'Tempo do Estado-Nação', actor: 'Estados nacionais e grandes firmas nacionais (uso pleno do território nacional).' },
+        { id: 'regiao', label: 'Tempo Regional', actor: 'Estados federados, blocos regionais e empresas médias.' },
+        { id: 'lugar', label: 'Tempo do Lugar', actor: 'Municípios, pequenas empresas e cotidiano local — teatro de múltiplos tempos externos.' }
+      ];
+      const curScale = scales.find(s => s.id === uiState.c5Scale);
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 5</span>
+            <h3 class="section-heading">Hierarquia Financeira dos Lugares &amp; Escalas dos Tempos</h3>
+            <p class="infographic-lead">Selecione o nível urbano para ver a seletividade geográfica dos instrumentos financeiros (o "dreno noturno" para as metrópoles) e explore as escalas sobrepostas da divisão do trabalho.</p>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="panel-soft">
+            <span class="section-kicker" style="color:var(--terracotta);">1. Hierarquia Financeira</span>
+            <div class="btn-group" style="margin-top:6px;">
+              <button type="button" class="ctrl-btn ${uiState.c5City==='metropole' ? 'active-terracotta' : ''}" onclick="uiState.c5City='metropole'; renderMain();">Metrópole</button>
+              <button type="button" class="ctrl-btn ${uiState.c5City==='media' ? 'active-terracotta' : ''}" onclick="uiState.c5City='media'; renderMain();">Cidade Média</button>
+              <button type="button" class="ctrl-btn ${uiState.c5City==='pequena' ? 'active-terracotta' : ''}" onclick="uiState.c5City='pequena'; renderMain();">Localidade</button>
+            </div>
+            <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:8px;">${cur.name}</h4>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+              ${cur.instruments.map(inst => `<span class="chip chip-amber">${inst}</span>`).join('')}
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:10px;">${cur.drain}</p>
+            <div class="meter-row" style="margin-bottom:0;">
+              <div class="meter-head"><span>Densidade de Trabalho Morto (Rugosidades)</span><span>${cur.rugosity}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${cur.rugosity}%;background:var(--terracotta);"></div></div>
+            </div>
+          </div>
+
+          <div class="panel-soft">
+            <span class="section-kicker">2. Escalas dos Tempos Sobrepostos</span>
+            <div class="btn-group" style="margin-top:6px;">
+              ${scales.map(s => `
+                <button type="button" class="ctrl-btn ${uiState.c5Scale===s.id ? 'active' : ''}" onclick="uiState.c5Scale='${s.id}'; renderMain();">${s.label.replace('Tempo do ','').replace('Tempo ','')}</button>
+              `).join('')}
+            </div>
+            <h4 style="font-family:var(--font-serif);font-size:1rem;color:var(--teal-dark);margin-bottom:6px;">${curScale.label}</h4>
+            <p style="font-size:0.83rem;color:var(--text-main);margin-bottom:10px;"><strong>Agentes portadores:</strong> ${curScale.actor}</p>
+            <p style="font-size:0.78rem;color:var(--text-muted);border-top:1px solid var(--border-soft);padding-top:8px;">
+              <strong>Prático-Inerte:</strong> Cada nova divisão do trabalho encontra um patrimônio de formas herdadas (trabalho morto) que condiciona onde e como o trabalho vivo se instala.
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 6: Diacronia × Sincronia & Acontecer Solidário --- */
+    function renderInfoCap6() {
+      const solids = {
+        homologo: {
+          title: 'Acontecer Homólogo',
+          badge: 'Horizontalidade • Contiguidade',
+          color: '#3F6A4E',
+          desc: 'Áreas de produção agrícola ou industrial moderna que compartilham informação especializada e regras localmente reformuladas. Primazia das formas e das técnicas; forças centrípetas.'
+        },
+        complementar: {
+          title: 'Acontecer Complementar',
+          badge: 'Horizontalidade • Cidade–Campo / Interurbano',
+          color: '#1A4A4F',
+          desc: 'Relações de intercâmbio geograficamente próximo entre cidade e campo ou entre cidades vizinhas, movidas pelas necessidades da produção moderna e pela copresença.'
+        },
+        hierarquico: {
+          title: 'Acontecer Hierárquico',
+          badge: 'Verticalidade • Teleação / Normas',
+          color: '#B85D3B',
+          desc: 'Ordens e informações privilegiadas (segredo e poder) que partem de um centro distante e realizam-se como trabalho em outro lugar. Independe da contiguidade; primazia das normas e da política.'
+        }
+      };
+      const curS = solids[uiState.c6Solid];
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 6</span>
+            <h3 class="section-heading">Eixo das Sucessões × Eixo das Coexistências &amp; Acontecer Solidário</h3>
+            <p class="infographic-lead">Visualize o cruzamento entre diacronia e sincronia no evento (<em>hic et nunc</em>) e alterne entre as três formas de acontecer solidário.</p>
+          </div>
+        </div>
+
+        <div class="grid-2" style="align-items:start;">
+          <div class="svg-stage">
+            <svg viewBox="0 0 380 230" role="img" aria-label="Plano cartesiano de diacronia e sincronia">
+              <!-- Eixo Y: Sucessões (Diacronia) -->
+              <line x1="60" y1="200" x2="60" y2="24" stroke="#1A4A4F" stroke-width="2.5"/>
+              <polygon points="60,16 55,28 65,28" fill="#1A4A4F"/>
+              <text x="68" y="30" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#1A4A4F">EIXO DAS SUCESSÕES (DIACRONIA)</text>
+              <text x="68" y="44" font-family="Inter, sans-serif" font-size="9.5" fill="#4F5957">Ontem → Hoje (Tempo abstrato / períodos)</text>
+
+              <!-- Eixo X: Coexistências (Sincronia) -->
+              <line x1="60" y1="200" x2="355" y2="200" stroke="#B85D3B" stroke-width="2.5"/>
+              <polygon points="363,200 351,195 351,205" fill="#B85D3B"/>
+              <text x="155" y="220" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#B85D3B">EIXO DAS COEXISTÊNCIAS (SINCRONIA)</text>
+
+              <!-- Pontos de temporalidades simultâneas -->
+              <line x1="60" y1="115" x2="335" y2="115" stroke="#C68B2C" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <circle cx="130" cy="115" r="7" fill="#3F6A4E"/>
+              <text x="130" y="102" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#1D2322">Tempo Lento</text>
+
+              <circle cx="220" cy="115" r="10" fill="#B85D3B"/>
+              <text x="220" y="96" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#B85D3B">EVENTO (Hic et Nunc)</text>
+
+              <circle cx="310" cy="115" r="7" fill="#1A4A4F"/>
+              <text x="310" y="102" text-anchor="middle" font-family="Inter, sans-serif" font-size="9.5" fill="#1D2322">Tempo Rápido</text>
+
+              <text x="210" y="142" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#4F5957">Viver comum: temporalidades distintas</text>
+              <text x="210" y="156" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#4F5957">simultâneas no mesmo lugar (domínio da Geografia)</text>
+            </svg>
+          </div>
+
+          <div>
+            <span class="section-kicker" style="color:var(--terracotta);">Três Formas de Acontecer Solidário</span>
+            <div class="btn-group" style="margin-top:6px;">
+              <button type="button" class="ctrl-btn ${uiState.c6Solid==='homologo' ? 'active-olive' : ''}" onclick="uiState.c6Solid='homologo'; renderMain();">Homólogo</button>
+              <button type="button" class="ctrl-btn ${uiState.c6Solid==='complementar' ? 'active' : ''}" onclick="uiState.c6Solid='complementar'; renderMain();">Complementar</button>
+              <button type="button" class="ctrl-btn ${uiState.c6Solid==='hierarquico' ? 'active-terracotta' : ''}" onclick="uiState.c6Solid='hierarquico'; renderMain();">Hierárquico</button>
+            </div>
+            <div class="panel-soft" style="border-left:4px solid ${curS.color};margin-bottom:12px;">
+              <span class="chip" style="color:${curS.color};border-color:${curS.color};margin-bottom:6px;">${curS.badge}</span>
+              <h4 style="font-family:var(--font-serif);font-size:1.04rem;margin-bottom:4px;">${curS.title}</h4>
+              <p style="font-size:0.82rem;color:var(--text-main);">${curS.desc}</p>
+            </div>
+            <div class="panel-soft" style="padding:12px 14px;">
+              <strong style="font-size:0.78rem;color:var(--teal-dark);">Dupla Escala dos Eventos:</strong>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:3px;">
+                1) <strong>Escala de Origem</strong> (força do emissor: FMI, Estado, município) ≠ 2) <strong>Área de Ocorrência</strong> (extensão real do impacto no território — a escala varia com o tempo).
+              </p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 7: Linha do Tempo dos Sistemas Técnicos --- */
+    function renderInfoCap7() {
+      const periods = [
+        {
+          era: 'Pré-Mecânico',
+          years: 'Até ~1750',
+          tool: 'Ferramenta (técnicas do corpo)',
+          energy: 'Força humana, água e vento',
+          info: 'Linguagem e escrita; técnicas locais e pouco invasoras.',
+          speed: 15
+        },
+        {
+          era: 'Vapor & Ferrovia',
+          years: '1770 – 1890',
+          tool: 'Máquina a vapor',
+          energy: 'Carvão e ferro',
+          info: 'Telégrafo elétrico e ferrovia unificam os horários nacionais. A mecanização "parou na plataforma da estação".',
+          speed: 42
+        },
+        {
+          era: 'Eletricidade & Fordismo',
+          years: '1880 – 1980',
+          tool: 'Linhas de montagem e engenharia pesada',
+          energy: 'Eletricidade e petróleo',
+          info: 'Telefone, rádio, automóvel e televisão penetram nas casas e nos lugares mais ermos.',
+          speed: 70
+        },
+        {
+          era: 'Sistema Técnico Informacional',
+          years: '1980 – Presente',
+          tool: 'Autômato, computador e tecnociência',
+          energy: 'Informação (microeletrônica e satélites)',
+          info: 'As Técnicas da Informação atuam como "cimento" que unifica, invade e comanda todos os outros subsistemas técnicos em tempo real.',
+          speed: 100
+        }
+      ];
+      const p = periods[uiState.c7Period];
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 7</span>
+            <h3 class="section-heading">Linha do Tempo dos Períodos e Sistemas Técnicos</h3>
+            <p class="infographic-lead">Compare a sucessão dos sistemas técnicos (Fu-chen Lo / Mumford / Attali) e veja como o tempo de incubação e difusão das inovações se acelerou brutalmente.</p>
+          </div>
+        </div>
+
+        <div class="grid-4" style="margin-bottom:16px;">
+          ${periods.map((item, i) => `
+            <button type="button" class="ctrl-btn ${uiState.c7Period===i ? 'active-amber' : ''}" style="text-align:left;padding:12px;" onclick="uiState.c7Period=${i}; renderMain();">
+              <div style="font-family:var(--font-mono);font-size:0.66rem;opacity:0.85;">${item.years}</div>
+              <div style="font-family:var(--font-serif);font-size:0.95rem;font-weight:700;margin-top:2px;">${item.era}</div>
+            </button>
+          `).join('')}
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--amber);">
+          <div class="grid-3" style="margin-bottom:14px;">
+            <div style="background:#fff;padding:12px;border-radius:10px;border:1px solid var(--border-soft);">
+              <span class="concept-tag" style="color:var(--teal);">Instrumento Típico</span>
+              <strong style="font-size:0.88rem;">${p.tool}</strong>
+            </div>
+            <div style="background:#fff;padding:12px;border-radius:10px;border:1px solid var(--border-soft);">
+              <span class="concept-tag" style="color:var(--terracotta);">Energia / Base</span>
+              <strong style="font-size:0.88rem;">${p.energy}</strong>
+            </div>
+            <div style="background:#fff;padding:12px;border-radius:10px;border:1px solid var(--border-soft);">
+              <span class="concept-tag" style="color:var(--amber);">Velocidade de Difusão</span>
+              <div class="meter-track" style="margin-top:6px;"><div class="meter-fill" style="width:${p.speed}%;background:var(--amber);"></div></div>
+            </div>
+          </div>
+          <p style="font-size:0.86rem;color:var(--text-main);"><strong>Papel da Informação &amp; Território:</strong> ${p.info}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 8: Triângulo das Três Unicidades --- */
+    function renderInfoCap8() {
+      const units = {
+        tecnica: {
+          title: '1. Unicidade Técnica',
+          cause: 'Fim dos impérios coloniais pós-1945 e afunilamento histórico das escolhas até um único sistema técnico hegemônico ("mecano universal").',
+          effect: 'Permite a extrema dispersão geográfica da produção combinada com a extrema concentração do controle ("concentrização").',
+          color: '#1A4A4F'
+        },
+        tempo: {
+          title: '2. Unicidade do Tempo (Convergência dos Momentos)',
+          cause: 'Satélites, fibras óticas, computadores e telecomunicações permitem conhecer instantaneamente eventos distantes em tempo real.',
+          effect: 'Ao contrário de 1789 (quando Luís XVI anotou "nada" no dia da queda da Bastilha), os momentos hoje convergem em rede — criando novo comando da distância.',
+          color: '#C68B2C'
+        },
+        motor: {
+          title: '3. Motor Único (Mais-Valia Universal)',
+          cause: 'Empresas-rede globais e globalização financeira (desregulação, mercados 24h, 40 dólares financeiros para cada 1 dólar de mercadoria).',
+          effect: 'Impõe a competitividade como "lei natural" e guerra sem quartel entre firmas, países e lugares pela mais-valia fugaz.',
+          color: '#B85D3B'
+        }
+      };
+      const u = units[uiState.c8Unit];
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 8</span>
+            <h3 class="section-heading">As Três Unicidades &amp; A Inteligência Planetária</h3>
+            <p class="infographic-lead">Clique em cada vértice do triângulo para explorar os três pilares que sustentam a globalização contemporânea.</p>
+          </div>
+        </div>
+
+        <div class="grid-2" style="align-items:center;">
+          <div class="svg-stage">
+            <svg viewBox="0 0 380 245" role="img" aria-label="Triângulo das três unicidades">
+              <!-- Linhas conectoras -->
+              <polygon points="190,48 72,195 308,195" fill="rgba(198,139,44,0.08)" stroke="#4F5957" stroke-width="2"/>
+              <!-- Centro -->
+              <circle cx="190" cy="144" r="44" fill="#FFFFFF" stroke="#C68B2C" stroke-width="2" stroke-dasharray="4 3"/>
+              <text x="190" y="140" text-anchor="middle" font-family="Newsreader, serif" font-size="11.5" font-weight="700" fill="#1D2322">Inteligência</text>
+              <text x="190" y="155" text-anchor="middle" font-family="Newsreader, serif" font-size="11.5" font-weight="700" fill="#1D2322">Planetária</text>
+
+              <!-- Vértice 1: Técnica -->
+              <g onclick="uiState.c8Unit='tecnica'; renderMain();" style="cursor:pointer;">
+                <circle cx="190" cy="48" r="${uiState.c8Unit==='tecnica' ? 32 : 26}" fill="${uiState.c8Unit==='tecnica' ? '#1A4A4F' : '#FFFFFF'}" stroke="#1A4A4F" stroke-width="2.5"/>
+                <text x="190" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="${uiState.c8Unit==='tecnica' ? '#fff' : '#1A4A4F'}">UNICIDADE</text>
+                <text x="190" y="58" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700" fill="${uiState.c8Unit==='tecnica' ? '#fff' : '#1A4A4F'}">TÉCNICA</text>
+              </g>
+
+              <!-- Vértice 2: Tempo -->
+              <g onclick="uiState.c8Unit='tempo'; renderMain();" style="cursor:pointer;">
+                <circle cx="72" cy="195" r="${uiState.c8Unit==='tempo' ? 34 : 28}" fill="${uiState.c8Unit==='tempo' ? '#C68B2C' : '#FFFFFF'}" stroke="#C68B2C" stroke-width="2.5"/>
+                <text x="72" y="192" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="${uiState.c8Unit==='tempo' ? '#fff' : '#875B14'}">TEMPO</text>
+                <text x="72" y="205" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="${uiState.c8Unit==='tempo' ? '#fff' : '#875B14'}">REAL</text>
+              </g>
+
+              <!-- Vértice 3: Motor -->
+              <g onclick="uiState.c8Unit='motor'; renderMain();" style="cursor:pointer;">
+                <circle cx="308" cy="195" r="${uiState.c8Unit==='motor' ? 34 : 28}" fill="${uiState.c8Unit==='motor' ? '#B85D3B' : '#FFFFFF'}" stroke="#B85D3B" stroke-width="2.5"/>
+                <text x="308" y="192" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="${uiState.c8Unit==='motor' ? '#fff' : '#B85D3B'}">MOTOR</text>
+                <text x="308" y="205" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" font-weight="700" fill="${uiState.c8Unit==='motor' ? '#fff' : '#B85D3B'}">ÚNICO</text>
+              </g>
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${u.color};">
+            <h4 style="font-family:var(--font-serif);font-size:1.15rem;color:${u.color};margin-bottom:10px;">${u.title}</h4>
+            <p style="font-size:0.84rem;color:var(--text-main);margin-bottom:10px;"><strong>Base / Causa:</strong> ${u.cause}</p>
+            <p style="font-size:0.84rem;color:var(--text-main);"><strong>Efeito Territorial:</strong> ${u.effect}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 9: Objetos × Ações × Normas (Passado vs. Presente) --- */
+    function renderInfoCap9() {
+      const isNow = uiState.c9Era === 'presente';
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 9</span>
+            <h3 class="section-heading">Objetos Intencionais × Ações Pragmáticas × Normas</h3>
+            <p class="infographic-lead">Alterne entre o <strong>Passado</strong> e o <strong>Presente</strong> para ver como mudaram os objetos, as ações e a regulação normativa do território.</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="ctrl-btn ${!isNow ? 'active-olive' : ''}" onclick="uiState.c9Era='passado'; renderMain();">Passado (Objetos Locais &amp; Polivalentes)</button>
+          <button type="button" class="ctrl-btn ${isNow ? 'active' : ''}" onclick="uiState.c9Era='presente'; renderMain();">Presente (Objetos Informacionais &amp; Normas Globais)</button>
+        </div>
+
+        <div class="grid-3">
+          <div class="panel-soft" style="border-top:4px solid var(--teal);">
+            <span class="chip chip-teal" style="margin-bottom:8px;">1. Objetos</span>
+            <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:6px;">${isNow ? 'Precisos, Informacionais e Hipertélicos' : 'Pouco Numerosos e Polivalentes'}</h4>
+            <p style="font-size:0.82rem;color:var(--text-main);">
+              ${isNow
+                ? 'Nascem da ciência no laboratório com intencionalidade extrema (informação nos objetos e para os objetos). Funcionam em sistema e envelhecem depressa pela competitividade.'
+                : 'Criados pelo grupo para uso próprio, subordinados aos habitantes ("objetos vivos"), com reversibilidade de uso e liberdade de adaptação.'}
+            </p>
+          </div>
+
+          <div class="panel-soft" style="border-top:4px solid var(--terracotta);">
+            <span class="chip chip-terra" style="margin-bottom:8px;">2. Ações</span>
+            <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:6px;">${isNow ? 'Pragmáticas, Exógenas e Teleagidas' : 'Endógenas e Comunicacionais'}</h4>
+            <p style="font-size:0.82rem;color:var(--text-main);">
+              ${isNow
+                ? 'Informadas de fora, obedientes à razão do instrumento (just-in-time e just-in-place). Exigem retórica e "bulas" técnicas para legitimar-se, gerando alienação.'
+                : 'Orientadas por valores e necessidades locais; a comunicação direta entre pessoas e objetos prescindia de tradutores especializados.'}
+            </p>
+          </div>
+
+          <div class="panel-soft" style="border-top:4px solid var(--amber);">
+            <span class="chip chip-amber" style="margin-bottom:8px;">3. Normas &amp; Território</span>
+            <h4 style="font-family:var(--font-serif);font-size:1rem;margin-bottom:6px;">${isNow ? 'Lex Mercatoria &amp; Pontos de Controle' : 'Costumes e Normas Locais'}</h4>
+            <p style="font-size:0.82rem;color:var(--text-main);">
+              ${isNow
+                ? 'A fragmentação produtiva exige regulação rígida à distância: normas empresariais, jurídicas e técnicas articulam "pontos de cálculo" (autonomia) e "pontos de controle" (dependência).'
+                : 'Regras costumeiras e territoriais nascidas da convivência local regulavam o ritmo do trabalho e o uso dos recursos.'}
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 10: 3 Estágios do Meio + Tecnosfera vs. Psicosfera --- */
+    function renderInfoCap10() {
+      const stages = [
+        {
+          name: 'Meio Natural',
+          artif: 15, science: 10, rigidity: 12,
+          desc: 'Simbiose com a natureza: técnicas sem objetos técnicos autônomos (pousio, rotação de terras). A sociedade local comanda seus tempos e preserva o meio de vida.'
+        },
+        {
+          name: 'Meio Técnico',
+          artif: 58, science: 45, rigidity: 55,
+          desc: 'Emergência do espaço mecanizado (fábricas, ferrovias, próteses no território). A lógica instrumental desafia a natureza e a divisão internacional do trabalho se expande.'
+        },
+        {
+          name: 'Meio Técnico-Científico-Informacional',
+          artif: 95, science: 96, rigidity: 90,
+          desc: 'A cara geográfica da globalização: ciência, tecnologia e informação unidas sob a égide do mercado global. Conhecimento vira recurso (ex.: radar de Bauru), cidades endurecem e eclode a Guerra dos Lugares e a crise ambiental.'
+        }
+      ];
+      const st = stages[uiState.c10Stage];
+      const isTecno = uiState.c10Sphere === 'tecnosfera';
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 10</span>
+            <h3 class="section-heading">Evolução do Meio Geográfico + Tecnosfera &amp; Psicosfera</h3>
+            <p class="infographic-lead">Avance pelas três etapas históricas do meio geográfico e compare os dois pilares indissociáveis da globalização no território.</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          ${stages.map((s, i) => `
+            <button type="button" class="ctrl-btn ${uiState.c10Stage===i ? 'active' : ''}" onclick="uiState.c10Stage=${i}; renderMain();">
+              ${i + 1}. ${s.name}
+            </button>
+          `).join('')}
+        </div>
+
+        <div class="grid-2" style="margin-bottom:16px;">
+          <div class="panel-soft">
+            <h4 style="font-family:var(--font-serif);font-size:1.1rem;color:var(--teal-dark);margin-bottom:6px;">${st.name}</h4>
+            <p style="font-size:0.84rem;color:var(--text-main);">${st.desc}</p>
+          </div>
+          <div class="panel-soft">
+            <div class="meter-row">
+              <div class="meter-head"><span>Grau de Artificialidade</span><span>${st.artif}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${st.artif}%;background:var(--teal);"></div></div>
+            </div>
+            <div class="meter-row">
+              <div class="meter-head"><span>Densidade de Ciência &amp; Informação</span><span>${st.science}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${st.science}%;background:var(--amber);"></div></div>
+            </div>
+            <div class="meter-row" style="margin-bottom:0;">
+              <div class="meter-head"><span>Rigidez (Capital Fixo para gerar Fluidez)</span><span>${st.rigidity}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${st.rigidity}%;background:var(--terracotta);"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-group" style="margin-bottom:10px;">
+          <button type="button" class="ctrl-btn ${isTecno ? 'active' : ''}" onclick="uiState.c10Sphere='tecnosfera'; renderMain();">Tecnosfera (Materialidade)</button>
+          <button type="button" class="ctrl-btn ${!isTecno ? 'active-terracotta' : ''}" onclick="uiState.c10Sphere='psicosfera'; renderMain();">Psicosfera (Ideias &amp; Sentidos)</button>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${isTecno ? 'var(--teal)' : 'var(--terracotta)'};">
+          <p style="font-size:0.84rem;color:var(--text-main);">
+            ${isTecno
+              ? '<strong>Tecnosfera:</strong> Mundo dos objetos técnico-científicos que adere ao lugar como uma prótese, traduzindo mandamentos da produção e do intercâmbio distantes.'
+              : '<strong>Psicosfera:</strong> Reino das ideias, crenças, paixões e produção de sentido. Apóia, acompanha e muitas vezes antecede a expansão do meio técnico-científico, moldando comportamentos.'}
+          </p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 11: Simulador de Redes (Fluidez & Seletividade) --- */
+    function renderInfoCap11() {
+      const f = uiState.c11Fluidity;
+      const strokeW = (1.5 + (f / 100) * 3.5).toFixed(1);
+      const magmaOpacity = (0.25 + (f / 100) * 0.65).toFixed(2);
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 11</span>
+            <h3 class="section-heading">Tempos Rápidos × Tempos Lentos &amp; Seletividade das Redes</h3>
+            <p class="infographic-lead">Ajuste o <strong>Imperativo da Fluidez</strong> para observar como o adensamento das redes rápidas conecta nós seletivos enquanto acentua áreas de exclusão ("magmas") e instabilidade territorial.</p>
+          </div>
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:14px;">
+          <div class="meter-head">
+            <span>Imperativo da Fluidez (Redes Técnicas + Desregulação)</span>
+            <span style="color:var(--teal);">${f}%</span>
+          </div>
+          <input type="range" class="atlas-slider" min="15" max="100" value="${f}" oninput="uiState.c11Fluidity=Number(this.value); renderMain();" aria-label="Controlar imperativo da fluidez">
+        </div>
+
+        <div class="svg-stage" style="margin-bottom:14px;">
+          <svg viewBox="0 0 780 215" role="img" aria-label="Simulador de redes rápidas e zonas de baixa intensidade">
+            <!-- Fundo: Espaço Banal / Magma -->
+            <rect x="10" y="10" width="760" height="195" rx="12" fill="#F2EFE6" stroke="#E2DDD0"/>
+
+            <!-- Zonas de exclusão / Magmas -->
+            <ellipse cx="215" cy="145" rx="95" ry="42" fill="#DFD8C8" opacity="${magmaOpacity}"/>
+            <text x="215" y="149" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#4F5957">ZONA DE BAIXA INTENSIDADE (MAGMA)</text>
+
+            <ellipse cx="585" cy="150" rx="105" ry="40" fill="#DFD8C8" opacity="${magmaOpacity}"/>
+            <text x="585" y="154" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#4F5957">TEMPOS LENTOS / EX-CONECTADOS</text>
+
+            <!-- Arcos rápidos da rede -->
+            <line x1="90" y1="70" x2="340" y2="55" stroke="#1A4A4F" stroke-width="${strokeW}"/>
+            <line x1="340" y1="55" x2="670" y2="65" stroke="#1A4A4F" stroke-width="${strokeW}"/>
+            <line x1="340" y1="55" x2="420" y2="145" stroke="#C68B2C" stroke-width="${(strokeW * 0.7).toFixed(1)}" stroke-dasharray="5 3"/>
+            <line x1="90" y1="70" x2="420" y2="145" stroke="#C68B2C" stroke-width="1.4" stroke-dasharray="4 4"/>
+
+            <!-- Nós hegemônicos -->
+            <circle cx="90" cy="70" r="14" fill="#1A4A4F"/>
+            <text x="90" y="45" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#1A4A4F">Nó Financeiro</text>
+
+            <circle cx="340" cy="55" r="17" fill="#B85D3B"/>
+            <text x="340" y="30" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#B85D3B">Metrópole-Rede (Comando Político)</text>
+
+            <circle cx="670" cy="65" r="14" fill="#1A4A4F"/>
+            <text x="670" y="40" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#1A4A4F">Tecnopolo / Teleporto</text>
+
+            <circle cx="420" cy="145" r="10" fill="#C68B2C"/>
+            <text x="420" y="172" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#875B14">Cidade Local (Comando Técnico)</text>
+          </svg>
+        </div>
+
+        <div class="panel-soft">
+          <p style="font-size:0.83rem;color:var(--text-main);">
+            <strong>Efeito observado (Fluidez em ${f}%):</strong> ${
+              f > 70
+                ? 'Alta velocidade nos corredores exclusivos das grandes corporações, gerando rápido envelhecimento dos subespaços não atualizados e forte seletividade espacial.'
+                : f > 40
+                ? 'Convivência instável entre redes rápidas (que integram pontos distantes) e áreas contíguas de menor velocidade.'
+                : 'Menor pressão de velocidade: maior autonomia relativa dos circuitos locais, porém menor integração aos fluxos globais.'
+            }
+          </p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 12: Horizontalidades e Verticalidades --- */
+    function renderInfoCap12() {
+      const mode = uiState.c12Layer;
+      const showV = mode === 'vertical' || mode === 'ambos';
+      const showH = mode === 'horizontal' || mode === 'ambos';
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 12</span>
+            <h3 class="section-heading">Horizontalidades × Verticalidades no Território</h3>
+            <p class="infographic-lead">Alterne as camadas do diagrama para distinguir os pontos descontínuos das ordens globais (<strong>Verticalidades</strong>) da extensão contígua do cotidiano (<strong>Horizontalidades</strong>).</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="ctrl-btn ${mode==='vertical' ? 'active-terracotta' : ''}" onclick="uiState.c12Layer='vertical'; renderMain();">Verticalidades (Pontos &amp; Ordens)</button>
+          <button type="button" class="ctrl-btn ${mode==='horizontal' ? 'active-olive' : ''}" onclick="uiState.c12Layer='horizontal'; renderMain();">Horizontalidades (Contiguidade)</button>
+          <button type="button" class="ctrl-btn ${mode==='ambos' ? 'active' : ''}" onclick="uiState.c12Layer='ambos'; renderMain();">Sobreposição Dialética</button>
+        </div>
+
+        <div class="svg-stage" style="margin-bottom:14px;">
+          <svg viewBox="0 0 780 220" role="img" aria-label="Camadas de verticalidades e horizontalidades">
+            <!-- Camada Horizontal (Base contígua) -->
+            <g opacity="${showH ? 1 : 0.14}">
+              <rect x="30" y="128" width="720" height="72" rx="14" fill="#EAF2EC" stroke="#3F6A4E" stroke-width="2"/>
+              <text x="50" y="154" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700" fill="#3F6A4E">HORIZONTALIDADES • EXTENSÃO CONTÍNUA E CONTÍGUA (FORÇAS CENTRÍPETAS)</text>
+              <text x="50" y="174" font-family="Inter, sans-serif" font-size="11" fill="#1D2322">Produção direta, relação cidade-campo, cotidiano compartilhado, solidariedade orgânica e possibilidade de ação política local.</text>
+            </g>
+
+            <!-- Camada Vertical (Pontos e vetores superiores) -->
+            <g opacity="${showV ? 1 : 0.14}">
+              <line x1="120" y1="42" x2="390" y2="42" stroke="#B85D3B" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <line x1="390" y1="42" x2="660" y2="42" stroke="#B85D3B" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <line x1="120" y1="42" x2="120" y2="140" stroke="#B85D3B" stroke-width="2"/>
+              <line x1="390" y1="42" x2="390" y2="140" stroke="#B85D3B" stroke-width="2"/>
+              <line x1="660" y1="42" x2="660" y2="140" stroke="#B85D3B" stroke-width="2"/>
+
+              <circle cx="120" cy="42" r="12" fill="#B85D3B"/>
+              <circle cx="390" cy="42" r="15" fill="#1A4A4F"/>
+              <circle cx="660" cy="42" r="12" fill="#B85D3B"/>
+
+              <text x="390" y="18" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700" fill="#B85D3B">VERTICALIDADES • PONTOS DESCONTÍNUOS EM REDE (FORÇAS CENTRÍFUGAS / ENTROPIA)</text>
+            </g>
+
+            <!-- Interseção: Cidades -->
+            ${mode === 'ambos' ? `
+              <circle cx="390" cy="140" r="9" fill="#C68B2C" stroke="#fff" stroke-width="2"/>
+              <text x="408" y="114" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700" fill="#875B14">← CIDADE: Ponto de interseção e tensão</text>
+            ` : ''}
+          </svg>
+        </div>
+
+        <div class="panel-soft">
+          <p style="font-size:0.84rem;color:var(--text-main);">
+            ${mode === 'vertical'
+              ? '<strong>Verticalidades:</strong> Articulam pontos distantes segundo racionalidades hegemônicas e normas rígidas. Geram solidariedade organizacional, mas trazem desordem (entropia) às coesões locais.'
+              : mode === 'horizontal'
+              ? '<strong>Horizontalidades:</strong> Espaços da contiguidade e da vida cotidiana. Podem transformar interesses comuns e o "cotidiano homólogo" em força política coletiva.'
+              : '<strong>Sobreposição Dialética:</strong> O espaço geográfico reúne ambos os recortes inseparavelmente. As cidades são o palco onde forças centrífugas (verticais) perturbam e obrigam a refazer as solidariedades centrípetas (horizontais).'}
+          </p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 13: Mapa Esquemático Espaços Luminosos vs. Opacos --- */
+    function renderInfoCap13() {
+      const zones = {
+        luminoso: {
+          title: 'Espaço Luminoso (Racionalidade Hegemônica)',
+          tech: 96, info: 95, norm: 94, color: '#C68B2C',
+          desc: 'Fração do território densamente equipada com ciência, tecnologia e informação (centros financeiros, tecnopolos, agroindústria de ponta). Atrai investimentos públicos e atores hegemônicos; funciona como máquina de precisão ("campo e cronômetro").'
+        },
+        transicao: {
+          title: 'Zona de Transição / Contágio Racional',
+          tech: 58, info: 52, norm: 60, color: '#1A4A4F',
+          desc: 'Áreas onde objetos técnicos modernos convivem com rugosidades e serviços tradicionais. Forte conflito entre o ritmo dos relógios corporativos e a diversidade socioespacial herdada.'
+        },
+        opaco: {
+          title: 'Espaço Opaco (Contra-Racionalidades)',
+          tech: 22, info: 25, norm: 28, color: '#3F6A4E',
+          desc: 'Áreas menos modernas, consideradas "irracionais" para usos hegemônicos. Abrigam pobres, migrantes e atividades marginais que, a partir da experiência da escassez, constroem racionalidades paralelas e criativas.'
+        }
+      };
+      const z = zones[uiState.c13Zone];
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 13</span>
+            <h3 class="section-heading">Espaços Luminosos vs. Espaços Opacos</h3>
+            <p class="infographic-lead">Clique nas zonas do mapa esquemático para inspecionar as densidades técnica, informacional e normativa e compreender a emergência das <strong>contra-racionalidades</strong>.</p>
+          </div>
+        </div>
+
+        <div class="grid-2" style="align-items:center;">
+          <div class="svg-stage">
+            <svg viewBox="0 0 380 230" role="img" aria-label="Mapa esquemático de espaços luminosos e opacos">
+              <!-- Fundo opaco -->
+              <rect x="12" y="12" width="356" height="206" rx="14"
+                fill="${uiState.c13Zone==='opaco' ? '#3F6A4E' : '#DCE7DF'}"
+                stroke="#3F6A4E" stroke-width="2"
+                onclick="uiState.c13Zone='opaco'; renderMain();" style="cursor:pointer;"/>
+              <text x="28" y="36" font-family="JetBrains Mono, monospace" font-size="10.5" font-weight="700"
+                fill="${uiState.c13Zone==='opaco' ? '#FFFFFF' : '#284A34'}">ESPAÇOS OPACOS (Contra-racionalidades)</text>
+
+              <!-- Zona de transição -->
+              <ellipse cx="190" cy="122" rx="125" ry="74"
+                fill="${uiState.c13Zone==='transicao' ? '#1A4A4F' : '#E6F0F0'}"
+                stroke="#1A4A4F" stroke-width="2" stroke-dasharray="5 3"
+                onclick="uiState.c13Zone='transicao'; renderMain();" style="cursor:pointer;"/>
+              <text x="190" y="70" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" font-weight="700"
+                fill="${uiState.c13Zone==='transicao' ? '#FFFFFF' : '#1A4A4F'}">ZONA DE TRANSIÇÃO</text>
+
+              <!-- Núcleo luminoso -->
+              <circle cx="190" cy="128" r="46"
+                fill="${uiState.c13Zone==='luminoso' ? '#C68B2C' : '#FBF4E4'}"
+                stroke="#C68B2C" stroke-width="2.5"
+                onclick="uiState.c13Zone='luminoso'; renderMain();" style="cursor:pointer;"/>
+              <text x="190" y="124" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700"
+                fill="${uiState.c13Zone==='luminoso' ? '#FFFFFF' : '#875B14'}">ESPAÇO</text>
+              <text x="190" y="139" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700"
+                fill="${uiState.c13Zone==='luminoso' ? '#FFFFFF' : '#875B14'}">LUMINOSO</text>
+            </svg>
+          </div>
+
+          <div class="panel-soft" style="border-left:4px solid ${z.color};">
+            <h4 style="font-family:var(--font-serif);font-size:1.1rem;color:${z.color};margin-bottom:8px;">${z.title}</h4>
+            <p style="font-size:0.83rem;color:var(--text-main);margin-bottom:14px;">${z.desc}</p>
+            <div class="meter-row">
+              <div class="meter-head"><span>Densidade Técnica</span><span>${z.tech}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${z.tech}%;background:var(--teal);"></div></div>
+            </div>
+            <div class="meter-row">
+              <div class="meter-head"><span>Densidade Informacional</span><span>${z.info}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${z.info}%;background:var(--amber);"></div></div>
+            </div>
+            <div class="meter-row" style="margin-bottom:0;">
+              <div class="meter-head"><span>Rigidez Normativa</span><span>${z.norm}%</span></div>
+              <div class="meter-track"><div class="meter-fill" style="width:${z.norm}%;background:var(--terracotta);"></div></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 14: Homens Lentos & Migrante: Da Memória à Descoberta --- */
+    function renderInfoCap14() {
+      const isLento = uiState.c14Profile === 'lento';
+      const migrantSteps = [
+        {
+          step: '1. Memória & Estranhamento',
+          desc: 'Ao chegar à cidade grande, o migrante traz uma memória construída em outro lugar. Diante de um espaço que não ajudou a criar, sua memória revela-se inútil para a luta cotidiana (choque e alienação inicial).'
+        },
+        {
+          step: '2. Reaprendizado do Entorno',
+          desc: 'Obrigados a esquecer rotinas antigas, os migrantes não usam passivamente o prático-inerte herdado. O novo meio ambiente atua como detonador intelectual de uma "terceira via" de entendimento da cidade.'
+        },
+        {
+          step: '3. Descoberta & Futuro',
+          desc: 'Enquanto a memória olha para o passado, a nova consciência olha para o futuro. A "consciência pelo lugar" supera a "consciência no lugar", alimentando uma práxis inventiva e libertadora.'
+        }
+      ];
+      const ms = migrantSteps[uiState.c14MigrantStep];
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 14</span>
+            <h3 class="section-heading">Os Homens Lentos &amp; A Jornada do Migrante</h3>
+            <p class="infographic-lead">Contraste o uso do espaço urbano pelos "homens rápidos" e pelos "homens lentos", e percorra a transformação do migrante <strong>da memória à descoberta</strong>.</p>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button type="button" class="ctrl-btn ${!isLento ? 'active' : ''}" onclick="uiState.c14Profile='rapido'; renderMain();">Homens Rápidos (Fluidez &amp; Imagens)</button>
+          <button type="button" class="ctrl-btn ${isLento ? 'active-olive' : ''}" onclick="uiState.c14Profile='lento'; renderMain();">Homens Lentos (Proximidade &amp; Criatividade)</button>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid ${isLento ? 'var(--olive)' : 'var(--teal)'};margin-bottom:18px;">
+          <h4 style="font-family:var(--font-serif);font-size:1.1rem;color:${isLento ? 'var(--olive)' : 'var(--teal)'};margin-bottom:6px;">
+            ${isLento ? 'Os Homens Lentos — Os Pobres na Cidade' : 'Os Homens Rápidos — A Ilusão da Velocidade'}
+          </h4>
+          <p style="font-size:0.85rem;color:var(--text-main);">
+            ${isLento
+              ? 'Habitam as zonas opacas e vivem a experiência da escassez e da proximidade intensa. Escapam ao totalitarismo da racionalidade e às miragens da cultura de massas, desenvolvendo a <strong>flexibilidade tropical</strong>, a ação comunicativa ativa e um olhar mais agudo para o futuro.'
+              : 'Dotados de grande mobilidade e acesso às zonas luminosas, percorrem a cidade mas acabam vendo pouco dela. Prisioneiros das imagens prefabricadas e do conforto rotineiro, mantêm relação pragmática e superficial com o espaço banal.'}
+          </p>
+        </div>
+
+        <span class="section-kicker" style="color:var(--olive);">Os Migrantes no Lugar: Da Memória à Descoberta</span>
+        <div class="grid-3" style="margin-top:8px;margin-bottom:12px;">
+          ${migrantSteps.map((s, i) => `
+            <button type="button" class="ctrl-btn ${uiState.c14MigrantStep===i ? 'active-olive' : ''}" style="text-align:left;padding:11px 12px;" onclick="uiState.c14MigrantStep=${i}; renderMain();">
+              ${s.step}
+            </button>
+          `).join('')}
+        </div>
+        <div class="panel-soft">
+          <p style="font-size:0.84rem;color:var(--text-main);"><strong>${ms.step}:</strong> ${ms.desc}</p>
+        </div>
+      `;
+    }
+
+    /* --- CAPÍTULO 15: Balança Dialética Ordem Global vs. Ordem Local --- */
+    function renderInfoCap15() {
+      const b = uiState.c15Balance; // 0 = Global, 100 = Local
+      const globalW = 100 - b;
+      const localW = b;
+      const tilt = ((b - 50) / 50) * 10; // inclinação visual suave (-10deg a +10deg)
+
+      const synthesis = b < 35
+        ? 'Predomínio da Ordem Global (Globalização Perversa): razão técnica e organizacional, sincronização despótica, normas corporativas desterritorializadas e esvaziamento do sentido local.'
+        : b > 65
+        ? 'Afirmação da Ordem Local (A Força do Lugar): primazia da comunicação, da copresença, da emoção e da solidariedade orgânica — o território local como norma capaz de fundar um novo destino.'
+        : 'Tensão Dialética Permanente (Síntese de Milton Santos): cada lugar é simultaneamente objeto de uma razão global e de uma razão local, que se associam e se confrontam — abrindo caminho para uma outra globalização.';
+
+      return `
+        <div class="infographic-header">
+          <div>
+            <span class="section-kicker">Infográfico Exclusivo • Cap. 15</span>
+            <h3 class="section-heading">Balança Dialética: Ordem Global vs. Ordem Local</h3>
+            <p class="infographic-lead">Deslize o controle para tensionar a relação entre a <strong>Ação Globalizada como Norma</strong> e o <strong>Território Local como Norma</strong>.</p>
+          </div>
+        </div>
+
+        <div class="panel-soft" style="margin-bottom:16px;">
+          <div class="meter-head">
+            <span style="color:var(--terracotta);">← Ordem Global (${globalW}%)</span>
+            <span style="color:var(--olive);">Ordem Local (${localW}%) →</span>
+          </div>
+          <input type="range" class="atlas-slider" min="0" max="100" value="${b}" oninput="uiState.c15Balance=Number(this.value); renderMain();" aria-label="Equilibrar ordem global e ordem local">
+        </div>
+
+        <div class="svg-stage" style="margin-bottom:14px;">
+          <svg viewBox="0 0 780 180" role="img" aria-label="Balança dialética entre ordem global e ordem local">
+            <!-- Base da balança -->
+            <polygon points="390,122 362,168 418,168" fill="#1A4A4F"/>
+            <!-- Braço inclinável -->
+            <g transform="rotate(${tilt.toFixed(1)} 390 122)">
+              <line x1="140" y1="122" x2="640" y2="122" stroke="#1D2322" stroke-width="4" stroke-linecap="round"/>
+              <!-- Prato Global -->
+              <rect x="65" y="42" width="190" height="72" rx="12" fill="#FDF1EC" stroke="#B85D3B" stroke-width="2"/>
+              <text x="160" y="68" text-anchor="middle" font-family="Newsreader, serif" font-size="14" font-weight="700" fill="#B85D3B">ORDEM GLOBAL</text>
+              <text x="160" y="88" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#4F5957">Razão Técnica • Norma</text>
+              <text x="160" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#4F5957">Informação • Verticalidade</text>
+
+              <!-- Prato Local -->
+              <rect x="525" y="42" width="190" height="72" rx="12" fill="#EAF2EC" stroke="#3F6A4E" stroke-width="2"/>
+              <text x="620" y="68" text-anchor="middle" font-family="Newsreader, serif" font-size="14" font-weight="700" fill="#3F6A4E">ORDEM LOCAL</text>
+              <text x="620" y="88" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#4F5957">Razão Orgânica • Emoção</text>
+              <text x="620" y="102" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="#4F5957">Comunicação • Copresença</text>
+            </g>
+            <circle cx="390" cy="122" r="8" fill="#C68B2C"/>
+          </svg>
+        </div>
+
+        <div class="panel-soft" style="border-left:4px solid var(--olive);">
+          <strong style="font-size:0.84rem;color:var(--teal-dark);">Leitura da Síntese Conclusiva:</strong>
+          <p style="font-size:0.84rem;color:var(--text-main);margin-top:4px;">${synthesis}</p>
+        </div>
+      `;
+    }
+
+    /* =========================================================================
+       RENDERIZAÇÃO PRINCIPAL DE CADA CAPÍTULO
+       ========================================================================= */
+
+    function renderChapter(ch) {
+      const part = PARTS[ch.part];
+      const isDone = !!studied[ch.id];
+      const prevTarget = ch.id === 1 ? 'overview' : ch.id - 1;
+      const prevLabel = ch.id === 1 ? 'Mapa Geral da Obra' : `Cap. ${ch.id - 1} — ${CHAPTERS[ch.id - 2].title}`;
+      const nextTarget = ch.id < 15 ? ch.id + 1 : 'overview';
+      const nextLabel = ch.id < 15 ? `Cap. ${ch.id + 1} — ${CHAPTERS[ch.id].title}` : 'Voltar ao Mapa Geral da Obra';
+
+      return `
+        <header class="chapter-header">
+          <div class="chapter-meta-row">
+            <span class="part-pill" style="background:${part.color};">${part.roman} • ${part.title}</span>
+            <button type="button" class="study-toggle-btn ${isDone ? 'studied' : ''}" onclick="toggleChapterStudied(${ch.id})">
+              <span>${isDone ? '✓' : '○'}</span>
+              <span>${isDone ? 'Capítulo Estudado' : 'Marcar como estudado'}</span>
+            </button>
+          </div>
+          <h2 class="chapter-title">Capítulo ${ch.id} — ${ch.title}</h2>
+          <p class="chapter-subtitle">${ch.subtitle}</p>
+          <div class="editorial-divider"></div>
+        </header>
+
+        <!-- Card Ideia Central -->
+        <section class="card thesis-card" style="border-left-color:${part.color};">
+          <span class="section-kicker" style="color:${part.color};">Ideia Central &amp; Tese do Capítulo</span>
+          <p class="thesis-text">${ch.thesis}</p>
+        </section>
+
+        <!-- Infográfico Interativo Exclusivo -->
+        <section class="infographic-card">
+          ${renderInfographic(ch.id)}
+        </section>
+
+        <!-- Grid de Ideias-Chave -->
+        <section style="margin-bottom:26px;">
+          <span class="section-kicker" style="color:${part.color};">Conceitos Estruturantes</span>
+          <h3 class="section-heading">Ideias-Chave &amp; Conceitos Fundamentais</h3>
+          <div class="concepts-grid">
+            ${ch.concepts.map(c => `
+              <article class="concept-card">
+                <span class="concept-tag" style="color:${part.color};">${c.tag}</span>
+                <h4>${c.name}</h4>
+                <p>${c.desc}</p>
+              </article>
+            `).join('')}
+          </div>
+        </section>
+
+        <!-- Citação Editorial -->
+        <blockquote class="editorial-quote" style="background:${part.soft};border-left-color:${part.color};">
+          <p>“${ch.quote}”</p>
+          <footer>— Milton Santos, ${ch.quoteRef} (Edusp)</footer>
+        </blockquote>
+
+        <!-- Navegação Inferior -->
+        <nav class="chapter-footer-nav" aria-label="Navegação entre capítulos">
+          <button type="button" class="nav-step-btn" onclick="navigateTo(${typeof prevTarget === 'string' ? `'${prevTarget}'` : prevTarget})">
+            <span style="font-size:1.15rem;color:var(--teal);">←</span>
+            <div>
+              <span class="nav-step-meta">Anterior</span>
+              <span class="nav-step-title">${prevLabel}</span>
+            </div>
+          </button>
+
+          <button type="button" class="nav-step-btn next" onclick="navigateTo(${typeof nextTarget === 'string' ? `'${nextTarget}'` : nextTarget})">
+            <div>
+              <span class="nav-step-meta">${ch.id < 15 ? 'Próximo Capítulo' : 'Concluir Percurso'}</span>
+              <span class="nav-step-title">${nextLabel}</span>
+            </div>
+            <span style="font-size:1.15rem;">${ch.id < 15 ? '→' : '↺'}</span>
+          </button>
+        </nav>
+      `;
+    }
+
+    function renderMain() {
+      const main = document.getElementById('main-content');
+      if (!main) return;
+      if (currentView === 'overview') {
+        main.innerHTML = renderOverview();
+      } else {
+        const ch = CHAPTERS.find(c => c.id === currentView);
+        main.innerHTML = ch ? renderChapter(ch) : renderOverview();
+      }
+    }
+
+    /* =========================================================================
+       INICIALIZAÇÃO
+       ========================================================================= */
+
+    document.addEventListener('DOMContentLoaded', () => {
+      try {
+        document.getElementById('open-drawer-btn').addEventListener('click', openDrawer);
+        document.getElementById('close-drawer-btn').addEventListener('click', closeDrawer);
+        document.getElementById('sidebar-overlay').addEventListener('click', closeDrawer);
+        document.getElementById('reset-progress-btn').addEventListener('click', resetProgress);
+
+        const searchInput = document.getElementById('search-input');
+        const searchClear = document.getElementById('search-clear');
+
+        searchInput.addEventListener('input', (e) => {
+          searchTerm = e.target.value;
+          searchClear.classList.toggle('visible', searchTerm.length > 0);
+          renderSidebar();
+        });
+
+        searchClear.addEventListener('click', () => {
+          searchTerm = '';
+          searchInput.value = '';
+          searchClear.classList.remove('visible');
+          renderSidebar();
+          searchInput.focus();
+        });
+
+        renderSidebar();
+        renderMain();
+      } catch (err) {
+        console.error('Erro na inicialização do Atlas:', err);
+      }
+    });
+  </script>
+</body>
+</html>
