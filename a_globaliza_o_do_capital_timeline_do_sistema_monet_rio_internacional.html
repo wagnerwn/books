@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Globalização do Capital — Timeline do Sistema Monetário Internacional</title>
+
+  <!-- Google Fonts: Cormorant Garamond (editorial/acadêmica) e Inter (leitura e diagramas) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            wine: {
+              950: '#380202',
+              900: '#500404',
+              800: '#6E0404',
+              700: '#8C1D2C',
+              600: '#A62B3A',
+              200: '#E2CBCB',
+              100: '#EBE0E0',
+              50:  '#F4EBEB',
+            },
+            paper: '#FAF6F5',
+            ink: {
+              DEFAULT: '#261414',
+              muted: '#5C4343',
+            },
+            gold: '#A87C2D',
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Estilos editoriais complementares */
+    body {
+      background-color: #FAF6F5;
+      color: #261414;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    /* Scrollbar discreta em tom vinho */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF6F5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D2B8B8;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #8C1D2C;
+    }
+
+    /* Transição suave para expansão de subcapítulos */
+    .accordion-content {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.32s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    .accordion-content.is-open {
+      grid-template-rows: 1fr;
+    }
+    .accordion-inner {
+      overflow: hidden;
+    }
+
+    /* Linha vertical da timeline */
+    .timeline-rail {
+      position: relative;
+    }
+    .timeline-rail::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(to bottom, #6E0404 0%, #D2B8B8 100%);
+    }
+
+    /* Destaque ativo no menu lateral */
+    .nav-sub-item.active-nav {
+      background-color: #F4EBEB;
+      color: #6E0404;
+      font-weight: 600;
+      border-left-color: #6E0404;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-wine-800 selection:text-white">
+
+  <!-- =====================================================================
+       BARRA SUPERIOR FIXA: TÍTULO COMPACTO, FAIXA CRONOLÓGICA E GLOSSÁRIO
+       ===================================================================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-wine-100 shadow-sm">
+    <div class="max-w-[1440px] mx-auto px-4 sm:px-6">
+      <!-- Linha 1: Marca, controle mobile e botão do glossário -->
+      <div class="flex items-center justify-between h-14 gap-3">
+        <div class="flex items-center gap-3 min-w-0">
+          <!-- Botão menu lateral mobile -->
+          <button id="mobileMenuBtn" type="button" aria-label="Abrir índice da timeline"
+            class="lg:hidden inline-flex items-center justify-center p-2 rounded-lg text-wine-900 hover:bg-wine-50 border border-wine-100 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <a href="#topo" class="flex items-baseline gap-2 truncate">
+            <span class="font-serif font-bold text-xl sm:text-2xl text-wine-900 tracking-tight truncate">A Globalização do Capital</span>
+            <span class="hidden md:inline text-xs uppercase tracking-widest text-ink-muted font-medium">Barry Eichengreen</span>
+          </a>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <button id="openGlossaryBtn" type="button"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-medium bg-wine-900 text-white hover:bg-wine-800 transition shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+            <span>Glossário</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Linha 2: Faixa Cronológica Horizontal dos Capítulos -->
+      <nav aria-label="Navegação cronológica por capítulos" class="flex items-center gap-1.5 overflow-x-auto pb-2.5 pt-1 text-xs">
+        <a href="#cap-1" class="chap-pill shrink-0 px-3 py-1.5 rounded-full border border-wine-100 bg-paper text-ink hover:border-wine-700 hover:text-wine-900 transition">
+          <span class="font-semibold text-wine-800">Cap. 1</span> · Introdução
+        </a>
+        <a href="#cap-2" class="chap-pill shrink-0 px-3 py-1.5 rounded-full border border-wine-100 bg-paper text-ink hover:border-wine-700 hover:text-wine-900 transition">
+          <span class="font-semibold text-wine-800">Cap. 2</span> · Padrão Ouro <span class="text-ink-muted">(1870–1914)</span>
+        </a>
+        <a href="#cap-3" class="chap-pill shrink-0 px-3 py-1.5 rounded-full border border-wine-100 bg-paper text-ink hover:border-wine-700 hover:text-wine-900 transition">
+          <span class="font-semibold text-wine-800">Cap. 3</span> · Entreguerras <span class="text-ink-muted">(1914–1939)</span>
+        </a>
+        <a href="#cap-4" class="chap-pill shrink-0 px-3 py-1.5 rounded-full border border-wine-100 bg-paper text-ink hover:border-wine-700 hover:text-wine-900 transition">
+          <span class="font-semibold text-wine-800">Cap. 4</span> · Bretton Woods <span class="text-ink-muted">(1944–1973)</span>
+        </a>
+        <a href="#cap-5" class="chap-pill shrink-0 px-3 py-1.5 rounded-full border border-wine-100 bg-paper text-ink hover:border-wine-700 hover:text-wine-900 transition">
+          <span class="font-semibold text-wine-800">Cap. 5</span> · Flutuação e Euro <span class="text-ink-muted">(1973–1998)</span>
+        </a>
+        <a href="#cap-6" class="chap-pill shrink-0 px-3 py-1.5 rounded-full border border-wine-100 bg-paper text-ink hover:border-wine-700 hover:text-wine-900 transition">
+          <span class="font-semibold text-wine-800">Cap. 6</span> · Conclusão
+        </a>
+        <a href="#epilogo" class="chap-pill shrink-0 px-3 py-1.5 rounded-full border border-wine-200 bg-wine-50 text-wine-900 hover:bg-wine-100 transition font-medium">
+          Epílogo Brasil <span class="text-ink-muted">(2000)</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- =====================================================================
+       OVERLAY MOBILE PARA MENU LATERAL
+       ===================================================================== -->
+  <div id="mobileOverlay" class="fixed inset-0 bg-wine-950/50 z-40 hidden lg:hidden backdrop-blur-xs"></div>
+
+  <!-- =====================================================================
+       LAYOUT PRINCIPAL: SIDEBAR FIXA + CONTEÚDO EDITORIAL DA TIMELINE
+       ===================================================================== -->
+  <div id="topo" class="max-w-[1440px] mx-auto flex relative">
+
+    <!-- BARRA LATERAL (ÍNDICE COMPLETO DE CAPÍTULOS E SUBCAPÍTULOS) -->
+    <aside id="sidebarNav"
+      class="fixed lg:sticky top-0 lg:top-[105px] left-0 z-50 lg:z-20 h-screen lg:h-[calc(100vh-105px)] w-80 lg:w-72 xl:w-80 bg-white border-r border-wine-100 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 shadow-xl lg:shadow-none shrink-0">
+      <div class="p-4 border-b border-wine-100 flex items-center justify-between bg-paper">
+        <div>
+          <p class="text-[11px] uppercase tracking-widest text-wine-700 font-semibold">Mapa da Obra</p>
+          <h2 class="font-serif font-bold text-lg text-wine-900">Sumário Clicável</h2>
+        </div>
+        <button id="closeSidebarBtn" type="button" aria-label="Fechar índice"
+          class="lg:hidden p-1.5 rounded-lg text-wine-900 hover:bg-wine-50">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <!-- Lista preenchida via JS -->
+      <div id="sidebarList" class="overflow-y-auto flex-1 p-3 space-y-4 text-sm"></div>
+      <div class="p-3 border-t border-wine-100 bg-paper text-[11px] text-ink-muted text-center">
+        Clique em qualquer subcapítulo para navegar e abrir sua síntese e esquemas.
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="flex-1 min-w-0 px-4 sm:px-8 lg:px-10 py-8 lg:py-10 space-y-12">
+
+      <!-- =================================================================
+           ABERTURA EDITORIAL + ESQUEMA MESTRE DA OBRA (CURVA EM U)
+           ================================================================= -->
+      <section class="bg-white rounded-2xl border border-wine-100 shadow-sm overflow-hidden">
+        <!-- Faixa superior vinho -->
+        <div class="bg-gradient-to-br from-wine-900 via-wine-800 to-wine-700 text-white p-6 sm:p-10">
+          <div class="flex flex-wrap items-center gap-2 text-xs uppercase tracking-widest text-wine-100 mb-3">
+            <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/20">Infográfico Editorial &amp; Timeline</span>
+            <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/20">1850 — 2000</span>
+            <span class="px-2.5 py-1 rounded-full bg-white/10 border border-white/20">Editora 34 (2000)</span>
+          </div>
+          <h1 class="font-serif font-bold text-3xl sm:text-5xl leading-tight tracking-tight">
+            A Globalização do Capital
+          </h1>
+          <p class="font-serif italic text-xl sm:text-2xl text-wine-100 mt-1">
+            Uma História do Sistema Monetário Internacional — Barry Eichengreen
+          </p>
+          <p class="mt-4 text-sm sm:text-base text-white/90 max-w-3xl leading-relaxed">
+            Como o mundo saiu do padrão ouro clássico, atravessou o caos entreguerras, construiu Bretton Woods e desembocou na era do câmbio flutuante e do Euro? Este infográfico percorre todos os capítulos e subcapítulos da obra de Barry Eichengreen para demonstrar sua tese central: <strong>a história monetária não é apenas econômica — é profundamente política e histórica.</strong>
+          </p>
+        </div>
+
+        <!-- ESQUEMA MESTRE: A CURVA EM "U" E A DINÂMICA POLANYIANA -->
+        <div class="p-6 sm:p-8 bg-paper border-b border-wine-100">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-5">
+            <div>
+              <span class="text-xs font-semibold uppercase tracking-widest text-wine-700">Esquema Mestre da Obra</span>
+              <h2 class="font-serif font-bold text-2xl sm:text-3xl text-wine-900">
+                A Curva em "U" da Mobilidade de Capitais e a Dinâmica Polanyiana
+              </h2>
+            </div>
+            <span class="text-xs text-ink-muted">Visão panorâmica de 150 anos (1870–2000)</span>
+          </div>
+
+          <!-- Diagrama SVG Principal -->
+          <div class="bg-white rounded-xl border border-wine-100 p-4 sm:p-6 overflow-x-auto">
+            <svg viewBox="0 0 920 380" class="w-full min-w-[680px] h-auto" role="img" aria-label="Gráfico da Curva em U da Mobilidade de Capitais e Regimes Cambiais de 1870 a 2000">
+              <defs>
+                <linearGradient id="uFill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#8C1D2C" stop-opacity="0.18" />
+                  <stop offset="100%" stop-color="#8C1D2C" stop-opacity="0.01" />
+                </linearGradient>
+                <marker id="arrowWine" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                  <path d="M 0 1 L 10 5 L 0 9 z" fill="#6E0404" />
+                </marker>
+              </defs>
+
+              <!-- Faixas de fundo das 4 eras -->
+              <rect x="75" y="35" width="195" height="215" fill="#FAF6F5" />
+              <rect x="270" y="35" width="185" height="215" fill="#F4EBEB" />
+              <rect x="455" y="35" width="215" height="215" fill="#FAF6F5" />
+              <rect x="670" y="35" width="220" height="215" fill="#F4EBEB" />
+
+              <!-- Divisórias verticais -->
+              <line x1="270" y1="35" x2="270" y2="255" stroke="#D2B8B8" stroke-dasharray="4 4" />
+              <line x1="455" y1="35" x2="455" y2="255" stroke="#D2B8B8" stroke-dasharray="4 4" />
+              <line x1="670" y1="35" x2="670" y2="255" stroke="#D2B8B8" stroke-dasharray="4 4" />
+
+              <!-- Eixos -->
+              <line x1="75" y1="250" x2="890" y2="250" stroke="#500404" stroke-width="1.5" />
+              <line x1="75" y1="35" x2="75" y2="250" stroke="#500404" stroke-width="1.5" />
+
+              <!-- Rótulos eixo Y -->
+              <text x="65" y="55" text-anchor="end" font-size="11" font-weight="600" fill="#500404">ALTA</text>
+              <text x="65" y="148" text-anchor="end" font-size="10" fill="#5C4343">Média</text>
+              <text x="65" y="245" text-anchor="end" font-size="11" font-weight="600" fill="#500404">BAIXA</text>
+              <text x="20" y="145" text-anchor="middle" font-size="11" font-weight="600" fill="#6E0404" transform="rotate(-90 20 145)">MOBILIDADE INTERNACIONAL DE CAPITAIS</text>
+
+              <!-- Área sob a Curva em U -->
+              <path d="M 90 70 C 170 62, 235 72, 270 105 C 325 160, 385 220, 455 225 C 535 230, 610 185, 670 135 C 740 80, 815 60, 875 55 L 875 250 L 90 250 Z" fill="url(#uFill)" />
+
+              <!-- Curva em U -->
+              <path d="M 90 70 C 170 62, 235 72, 270 105 C 325 160, 385 220, 455 225 C 535 230, 610 185, 670 135 C 740 80, 815 60, 875 55"
+                fill="none" stroke="#6E0404" stroke-width="3.5" stroke-linecap="round" />
+
+              <!-- Pontos de destaque na curva -->
+              <circle cx="170" cy="67" r="6" fill="#A87C2D" stroke="#FFFFFF" stroke-width="2" />
+              <circle cx="365" cy="195" r="6" fill="#6E0404" stroke="#FFFFFF" stroke-width="2" />
+              <circle cx="560" cy="205" r="6" fill="#6E0404" stroke="#FFFFFF" stroke-width="2" />
+              <circle cx="785" cy="72" r="6" fill="#8C1D2C" stroke="#FFFFFF" stroke-width="2" />
+
+              <!-- Títulos das 4 Eras no topo -->
+              <text x="172" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#500404">1. PADRÃO OURO (1870–1914)</text>
+              <text x="362" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#500404">2. ENTREGUERRAS (1914–1939)</text>
+              <text x="562" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#500404">3. BRETTON WOODS (1944–1973)</text>
+              <text x="780" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="#500404">4. PÓS-1973 (1973–2000)</text>
+
+              <!-- Anotações internas da curva -->
+              <text x="172" y="96" text-anchor="middle" font-size="10.5" font-weight="600" fill="#261414">Câmbio Fixo (Ouro)</text>
+              <text x="172" y="111" text-anchor="middle" font-size="9.5" fill="#5C4343">Alta mobilidade SEM crises</text>
+              <text x="172" y="124" text-anchor="middle" font-size="9.5" fill="#5C4343">políticas internas</text>
+
+              <text x="362" y="148" text-anchor="middle" font-size="10.5" font-weight="600" fill="#261414">Colapso e Controles</text>
+              <text x="362" y="163" text-anchor="middle" font-size="9.5" fill="#5C4343">Fluxos desestabilizadores</text>
+              <text x="362" y="176" text-anchor="middle" font-size="9.5" fill="#5C4343">e Grande Depressão</text>
+
+              <text x="562" y="158" text-anchor="middle" font-size="10.5" font-weight="600" fill="#261414">Câmbio Fixo Ajustável</text>
+              <text x="562" y="173" text-anchor="middle" font-size="9.5" fill="#5C4343">Controles de capital protegem</text>
+              <text x="562" y="186" text-anchor="middle" font-size="9.5" fill="#5C4343">o pleno emprego doméstico</text>
+
+              <text x="780" y="106" text-anchor="middle" font-size="10.5" font-weight="600" fill="#261414">Bipolaridade Cambial</text>
+              <text x="780" y="121" text-anchor="middle" font-size="9.5" fill="#5C4343">Livre Flutuação (EUA/Japão)</text>
+              <text x="780" y="134" text-anchor="middle" font-size="9.5" fill="#5C4343">ou União Monetária (Euro)</text>
+
+              <!-- Linha do tempo de anos -->
+              <text x="90" y="268" text-anchor="middle" font-size="10" font-weight="600" fill="#5C4343">1870</text>
+              <text x="270" y="268" text-anchor="middle" font-size="10" font-weight="600" fill="#5C4343">1914</text>
+              <text x="455" y="268" text-anchor="middle" font-size="10" font-weight="600" fill="#5C4343">1944</text>
+              <text x="670" y="268" text-anchor="middle" font-size="10" font-weight="600" fill="#5C4343">1973</text>
+              <text x="875" y="268" text-anchor="middle" font-size="10" font-weight="600" fill="#5C4343">2000</text>
+
+              <!-- Faixa inferior: Dinâmica Polanyiana (O Motor Político) -->
+              <rect x="75" y="285" width="815" height="82" rx="10" fill="#500404" />
+              <text x="92" y="306" font-size="10.5" font-weight="700" fill="#FAF6F5" letter-spacing="0.8">DINÂMICA POLANYIANA — O ESCUDO POLÍTICO DAS TAXAS FIXAS</text>
+
+              <!-- 4 blocos internos na faixa vinho -->
+              <rect x="90" y="316" width="170" height="40" rx="6" fill="#6E0404" stroke="#A62B3A" />
+              <text x="175" y="333" text-anchor="middle" font-size="9.5" font-weight="600" fill="#FFFFFF">Imunidade Política</text>
+              <text x="175" y="347" text-anchor="middle" font-size="8.8" fill="#EBE0E0">Voto restrito · Salários flexíveis</text>
+
+              <line x1="263" y1="336" x2="281" y2="336" stroke="#FAF6F5" stroke-width="1.5" />
+              <polygon points="281,332 287,336 281,340" fill="#FAF6F5" />
+
+              <rect x="290" y="316" width="165" height="40" rx="6" fill="#6E0404" stroke="#A62B3A" />
+              <text x="372" y="333" text-anchor="middle" font-size="9.5" font-weight="600" fill="#FFFFFF">Politização da Moeda</text>
+              <text x="372" y="347" text-anchor="middle" font-size="8.8" fill="#EBE0E0">Sufrágio universal · Sindicatos</text>
+
+              <line x1="458" y1="336" x2="476" y2="336" stroke="#FAF6F5" stroke-width="1.5" />
+              <polygon points="476,332 482,336 476,340" fill="#FAF6F5" />
+
+              <rect x="485" y="316" width="180" height="40" rx="6" fill="#6E0404" stroke="#A62B3A" />
+              <text x="575" y="333" text-anchor="middle" font-size="9.5" font-weight="600" fill="#FFFFFF">Escudo de Controles</text>
+              <text x="575" y="347" text-anchor="middle" font-size="8.8" fill="#EBE0E0">Controles substituem limites ao voto</text>
+
+              <line x1="668" y1="336" x2="686" y2="336" stroke="#FAF6F5" stroke-width="1.5" />
+              <polygon points="686,332 692,336 686,340" fill="#FAF6F5" />
+
+              <rect x="695" y="316" width="180" height="40" rx="6" fill="#8C1D2C" stroke="#FAF6F5" />
+              <text x="785" y="333" text-anchor="middle" font-size="9.5" font-weight="600" fill="#FFFFFF">Sem Escudos → Bipolaridade</text>
+              <text x="785" y="347" text-anchor="middle" font-size="8.8" fill="#FFFFFF">Democracia + Capital Livre</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- =================================================================
+           CONTAINER DA TIMELINE VERTICAL (PREENCHIDO VIA JAVASCRIPT)
+           ================================================================= -->
+      <div id="timelineContainer" class="space-y-14"></div>
+
+      <!-- RODAPÉ EDITORIAL -->
+      <footer class="border-t border-wine-100 pt-8 pb-12 text-center text-xs text-ink-muted space-y-2">
+        <p class="font-serif text-base text-wine-900 font-semibold">
+          A Globalização do Capital: Uma História do Sistema Monetário Internacional
+        </p>
+        <p>
+          Baseado na obra de Barry Eichengreen (Princeton University Press, 1996 / 2ª ed. 1998; tradução brasileira Editora 34, 2000).
+        </p>
+      </footer>
+    </main>
+  </div>
+
+  <!-- =====================================================================
+       MODAL DO GLOSSÁRIO RÁPIDO
+       ===================================================================== -->
+  <div id="glossaryModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-wine-950/60 backdrop-blur-xs">
+    <div class="bg-white rounded-2xl border border-wine-100 shadow-2xl w-full max-w-3xl max-h-[85vh] flex flex-col overflow-hidden">
+      <div class="p-5 sm:p-6 bg-wine-900 text-white flex items-center justify-between">
+        <div>
+          <p class="text-[11px] uppercase tracking-widest text-wine-100">Referência Conceitual</p>
+          <h3 class="font-serif font-bold text-2xl sm:text-3xl">Glossário Rápido da Obra</h3>
+        </div>
+        <button id="closeGlossaryBtn" type="button" aria-label="Fechar glossário"
+          class="p-2 rounded-lg text-white/80 hover:text-white hover:bg-white/10 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <div id="glossaryContent" class="p-5 sm:p-6 overflow-y-auto space-y-4 bg-paper"></div>
+    </div>
+  </div>
+
+  <!-- =====================================================================
+       DADOS ESTRUTURADOS, ESQUEMAS EXPLICATIVOS E LÓGICA DE NAVEGAÇÃO
+       ===================================================================== -->
+  <script>
+    // =========================================================================
+    // 1. ESQUEMAS EXPLICATIVOS (SVGs E DIAGRAMAS HTML/CSS EM VINHO E BRANCO)
+    // =========================================================================
+    const DIAGRAMS = {
+      // CAPÍTULO 1: Dinâmica Polanyiana e Externalidades em Rede
+      cap1_polanyi: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Os Dois Motores da Teoria de Eichengreen</div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="bg-white rounded-lg border border-wine-100 p-4">
+              <h5 class="font-serif font-bold text-lg text-wine-900 mb-2">1. Dinâmica Polanyiana (Política Interna)</h5>
+              <div class="space-y-2 text-xs">
+                <div class="p-2.5 rounded-lg bg-wine-50 border border-wine-100">
+                  <strong class="text-wine-900">Século XIX (Liberalismo Clássico):</strong> Voto censitário + mercados flexíveis → Governos priorizam 100% o câmbio fixo sem custo eleitoral.
+                </div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2.5 rounded-lg bg-wine-50 border border-wine-100">
+                  <strong class="text-wine-900">Pós-1914 (Liberalismo Intrínseco):</strong> Sufrágio universal + sindicatos + bem-estar social → Conflito agudo entre <em>equilíbrio externo</em> e <em>pleno emprego</em>.
+                </div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2.5 rounded-lg bg-wine-900 text-white">
+                  <strong>Resultado:</strong> Sem controles de capital, especuladores testam a disposição política do governo, inviabilizando paridades fixas intermediárias.
+                </div>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg border border-wine-100 p-4">
+              <h5 class="font-serif font-bold text-lg text-wine-900 mb-2">2. Externalidades em Rede &amp; Trajetória</h5>
+              <div class="space-y-2 text-xs">
+                <div class="p-2.5 rounded-lg bg-wine-50 border border-wine-100">
+                  <strong class="text-wine-900">Efeito de Rede:</strong> Adotar o mesmo padrão monetário dos parceiros comerciais reduz custos de transação e empréstimo (como usar o mesmo padrão de PC).
+                </div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2.5 rounded-lg bg-wine-50 border border-wine-100">
+                  <strong class="text-wine-900">Dependência de Trajetória:</strong> Acidentes históricos (ex: Newton em 1717) travam o sistema em um caminho por mais de um século.
+                </div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2.5 rounded-lg bg-wine-900 text-white">
+                  <strong>Problema do "Carona" (Free-Riding):</strong> Reformas exigem ação coletiva; só ocorrem sob laços políticos excepcionais (Guerra Fria em Bretton Woods; União Europeia).
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 2.2: Arbitragem no Bimetalismo e Lei de Gresham
+      cap2_bimetalismo: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Mecanismo de Arbitragem no Bimetalismo (Lei de Gresham)</div>
+          <div class="bg-white rounded-lg border border-wine-100 p-4 overflow-x-auto">
+            <svg viewBox="0 0 760 225" class="w-full min-w-[580px] h-auto">
+              <!-- Cenário inicial -->
+              <rect x="15" y="15" width="210" height="65" rx="8" fill="#500404" />
+              <text x="120" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">Casa da Moeda (França, 1803)</text>
+              <text x="120" y="56" text-anchor="middle" font-size="10.5" fill="#FAF6F5">Proporção Legal: 15,5 Prata = 1 Ouro</text>
+              <text x="120" y="71" text-anchor="middle" font-size="9" fill="#E2CBCB">(Corredor de brassage e transporte)</text>
+
+              <!-- Seta para choque -->
+              <line x1="225" y1="48" x2="275" y2="48" stroke="#6E0404" stroke-width="2" />
+              <polygon points="275,43 283,48 275,53" fill="#6E0404" />
+
+              <!-- Choque de mercado -->
+              <rect x="285" y="15" width="220" height="65" rx="8" fill="#F4EBEB" stroke="#8C1D2C" stroke-width="1.5" />
+              <text x="395" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="#500404">Mercado Mundial Desvia</text>
+              <text x="395" y="55" text-anchor="middle" font-size="10.5" fill="#261414">Preço sobe para 16 Prata = 1 Ouro</text>
+              <text x="395" y="70" text-anchor="middle" font-size="9" fill="#5C4343">(Prata fica barata no exterior)</text>
+
+              <!-- Seta para arbitragem -->
+              <line x1="505" y1="48" x2="545" y2="48" stroke="#6E0404" stroke-width="2" />
+              <polygon points="545,43 553,48 545,53" fill="#6E0404" />
+
+              <!-- Lucro da arbitragem -->
+              <rect x="555" y="15" width="190" height="65" rx="8" fill="#FAF6F5" stroke="#A87C2D" stroke-width="1.5" />
+              <text x="650" y="38" text-anchor="middle" font-size="11" font-weight="700" fill="#500404">Lucro de Arbitragem</text>
+              <text x="650" y="55" text-anchor="middle" font-size="10" fill="#261414">+0,5 onça de prata por ciclo</text>
+              <text x="650" y="70" text-anchor="middle" font-size="9" fill="#5C4343">(Se superar custo de transporte)</text>
+
+              <!-- Fluxo passo a passo inferior -->
+              <rect x="15" y="110" width="165" height="58" rx="8" fill="#FAF6F5" stroke="#D2B8B8" />
+              <text x="97" y="131" text-anchor="middle" font-size="10" font-weight="700" fill="#6E0404">1. Importa Prata</text>
+              <text x="97" y="147" text-anchor="middle" font-size="9.5" fill="#261414">Leva 15,5 onças de prata</text>
+              <text x="97" y="160" text-anchor="middle" font-size="9.5" fill="#261414">à Casa da Moeda francesa</text>
+
+              <line x1="180" y1="139" x2="205" y2="139" stroke="#6E0404" stroke-width="1.8" />
+              <polygon points="205,135 212,139 205,143" fill="#6E0404" />
+
+              <rect x="214" y="110" width="165" height="58" rx="8" fill="#FAF6F5" stroke="#D2B8B8" />
+              <text x="296" y="131" text-anchor="middle" font-size="10" font-weight="700" fill="#6E0404">2. Troca por Ouro</text>
+              <text x="296" y="147" text-anchor="middle" font-size="9.5" fill="#261414">Cunha prata e troca por</text>
+              <text x="296" y="160" text-anchor="middle" font-size="9.5" fill="#261414">1 onça de ouro ao par</text>
+
+              <line x1="379" y1="139" x2="404" y2="139" stroke="#6E0404" stroke-width="1.8" />
+              <polygon points="404,135 411,139 404,143" fill="#6E0404" />
+
+              <rect x="413" y="110" width="165" height="58" rx="8" fill="#FAF6F5" stroke="#D2B8B8" />
+              <text x="495" y="131" text-anchor="middle" font-size="10" font-weight="700" fill="#6E0404">3. Exporta o Ouro</text>
+              <text x="495" y="147" text-anchor="middle" font-size="9.5" fill="#261414">Vende 1 onça de ouro fora</text>
+              <text x="495" y="160" text-anchor="middle" font-size="9.5" fill="#261414">por 16 onças de prata</text>
+
+              <line x1="578" y1="139" x2="603" y2="139" stroke="#6E0404" stroke-width="1.8" />
+              <polygon points="603,135 610,139 603,143" fill="#6E0404" />
+
+              <rect x="612" y="110" width="133" height="58" rx="8" fill="#6E0404" />
+              <text x="678" y="131" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">Lei de Gresham</text>
+              <text x="678" y="147" text-anchor="middle" font-size="9" fill="#FAF6F5">Moeda "ruim" (prata)</text>
+              <text x="678" y="160" text-anchor="middle" font-size="9" fill="#FAF6F5">expulsa a "boa" (ouro)</text>
+
+              <!-- Nota estabilizadora -->
+              <rect x="15" y="182" width="730" height="30" rx="6" fill="#EBE0E0" />
+              <text x="380" y="201" text-anchor="middle" font-size="9.8" fill="#261414">
+                <tspan font-weight="700" fill="#500404">Efeito Estabilizador Limitado:</tspan> Enquanto a França tinha estoques de ouro para liberar, sustentava o piso da prata; grandes choques esgotavam o estoque.
+              </text>
+            </svg>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 2.5: Matriz Tipológica dos Padrões Ouro
+      cap2_matriz: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Matriz Tipológica do Padrão Ouro Internacional (Pós-1880)</div>
+          <div class="overflow-x-auto bg-white rounded-lg border border-wine-100">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-wine-900 text-white">
+                  <th class="p-3 font-semibold border-r border-wine-800 w-1/4">Composição das Reservas</th>
+                  <th class="p-3 font-semibold border-r border-wine-800 w-3/8">Meio Circulante: Predominância de Moedas de Ouro</th>
+                  <th class="p-3 font-semibold w-3/8">Meio Circulante: Ouro, Prata, Moedas Representativas e Papel-Moeda</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-wine-100">
+                <tr>
+                  <td class="p-3 font-semibold text-wine-900 bg-wine-50 border-r border-wine-100">Reservas em Ouro</td>
+                  <td class="p-3 border-r border-wine-100">
+                    <span class="inline-block px-2 py-0.5 rounded bg-gold/15 text-wine-900 font-semibold mb-1">Núcleo "Padrão Ouro Puro"</span>
+                    <p class="text-ink">Inglaterra, Alemanha, França (<em>claudicante</em>), Estados Unidos (Lei de 1900), Austrália, África do Sul, Egito.</p>
+                  </td>
+                  <td class="p-3">
+                    <p class="text-ink">Bélgica, Suíça, Áustria-Hungria, Holanda (com restrições práticas à conversibilidade interna e uso de instrumentos-ouro).</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-wine-900 bg-wine-50 border-r border-wine-100">Ouro + Divisas Estrangeiras (Ouro-Divisas)</td>
+                  <td class="p-3 border-r border-wine-100">
+                    <p class="text-ink">Rússia (grande detentora de saldos externos em Londres, Paris e Berlim).</p>
+                  </td>
+                  <td class="p-3">
+                    <p class="text-ink">Japão, Escandinávia, Áustria-Hungria e colônias britânicas — reservas rendiam juros em títulos de Londres.</p>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-wine-900 bg-wine-50 border-r border-wine-100">Totalmente em Divisas Estrangeiras</td>
+                  <td class="p-3 border-r border-wine-100 text-ink-muted italic">Não aplicável</td>
+                  <td class="p-3">
+                    <p class="text-ink">Índia, Filipinas e diversos países latino-americanos (conversão indireta via libra esterlina ou dólar).</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 2.6: Modelo de Hume vs. Mecanismo Cunliffe/Redesconto
+      cap2_hume_cunliffe: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Como o Balanço de Pagamentos se Ajustava</div>
+          <div class="grid md:grid-cols-2 gap-4 text-xs">
+            <!-- Modelo de Hume -->
+            <div class="bg-white rounded-lg border border-wine-100 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <h5 class="font-serif font-bold text-lg text-wine-900">Modelo de David Hume (1752)</h5>
+                <span class="px-2 py-0.5 rounded bg-wine-50 text-wine-800 font-medium">Fluxo Físico</span>
+              </div>
+              <div class="space-y-2">
+                <div class="p-2 rounded bg-paper border border-wine-100">1. País incorre em <strong>déficit comercial</strong></div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2 rounded bg-paper border border-wine-100">2. Exporta <strong>moedas de ouro</strong> para pagar o déficit</div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2 rounded bg-paper border border-wine-100">3. Oferta monetária cai no país deficitário → <strong>Preços caem</strong> (e sobem no superavitário)</div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2 rounded bg-wine-900 text-white">4. Exportações ficam baratas e importações caras → <strong>Equilíbrio restaurado</strong></div>
+              </div>
+            </div>
+
+            <!-- Modelo Cunliffe / Bancos Centrais -->
+            <div class="bg-white rounded-lg border border-wine-100 p-4">
+              <div class="flex items-center justify-between mb-2">
+                <h5 class="font-serif font-bold text-lg text-wine-900">Modelo Cunliffe / Redesconto (Séc. XIX)</h5>
+                <span class="px-2 py-0.5 rounded bg-gold/20 text-wine-900 font-medium">Juros &amp; Capital</span>
+              </div>
+              <div class="space-y-2">
+                <div class="p-2 rounded bg-paper border border-wine-100">1. País sofre déficit e perda inicial de reservas</div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2 rounded bg-paper border border-wine-100">2. Banco Central eleva a <strong>Taxa de Redesconto</strong> ("Regras do Jogo")</div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2 rounded bg-paper border border-wine-100">3. <strong>Duplo efeito:</strong> enxuga crédito doméstico (reduz importações) + <strong>atrai capital estrangeiro</strong></div>
+                <div class="text-center text-wine-700 font-bold">↓</div>
+                <div class="p-2 rounded bg-wine-900 text-white">4. Equilíbrio restaurado <strong>sem grandes remessas físicas de ouro</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 2.9: Dilema do Emprestador de Última Instância e Regra de Bagehot
+      cap2_bagehot: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · O Dilema do Emprestador de Última Instância &amp; Regra de Bagehot</div>
+          <div class="bg-white rounded-lg border border-wine-100 p-4 text-xs space-y-3">
+            <div class="p-3 rounded-lg bg-wine-900 text-white text-center font-semibold">
+              CORRIDA BANCÁRIA (Reserva Fracionária) → Conflito entre Estabilidade Bancária e Conversibilidade Ouro
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div class="p-3 rounded-lg bg-wine-50 border border-wine-200">
+                <p class="font-bold text-wine-900 mb-1">Se o BC NÃO injeta liquidez:</p>
+                <p class="text-ink-muted">Bancos solventes porém ilíquidos quebram por contágio (ex: pânico da Overend &amp; Gurney, 1866), colapsando o crédito doméstico.</p>
+              </div>
+              <div class="p-3 rounded-lg bg-wine-50 border border-wine-200">
+                <p class="font-bold text-wine-900 mb-1">Se o BC injeta liquidez sem credibilidade:</p>
+                <p class="text-ink-muted">Viola as regras do padrão ouro; investidores temem desvalorização e convertem depósitos em ouro, acelerando a fuga de reservas.</p>
+              </div>
+            </div>
+            <div class="p-3 rounded-lg bg-paper border-l-4 border-gold">
+              <p class="font-bold text-wine-900 mb-1">Soluções do Século XIX:</p>
+              <ul class="list-disc pl-4 space-y-1 text-ink">
+                <li><strong>Regra de Bagehot:</strong> Emprestar livremente contra boas garantias (contendo o <em>enxugamento interno</em>), mas a <strong>taxas de juro punitivas</strong> (contendo o <em>enxugamento externo</em>).</li>
+                <li><strong>Cláusula de Exceção Verificável:</strong> Suspender temporariamente o piso legal de ouro em choques externos claros, preservando a confiança de longo prazo.</li>
+                <li><strong>Operações "Salva-vidas":</strong> Resgate coletivo liderado pelos próprios bancos (ex: Baring 1890) ou suspensão coordenada de saques (EUA 1893).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 3.1: Ascensão, Queda e os 3 Blocos de 1932
+      cap3_cronologia: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Ciclo Breve do Padrão Ouro Entreguerras e os 3 Blocos de 1932</div>
+          <div class="grid sm:grid-cols-4 gap-2 text-xs mb-4">
+            <div class="p-3 rounded-lg bg-white border border-wine-100">
+              <span class="font-bold text-wine-800">1914–1923</span>
+              <p class="font-semibold text-ink mt-0.5">Guerra e Flutuação</p>
+              <p class="text-ink-muted mt-1">Emissão fiduciária, hiperinflação na Europa Central e câmbio flutuante limpo.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-white border border-wine-100">
+              <span class="font-bold text-wine-800">1924–1928</span>
+              <p class="font-semibold text-ink mt-0.5">Reconstrução Frágil</p>
+              <p class="text-ink-muted mt-1">Alemanha (1924), Grã-Bretanha (1925) e França (1926) restauram o ouro.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-white border border-wine-100">
+              <span class="font-bold text-wine-800">1929–1931</span>
+              <p class="font-semibold text-ink mt-0.5">Colapso Sistêmico</p>
+              <p class="text-ink-muted mt-1">Periferia sai (1929–30); crises na Áustria, Alemanha e saída da libra (set/1931).</p>
+            </div>
+            <div class="p-3 rounded-lg bg-wine-900 text-white">
+              <span class="font-bold text-wine-100">1933–1936</span>
+              <p class="font-semibold mt-0.5">Fim do Bloco do Ouro</p>
+              <p class="text-wine-100 mt-1">EUA saem em 1933; França, Holanda e Suíça capitulam em 1936.</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg border border-wine-100 p-3.5 text-xs">
+            <p class="font-bold text-wine-900 mb-2">Fracionamento em 3 Blocos Monetários (1932):</p>
+            <div class="grid sm:grid-cols-3 gap-2.5">
+              <div class="p-2.5 rounded bg-wine-50 border border-wine-100">
+                <strong class="text-wine-900">1. Bloco do Ouro Residual</strong>
+                <p class="text-ink-muted mt-0.5">EUA (até 1933), França, Bélgica, Suíça, Holanda e Polônia — sofrem deflação severa.</p>
+              </div>
+              <div class="p-2.5 rounded bg-wine-50 border border-wine-100">
+                <strong class="text-wine-900">2. Área da Libra Esterlina</strong>
+                <p class="text-ink-muted mt-0.5">Grã-Bretanha, Commonwealth e Escandinávia — câmbio desvalorizado e juros menores.</p>
+              </div>
+              <div class="p-2.5 rounded bg-wine-50 border border-wine-100">
+                <strong class="text-wine-900">3. Controles Cambiais</strong>
+                <p class="text-ink-muted mt-0.5">Alemanha e Europa Central/Oriental — paridade nominal mantida via racionamento de divisas.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 3.2: Nurkse vs. Friedman no Caso do Franco
+      cap3_nurkse_friedman: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Causal Comparativo · O Debate sobre o Franco Francês (1921–1926)</div>
+          <div class="grid md:grid-cols-2 gap-4 text-xs">
+            <div class="bg-white rounded-lg border border-wine-200 p-4">
+              <h5 class="font-serif font-bold text-lg text-wine-900">Ragnar Nurkse (1944)</h5>
+              <p class="text-[11px] text-wine-700 font-semibold uppercase tracking-wider mb-2">Especulação Desestabilizadora</p>
+              <div class="p-2.5 rounded bg-wine-50 border border-wine-100 mb-2">
+                <strong>Causalidade Bidirecional (Auto-agravante):</strong><br/>
+                Vendas especulativas de francos ⇄ Queda do câmbio ⇄ Inflação sobe e receita tributária real cai ⇄ Déficit fiscal piora ⇄ Mais vendas de francos.
+              </div>
+              <p class="text-ink-muted"><strong>Consequência histórica:</strong> Moldou o consenso de Bretton Woods contra taxas flutuantes livres e a favor de controles de capital.</p>
+            </div>
+            <div class="bg-white rounded-lg border border-wine-200 p-4">
+              <h5 class="font-serif font-bold text-lg text-wine-900">Milton Friedman (1953)</h5>
+              <p class="text-[11px] text-wine-700 font-semibold uppercase tracking-wider mb-2">Reflexo dos Fundamentos Políticos</p>
+              <div class="p-2.5 rounded bg-wine-50 border border-wine-100 mb-2">
+                <strong>Causalidade Unidirecional:</strong><br/>
+                Impasse fiscal (esquerda vs. direita sobre taxação do capital) + incerteza das reparações alemãs → Expectativa de monetização → Queda do franco.
+              </div>
+              <p class="text-ink-muted"><strong>Prova:</strong> Quando Poincaré formou governo de união nacional e tirou o imposto sobre capital da pauta (jul/1926), o franco estabilizou imediatamente.</p>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 3.6: Triângulo de Pagamentos e Reciclagem (Anos 1920)
+      cap3_reciclagem: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · O Circuito Frágil de Reciclagem de Capitais (1924–1928)</div>
+          <div class="bg-white rounded-lg border border-wine-100 p-4 overflow-x-auto">
+            <svg viewBox="0 0 740 215" class="w-full min-w-[540px] h-auto">
+              <!-- EUA -->
+              <rect x="260" y="12" width="220" height="52" rx="8" fill="#500404" />
+              <text x="370" y="34" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">ESTADOS UNIDOS</text>
+              <text x="370" y="51" text-anchor="middle" font-size="9.5" fill="#EBE0E0">Maior credor mundial · Superávit comercial</text>
+
+              <!-- Alemanha -->
+              <rect x="35" y="138" width="215" height="56" rx="8" fill="#FAF6F5" stroke="#6E0404" stroke-width="1.8" />
+              <text x="142" y="160" text-anchor="middle" font-size="11.5" font-weight="700" fill="#500404">ALEMANHA</text>
+              <text x="142" y="176" text-anchor="middle" font-size="9.5" fill="#5C4343">Depende de bônus vendidos em NY</text>
+
+              <!-- Aliados -->
+              <rect x="490" y="138" width="215" height="56" rx="8" fill="#FAF6F5" stroke="#6E0404" stroke-width="1.8" />
+              <text x="597" y="160" text-anchor="middle" font-size="11.5" font-weight="700" fill="#500404">ALIADOS (França / Reino Unido)</text>
+              <text x="597" y="176" text-anchor="middle" font-size="9.5" fill="#5C4343">Recebem reparações e pagam dívidas</text>
+
+              <!-- Seta EUA -> Alemanha -->
+              <path d="M 260 45 L 142 132" fill="none" stroke="#8C1D2C" stroke-width="2.5" stroke-dasharray="6 3" />
+              <polygon points="138,128 140,137 148,133" fill="#8C1D2C" />
+              <rect x="92" y="70" width="155" height="36" rx="6" fill="#F4EBEB" stroke="#8C1D2C" />
+              <text x="169" y="85" text-anchor="middle" font-size="9.5" font-weight="700" fill="#6E0404">Empréstimos Privados</text>
+              <text x="169" y="99" text-anchor="middle" font-size="8.8" fill="#261414">CORTADOS EM 1928 (Fed ↑ juros)</text>
+
+              <!-- Seta Alemanha -> Aliados -->
+              <line x1="255" y1="166" x2="482" y2="166" stroke="#500404" stroke-width="2.2" />
+              <polygon points="482,161 490,166 482,171" fill="#500404" />
+              <text x="370" y="157" text-anchor="middle" font-size="10" font-weight="600" fill="#500404">Reparações de Guerra (~US$ 2 bi)</text>
+              <text x="370" y="182" text-anchor="middle" font-size="9" fill="#5C4343">Plano Dawes (1924)</text>
+
+              <!-- Seta Aliados -> EUA -->
+              <path d="M 597 135 L 485 48" fill="none" stroke="#500404" stroke-width="2.2" />
+              <polygon points="489,45 480,45 483,53" fill="#500404" />
+              <text x="605" y="86" text-anchor="middle" font-size="10" font-weight="600" fill="#500404">Dívidas de Guerra</text>
+              <text x="605" y="100" text-anchor="middle" font-size="9" fill="#5C4343">(~US$ 1 bi, 1926–31)</text>
+            </svg>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 3.9: Efeito Dominó de 1931
+      cap3_domino: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · O Efeito Dominó da Desintegração (1931–1933)</div>
+          <div class="flex flex-col sm:flex-row items-stretch justify-between gap-2 text-xs">
+            <div class="flex-1 p-3 rounded-lg bg-white border-t-4 border-wine-900 shadow-xs">
+              <div class="font-bold text-wine-900">1. Áustria (Mai/1931)</div>
+              <p class="text-ink-muted mt-1">Quebra do <em>Credit Anstalt</em>; impasse no BIS por causa da união alfandegária; controles cambiais.</p>
+            </div>
+            <div class="self-center text-wine-700 font-bold text-base rotate-90 sm:rotate-0">→</div>
+            <div class="flex-1 p-3 rounded-lg bg-white border-t-4 border-wine-800 shadow-xs">
+              <div class="font-bold text-wine-900">2. Hungria (Jul/1931)</div>
+              <p class="text-ink-muted mt-1"><em>Credit Anstalt</em> controlava o maior banco húngaro; feriado bancário e congelamento de depósitos.</p>
+            </div>
+            <div class="self-center text-wine-700 font-bold text-base rotate-90 sm:rotate-0">→</div>
+            <div class="flex-1 p-3 rounded-lg bg-white border-t-4 border-wine-700 shadow-xs">
+              <div class="font-bold text-wine-900">3. Alemanha (Jul/1931)</div>
+              <p class="text-ink-muted mt-1">Dívida externa 3× reservas; quebra da <em>Nordwolle</em>; feriado bancário e controles de câmbio.</p>
+            </div>
+            <div class="self-center text-wine-700 font-bold text-base rotate-90 sm:rotate-0">→</div>
+            <div class="flex-1 p-3 rounded-lg bg-white border-t-4 border-wine-600 shadow-xs">
+              <div class="font-bold text-wine-900">4. Reino Unido (Set/1931)</div>
+              <p class="text-ink-muted mt-1">Ativos congelados + 20% de desemprego; ataque especulativo derruba a libra.</p>
+            </div>
+            <div class="self-center text-wine-700 font-bold text-base rotate-90 sm:rotate-0">→</div>
+            <div class="flex-1 p-3 rounded-lg bg-wine-900 text-white shadow-xs">
+              <div class="font-bold">5. EUA (Abr/1933)</div>
+              <p class="text-wine-100 mt-1">Contágio ao dólar e corridas bancárias levam Roosevelt a suspender o ouro.</p>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 4.1: Plano Keynes vs. Plano White -> Tríade de Bretton Woods
+      cap4_keynes_white: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Plano Keynes vs. Plano White → A Tríade de Bretton Woods (1944)</div>
+          <div class="grid md:grid-cols-2 gap-3 text-xs mb-3">
+            <div class="p-3.5 rounded-lg bg-white border border-wine-100">
+              <h5 class="font-serif font-bold text-lg text-wine-900">Plano Keynes (Reino Unido — Devedor)</h5>
+              <ul class="mt-2 space-y-1 text-ink list-disc pl-4">
+                <li><strong>Clearing Union</strong> com US$ 26 bi em direitos de saque (US$ 23 bi de obrigação potencial dos EUA).</li>
+                <li>Pressão simétrica sobre <strong>países superavitários</strong> para ajustar.</li>
+                <li>Ampla flexibilidade cambial e <strong>controles de capital</strong> permitidos para proteger o pleno emprego.</li>
+              </ul>
+            </div>
+            <div class="p-3.5 rounded-lg bg-white border border-wine-100">
+              <h5 class="font-serif font-bold text-lg text-wine-900">Plano White (EUA — Credor)</h5>
+              <ul class="mt-2 space-y-1 text-ink list-disc pl-4">
+                <li><strong>Fundo de Estabilização (FMI)</strong> limitado a US$ 5 bi (teto de US$ 2 bi para os EUA).</li>
+                <li>Ônus do ajuste recai sobre <strong>países deficitários</strong>.</li>
+                <li>Paridades fixas com poder de veto do Fundo e ideal de mundo <strong>sem controles</strong>.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="p-4 rounded-lg bg-wine-900 text-white text-xs">
+            <p class="font-bold uppercase tracking-wider text-wine-100 mb-2 text-center">Compromisso Final: A Tríade de Bretton Woods (Quotas iniciais: US$ 8,8 bi)</p>
+            <div class="grid sm:grid-cols-3 gap-2.5">
+              <div class="p-2.5 rounded bg-white/10 border border-white/15">
+                <strong>1. Câmbio Fixo Ajustável</strong>
+                <p class="text-wine-100 mt-1">Banda de ±1% em torno do dólar/ouro; alterações permitidas em "desequilíbrio fundamental".</p>
+              </div>
+              <div class="p-2.5 rounded bg-white/10 border border-white/15">
+                <strong>2. Controles de Capital</strong>
+                <p class="text-wine-100 mt-1">Autorizados para conter fluxos especulativos e dar autonomia ao pleno emprego.</p>
+              </div>
+              <div class="p-2.5 rounded bg-white/10 border border-white/15">
+                <strong>3. FMI &amp; Cláusula de Escassez</strong>
+                <p class="text-wine-100 mt-1">Monitoramento, créditos de curto prazo e permissão de discriminar moeda escassa (nunca aplicada).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 4.3: Mecanismo da UEP
+      cap4_uep: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · União Européia de Pagamentos (UEP, 1950–1958)</div>
+          <div class="grid sm:grid-cols-3 gap-3 text-xs">
+            <div class="p-3 rounded-lg bg-white border border-wine-100">
+              <span class="font-bold text-wine-800">1. Compensação Multilateral</span>
+              <p class="text-ink-muted mt-1">Operada pelo BIS (Basiléia): superávits e déficits bilaterais intra-europeus eram consolidados em um único saldo líquido mensal contra a UEP.</p>
+            </div>
+            <div class="p-3 rounded-lg bg-white border border-wine-100">
+              <span class="font-bold text-wine-800">2. Créditos &amp; Código OCEE</span>
+              <p class="text-ink-muted mt-1">Quotas de crédito financiavam déficits temporários (até ~US$ 3 bi) em troca de cortes coordenados de barreiras comerciais (50% → 60% → 75%).</p>
+            </div>
+            <div class="p-3 rounded-lg bg-wine-900 text-white">
+              <span class="font-bold">3. Ponte para 1958</span>
+              <p class="text-wine-100 mt-1">Superou o impasse de coordenação que o FMI não resolveu, permitindo a restauração da conversibilidade em conta corrente em dez/1958.</p>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 4.5: Dilema de Triffin
+      cap4_triffin: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · O Dilema de Triffin (Instabilidade Dinâmica de Bretton Woods)</div>
+          <div class="bg-white rounded-lg border border-wine-100 p-4 text-xs">
+            <div class="p-3 rounded-lg bg-wine-900 text-white text-center font-semibold mb-3">
+              Economia Mundial Cresce → Demanda por Reservas Internacionais Sobe (Ouro cresce devagar → Mundo acumula DÓLARES)
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div class="p-3.5 rounded-lg bg-wine-50 border border-wine-200">
+                <p class="font-bold text-wine-900 mb-1">Caminho A: EUA eliminam seus déficits externos</p>
+                <p class="text-ink-muted">Cessa o fornecimento de novos dólares ao mundo → <strong>Escassez de liquidez internacional</strong> → Contração do comércio e espiral deflacionária global.</p>
+              </div>
+              <div class="p-3.5 rounded-lg bg-wine-50 border border-wine-200">
+                <p class="font-bold text-wine-900 mb-1">Caminho B: EUA mantêm déficits para suprir dólares</p>
+                <p class="text-ink-muted">Passivos externos em dólares superam o ouro americano (ocorre em 1960/1963) → <strong>Perda de confiança na paridade US$ 35/onça</strong> → Corrida para converter dólares em ouro (De Gaulle).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 4.9: Escalada Final de Bretton Woods
+      cap4_colapso: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · A Escalada Final de Bretton Woods (1960–1973)</div>
+          <div class="grid sm:grid-cols-5 gap-2 text-xs">
+            <div class="p-2.5 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-800">1960–61</strong>
+              <p class="text-ink-muted mt-1">Passivos em dólar superam ouro dos EUA; ouro bate US$ 40; nasce o <em>Gold Pool</em>.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-800">1967–68</strong>
+              <p class="text-ink-muted mt-1">Libra cai 17%; França deixa o <em>Gold Pool</em>; mercado de ouro se divide em dois preços.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-800">Ago/1971</strong>
+              <p class="text-ink-muted mt-1">Nixon fecha o <strong>guichê do ouro</strong> e impõe sobretaxa de 10% sobre importações.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-800">Dez/1971</strong>
+              <p class="text-ink-muted mt-1"><strong>Acordo Smithsoniano</strong>: dólar cai 8%, bandas vão a ±2,25%, mas sem ouro.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-wine-900 text-white">
+              <strong>Fev–Mar/1973</strong>
+              <p class="text-wine-100 mt-1">Nova fuga do dólar; CEE e Japão flutuam. <strong>Fim definitivo de Bretton Woods.</strong></p>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 5.2: Ciclo do Dólar nos anos 80
+      cap5_dolar80: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · O Ciclo do Dólar na Década de 1980</div>
+          <div class="flex flex-col sm:flex-row items-stretch justify-between gap-2 text-xs">
+            <div class="flex-1 p-3 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-900">1979–84 · Volcker + Reagan</strong>
+              <p class="text-ink-muted mt-1">Juros altíssimos contra inflação + cortes de impostos e gastos militares = forte atração de capitais.</p>
+            </div>
+            <div class="self-center text-wine-700 font-bold rotate-90 sm:rotate-0">→</div>
+            <div class="flex-1 p-3 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-900">1984–85 · Superdólar</strong>
+              <p class="text-ink-muted mt-1">Bolha especulativa valoriza ainda mais o dólar; indústria americana sofre e Congresso ameaça protecionismo.</p>
+            </div>
+            <div class="self-center text-wine-700 font-bold rotate-90 sm:rotate-0">→</div>
+            <div class="flex-1 p-3 rounded-lg bg-wine-50 border border-wine-200">
+              <strong class="text-wine-900">Set/1985 · Acordo do Plaza</strong>
+              <p class="text-ink-muted mt-1">G-5 coordena intervenção esterilizada para promover queda ordenada do dólar (cai ~40% frente ao iene).</p>
+            </div>
+            <div class="self-center text-wine-700 font-bold rotate-90 sm:rotate-0">→</div>
+            <div class="flex-1 p-3 rounded-lg bg-wine-900 text-white">
+              <strong>Fev/1987 · Acordo do Louvre</strong>
+              <p class="text-wine-100 mt-1">G-7 tenta estabilizar o dólar em faixas (~5%); sem convergência fiscal, colapsa após o crash de out/1987.</p>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 5.5: Da Serpente ao Euro + Quarteto Inconsistente
+      cap5_europa: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Da Serpente ao Euro &amp; o "Quarteto Inconsistente"</div>
+          <div class="grid sm:grid-cols-4 gap-2 text-xs mb-3">
+            <div class="p-2.5 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-800">1972 · Serpente</strong>
+              <p class="text-ink-muted mt-1">Bandas de ±2,25%; choques do petróleo reduzem o bloco à zona do marco alemão.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-800">1979 · SME (ERM)</strong>
+              <p class="text-ink-muted mt-1">Realinhamentos frequentes protegidos por controles de capital; virada francesa em 1983.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-white border border-wine-100">
+              <strong class="text-wine-800">1986–91 · Ato Único &amp; Maastricht</strong>
+              <p class="text-ink-muted mt-1">Fim dos controles de capital (1990) + critérios de convergência para moeda única.</p>
+            </div>
+            <div class="p-2.5 rounded-lg bg-wine-900 text-white">
+              <strong>1999 · Euro (BCE)</strong>
+              <p class="text-wine-100 mt-1">Fixação irrevogável das taxas de câmbio e política monetária supranacional única.</p>
+            </div>
+          </div>
+          <div class="p-3.5 rounded-lg bg-white border-l-4 border-wine-800 text-xs">
+            <strong class="text-wine-900">O Quarteto Inconsistente (Tommaso Padoa-Schioppa):</strong>
+            <p class="text-ink mt-1">Um bloco econômico não pode manter simultaneamente: <strong>(1) Livre Comércio</strong> + <strong>(2) Livre Mobilidade de Capitais</strong> + <strong>(3) Câmbio Fixo</strong> + <strong>(4) Autonomia Monetária Nacional</strong>. Ao eliminar os controles de capital para completar o Mercado Único, a Europa teve de abdicar da autonomia monetária nacional e criar o Banco Central Europeu.</p>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 5.7: Crises de 1ª Geração vs. 2ª Geração
+      cap5_geracoes: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Explicativo · Modelos de Crises Cambiais (1ª Geração vs. 2ª Geração)</div>
+          <div class="grid md:grid-cols-2 gap-4 text-xs">
+            <div class="p-4 rounded-lg bg-white border border-wine-100">
+              <h5 class="font-serif font-bold text-lg text-wine-900">1ª Geração (Paul Krugman)</h5>
+              <p class="text-[11px] text-wine-700 font-semibold uppercase mb-2">Fundamentos Inconsistentes</p>
+              <p class="text-ink leading-relaxed">Déficits fiscais persistentes e inflação superior à âncora corroem a competitividade e drenam reservas gradualmente. O ataque especulativo apenas <strong>antecipa um colapso inevitável</strong> (ex: Itália e Espanha em 1992).</p>
+            </div>
+            <div class="p-4 rounded-lg bg-white border border-wine-200">
+              <h5 class="font-serif font-bold text-lg text-wine-900">2ª Geração (Maurice Obstfeld)</h5>
+              <p class="text-[11px] text-wine-700 font-semibold uppercase mb-2">Profecias Autorrealizáveis</p>
+              <p class="text-ink leading-relaxed">Mesmo com fundamentos viáveis (ex: França em 1992–93), o mercado percebe que <strong>governos democráticos</strong> não suportarão juros altíssimos com desemprego elevado. O próprio ataque eleva o custo da defesa até forçar o governo a capitular — confirmando a tese central de Eichengreen.</p>
+            </div>
+          </div>
+        </div>
+      `,
+
+      // CAPÍTULO 6: Matriz Comparativa das 4 Grandes Eras
+      cap6_matriz_final: `
+        <div class="mt-5 bg-paper rounded-xl border border-wine-100 p-4 sm:p-5">
+          <div class="text-[11px] uppercase tracking-widest font-semibold text-wine-700 mb-3">Esquema Síntese Final · Comparação das 4 Grandes Eras do Sistema Monetário Internacional</div>
+          <div class="overflow-x-auto bg-white rounded-lg border border-wine-100">
+            <table class="w-full text-xs text-left border-collapse min-w-[680px]">
+              <thead>
+                <tr class="bg-wine-900 text-white">
+                  <th class="p-3 font-semibold border-r border-wine-800">Dimensão</th>
+                  <th class="p-3 font-semibold border-r border-wine-800">1. Padrão Ouro<br/><span class="font-normal text-wine-100">(1870–1914)</span></th>
+                  <th class="p-3 font-semibold border-r border-wine-800">2. Entreguerras<br/><span class="font-normal text-wine-100">(1914–1939)</span></th>
+                  <th class="p-3 font-semibold border-r border-wine-800">3. Bretton Woods<br/><span class="font-normal text-wine-100">(1944–1973)</span></th>
+                  <th class="p-3 font-semibold">4. Pós-1973<br/><span class="font-normal text-wine-100">(1973–2000)</span></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-wine-100">
+                <tr>
+                  <td class="p-3 font-semibold bg-wine-50 text-wine-900 border-r border-wine-100">Mobilidade de Capitais</td>
+                  <td class="p-3 border-r border-wine-100"><strong>Alta</strong> (sem controles)</td>
+                  <td class="p-3 border-r border-wine-100"><strong>Em queda</strong> (controles nos anos 30)</td>
+                  <td class="p-3 border-r border-wine-100"><strong>Baixa → Crescente</strong> (controles erodem nos anos 60)</td>
+                  <td class="p-3"><strong>Muito Alta</strong> (mercados líquidos globais)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-wine-50 text-wine-900 border-r border-wine-100">Regime Cambial</td>
+                  <td class="p-3 border-r border-wine-100">Fixo (conversibilidade em ouro)</td>
+                  <td class="p-3 border-r border-wine-100">Flutuante → Ouro-divisas → 3 Blocos / Flutuação administrada</td>
+                  <td class="p-3 border-r border-wine-100">Fixo ajustável (±1%) ancorado no dólar-ouro</td>
+                  <td class="p-3">Bipolar: Flutuação livre ou União Monetária / Currency Board</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-wine-50 text-wine-900 border-r border-wine-100">Contexto Político</td>
+                  <td class="p-3 border-r border-wine-100">Imunidade política (voto restrito, sem pressão por emprego)</td>
+                  <td class="p-3 border-r border-wine-100">Sufrágio universal, sindicatos e conflito distributivo</td>
+                  <td class="p-3 border-r border-wine-100">Estado de bem-estar, pleno emprego e Guerra Fria</td>
+                  <td class="p-3">Democracia de massas consolidada + integração europeia</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-wine-50 text-wine-900 border-r border-wine-100">Mecanismo de Ajuste</td>
+                  <td class="p-3 border-r border-wine-100">Redesconto, preços flexíveis e capital estabilizador</td>
+                  <td class="p-3 border-r border-wine-100">Disfuncional (deflação da dívida e falta de cooperação)</td>
+                  <td class="p-3 border-r border-wine-100">Controles seletivos, UEP, swaps e Gold Pool</td>
+                  <td class="p-3">Taxa de câmbio flutuante + Metas de Inflação (ou BCE)</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold bg-wine-50 text-wine-900 border-r border-wine-100">Motivo do Colapso / Transição</td>
+                  <td class="p-3 border-r border-wine-100">1ª Guerra Mundial e perda do consenso político pré-1914</td>
+                  <td class="p-3 border-r border-wine-100">Grande Depressão, crises bancárias e dilema do emprestador</td>
+                  <td class="p-3 border-r border-wine-100">Dilema de Triffin, erosão dos controles e inflação dos EUA</td>
+                  <td class="p-3">Regimes intermediários colapsam (SME 1992, México 94, Ásia 97, Brasil 99)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `
+    };
+
+    // =========================================================================
+    // 2. ESTRUTURA COMPLETA DO LIVRO (6 CAPÍTULOS + TODOS OS SUBCAPÍTULOS + EPÍLOGO)
+    // =========================================================================
+    const BOOK_DATA = [
+      {
+        id: 'cap-1',
+        number: 'Capítulo 1',
+        era: 'Arcabouço Teórico · 1850–2000',
+        title: 'Introdução',
+        subtitle: 'A tese central da obra: política, história e a Curva em "U" da mobilidade de capitais.',
+        subchapters: [
+          {
+            id: 'c1-s1',
+            year: 'Tese Central',
+            title: 'O sistema monetário como "cola" e a crítica à visão convencional',
+            summary: 'Barry Eichengreen define o sistema monetário internacional como a "cola" que mantém ligadas as economias nacionais, organizando os mercados cambiais, o ajuste do balanço de pagamentos e o acesso ao crédito em crises. Ele desmonta a explicação convencional de que o aumento da mobilidade de capitais sozinho destruiu o câmbio fixo após 1971: a mobilidade de capitais descreve uma <strong>Curva em "U"</strong> ao longo de 150 anos e já era altíssima sob o padrão ouro clássico (1870–1914).',
+            concepts: ['Curva em "U" da Mobilidade', 'Liberalismo Intrínseco (John Ruggie)', 'Dinâmica Polanyiana (1944)', 'Externalidades em Rede', 'Dependência de Trajetória', 'Problema do Carona (Free-Riding)'],
+            events: [
+              'Antes de 1914: alta mobilidade de capitais compatível com câmbio fixo graças ao voto restrito e isolamento dos bancos centrais.',
+              'Século XX: sufrágio universal, sindicatos e Estado de bem-estar social transformam o liberalismo clássico em "liberalismo intrínseco".',
+              '1945–1971: controles de capital substituem os limites à democracia como escudo das taxas fixas.',
+              'Reformas monetárias coletivas fracassam nas décadas de 1870, 1920 e 1970, vingando apenas sob alianças políticas profundas (Guerra Fria e União Europeia).'
+            ],
+            diagram: DIAGRAMS.cap1_polanyi
+          }
+        ]
+      },
+      {
+        id: 'cap-2',
+        number: 'Capítulo 2',
+        era: 'Era I · c. 1870–1914',
+        title: 'O padrão ouro',
+        subtitle: 'Como um acidente histórico britânico gerou o primeiro sistema global de taxas de câmbio fixas — e por que ele funcionou apenas naquele contexto histórico.',
+        subchapters: [
+          {
+            id: 'c2-s1',
+            year: 'Origens',
+            title: 'Pré-história',
+            summary: 'Moedas cunhadas em metais preciosos serviram como dinheiro desde a Antiguidade (a libra e o pêni derivam de unidades romanas de peso). Durante toda a Idade Média, a <strong>prata</strong> predominou no uso cotidiano por ter valor adequado a transações comuns, enquanto o cobre era pesado demais — o padrão cobre sueco de 1625 gerou moedas de até 19 kg transportadas em carroças — e o ouro valia demais para salários. Florins e ducados de ouro espalharam-se nas grandes transações comerciais a partir da Itália no século XIII, mas o padrão ouro internacional só se consolidou de fato após 1870.',
+            concepts: ['Moeda-Mercadoria', 'Padrão Prata', 'Padrão Cobre (Suécia, 1625)'],
+            events: [
+              '1255: Luís IX introduz moedas de ouro na França; florins (Florença) e ducados (Veneza) lideram grandes negócios.',
+              '1625: Suécia adota padrão cobre com moedas gigantes de mais de 19 quilos.',
+              'Pós-1870: Consolidação efetiva do padrão ouro como base das operações monetárias internacionais.'
+            ]
+          },
+          {
+            id: 'c2-s2',
+            year: '1717–1860',
+            title: 'Os dilemas do bimetalismo',
+            summary: 'No século XIX, muitos países permitiam a livre cunhagem simultânea de ouro e prata (bimetalismo), servindo de ponte entre a Inglaterra (ouro) e países de prata. A lei francesa de 1803 fixou a proporção em <strong>15,5 para 1</strong>. Sempre que o preço de mercado se afastava dessa razão além dos custos de cunhagem (<em>brassage</em>) e transporte, abria-se arbitragem lucrativa que acionava a <strong>Lei de Gresham</strong>: o metal supervalorizado na casa da moeda expulsava o subvalorizado. Na Inglaterra, o ajuste insuficiente de <strong>Sir Isaac Newton em 1717</strong> subvalorizou a prata e colocou o país acidentalmente no padrão ouro.',
+            concepts: ['Bimetalismo (15,5:1)', 'Lei de Gresham', 'Brassage', 'Arbitragem Metálica'],
+            events: [
+              '1717: Isaac Newton fixa preço baixo demais para a prata na Casa da Moeda inglesa → adoção acidental do ouro (formalizada em 1774 e 1821).',
+              '1803: Lei monetária napoleônica estabelece a proporção bimetálica francesa de 15,5:1.',
+              '1848–1851: Descobertas de ouro na Califórnia e Austrália multiplicam em 10× a produção mundial, inundando a França de ouro e drenando prata.',
+              '1859: Descoberta de prata em Nevada inverte o fluxo e acirra debates sobre o bimetalismo.'
+            ],
+            diagram: DIAGRAMS.cap2_bimetalismo
+          },
+          {
+            id: 'c2-s3',
+            year: 'Séc. XIX',
+            title: 'A atração do bimetalismo',
+            summary: 'Por que o bimetalismo sobreviveu até a década de 1870 apesar de suas instabilidades? Eichengreen avalia três explicações: (1) a tese técnica de <strong>Angela Redish</strong>, segundo a qual antes das prensas a vapor era impossível cunhar moedas representativas de pequeno valor sem falsificação generalizada; (2) interesses políticos de mineradores de prata e agricultores endividados (David Ricardo), tese relativizada por Marc Flandreau; e (3) o fator decisivo: <strong>externalidades em rede</strong> — enquanto os vizinhos comerciais mantinham o bimetalismo, abandonar o bloco isoladamente trazia altos custos comerciais e financeiros.',
+            concepts: ['Prensas a Vapor (Redish)', 'Moedas Representativas', 'Externalidades em Rede'],
+            events: [
+              '1816: Casas da moeda britânicas instalam prensas a vapor, viabilizando moedas divisionárias seguras.',
+              '1854: Portugal acompanha a Grã-Bretanha e adota o padrão ouro por conta dos fortes laços comerciais.',
+              'Até 1870: Holanda, França e vizinhos permanecem no bimetalismo devido às vantagens de rede.'
+            ]
+          },
+          {
+            id: 'c2-s4',
+            year: '1865–1898',
+            title: 'O advento do padrão ouro',
+            summary: 'A redução do teor de prata em moedas divisionárias na Itália (0,835) e Suíça (0,8) ameaçou expulsar moedas francesas e belgas, levando à criação da <strong>União Monetária Latina (1865)</strong>. O ponto de virada veio com a <strong>Guerra Franco-Prussiana (1870–71)</strong>: usando a indenização francesa de 5 bilhões de francos, a recém-unificada Alemanha adotou o marco-ouro em 1871–73. Como as duas maiores potências industriais (Grã-Bretanha e Alemanha) estavam no ouro, as externalidades em rede dispararam um efeito cascata global. A desmonetização da prata provocou forte <strong>deflação entre 1873 e 1896</strong>, mas a conferência de 1878 fracassou em restaurar o bimetalismo por falta de coordenação.',
+            concepts: ['União Monetária Latina', 'Efeito Cascata de Rede', 'Deflação de 1873–1896'],
+            events: [
+              '1865: Criação da União Monetária Latina (França, Bélgica, Itália, Suíça e depois Grécia) com pureza de 0,835.',
+              '1871–73: Alemanha usa reparações francesas (Tratado de Frankfurt) para criar o marco-ouro; surge a União Monetária Escandinava (1873).',
+              '1873–79: EUA omitem a prata na Lei da Cunhagem (1873) e restauram a conversibilidade do dólar em ouro (1879).',
+              '1878: Conferência monetária convocada pelos EUA fracassa diante da recusa da Alemanha e do bloqueio britânico.',
+              'Fim do séc. XIX: Rússia, Japão e Índia (1898) aderem ao ouro; apenas China e parte da América Central ficam na prata.'
+            ]
+          },
+          {
+            id: 'c2-s5',
+            year: '1880–1913',
+            title: 'Padrões ouro',
+            summary: 'Longe de ser monolítico, o sistema englobava arranjos nacionais heterogêneos. Apenas quatro países — Inglaterra, Alemanha, França (com seu padrão ouro <em>"claudicante"</em>) e EUA (após superar as leis da prata Bland-Allison e Sherman com a Lei do Padrão Ouro de 1900) — tinham ampla circulação de moedas de ouro. Os bancos centrais (muitos privados, como o Banco da Inglaterra sob a Lei de Peel de 1844) usavam <strong>instrumentos-ouro</strong> para desencorajar saídas do metal e operavam sistemas <em>fiduciários</em> ou <em>proporcionais</em>. Além disso, as reservas em divisas estrangeiras (que rendiam juros, lideradas pela libra com ~40%) saltaram de 10% (1880) para 20% (1913).',
+            concepts: ['Padrão Ouro "Claudicante"', 'Instrumentos-Ouro', 'Sistemas Fiduciários vs. Proporcionais', 'Padrão Ouro-Divisas'],
+            events: [
+              '1844: Lei de Peel (Bank Charter Act) divide o Banco da Inglaterra em Departamento de Emissão e Departamento Bancário.',
+              '1878 e 1890: Leis Bland-Allison e Sherman obrigam o Tesouro americano a comprar prata; encerradas pela Lei do Padrão Ouro de 1900.',
+              '1900–1913: Reservas em divisas estrangeiras (especialmente libras, francos e marcos) quadruplicam.'
+            ],
+            diagram: DIAGRAMS.cap2_matriz
+          },
+          {
+            id: 'c2-s6',
+            year: 'Mecanismo',
+            title: 'Como funcionava o padrão ouro',
+            summary: 'O modelo clássico de <strong>fluxo de moedas metálicas de David Hume (1752)</strong> explicava o ajuste apenas via saída física de ouro e queda de preços. Como no século XIX havia papel-moeda, bancos centrais e enormes fluxos de capital, a <strong>Comissão Cunliffe (1919)</strong> atualizou o modelo: ao prever perdas de ouro, o banco central elevava a <strong>taxa de redesconto</strong>, esfriando a demanda e atraindo capital estrangeiro sem precisar mover grandes quantidades de ouro. Keynes batizou esse comportamento em 1925 de <em>"Regras do Jogo"</em>. Contudo, estudos empíricos de Ragnar Nurkse (1944) e Arthur Bloomfield (1959) revelaram que os bancos centrais violavam essas regras frequentemente antes de 1913, por motivos de lucratividade, atividade econômica e custo da dívida pública.',
+            concepts: ['Modelo de Fluxo de Moedas Metálicas (Hume)', 'Comissão Cunliffe', 'Taxa de Redesconto', 'Regras do Jogo (Keynes)'],
+            events: [
+              '1752: David Hume formula o modelo de ajuste automático via fluxo de espécie.',
+              '1919: Relatório da Comissão Cunliffe incorpora papel-moeda, bancos centrais e fluxos de capital.',
+              '1959: Arthur Bloomfield demonstra que bancos centrais pré-1914 violavam as "regras do jogo" tanto quanto no entreguerras.'
+            ],
+            diagram: DIAGRAMS.cap2_hume_cunliffe
+          },
+          {
+            id: 'c2-s7',
+            year: 'Credibilidade',
+            title: 'O padrão ouro como instituição característica de um momento histórico',
+            summary: 'Se os bancos centrais violavam as regras do jogo no curto prazo, por que o padrão ouro permaneceu tão estável? Porque ele era uma <strong>instituição social e política</strong> baseada na credibilidade inabalável da conversibilidade. No núcleo europeu, o voto era restrito a proprietários, partidos trabalhistas eram incipientes e salários/preços eram flexíveis. Como os investidores tinham certeza absoluta de que as autoridades defenderiam a paridade no longo prazo, quando uma moeda se enfraquecia até o ponto de exportação do ouro, o capital entrava <strong>de forma estabilizadora</strong> esperando ganhos futuros — dando aos bancos centrais margem até para esterilizar choques no curto prazo.',
+            concepts: ['Credibilidade de Longo Prazo', 'Fluxos de Capital Estabilizadores', 'Esterilização', 'Pontos do Ouro'],
+            events: [
+              'Antes de 1914: Investimentos externos raramente precisavam de hedge cambial devido à confiança nas paridades.',
+              'Desvios temporários das "regras do jogo" não geravam ataques especulativos graças ao isolamento político dos bancos centrais.'
+            ]
+          },
+          {
+            id: 'c2-s8',
+            year: '1890–1910',
+            title: 'Solidariedade internacional',
+            summary: 'Longe de ser um sistema puramente atomizado e automático, o padrão ouro dependia da cooperação entre bancos centrais. Em tempos normais, o Banco da Inglaterra atuava como o <em>"maestro da orquestra internacional"</em> (Keynes), sinalizando ajustes globais via sua taxa de redesconto. Em crises agudas, quando a defesa da paridade exigia ações em direções opostas, bancos centrais estrangeiros emprestavam ouro diretamente ao país sob ataque. O marco histórico foi a <strong>Crise do Baring (1890)</strong>, quando o Banco da França e a Rússia emprestaram ouro a Londres para salvar a libra e o sistema financeiro britânico.',
+            concepts: ['Maestro da Orquestra Internacional', 'Cooperação entre Bancos Centrais', 'Crise do Baring (1890)'],
+            events: [
+              '1890: Insolvência da casa bancária Baring Brothers (calote argentino); Banco da Inglaterra recebe empréstimos de ouro da França (£3 mi) e Rússia (£1,5 mi).',
+              '1893 e 1898: Consórcios europeus apoiam o Tesouro dos EUA (1893) e o Reichsbank alemão (1898).',
+              '1906–1907 e 1909–1910: França, Alemanha, Rússia e Canadá coordenam transferências de ouro para conter crises em Londres e Nova York.'
+            ]
+          },
+          {
+            id: 'c2-s9',
+            year: '1866–1893',
+            title: 'O padrão ouro e o emprestador de última instância',
+            summary: 'A expansão da <strong>reserva bancária fracionária</strong> expôs o calcanhar de Aquiles do padrão ouro: corridas aos bancos exigiam um <em>emprestador de última instância</em>, mas injetar liquidez contrariava a disciplina do ouro. Após a recusa desastrosa do Banco da Inglaterra em socorrer o mercado na crise <strong>Overend &amp; Gurney (1866)</strong>, consolidou-se a <strong>Regra de Bagehot</strong> (emprestar livremente contra boas garantias, mas a juros altos). Além disso, <strong>cláusulas de exceção verificáveis</strong> e operações coletivas "salva-vidas" dos próprios bancos evitaram que o conflito entre estabilidade bancária e padrão ouro destruísse o sistema antes de 1914.',
+            concepts: ['Reserva Bancária Fracionária', 'Emprestador de Última Instância', 'Regra de Bagehot', 'Cláusula de Exceção'],
+            events: [
+              '1866: Falência da Overend &amp; Gurney provoca pânico em Londres após recusa inicial do Banco da Inglaterra em redescontar títulos.',
+              '1890: Banco da Inglaterra organiza fundo de garantia coletivo para o Baring Brothers.',
+              '1893: Sem banco central, bancos dos EUA suspendem coordenadamente a conversibilidade de depósitos, criando prêmio pela moeda e atraindo ouro.'
+            ],
+            diagram: DIAGRAMS.cap2_bagehot
+          },
+          {
+            id: 'c2-s10',
+            year: 'Periferia &amp; EUA',
+            title: 'Instabilidade na periferia',
+            summary: 'Fora do núcleo europeu, o padrão ouro foi muito mais instável. Países periféricos careciam de bancos centrais (o próprio Fed só nasceu em 1913), não recebiam cooperação de emergência da Europa e dependiam de poucas <em>commodities</em> sujeitas a choques severos. Enquanto os empréstimos britânicos geravam demanda por exportações industriais da própria Grã-Bretanha (estabilizando suas contas), na periferia a queda nas exportações secava o crédito externo (choques pró-cíclicos). Mesmo nos EUA, o sufrágio universal e a aliança populista de agricultores e mineradores de prata geraram fugas de capitais em 1893 e na campanha da <em>"cruz de ouro"</em> de William Jennings Bryan (1896).',
+            concepts: ['Choques nos Termos de Troca', 'Fluxos Pró-Cíclicos', 'Movimento Populista / "Cruz de Ouro"'],
+            events: [
+              '1893: Reservas de ouro dos EUA caem abaixo de US$ 100 milhões; presidente Cleveland revoga a Lei Sherman.',
+              '1896: Vitória de William McKinley sobre Bryan + novas minas de ouro (África do Sul, Alasca, Austrália) encerram a deflação e consolidam o dólar.',
+              'América Latina e Sul da Europa: Argentina, Brasil, Chile, Itália e Portugal suspendem recorrentemente a conversibilidade.'
+            ]
+          },
+          {
+            id: 'c2-s11',
+            year: '1900–1914',
+            title: 'A estabilidade do sistema',
+            summary: 'A "idade de ouro" do padrão ouro clássico durou pouco mais de quatro décadas e apoiou-se em condições irrepetíveis: a hegemonia comercial/financeira da Grã-Bretanha, mercados abertos e um raro intervalo de paz europeia (1871–1913). Já na virada do século, porém, o equilíbrio dava sinais de erosão: o declínio relativo britânico, a ascensão dos EUA (cujo sistema bancário rural drenava ouro de Londres a cada colheita), o risco sistêmico das reservas crescentes em divisas, o avanço da democracia operária e a escalada militar europeia. A Primeira Guerra Mundial encerrou abruptamente o sistema.',
+            concepts: ['Hegemonia Britânica', 'Comércio Multilateral Aberto', 'Sazonalidade Financeira Americana'],
+            events: [
+              '1871–1913: Raro período de paz entre potências europeias facilita a solidariedade financeira.',
+              'Virada do século: EUA tornam-se a maior economia mundial, amplificando choques sazonais de liquidez sobre Londres.',
+              '1914: Eclosão da Primeira Guerra Mundial destrói os pilares do padrão ouro clássico.'
+            ]
+          }
+        ]
+      },
+      {
+        id: 'cap-3',
+        number: 'Capítulo 3',
+        era: 'Era II · 1914–1939',
+        title: 'Instabilidade entre as guerras',
+        subtitle: 'O contra-exemplo histórico: a tentativa frustrada de restaurar o mundo de antes da guerra em uma sociedade democratizada e com mercados de trabalho rígidos.',
+        subchapters: [
+          {
+            id: 'c3-s1',
+            year: '1914–1936',
+            title: 'Cronologia',
+            summary: 'A Primeira Guerra Mundial suspendeu a conversibilidade e substituiu o ouro por moeda fiduciária para financiar o esforço bélico. Após um período de flutuação relativamente limpa no início dos anos 1920, países traumatizados pela hiperinflação (Áustria 1923, Alemanha e Polônia 1924, Hungria 1925) estabilizaram primeiro. Com o retorno da Grã-Bretanha (1925) e da França (1926), o padrão ouro foi reconstruído — mas sobreviveu menos de cinco anos como sistema global. A Grande Depressão derrubou a periferia em 1929–30, atingiu o centro europeu e a libra em 1931, dividiu o mundo em <strong>três blocos</strong> em 1932 e eliminou o dólar (1933) e o bloco do ouro (1936).',
+            concepts: ['Moeda Fiduciária de Guerra', 'Flutuação Limpa (Anos 20)', 'Sistema Tripolar de 1932'],
+            events: [
+              '1923–1926: Estabilizações na Europa Central, retorno da Grã-Bretanha (1925) e estabilização de facto da França (1926).',
+              '1929–1930: Argentina, Brasil, Austrália, Canadá e demais periféricos abandonam ou limitam o ouro.',
+              '1931–1936: Queda da Áustria, Alemanha e libra (1931), saída dos EUA (1933) e fim do Bloco do Ouro (1936).'
+            ],
+            diagram: DIAGRAMS.cap3_cronologia
+          },
+          {
+            id: 'c3-s2',
+            year: '1921–1926',
+            title: 'A experiência da flutuação: o controvertido caso do franco',
+            summary: 'A flutuação livre dos anos 1920 deixou um trauma profundo. Em estudo influente da Liga das Nações (1944), <strong>Ragnar Nurkse</strong> usou o franco francês (1924–26) para condenar o câmbio flutuante como alvo de <em>especulação desestabilizadora</em> e movimentos auto-agravantes. <strong>Milton Friedman (1953)</strong> contestou Nurkse, argumentando que a volatilidade do franco apenas refletia a instabilidade fiscal e política francesa (impasse entre esquerda e direita sobre impostos sobre o capital, invasão do Ruhr em 1923 e espera pelas reparações alemãs). Somente quando Raymond Poincaré formou um governo de união nacional em julho de 1926 o franco se estabilizou.',
+            concepts: ['Especulação Desestabilizadora (Nurkse)', 'Fundamentos Fiscais (Friedman)', 'Plano Dawes (1924)', 'Taxação sobre o Capital'],
+            events: [
+              'Jan/1923: França e Bélgica ocupam o Ruhr; resistência alemã dispara hiperinflação na Alemanha.',
+              '1924: Plano Dawes equaciona reparações e Poincaré sobe impostos, mas é derrotado por Herriot (centro-esquerda).',
+              '1925–1926: Cinco governos minoritários em 14 meses e medo de imposto de 10% sobre o capital derrubam o franco de 19 para 41 por dólar.',
+              'Jul/1926: Retorno de Poincaré com plenos poderes resolve o impasse fiscal e estabiliza a moeda.'
+            ],
+            diagram: DIAGRAMS.cap3_nurkse_friedman
+          },
+          {
+            id: 'c3-s3',
+            year: '1925',
+            title: 'A reconstrução do padrão ouro',
+            summary: 'A peça central da reconstrução foi o retorno da Grã-Bretanha ao padrão ouro em <strong>25 de abril de 1925</strong> à paridade pré-guerra de <strong>US$ 4,86 por libra</strong>. Como os preços britânicos não haviam caído o suficiente em relação aos americanos, a libra voltou supervalorizada em cerca de 10% a 15% (como denunciou Keynes em <em>The Economic Consequences of Mr. Churchill</em>). Isso sufocou as exportações industriais britânicas e condenou o país a desemprego de dois dígitos e juros altos. Churchill optou pela paridade antiga por temer perder credibilidade e o status financeiro da <em>City</em> de Londres, enquanto França, Bélgica e Itália estabilizaram a taxas desvalorizadas.',
+            concepts: ['Supervalorização da Libra (1925)', 'The Economic Consequences of Mr. Churchill', 'Interesses Financeiros vs. Industriais'],
+            events: [
+              '1920–21: Aperto deflacionário eleva o desemprego britânico de 2% para 11,3%.',
+              '1924: Fed de Nova York (Benjamin Strong) reduz juros para ajudar a valorização da libra.',
+              'Abr/1925: Grã-Bretanha restaura a paridade de US$ 4,86; 39 países adotam o padrão ouro até 1926.'
+            ]
+          },
+          {
+            id: 'c3-s4',
+            year: '1922–1927',
+            title: 'O novo padrão ouro',
+            summary: 'Temendo uma escassez mundial de ouro, os governos retiraram moedas de ouro de circulação (exigindo compras mínimas de barras de 400 onças) e institucionalizaram o <strong>padrão ouro-divisas</strong>. Na <strong>Conferência de Gênova (1922)</strong>, liderada pela Grã-Bretanha (Keynes e Hawtrey), propôs-se o uso ilimitado de divisas como reserva e a coordenação de juros para estabilizar o poder de compra do ouro. Contudo, os Estados Unidos — isolacionistas e detentores de amplas reservas de ouro — boicotaram a conferência e vetaram a cúpula de bancos centrais. A reconstrução ocorreu de forma pontual e descoordenada.',
+            concepts: ['Padrão Ouro-Divisas', 'Escassez de Ouro', 'Conferência de Gênova (1922)'],
+            events: [
+              '1922: Conferência de Gênova recomenda reservas em divisas e cooperação monetária, mas sem adesão dos EUA.',
+              '1923: Reservas de ouro dos EUA saltam de US$ 1,3 bi (1913) para US$ 4 bi.',
+              'Anos 1920: Reconstrução fragmentada sem mecanismo coletivo de governança.'
+            ]
+          },
+          {
+            id: 'c3-s5',
+            year: '1926–1929',
+            title: 'Os problemas do novo padrão ouro',
+            summary: 'O sistema reconstruído nasceu profundamente assimétrico. A cobertura global de ouro caiu de 48% (1913) para 40% (1927), mas <strong>França e Alemanha</strong> drenaram quase todo o crescimento das reservas mundiais. O franco Poincaré subvalorizado, somado às restrições legais francesas a operações de mercado aberto e à liquidação de divisas por Émile Moreau, transformou a França em uma "cisterna de ouro". A Alemanha atraiu capitais com juros altos sob Hjalmar Schacht. Já os EUA (com ~45% do ouro mundial) elevaram juros de 3,5% para 5% em 1928 para conter a bolha de Wall Street, asfixiando o resto do mundo.',
+            concepts: ['Assimetria do Ajuste', 'Cisterna de Ouro Francesa', 'Ouro Livre do Fed'],
+            events: [
+              '1926–1931: Reservas de ouro do Banco da França quadruplicam; Moreau converte divisas em ouro pressionando Londres.',
+              '1924–1928: Reservas do Reichsbank alemão mais que triplicam com capitais americanos.',
+              '1928: Fed de Nova York eleva a taxa de redesconto de 3,5% para 5%, estancando a liquidez global.'
+            ]
+          },
+          {
+            id: 'c3-s6',
+            year: '1924–1929',
+            title: 'O padrão dos pagamentos internacionais',
+            summary: 'A guerra deslocou mercados europeus para os EUA e o Japão, enquanto as reparações alemãs e as dívidas de guerra aliadas geraram um fluxo contínuo de recursos para os EUA. O equilíbrio só se mantinha porque os bancos americanos <strong>reciclavam</strong> seu superávit emprestando bilhões à Europa e América Latina via bônus em dólares. Quando o aperto monetário do Fed em 1928 fez esses empréstimos despencarem a zero no segundo semestre, o circuito rompeu-se. Sem moratória das dívidas de guerra, o ajuste recaiu sobre uma deflação brutal que acionou a <strong>"deflação da dívida"</strong> (Irving Fisher), elevando o peso real das dívidas e ameaçando os bancos.',
+            concepts: ['Reciclagem de Capitais', 'Reparações e Dívidas de Guerra', 'Deflação da Dívida (Irving Fisher)'],
+            events: [
+              '1924–1929: Aliados recebem ~US$ 2 bi em reparações alemãs e repassam ~US$ 1 bi aos EUA.',
+              '2º semestre de 1928: Empréstimos externos privados dos EUA caem a zero após alta de juros do Fed.',
+              '1929: Início da Grande Depressão golpeia mercados exportadores e agrava a insolvência global.'
+            ],
+            diagram: DIAGRAMS.cap3_reciclagem
+          },
+          {
+            id: 'c3-s7',
+            year: '1929–1931',
+            title: 'Reações à Grande Depressão',
+            summary: 'A queda da produção industrial atingiu 48% nos EUA e 39% na Alemanha, com desemprego de 25% nos EUA e 44% na indústria alemã. Enquanto a periferia abandonava o ouro em bloco (1929–30), os países centrais ficaram paralisados: estimular a economia violava o padrão ouro. Na nova realidade política do entreguerras — em que fatores domésticos passaram a pesar na política monetária (Robert Triffin) —, os investidores duvidaram da disposição dos governos em manter a austeridade. Os fluxos de capital tornaram-se <strong>desestabilizadores</strong> e os bancos centrais correram para liquidar divisas em ouro, agravando a deflação.',
+            concepts: ['Prioridade Doméstica (Triffin)', 'Fluxos de Capital Desestabilizadores', 'Liquidação de Reservas em Divisas'],
+            events: [
+              '1929–30: Suspensão simultânea da conversibilidade na América Latina, Canadá, Austrália e Nova Zelândia.',
+              '1931: Corrida de bancos centrais para trocar divisas por ouro destrói cerca de US$ 100 milhões em reservas globais.',
+              'Paradoxo da credibilidade: países que haviam desvalorizado antes (França/Bélgica) tinham mais credibilidade inicial que Reino Unido e EUA.'
+            ]
+          },
+          {
+            id: 'c3-s8',
+            year: '1930–1933',
+            title: 'Crises bancárias e sua administração',
+            summary: 'A deflação corroeu as garantias bancárias e disparou falências. Contudo, os bancos centrais ficaram presos em um <strong>dilema fatal</strong>: atuar como emprestador de última instância injetando liquidez violava os pisos de ouro e disparava fugas de capitais que esvaziavam o sistema ainda mais rápido. A cláusula de exceção do século XIX não funcionava mais porque o mercado suspeitava que qualquer suspensão seria permanente. A única saída — uma <strong>reflação coordenada internacionalmente</strong> — foi bloqueada por visões irreconciliáveis: britânicos (Keynes) queriam expansão de crédito; franceses e americanos (até 1933) adotavam a doutrina <em>liquidacionista</em>.',
+            concepts: ['Dilema do Emprestador sob o Ouro', 'Visão Reflacionista vs. Liquidacionista', 'Perda da Cláusula de Exceção'],
+            events: [
+              '1931: Relatório da Comissão Macmillan (Reino Unido) alerta para a escassez de crédito e risco sistêmico.',
+              'França associa expansão monetária ao caos inflacionário dos anos 20 e bloqueia coordenação reflacionária.',
+              'EUA mantêm postura liquidacionista até a posse de Roosevelt em março de 1933.'
+            ]
+          },
+          {
+            id: 'c3-s9',
+            year: 'Mai–Jul/1931',
+            title: 'A desintegração do padrão ouro',
+            summary: 'O colapso do núcleo industrial começou na <strong>Áustria (maio de 1931)</strong> com a insolvência do <em>Credit Anstalt</em>, cujos passivos superavam o orçamento estatal. O socorro governamental disparou fuga de capitais; a ajuda do BIS foi travada pela exigência francesa de que a Áustria renunciasse à união alfandegária com a Alemanha. Viena impôs controles cambiais. O pânico contagiou a <strong>Hungria</strong> e a <strong>Alemanha</strong>, onde a dívida externa de curto prazo era o triplo das reservas do Reichsbank. Sem moratória ou empréstimo sem amarras (o Fed de NY exigiu que Berlim não usasse o dinheiro para socorrer bancos!), a Alemanha decretou feriado bancário e controles cambiais em julho de 1931.',
+            concepts: ['Crise do Credit Anstalt', 'Contágio Bancário-Cambial', 'Controles Cambiais na Europa Central'],
+            events: [
+              'Mai/1931: Quebra do Credit Anstalt em Viena; negociações travadas no BIS.',
+              'Jul/1931: Feriado bancário e controles cambiais na Hungria; quebra da têxtil Nordwolle precipita feriado bancário e saída da Alemanha (13/jul).'
+            ],
+            diagram: DIAGRAMS.cap3_domino
+          },
+          {
+            id: 'c3-s10',
+            year: 'Set/1931',
+            title: 'A crise da libra esterlina',
+            summary: 'Com ativos britânicos congelados na Europa Central e queda drástica nas receitas invisíveis (fretes, seguros e dividendos externos), o balanço de pagamentos britânico deteriorou-se. Embora o Banco da Inglaterra pudesse tecnicamente subir juros, os mercados sabiam que um <strong>governo trabalhista minoritário diante de 20% de desemprego</strong> não suportaria novos apertos. A crise alemã serviu de gatilho para um ataque especulativo massivo. Em <strong>19 de setembro de 1931</strong>, a Grã-Bretanha suspendeu a conversibilidade em ouro; a libra caiu um terço em três meses e cerca de 25 países acompanharam a saída.',
+            concepts: ['Receitas Invisíveis', 'Limite Político dos Juros', 'Abandono Britânico do Ouro (19/Set/1931)'],
+            events: [
+              'Jul/1931: Banco da Inglaterra sobe juros duas vezes, mas não estanca a fuga de capitais.',
+              '19/Set/1931: Suspensão da conversibilidade da libra; marco simbólico do fim do padrão ouro entreguerras.',
+              'Fim de 1931: Bancos centrais passam a converter dólares em ouro, levando o contágio aos Estados Unidos.'
+            ]
+          },
+          {
+            id: 'c3-s11',
+            year: '1932–1936',
+            title: 'O dólar entra em cena',
+            summary: 'As desvalorizações da área da libra e os controles alemães esmagaram a competitividade dos países remanescentes no ouro. Nos EUA, o Banco da França liquidou reservas em dólares, enquanto a Lei Glass-Steagall (1932) flexibilizou temporariamente o "ouro livre". A vitória de <strong>Franklin D. Roosevelt</strong> gerou corrida ao ouro; em março de 1933 ele decretou feriado bancário e, em abril, suspendeu a conversibilidade. Elevando diariamente o preço oficial de compra do ouro, Roosevelt desvalorizou o dólar em 40% até fixá-lo em <strong>US$ 35 por onça</strong> (jan/1934). O restante do Bloco do Ouro sucumbiu em seguida: Tchecoslováquia (1934), Bélgica (1935) e França, Holanda e Suíça (1936).',
+            concepts: ['Lei Glass-Steagall (1932)', 'Desvalorização de Roosevelt (US$ 35/onça)', 'Fim do Bloco do Ouro'],
+            events: [
+              'Mar–Abr/1933: Feriado bancário nacional nos EUA e suspensão da conversibilidade do dólar em ouro.',
+              'Jan/1934: Dólar estabilizado a US$ 35 por onça (antes US$ 20,67), acumulando queda de 40%.',
+              '1934–1936: Capitulação final da Tchecoslováquia, Bélgica, França, Holanda e Suíça.'
+            ]
+          },
+          {
+            id: 'c3-s12',
+            year: '1932–1939',
+            title: 'Flutuação administrada',
+            summary: 'Diferentemente dos anos 1920, na década de 1930 os governos intervieram ativamente via <strong>Contas de Equalização Cambial</strong> para suavizar oscilações. Liberados do ouro, países puderam cortar juros e expandir crédito: a recuperação econômica acompanhou diretamente a ordem de saída do ouro (Grã-Bretanha em 1931, EUA em 1933, França apenas em 1936). Eichengreen rebate o rótulo simplista de <em>"desvalorização empobreça-o-próximo"</em>: abandonar o ouro foi <strong>parte da solução</strong> da Depressão, pois restaurou a autonomia monetária. O <strong>Acordo Tripartite (1936)</strong> entre EUA, Reino Unido e França buscou evitar retaliações cambiais e reconstruir o comércio.',
+            concepts: ['Contas de Equalização Cambial', 'Autonomia Monetária', 'Desvalorização "Empobreça-o-Próximo"', 'Acordo Tripartite (1936)'],
+            events: [
+              'Jul/1932: Entra em operação a British Exchange Equalisation Account.',
+              '1933: Conferência Econômica de Londres fracassa em coordenar reflação global.',
+              '1936: Acordo Tripartite (EUA, Reino Unido e França) limita desvalorizações competitivas e prepara o espírito de Bretton Woods.'
+            ]
+          },
+          {
+            id: 'c3-s13',
+            year: 'Síntese',
+            title: 'Conclusões',
+            summary: 'Eichengreen sintetiza o entreguerras em <strong>três transformações estruturais</strong>: (1) a crescente tensão entre objetivos domésticos (emprego, crescimento) e a defesa rígida da taxa de câmbio; (2) a natureza de <strong>Jano (bifronte)</strong> dos fluxos de capital, que são estabilizadores quando há credibilidade política, mas altamente destrutivos quando a credibilidade desaparece; e (3) o <strong>deslocamento do centro de gravidade</strong> econômico do Reino Unido para os Estados Unidos, cujas relações comerciais e financeiras ainda não estavam harmonizadas com o papel de estabilizador global.',
+            concepts: ['Conflito Interno vs. Externo', 'Natureza de Jano dos Fluxos de Capital', 'Transição Hegemônica (UK → EUA)'],
+            events: [
+              'Lição central para o pós-guerra: não era possível voltar ao padrão ouro clássico; o novo sistema precisaria de câmbio ajustável e controles de capital.'
+            ]
+          }
+        ]
+      },
+      {
+        id: 'cap-4',
+        number: 'Capítulo 4',
+        era: 'Era III · 1944–1973',
+        title: 'O sistema de Bretton Woods',
+        subtitle: 'A tentativa deliberada de conciliar estabilidade cambial e pleno emprego por meio de controles de capital, câmbio ajustável e cooperação institucional.',
+        subchapters: [
+          {
+            id: 'c4-s1',
+            year: '1941–1944',
+            title: 'O planejamento durante a guerra e suas conseqüências',
+            summary: 'Desenhado durante a Segunda Guerra, o Acordo de Bretton Woods (1944) resultou do duelo entre o <strong>Plano Keynes</strong> (britânico: <em>Clearing Union</em> generosa de US$ 26 bi, flexibilidade cambial e controles) e o <strong>Plano White</strong> (americano: Fundo limitado a US$ 5 bi e paridades fixas). O compromisso gerou a <strong>Tríade de Bretton Woods</strong>: câmbio fixo ajustável em caso de "desequilíbrio fundamental", controles de capital permitidos e o FMI (US$ 8,8 bi). Contudo, os EUA subestimaram drasticamente a escassez europeia de dólares no pós-guerra, e a não ratificação da Carta de Havana (OIC) deixou o comércio sem coordenação equivalente.',
+            concepts: ['Plano Keynes vs. Plano White', 'Tríade de Bretton Woods', 'Desequilíbrio Fundamental', 'Cláusula de Escassez de Divisas'],
+            events: [
+              'Ago/1941: Carta do Atlântico estabelece compromisso anglo-americano de comércio multilateral e pleno emprego.',
+              'Jul/1944: Conferência de Bretton Woods (New Hampshire) cria o FMI e o Banco Mundial.',
+              '1947–1950: EUA não ratificam a OIC (Carta de Havana); GATT avança lentamente.'
+            ],
+            diagram: DIAGRAMS.cap4_keynes_white
+          },
+          {
+            id: 'c4-s2',
+            year: '1947–1949',
+            title: 'A crise da libra esterlina e o realinhamento das moedas européias',
+            summary: 'Como condição para um empréstimo de US$ 3,75 bilhões em 1946, os EUA forçaram a Grã-Bretanha a restaurar a conversibilidade da libra em julho de 1947. Com £3,5 bilhões em saldos acumulados pela Commonwealth e apenas £0,5 bilhão em reservas, a tentativa durou apenas <strong>seis semanas desastrosas</strong> até ser suspensa em agosto. O choque convenceu Washington a aprovar o <strong>Plano Marshall (US$ 13 bilhões, 1948–51)</strong> e aceitar uma transição mais longa. Após a recessão americana de 1948–49 drenar reservas europeias, a Grã-Bretanha desvalorizou a libra em setembro de 1949, seguida por 23 países (desvalorização média europeia de 30%).',
+            concepts: ['Crise de Conversibilidade (1947)', 'Plano Marshall', 'Realinhamento Cambial de 1949'],
+            events: [
+              '15/Jul a 20/Ago/1947: Seis semanas de conversibilidade consomem o empréstimo americano à Grã-Bretanha.',
+              '1948–1951: Plano Marshall transfere US$ 13 bilhões à Europa — mais de 4× os direitos de saque europeus no FMI.',
+              '18/Set/1949: Desvalorização da libra desencadeia realinhamento geral das moedas europeias (~30%).'
+            ]
+          },
+          {
+            id: 'c4-s3',
+            year: '1950–1958',
+            title: 'A união européia de pagamentos',
+            summary: 'Como o comércio intra-europeu continuava sufocado por restrições bilaterais e as quotas do FMI eram insuficientes, a Europa Ocidental criou a <strong>União Européia de Pagamentos (UEP)</strong> em 1950. Operada pelo BIS na Basiléia e vinculada ao Código de Liberalização da OCEE, a UEP compensava saldos multilateralmente, oferecia créditos automáticos e coordenava cortes simultâneos de barreiras comerciais. Com o início da Guerra Fria, os EUA toleraram a discriminação comercial contra o dólar para fortalecer a Europa Ocidental — admitindo na prática a assimetria do sistema e esvaziando temporariamente o papel do FMI.',
+            concepts: ['União Européia de Pagamentos (UEP)', 'Código de Liberalização (OCEE)', 'Compensação Multilateral'],
+            events: [
+              '1950: Criação da UEP com capital de giro americano (US$ 350 milhões) e operação via BIS.',
+              '1950–1958: UEP mobiliza quase US$ 3 bi em créditos e permite a remoção coordenada de restrições comerciais.',
+              'Dez/1958: Encerramento da UEP com a restauração plena da conversibilidade em conta corrente.'
+            ],
+            diagram: DIAGRAMS.cap4_uep
+          },
+          {
+            id: 'c4-s4',
+            year: 'Anos 1950',
+            title: 'Problemas de pagamentos e controles seletivos',
+            summary: 'O contrato social do pós-guerra na Europa baseou-se na moderação salarial em troca de <strong>pleno emprego e Estado de bem-estar</strong>. Elevar juros drasticamente para corrigir déficits externos (como no padrão ouro) tornara-se politicamente inaceitável. Os governos recorreram a <strong>controles seletivos de importação e câmbio</strong> sob supervisão da UEP: a Alemanha superou a crise da Guerra da Coreia (1950) combinando controles temporários e ajuste fiscal de Ludwig Erhard; a Grã-Bretanha caiu no ciclo eleitoral de <em>"Stop-Go"</em>; e a França sofreu crises fiscais recorrentes (Indochina, Argélia) até a estabilização ortodoxa de De Gaulle e Antoine Pinay em 1958.',
+            concepts: ['Pacto Social do Pós-Guerra', 'Controles Seletivos', 'Política "Stop-Go" (Reino Unido)'],
+            events: [
+              '1950–51: Crise alemã na Guerra da Coreia resolvida com crédito especial de US$ 120 mi da UEP + ajuste fiscal.',
+              '1951–1957: Crises recorrentes do balanço de pagamentos francês ligadas a guerras coloniais e impasses da Quarta República.',
+              '1958: Charles De Gaulle e Antoine Pinay combinam austeridade fiscal e desvalorização de 17% do franco.'
+            ]
+          },
+          {
+            id: 'c4-s5',
+            year: '1958–1963',
+            title: 'Conversibilidade: problemas e progressos',
+            summary: 'A recuperação europeia e japonesa, aliada aos gastos militares e investimentos americanos no exterior, eliminou a "escassez de dólares" e permitiu restaurar a <strong>conversibilidade em conta corrente em 31 de dezembro de 1958</strong> (reconhecida sob o Artigo VIII em 1961). O sistema de Bretton Woods finalmente operava a pleno vapor — mas expôs duas falhas fatais: a <strong>"Questão De Gaulle"</strong> (crítica francesa ao <em>"privilégio exorbitante"</em> dos EUA de financiar déficits emitindo dólares) e o <strong>"Dilema de Triffin"</strong> (a oferta de liquidez global em dólares minava a própria conversibilidade do dólar em ouro).',
+            concepts: ['Conversibilidade (Artigo VIII)', 'Questão De Gaulle ("Privilégio Exorbitante")', 'Dilema de Triffin'],
+            events: [
+              '31/Dez/1958: Países da Europa Ocidental restauram a conversibilidade em conta corrente.',
+              '1960: Pela primeira vez, o passivo monetário externo dos EUA supera suas reservas de ouro (e junto a bancos centrais estrangeiros em 1963).'
+            ],
+            diagram: DIAGRAMS.cap4_triffin
+          },
+          {
+            id: 'c4-s6',
+            year: '1961–1970',
+            title: 'Direitos especiais de saque',
+            summary: 'Para aliviar o Dilema de Triffin sem depender de déficits americanos, debateu-se a criação de um ativo de reserva suplementar. O processo foi travado por disputas entre o <strong>G-10</strong> (países ricos) e o <strong>Terceiro Mundo</strong> (que exigia distribuição direta), além da ambivalência americana (temor de enfraquecer o dólar). Somente após De Gaulle ameaçar retornar ao padrão ouro e acelerar conversões de dólares em ouro, os EUA mudaram de posição em 1965. Os <strong>Direitos Especiais de Saque (DES)</strong> foram aprovados no Rio de Janeiro (1967), mas sua primeira alocação em 1970 chegou tarde demais — quando o problema já era excesso de liquidez e inflação.',
+            concepts: ['Direitos Especiais de Saque (DES)', 'Grupo dos Dez (G-10)', 'Acordo Geral sobre Empréstimos (GAB)'],
+            events: [
+              '1961: G-10 assina o Acordo Geral sobre Empréstimos (US$ 6 bilhões para o FMI).',
+              '1967: Reunião do FMI no Rio de Janeiro aprova a Primeira Emenda criando os DES.',
+              '1970: Primeira emissão de DES ocorre em meio a um ambiente já inflacionário.'
+            ]
+          },
+          {
+            id: 'c4-s7',
+            year: 'Anos 1960',
+            title: 'Redução nos controles e aumento na rigidez',
+            summary: 'Com a conversibilidade em conta corrente (1958), tornou-se muito mais fácil driblar controles de capital via superfaturamento comercial, corporações multinacionais e a ascensão do mercado de <strong>euromoedas (eurodólares)</strong> em Londres. Embora estudos (Obstfeld, Marston, Kouri &amp; Porter) mostrem que controles ainda davam alguma autonomia, o câmbio "ajustável" tornou-se <strong>extremamente rígido</strong>: admitir uma desvalorização virou confissão de fracasso político e gatilho de ataques especulativos. Bretton Woods só sobreviveu até 1971 graças a uma rede improvisada de cooperação via BIS, linhas de <em>swap</em> e o <strong>London Gold Pool (1961–1968)</strong>.',
+            concepts: ['Mercado de Eurodólares', 'Rigidez das Paridades', 'Acordos de Swap', 'London Gold Pool'],
+            events: [
+              'Mar/1961: Revalorização do marco alemão e florim holandês (5%) gera especulação; bancos centrais inauguram acordos de swap.',
+              'Nov/1961: Criação do London Gold Pool para manter o preço privado do ouro em US$ 35/onça.',
+              '1967–68: França abandona o Gold Pool; perdas de US$ 800 mi em ouro encerram o acordo e criam preço duplo para o ouro.'
+            ]
+          },
+          {
+            id: 'c4-s8',
+            year: '1961–1967',
+            title: 'A batalha em defesa da libra',
+            summary: 'Os EUA viam a libra esterlina como a <em>"primeira linha de defesa do dólar"</em> e organizaram sucessivos pacotes de resgate para evitar sua queda. A economia britânica crescia lentamente, com sindicalismo fragmentado e grande passivo externo. Após rejeitar a flutuação em 1952 (Plano ROBOT) e superar crises em 1961 e 1964, o governo trabalhista de <strong>Harold Wilson</strong> recusou-se a desvalorizar por temer inflação e o estigma político. O fechamento do Canal de Suez (Guerra dos Seis Dias, 1967) e dúvidas manifestadas pela França precipitaram a fuga de capitais: em <strong>18 de novembro de 1967</strong>, a libra foi desvalorizada em 17%.',
+            concepts: ['Primeira Linha de Defesa do Dólar', 'Plano ROBOT (1952)', 'Desvalorização da Libra (1967)'],
+            events: [
+              '1961 e 1964: Linhas de crédito internacionais e saques no FMI sustentam a paridade de US$ 2,80.',
+              '18/Nov/1967: Libra desvalorizada em 17%; FMI é avisado com apenas 1 hora de antecedência (reflexo da velocidade dos mercados).'
+            ]
+          },
+          {
+            id: 'c4-s9',
+            year: '1960–1973',
+            title: 'A crise do dólar',
+            summary: 'Após a corrida ao ouro de outubro de 1960, os governos Kennedy e Johnson recorreram a remendos (Imposto de Equalização de Juros, restrições a bancos, Bônus Roosa) para evitar alterar a paridade de US$ 35/onça. Mesmo com inflação americana menor que a média do G-7 nos anos 60, o crescimento mais rápido da Europa e do Japão (<strong>efeito Balassa-Samuelson</strong>) exigia que a inflação americana fosse ainda menor — algo inviável com os gastos da Guerra do Vietnã. Recusando-se a importar inflação, a Alemanha deixou o marco flutuar em maio de 1971. Em <strong>15 de agosto de 1971</strong>, Richard Nixon fechou o guichê do ouro. Após a breve tentativa do Acordo Smithsoniano (dez/1971), uma nova corrida ao dólar em <strong>fevereiro-março de 1973</strong> enterrou definitivamente Bretton Woods.',
+            concepts: ['Imposto de Equalização de Juros', 'Bônus Roosa', 'Efeito Balassa-Samuelson', 'Fechamento do Guichê do Ouro (1971)', 'Acordo Smithsoniano'],
+            events: [
+              'Out/1960: Ouro dispara para US$ 40 nos mercados privados às vésperas da eleição de Kennedy.',
+              'Ago/1971: Nixon suspende conversibilidade do dólar em ouro e impõe sobretaxa de 10% às importações.',
+              'Dez/1971: Acordo Smithsoniano desvaloriza o dólar em 8% e alarga bandas para ±2,25%, sem restaurar o ouro.',
+              'Fev–Mar/1973: Segunda desvalorização de 10% falha; Europa e Japão adotam câmbio flutuante.'
+            ],
+            diagram: DIAGRAMS.cap4_colapso
+          },
+          {
+            id: 'c4-s10',
+            year: 'Síntese',
+            title: 'As lições de Bretton Woods',
+            summary: 'Eichengreen extrai <strong>quatro lições fundamentais</strong> de Bretton Woods: (1) a inadequação dos mecanismos de ajuste torna extremamente difícil operar câmbio fixo ajustável sob alta mobilidade de capitais; (2) a sobrevivência do sistema por quase três décadas provou a força da cooperação internacional contínua; (3) essa cooperação floresceu porque integrava uma teia mais ampla de interesses políticos e de segurança (a aliança da Guerra Fria e a OTAN); e (4) mesmo ampla, a cooperação encontra limites inarredáveis em um ambiente politizado quando o apoio externo passa a ameaçar metas domésticas vitais (como o controle da inflação na Alemanha).',
+            concepts: ['Quatro Lições de Bretton Woods', 'Teia de Vantagens Políticas (Guerra Fria)', 'Limites da Cooperação'],
+            events: [
+              'A erosão dos controles de capital, combinada à politização das metas domésticas, tornou inevitável o fim das paridades fixas ajustáveis.'
+            ]
+          }
+        ]
+      },
+      {
+        id: 'cap-5',
+        number: 'Capítulo 5',
+        era: 'Era IV · 1973–1998',
+        title: 'Do câmbio flutuante à unificação monetária',
+        subtitle: 'Sem controles de capital e sob democracia consolidada, o mundo polariza-se entre a livre flutuação e a unificação monetária irrevogável.',
+        subchapters: [
+          {
+            id: 'c5-s1',
+            year: '1973–1979',
+            title: 'O câmbio flutuante na década de 70',
+            summary: 'A transição para o câmbio flutuante em 1973 foi um "salto no escuro". O Comitê dos Vinte (C-20) fracassou em restaurar paridades ajustáveis, e a <strong>Segunda Emenda do FMI</strong> (após a Cúpula de Rambouillet, 1975; em vigor em 1978) legalizou a flutuação e removeu o papel oficial do ouro. Em meio aos choques do petróleo (1973 e 1979), o problema não foi deflação, mas <strong>inflação</strong> e forte volatilidade cambial nominal e real (explicada pelo modelo de <em>overshooting</em> de Dornbusch). Ainda assim, intervenções coordenadas, controles residuais e a Cúpula de Bonn (1978) evitaram desalinhamentos tão extremos quanto os dos anos 1980.',
+            concepts: ['Segunda Emenda do FMI (1978)', 'Overshooting (Dornbusch)', 'Cúpula de Bonn (1978)'],
+            events: [
+              '1972–74: Fracasso do Comitê dos Vinte (C-20) em desenhar um novo regime de paridades fixas.',
+              '1975: Cúpula de Rambouillet substitui "sistema de taxas estáveis" por "sistema estável de taxas".',
+              'Jul/1978: Cúpula de Bonn coordena pacote anti-inflacionário dos EUA com estímulos fiscais da Alemanha e do Japão.'
+            ]
+          },
+          {
+            id: 'c5-s2',
+            year: '1979–1988',
+            title: 'Taxas de câmbio flutuantes na década de 80',
+            summary: 'Três marcos redefiniram os anos 1980: o SME na Europa, a maior flexibilidade do iene japonês e a guinada americana com <strong>Paul Volcker</strong> no Fed (1979) e <strong>Ronald Reagan</strong> na presidência (1980). A combinação de aperto monetário severo contra a inflação com déficits fiscais expansionistas disparou os juros americanos e provocou uma valorização gigantesca do dólar (1980–85), alimentada por uma bolha especulativa em 1984–85. Temendo uma onda protecionista no Congresso dos EUA, o G-5 firmou o <strong>Acordo do Plaza (1985)</strong> para derrubar o dólar e o <strong>Acordo do Louvre (1987)</strong> para estabilizá-lo — mas a falta de convergência fiscal limitou a coordenação.',
+            concepts: ['Choque Volcker + Reaganomics', 'Acordo do Plaza (1985)', 'Acordo do Louvre (1987)', 'Intervenção Esterilizada'],
+            events: [
+              '1980–1985: Dólar valoriza-se fortemente em termos reais, gerando enormes déficits comerciais americanos.',
+              'Set/1985: Acordo do Plaza (Nova York) promove "valorização ordeira das outras moedas"; dólar despenca ~40% contra o iene.',
+              'Fev/1987: Acordo do Louvre tenta fixar faixas de referência (~5%), abandonadas na prática após o crash bolsista de outubro de 1987.'
+            ],
+            diagram: DIAGRAMS.cap5_dolar80
+          },
+          {
+            id: 'c5-s3',
+            year: '1970–1978',
+            title: 'A Serpente',
+            summary: 'Ao contrário de EUA e Japão, as economias abertas e altamente integradas da Europa Ocidental não podiam tolerar oscilações cambiais selvagens, que ameaçavam o comércio intra-europeu e desorganizavam os preços comuns da <strong>Política Agrícola Comum (PAC)</strong>. Seguindo o Relatório Werner (1970), criaram em 1972 a <strong>"Serpente no Túnel"</strong> (margens de ±2,25% entre moedas europeias). Porém, os choques do petróleo e políticas fiscais divergentes expulsaram rapidamente a libra, a lira e o franco francês, reduzindo a Serpente a uma pequena "zona do marco alemão" com Alemanha, Benelux e Dinamarca.',
+            concepts: ['Política Agrícola Comum (PAC)', 'Relatório Werner (1970)', 'Serpente no Túnel (±2,25%)'],
+            events: [
+              '1970: Relatório Werner propõe união monetária europeia em etapas até 1980.',
+              'Abr/1972: Criação da Serpente Europeia; Reino Unido sai em semanas, seguido por Itália (1973) e França (1974 e 1976).'
+            ]
+          },
+          {
+            id: 'c5-s4',
+            year: '1979–1986',
+            title: 'O sistema monetário europeu',
+            summary: 'Lançado em 1979 por Helmut Schmidt (Alemanha) e Valéry Giscard d\'Estaing (França), o <strong>Sistema Monetário Europeu (SME)</strong> criou o Mecanismo de Taxas de Câmbio (ERM, com bandas de ±2,25% e ±6% para a Itália), a unidade monetária <strong>ECU</strong> e linhas de crédito mútuo. Entre 1979 e 1983, o sistema sobreviveu graças a realinhamentos frequentes protegidos por controles de capital. O ponto de inflexão foi a virada do presidente socialista francês <strong>François Mitterrand em 1983</strong>, que abandonou a reflação unilateral para adotar a austeridade (<em>franc fort</em>), consolidando o marco alemão e o Bundesbank como âncora anti-inflacionária europeia.',
+            concepts: ['Sistema Monetário Europeu (SME)', 'Mecanismo de Taxas de Câmbio (ERM)', 'ECU', 'Virada do "Franc Fort" (1983)'],
+            events: [
+              'Mar/1979: Entrada em vigor do SME (sem o Reino Unido inicialmente).',
+              '1979–1983: Sete realinhamentos cambiais acomodam diferenciais de inflação sem romper o sistema.',
+              '1983: Governo Mitterrand opta pela permanência no SME e convergência com a política monetária alemã.'
+            ]
+          },
+          {
+            id: 'c5-s5',
+            year: '1986–1992',
+            title: 'Ímpeto renovado de integração',
+            summary: 'O <strong>Ato Único Europeu (1986)</strong> selou o compromisso de completar o Mercado Único até 1992 — exigindo a <strong>abolição total dos controles de capital</strong> até julho de 1990. Sem controles, o "Novo SME" (1987–92) ficou sem realinhamentos e exposto ao <strong>Quarteto Inconsistente</strong> de Tommaso Padoa-Schioppa: livre comércio, capital livre, câmbio fixo e autonomia monetária nacional não podiam coexistir. A solução foi o <strong>Relatório Delors (1989)</strong> e o <strong>Tratado de Maastricht (1991)</strong>, traçando critérios de convergência fiscal/monetária e o cronograma para o Banco Central Europeu e a moeda única.',
+            concepts: ['Ato Único Europeu (1986)', 'Quarteto Inconsistente', 'Relatório Delors (1989)', 'Tratado de Maastricht (1991)'],
+            events: [
+              '1986: Assinatura do Ato Único Europeu; França e Itália eliminam controles de capital até 1990.',
+              '1987–1992: Cinco anos sem realinhamentos no "Novo SME", criando falsa sensação de estabilidade definitiva.',
+              'Dez/1991: Tratado de Maastricht define os critérios de convergência e a criação do Euro.'
+            ],
+            diagram: DIAGRAMS.cap5_europa
+          },
+          {
+            id: 'c5-s6',
+            year: '1992–1993',
+            title: 'A crise do SME',
+            summary: 'A <strong>Reunificação Alemã (1990)</strong> gerou um choque fiscal assimétrico maciço. Para conter a inflação, o Bundesbank elevou drasticamente as taxas de juros, forçando os demais membros do SME — que estavam em recessão e desemprego crescente — a acompanharem o aperto para defender suas paridades. Quando a Dinamarca rejeitou o Tratado de Maastricht em referendo (junho de 1992), semeou-se a dúvida sobre a união monetária. Em setembro de 1992, ataques especulativos forçaram a saída da Finlândia, Itália e Reino Unido (<strong>"Quarta-feira Negra"</strong>). Após novos ataques ao franco francês, em <strong>agosto de 1993</strong> as bandas do SME foram alargadas de ±2,25% para ±15%.',
+            concepts: ['Choque da Reunificação Alemã', 'Quarta-feira Negra (Set/1992)', 'Alargamento das Bandas (±15%)'],
+            events: [
+              'Jun/1992: Eleitores dinamarqueses rejeitam Maastricht, abalando a credibilidade da transição para o Euro.',
+              'Set/1992: Itália e Reino Unido abandonam o ERM após ataques especulativos massivos; Espanha e Portugal desvalorizam.',
+              'Ago/1993: Pressão sobre o franco francês força o alargamento das bandas do SME para ±15%.'
+            ]
+          },
+          {
+            id: 'c5-s7',
+            year: 'Teoria das Crises',
+            title: 'Compreensão da crise',
+            summary: 'A crise do SME gerou um marco na teoria econômica ao contrapor duas explicações. Os <strong>modelos de 1ª geração</strong> (Krugman) atribuíam a crise a fundamentos deteriorados — inflação acumulada e perda de competitividade em países como Itália e Espanha. Já os <strong>modelos de 2ª geração</strong> (Obstfeld) mostraram que países com fundamentos saudáveis (como a França e, em parte, o Reino Unido) sofreram <strong>profecias autorrealizáveis</strong>: os mercados sabiam que governos democráticos enfrentando desemprego elevado capitulariam se os juros subissem demais. O ataque especulativo elevou o custo da defesa até torná-la politicamente inviável — confirmando plenamente a tese central do livro.',
+            concepts: ['Modelos de 1ª Geração (Fundamentos)', 'Modelos de 2ª Geração (Profecias Autorrealizáveis)', 'Equilíbrios Múltiplos'],
+            events: [
+              'A crise de 1992–93 demonstrou que, sem controles de capital, paridades fixas ajustáveis tornam-se alvos irresistíveis para mercados líquidos.'
+            ],
+            diagram: DIAGRAMS.cap5_geracoes
+          },
+          {
+            id: 'c5-s8',
+            year: '1973–1995',
+            title: 'A experiência dos países em desenvolvimento',
+            summary: 'Com mercados financeiros rasos, histórico de inflação e medo de volatilidade cambial, a maioria dos países em desenvolvimento manteve regimes de câmbio fixo ou administrado protegidos por controles de capital. Após a reciclagem dos petrodólares e a <strong>Crise da Dívida de 1982</strong>, a liberalização financeira dos anos 1990 trouxe de volta capitais externos, mas minou a eficácia dos controles. A <strong>Crise "Tequila" do México (1994–95)</strong> — quando o país combinou âncora cambial, conta de capital aberta, déficits em conta corrente e dívida de curto prazo indexada ao dólar (<em>Tesobonos</em>) — expôs brutalmente a fragilidade dos regimes intermediários.',
+            concepts: ['Crise da Dívida (1982)', 'Liberalização Financeira', 'Crise "Tequila" (México, 1994–95)'],
+            events: [
+              '1984 → 1994: Proporção de países em desenvolvimento com câmbio fixo cai de 71,4% para 45,2%, enquanto flutuação independente salta de 5,6% para 30,3%.',
+              'Dez/1994: Colapso do peso mexicano e pacote de resgate liderado por EUA e FMI.'
+            ]
+          },
+          {
+            id: 'c5-s9',
+            year: '1997–1998',
+            title: 'A crise asiática',
+            summary: 'Adicionada na segunda edição (1998), a análise da <strong>Crise Asiática</strong> reforça o diagnóstico. As economias do Leste Asiático tinham fundamentos fiscais sólidos, mas operavam câmbios atrelados <em>de facto</em> ao dólar com liberalização financeira apressada e supervisão bancária frágil (risco moral e empréstimos politicamente direcionados). Bancos e empresas endividaram-se em dólares no curto prazo sem proteção cambial (<strong>descasamento de moedas e prazos</strong>). Quando o <em>baht</em> tailandês desvalorizou em julho de 1997, o pânico e o contágio devastaram Indonésia, Malásia, Filipinas e Coreia do Sul — destruindo balanços bancários e provando que âncoras cambiais sem controles são armadilhas.',
+            concepts: ['Descasamento de Moedas e Prazos', 'Risco Moral Bancário', 'Contágio Asiático (1997–98)'],
+            events: [
+              'Jul/1997: Tailândia abandona a âncora do baht; crise alastra-se rapidamente pelo Sudeste Asiático.',
+              'Final de 1997: Coreia do Sul sofre crise de liquidez externa e recorre a pacote recorde do FMI.'
+            ]
+          },
+          {
+            id: 'c5-s10',
+            year: 'Síntese',
+            title: 'Conclusões',
+            summary: 'As crises da década de 1990 (SME 1992–93, México 1994–95, Ásia 1997–98) selaram a <strong>"visão bipolar"</strong> (desaparecimento dos regimes intermediários): em um mundo de altíssima mobilidade de capitais e democracia de massas, paridades fixas ajustáveis e bandas cambiais são inerentemente instáveis. Restam apenas dois extremos viáveis: <strong>câmbio flutuante livre</strong> ou fixação institucionalmente irrevogável (<strong>União Monetária</strong> como na Europa ou <strong>Currency Board</strong> em casos muito específicos).',
+            concepts: ['Visão Bipolar (Hollowing Out)', 'Fim dos Regimes Intermediários', 'Currency Board vs. União Monetária'],
+            events: [
+              '1999: Onze países europeus fixam definitivamente suas moedas para lançar o Euro, enquanto a maioria das grandes economias migra para o câmbio flutuante.'
+            ]
+          }
+        ]
+      },
+      {
+        id: 'cap-6',
+        number: 'Capítulo 6',
+        era: 'Síntese de 150 Anos',
+        title: 'Conclusão',
+        subtitle: 'Por que a história importa — e a resposta de Eichengreen ao dilema de Karl Polanyi.',
+        subchapters: [
+          {
+            id: 'c6-s1',
+            year: '1850–2000',
+            title: 'Síntese histórica, dependência de trajetória e a resposta a Polanyi',
+            summary: 'Ao encerrar o arco de 150 anos, Eichengreen reafirma que o sistema monetário internacional é um processo histórico moldado por <strong>dependência de trajetória</strong> e <strong>externalidades em rede</strong> — razão pela qual o passado continua a restringir e moldar as escolhas do presente. Respondendo à inquietação de Karl Polanyi (1944), o autor conclui que <strong>democracia política e globalização financeira podem coexistir</strong>, desde que os governos abandonem a ilusão das paridades fixas ajustáveis: a compatibilização ocorre pela adoção do câmbio flutuante com credibilidade doméstica ou, onde houver integração política profunda como na Europa, pela unificação monetária completa.',
+            concepts: ['Síntese Histórica', 'Compatibilidade entre Democracia e Globalização', 'Âncora Monetária Alternativa'],
+            events: [
+              'As quatro eras demonstram que o regime cambial só sobrevive quando harmonizado com o grau de mobilidade de capitais e com as restrições políticas internas de sua época.'
+            ],
+            diagram: DIAGRAMS.cap6_matriz_final
+          }
+        ]
+      },
+      {
+        id: 'epilogo',
+        number: 'Epílogo Especial',
+        era: 'Prefácio à Edição Brasileira · Fev/2000',
+        title: 'O Brasil, a Crise de 1999 e o Dilema do Mercosul',
+        subtitle: 'Como a crise do Real confirmou a tese do livro e inaugurou o pioneirismo brasileiro nas Metas de Inflação.',
+        subchapters: [
+          {
+            id: 'ep-s1',
+            year: '1999–2000',
+            title: 'Do colapso da banda cambial às Metas de Inflação e o impasse com a Argentina',
+            summary: 'No Prefácio à edição brasileira (fevereiro de 2000), Eichengreen mostra que a crise cambial brasileira era previsível pela lógica do livro: no fim de 1998, o Brasil era uma das poucas grandes economias abertas tentando sustentar uma banda cambial flexível. Após os choques da Ásia (1997) e da Rússia (1998) e diante de restrições fiscais federativas (democracia política), o país perdeu reservas e adotou o <strong>câmbio flutuante em janeiro de 1999</strong>. O autor elogia o <strong>pioneirismo do Brasil</strong> em adotar um regime explícito de <strong>Metas para a Inflação</strong> como nova âncora de credibilidade, mas alerta para o dilema não resolvido no Mercosul: um Real flutuante ao lado de um Peso argentino rigidamente atrelado ao dólar (<em>Currency Board</em>) gera tensões comerciais graves e ameaça a integração regional.',
+            concepts: ['Crise do Real (Jan/1999)', 'Regime de Metas para a Inflação', 'Dilema do Mercosul (Real Flutuante vs. Currency Board Argentino)'],
+            events: [
+              'Ago/1998–Fev/1999: Após moratória russa, Brasil perde US$ 31,8 bilhões em reservas (~62% do saldo de 1997).',
+              '15/Jan/1999: Brasil abandona a banda cambial e adota taxa de câmbio flutuante.',
+              '1999: Implementação bem-sucedida das Metas de Inflação contém a fuga de capitais e a recessão, mas a desvalorização do Real abala as exportações argentinas.'
+            ]
+          }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 3. GLOSSÁRIO RÁPIDO DA OBRA
+    // =========================================================================
+    const GLOSSARY_TERMS = [
+      { term: 'Lei de Gresham', def: 'Princípio segundo o qual, em um sistema bimetálico com taxa legal fixa, o metal supervalorizado na casa da moeda ("dinheiro ruim") expulsa de circulação o metal subvalorizado ("dinheiro bom"), que é exportado ou fundido.' },
+      { term: 'Regras do Jogo', def: 'Expressão cunhada por Keynes (1925) para descrever o comportamento esperado dos bancos centrais sob o padrão ouro: elevar juros e contrair crédito ao perder ouro, e expandir ao ganhar ouro. Na prática, eram frequentemente violadas no curto prazo.' },
+      { term: 'Regra de Bagehot', def: 'Diretriz para bancos centrais atuando como emprestadores de última instância em crises bancárias: emprestar livremente contra boas garantias para conter o pânico interno, mas a taxas de juros punitivas para evitar fugas externas de ouro.' },
+      { term: 'Esterilização', def: 'Operação pela qual um banco central neutraliza o impacto de entradas ou saídas de reservas internacionais sobre a oferta monetária doméstica, comprando ou vendendo títulos internos em sentido oposto.' },
+      { term: 'Cláusula de Exceção', def: 'Mecanismo que permitia a um banco central suspender temporariamente a conversibilidade em ouro ou o piso de reservas durante choques externos verificáveis (guerras, crises exógenas), sem perder credibilidade de longo prazo.' },
+      { term: 'Dilema de Triffin', def: 'Contradição estrutural de Bretton Woods apontada por Robert Triffin: para suprir liquidez global em dólares, os EUA precisavam ter déficits externos; mas déficits contínuos faziam os passivos em dólar superarem o ouro americano, destruindo a confiança na paridade.' },
+      { term: 'Externalidades em Rede', def: 'Benefícios crescentes de adotar o mesmo padrão monetário utilizado pelos principais parceiros comerciais e financeiros, reduzindo custos de transação e gerando forte dependência de trajetória histórica (path dependence).' },
+      { term: 'Liberalismo Intrínseco', def: 'Conceito de John Ruggie adotado por Eichengreen para designar o pacto do século XX que combina economia de mercado com compromisso estatal de pleno emprego e proteção social — em contraste com o liberalismo clássico do século XIX.' },
+      { term: 'Efeito Balassa-Samuelson', def: 'Fenômeno pelo qual países em rápido crescimento de produtividade industrial (como Europa e Japão nos anos 1960) registram inflação mais alta no setor de serviços não-comerciáveis sem perder competitividade externa.' },
+      { term: 'Profecia Autorrealizável (2ª Geração)', def: 'Dinâmica em que um ataque especulativo contra uma taxa fixa força o governo a elevar tanto os juros que o custo político (desemprego, dívida) torna-se insuportável, provocando a desvalorização mesmo quando os fundamentos iniciais eram viáveis.' },
+      { term: 'Currency Board (Caixa de Conversão)', def: 'Regime de câmbio fixo rígido previsto em lei ou constituição, onde cada unidade de moeda doméstica é 100% lastreada em divisas estrangeiras, eliminando a autonomia monetária e a capacidade de atuar como emprestador de última instância.' },
+      { term: 'Metas de Inflação', def: 'Arcabouço alternativo para a política monetária sob câmbio flutuante (pioneiro no Brasil em 1999 entre emergentes), no qual o banco central anuncia alvos explícitos de inflação e modelos transparentes para ancorar expectativas.' }
+    ];
+
+    // =========================================================================
+    // 4. RENDERIZAÇÃO DA SIDEBAR, TIMELINE E GLOSSÁRIO
+    // =========================================================================
+    const sidebarListEl = document.getElementById('sidebarList');
+    const timelineContainerEl = document.getElementById('timelineContainer');
+    const glossaryContentEl = document.getElementById('glossaryContent');
+
+    function renderApp() {
+      let sidebarHTML = '';
+      let timelineHTML = '';
+
+      BOOK_DATA.forEach((chapter, chapIdx) => {
+        // --- Sidebar ---
+        sidebarHTML += `
+          <div>
+            <a href="#${chapter.id}" class="flex items-center justify-between px-2 py-1.5 rounded-lg font-serif font-bold text-base text-wine-900 hover:bg-wine-50 transition">
+              <span>${chapter.number}: ${chapter.title}</span>
+              <span class="text-[10px] font-sans font-semibold px-1.5 py-0.5 rounded bg-wine-50 text-wine-700">${chapter.subchapters.length}</span>
+            </a>
+            <ul class="mt-1 space-y-0.5 pl-2 border-l border-wine-100 ml-2">
+              ${chapter.subchapters.map((sub, sIdx) => `
+                <li>
+                  <button type="button" data-target="${sub.id}"
+                    class="nav-sub-item w-full text-left px-2.5 py-1.5 text-xs text-ink-muted hover:text-wine-900 hover:bg-wine-50/70 rounded-r-lg border-l-2 border-transparent transition leading-snug">
+                    <span class="font-semibold text-wine-700 mr-1">${chapIdx < 5 && chapter.subchapters.length > 1 ? (sIdx + 1) + '.' : '•'}</span>${sub.title}
+                  </button>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+        `;
+
+        // --- Timeline Vertical do Capítulo ---
+        const isFirstChapter = chapIdx === 0;
+        timelineHTML += `
+          <section id="${chapter.id}" class="scroll-mt-32">
+            <!-- Cabeçalho da Era / Capítulo -->
+            <div class="bg-white rounded-2xl border border-wine-100 p-5 sm:p-7 shadow-xs mb-6">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider bg-wine-900 text-white">${chapter.number}</span>
+                    <span class="text-xs font-medium text-wine-700">${chapter.era}</span>
+                  </div>
+                  <h2 class="font-serif font-bold text-2xl sm:text-4xl text-wine-900">${chapter.title}</h2>
+                  <p class="text-sm text-ink-muted mt-1.5 max-w-3xl leading-relaxed">${chapter.subtitle}</p>
+                </div>
+                ${chapter.subchapters.length > 1 ? `
+                  <div class="flex items-center gap-2 shrink-0 self-start sm:self-center">
+                    <button type="button" data-chapter-toggle="${chapter.id}" data-action="expand"
+                      class="px-3 py-1.5 rounded-lg text-xs font-medium border border-wine-200 text-wine-900 bg-paper hover:bg-wine-50 transition">
+                      Expandir todos
+                    </button>
+                    <button type="button" data-chapter-toggle="${chapter.id}" data-action="collapse"
+                      class="px-3 py-1.5 rounded-lg text-xs font-medium border border-wine-100 text-ink-muted bg-white hover:bg-wine-50 transition">
+                      Recolher
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- Trilho da Timeline com Subcapítulos -->
+            <div class="timeline-rail space-y-4 pl-0">
+              ${chapter.subchapters.map((sub, subIdx) => {
+                // Abrir por padrão o Cap 1, o primeiro subcapítulo de cada era e o Cap 6/Epílogo
+                const openByDefault = isFirstChapter || subIdx === 0;
+                return `
+                  <article id="${sub.id}" data-chapter="${chapter.id}" class="relative pl-12 scroll-mt-32">
+                    <!-- Nó circular na linha vertical -->
+                    <span class="timeline-dot absolute left-[11px] top-5 w-[18px] h-[18px] rounded-full border-[3px] border-white shadow-sm transition-colors duration-200 ${openByDefault ? 'bg-wine-800 ring-4 ring-wine-100' : 'bg-wine-200'}"></span>
+
+                    <!-- Card do Subcapítulo -->
+                    <div class="bg-white rounded-xl border ${openByDefault ? 'border-wine-200 shadow-sm' : 'border-wine-100'} transition-all duration-200 overflow-hidden">
+                      <button type="button" data-accordion-btn="${sub.id}" aria-expanded="${openByDefault}"
+                        class="w-full text-left px-5 py-4 flex items-center justify-between gap-4 hover:bg-paper/80 transition">
+                        <div class="min-w-0">
+                          <div class="flex flex-wrap items-center gap-2 mb-1">
+                            <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-wine-50 text-wine-800 border border-wine-100">
+                              ${sub.year}
+                            </span>
+                            ${sub.diagram ? `<span class="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-gold/15 text-wine-900">Contém Esquema</span>` : ''}
+                          </div>
+                          <h3 class="font-serif font-bold text-xl sm:text-2xl text-wine-900 leading-snug">
+                            ${chapter.subchapters.length > 1 ? `<span class="text-wine-700/70 mr-1.5">${subIdx + 1}.</span>` : ''}${sub.title}
+                          </h3>
+                        </div>
+                        <span class="accordion-chevron shrink-0 w-8 h-8 rounded-full bg-paper border border-wine-100 flex items-center justify-center text-wine-800 transition-transform duration-200 ${openByDefault ? 'rotate-180' : ''}">
+                          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </span>
+                      </button>
+
+                      <!-- Conteúdo Expansível -->
+                      <div id="content-${sub.id}" class="accordion-content ${openByDefault ? 'is-open' : ''}">
+                        <div class="accordion-inner">
+                          <div class="px-5 pb-6 pt-2 border-t border-wine-50">
+                            <!-- Síntese -->
+                            <p class="text-sm sm:text-[15px] text-ink leading-relaxed">
+                              ${sub.summary}
+                            </p>
+
+                            <!-- Grid: Conceitos-Chave e Marcos Históricos -->
+                            <div class="grid md:grid-cols-12 gap-4 mt-5">
+                              <!-- Conceitos-Chave -->
+                              <div class="md:col-span-5 bg-paper rounded-xl border border-wine-100 p-4">
+                                <h4 class="text-[11px] uppercase tracking-widest font-bold text-wine-800 mb-2.5">Conceitos-Chave</h4>
+                                <div class="flex flex-wrap gap-1.5">
+                                  ${sub.concepts.map(c => `
+                                    <span class="px-2.5 py-1 rounded-md text-xs font-medium bg-white border border-wine-100 text-wine-900">
+                                      ${c}
+                                    </span>
+                                  `).join('')}
+                                </div>
+                              </div>
+
+                              <!-- Marcos / Acontecimentos -->
+                              <div class="md:col-span-7 bg-paper rounded-xl border border-wine-100 p-4">
+                                <h4 class="text-[11px] uppercase tracking-widest font-bold text-wine-800 mb-2.5">Marcos &amp; Acontecimentos</h4>
+                                <ul class="space-y-1.5 text-xs sm:text-[13px] text-ink leading-relaxed">
+                                  ${sub.events.map(ev => `
+                                    <li class="flex items-start gap-2">
+                                      <span class="w-1.5 h-1.5 rounded-full bg-wine-700 mt-1.5 shrink-0"></span>
+                                      <span>${ev}</span>
+                                    </li>
+                                  `).join('')}
+                                </ul>
+                              </div>
+                            </div>
+
+                            <!-- Esquema Explicativo (se houver) -->
+                            ${sub.diagram ? sub.diagram : ''}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                `;
+              }).join('')}
+            </div>
+          </section>
+        `;
+      });
+
+      sidebarListEl.innerHTML = sidebarHTML;
+      timelineContainerEl.innerHTML = timelineHTML;
+
+      // Renderiza Glossário
+      glossaryContentEl.innerHTML = GLOSSARY_TERMS.map(item => `
+        <div class="bg-white rounded-xl border border-wine-100 p-4">
+          <h4 class="font-serif font-bold text-xl text-wine-900">${item.term}</h4>
+          <p class="text-sm text-ink mt-1 leading-relaxed">${item.def}</p>
+        </div>
+      `).join('');
+    }
+
+    // =========================================================================
+    // 5. CONTROLE DE ACORDEÃO, NAVEGAÇÃO SUAVE, MOBILE MENU E GLOSSÁRIO
+    // =========================================================================
+    function setSubchapterState(subId, shouldOpen) {
+      const article = document.getElementById(subId);
+      if (!article) return;
+      const content = document.getElementById(`content-${subId}`);
+      const btn = article.querySelector(`[data-accordion-btn="${subId}"]`);
+      const chevron = btn.querySelector('.accordion-chevron');
+      const dot = article.querySelector('.timeline-dot');
+      const card = btn.parentElement;
+
+      if (shouldOpen) {
+        content.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+        chevron.classList.add('rotate-180');
+        dot.classList.remove('bg-wine-200');
+        dot.classList.add('bg-wine-800', 'ring-4', 'ring-wine-100');
+        card.classList.remove('border-wine-100');
+        card.classList.add('border-wine-200', 'shadow-sm');
+      } else {
+        content.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+        chevron.classList.remove('rotate-180');
+        dot.classList.add('bg-wine-200');
+        dot.classList.remove('bg-wine-800', 'ring-4', 'ring-wine-100');
+        card.classList.add('border-wine-100');
+        card.classList.remove('border-wine-200', 'shadow-sm');
+      }
+    }
+
+    function highlightSidebarItem(subId) {
+      document.querySelectorAll('.nav-sub-item').forEach(el => {
+        el.classList.toggle('active-nav', el.dataset.target === subId);
+      });
+    }
+
+    function bindEvents() {
+      // Clique no cabeçalho de qualquer subcapítulo na timeline
+      timelineContainerEl.addEventListener('click', (e) => {
+        const accBtn = e.target.closest('[data-accordion-btn]');
+        if (accBtn) {
+          const subId = accBtn.dataset.accordionBtn;
+          const isOpen = accBtn.getAttribute('aria-expanded') === 'true';
+          setSubchapterState(subId, !isOpen);
+          if (!isOpen) highlightSidebarItem(subId);
+          return;
+        }
+
+        // Botões "Expandir todos / Recolher" por capítulo
+        const chapToggle = e.target.closest('[data-chapter-toggle]');
+        if (chapToggle) {
+          const chapId = chapToggle.dataset.chapterToggle;
+          const shouldOpen = chapToggle.dataset.action === 'expand';
+          document.querySelectorAll(`article[data-chapter="${chapId}"]`).forEach(art => {
+            setSubchapterState(art.id, shouldOpen);
+          });
+        }
+      });
+
+      // Clique em subcapítulo na barra lateral
+      sidebarListEl.addEventListener('click', (e) => {
+        const navBtn = e.target.closest('.nav-sub-item');
+        if (!navBtn) return;
+        const targetId = navBtn.dataset.target;
+        setSubchapterState(targetId, true);
+        highlightSidebarItem(targetId);
+        closeMobileSidebar();
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+
+      // Controle do menu lateral mobile
+      const sidebarNav = document.getElementById('sidebarNav');
+      const mobileOverlay = document.getElementById('mobileOverlay');
+      const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+
+      function openMobileSidebar() {
+        sidebarNav.classList.remove('-translate-x-full');
+        mobileOverlay.classList.remove('hidden');
+      }
+      function closeMobileSidebar() {
+        sidebarNav.classList.add('-translate-x-full');
+        mobileOverlay.classList.add('hidden');
+      }
+
+      mobileMenuBtn.addEventListener('click', openMobileSidebar);
+      closeSidebarBtn.addEventListener('click', closeMobileSidebar);
+      mobileOverlay.addEventListener('click', closeMobileSidebar);
+
+      // Fecha sidebar mobile ao clicar em link de capítulo na sidebar
+      sidebarListEl.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', closeMobileSidebar);
+      });
+
+      // Modal do Glossário
+      const glossaryModal = document.getElementById('glossaryModal');
+      const openGlossaryBtn = document.getElementById('openGlossaryBtn');
+      const closeGlossaryBtn = document.getElementById('closeGlossaryBtn');
+
+      function openGlossary() {
+        glossaryModal.classList.remove('hidden');
+        glossaryModal.classList.add('flex');
+      }
+      function closeGlossary() {
+        glossaryModal.classList.add('hidden');
+        glossaryModal.classList.remove('flex');
+      }
+
+      openGlossaryBtn.addEventListener('click', openGlossary);
+      closeGlossaryBtn.addEventListener('click', closeGlossary);
+      glossaryModal.addEventListener('click', (e) => {
+        if (e.target === glossaryModal) closeGlossary();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeGlossary();
+      });
+
+      // Destaque automático na barra lateral conforme rolagem (IntersectionObserver)
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            highlightSidebarItem(entry.target.id);
+          }
+        });
+      }, { rootMargin: '-25% 0px -65% 0px', threshold: 0 });
+
+      document.querySelectorAll('article[data-chapter]').forEach(art => observer.observe(art));
+    }
+
+    // Inicialização
+    renderApp();
+    bindEvents();
+  </script>
+</body>
+</html>
