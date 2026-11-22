@@ -1,0 +1,2516 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="dashboard">
+  <meta name="design-style" content="broadsheet">
+  <title>Obras de Karl Marx e Friedrich Engels — Guia Interativo e Mapa Conceitual</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,500..800;1,400..700&family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* Broadsheet surfaces */
+      --background: #f7f3eb;
+      --surface-container-low: #efe8da;
+      --surface-container: #e6ddcc;
+      --surface-container-high: #ddd2be;
+
+      /* Ink */
+      --on-surface: #1a1817;
+      --on-surface-variant: #4d4845;
+
+      /* Rules */
+      --outline: #33302e;
+      --outline-variant: #cdc3b2;
+
+      /* Broadsheet accents */
+      --primary: #990f3d;
+      --on-primary: #ffffff;
+      --primary-container: #f4dce2;
+      --on-primary-container: #6b0a2a;
+      --secondary: #0d7680;
+      --tertiary: #0f5499;
+      --error: #b3261e;
+      --on-error: #ffffff;
+
+      /* Data series & 5 Thematic Axes */
+      --data-1: #990f3d;
+      --data-2: #0d7680;
+      --data-3: #0f5499;
+      --data-4: #7a4b09;
+      --data-context: #bfb5a4;
+
+      --axis-1: #990f3d; /* Crítica Filosófica e Jurídica da Juventude */
+      --axis-2: #0f5499; /* Fundação do Materialismo Histórico */
+      --axis-3: #0b636b; /* Crítica da Economia Política e O Capital */
+      --axis-4: #7a4b09; /* Análises Históricas e Conjuntura Política */
+      --axis-5: #2d4a3e; /* Programa Proletário e Maturidade / Engels */
+
+      /* Semantic */
+      --positive: #2d6a4f;
+      --warning: #8a5300;
+      --focus: #990f3d;
+
+      /* Typography */
+      --font-headline: 'Bitter', serif;
+      --font-body: 'Source Serif 4', serif;
+      --font-label: 'Source Sans 3', sans-serif;
+
+      /* Dashboard / Explorer Type Scale */
+      --display-size: clamp(1.85rem, 1.35rem + 1.8vw, 2.75rem);
+      --headline-size: clamp(1.3rem, 1.1rem + 0.65vw, 1.65rem);
+      --subhead-size: clamp(1.0625rem, 1rem + 0.25vw, 1.22rem);
+      --body-size: clamp(0.95rem, 0.92rem + 0.15vw, 1.03rem);
+      --label-size: 0.75rem;
+
+      /* Broadsheet square shape */
+      --rounded: 0;
+      --rounded-lg: 0;
+      --rounded-full: 0;
+
+      /* Rules */
+      --rule-masthead: 3px double var(--on-surface);
+      --rule-ink: 1px solid var(--on-surface);
+      --rule-section: 2px solid var(--outline);
+      --rule-column: 1px solid var(--outline-variant);
+
+      /* Spacing scale */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.58;
+      font-optical-sizing: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+    button, input, select {
+      font-family: inherit;
+      border-radius: var(--rounded);
+    }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    .page-grid {
+      display: grid;
+      gap: var(--space-xl);
+      padding: var(--space-lg) var(--space-lg) var(--space-2xl);
+      max-width: 1320px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Broadsheet Typography */
+    h1, h2, h3, h4 {
+      font-family: var(--font-headline);
+      color: var(--on-surface);
+      margin: 0;
+    }
+    h1 {
+      font-weight: 800;
+      font-size: var(--display-size);
+      line-height: 1.07;
+      letter-spacing: -0.015em;
+    }
+    h2 {
+      font-weight: 700;
+      font-size: var(--headline-size);
+      line-height: 1.14;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-weight: 700;
+      font-size: var(--subhead-size);
+      line-height: 1.22;
+    }
+
+    .section-label {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      display: block;
+      margin-bottom: var(--space-xs);
+    }
+
+    .tag {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--secondary);
+      background: transparent;
+      padding: 0;
+    }
+
+    .standfirst {
+      font-family: var(--font-body);
+      font-size: clamp(1.05rem, 1rem + 0.35vw, 1.24rem);
+      line-height: 1.5;
+      color: var(--on-surface-variant);
+      max-width: 64ch;
+      margin: var(--space-sm) 0 0;
+    }
+
+    /* Masthead */
+    .masthead {
+      border-bottom: var(--rule-ink);
+      padding-bottom: var(--space-lg);
+    }
+    .masthead-line {
+      border-bottom: var(--rule-masthead);
+      padding-bottom: var(--space-sm);
+      margin-bottom: var(--space-md);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--on-surface);
+    }
+    .masthead-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    .masthead-nav button {
+      background: transparent;
+      border: 0;
+      padding: var(--space-xs) 0;
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+      min-height: 44px;
+    }
+    .masthead-nav button:hover {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Ruled KPI columns */
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      margin-top: var(--space-lg);
+      padding-top: var(--space-md);
+      border-top: var(--rule-column);
+    }
+    .columns > .kpi-col {
+      border-left: var(--rule-column);
+      padding: var(--space-xs) var(--space-lg);
+      background: transparent;
+    }
+    .columns > .kpi-col:first-child {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .kpi-label {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--space-xs);
+    }
+    .kpi-value {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+      line-height: 1.1;
+      font-variant-numeric: lining-nums tabular-nums;
+      color: var(--on-surface);
+    }
+    .kpi-note {
+      font-family: var(--font-label);
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+      margin-top: var(--space-xs);
+    }
+
+    /* Filter & Search Control Desk */
+    .controls-desk {
+      background: var(--surface-container-low);
+      border-top: var(--rule-section);
+      border-bottom: var(--rule-ink);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .controls-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) auto;
+      gap: var(--space-md);
+      align-items: end;
+    }
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field-label {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface);
+    }
+    .text-input, .select-input {
+      height: 44px;
+      padding: 0 var(--space-md);
+      background: var(--background);
+      border: 1px solid var(--outline);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      transition: border-color var(--dur-micro) var(--ease-out);
+    }
+    .select-input {
+      padding-right: var(--space-xl);
+      cursor: pointer;
+    }
+    .text-input:focus, .select-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      padding: 0 var(--space-md);
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      border: 1px solid var(--outline);
+      background: var(--background);
+      color: var(--on-surface);
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .btn:hover {
+      background: var(--surface-container);
+    }
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: var(--on-primary);
+    }
+    .btn-primary:hover {
+      background: var(--on-primary-container);
+      border-color: var(--on-primary-container);
+    }
+    .btn-secondary {
+      background: var(--surface-container-low);
+      border-color: var(--outline);
+      color: var(--on-surface);
+    }
+    .btn-secondary:hover {
+      background: var(--surface-container-high);
+    }
+    .btn-compact {
+      min-height: 36px;
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    /* Axis filter strip */
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+    .axis-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-md);
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: 0.8125rem;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .axis-btn:hover {
+      background: var(--surface-container);
+      border-color: var(--outline);
+    }
+    .axis-btn[aria-pressed="true"] {
+      background: var(--on-surface);
+      border-color: var(--on-surface);
+      color: var(--background);
+    }
+    .axis-swatch {
+      width: 10px;
+      height: 10px;
+      flex-shrink: 0;
+      display: inline-block;
+    }
+
+    /* Intellectual trajectory strip */
+    .trajectory-strip {
+      border-top: var(--rule-column);
+      padding-top: var(--space-md);
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .trajectory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .traj-btn {
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      border-top: 3px solid var(--outline);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .traj-btn:hover {
+      background: var(--surface-container);
+    }
+    .traj-btn[aria-pressed="true"] {
+      background: var(--primary-container);
+      border-color: var(--primary);
+      border-top-color: var(--primary);
+    }
+    .traj-title {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: 0.8125rem;
+      color: var(--on-surface);
+      line-height: 1.25;
+    }
+    .traj-meta {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+    }
+
+    /* Section Headers */
+    .section-open {
+      border-top: var(--rule-section);
+      padding-top: var(--space-md);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .section-header-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--rule-column);
+    }
+
+    /* Section I: Chronology Eras */
+    .timeline-eras {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      border-bottom: var(--rule-ink);
+    }
+    .era-col {
+      border-left: var(--rule-column);
+      padding: var(--space-sm) var(--space-md) var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .era-col:first-child {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .era-head {
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--rule-ink);
+    }
+    .era-years {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1.15rem;
+      font-variant-numeric: lining-nums tabular-nums;
+      color: var(--primary);
+    }
+    .era-title {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--on-surface);
+      margin-top: 2px;
+    }
+    .era-desc {
+      font-size: 0.85rem;
+      color: var(--on-surface-variant);
+      margin: var(--space-xs) 0 0;
+      line-height: 1.4;
+    }
+    .timeline-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .tl-item {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-left: 3px solid var(--outline-variant);
+      padding: var(--space-xs) var(--space-sm);
+      min-height: 44px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 54px minmax(0, 1fr);
+      gap: var(--space-xs);
+      align-items: start;
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), opacity var(--dur-short) var(--ease-out);
+    }
+    .tl-item:hover {
+      background: var(--surface-container-low);
+      border-color: var(--outline-variant);
+    }
+    .tl-item.is-selected {
+      background: var(--primary-container);
+      border-color: var(--primary);
+      border-left-width: 4px;
+    }
+    .tl-item.is-connected {
+      background: var(--surface-container-low);
+      border-color: var(--outline);
+    }
+    .tl-item.is-dimmed {
+      opacity: 0.3;
+    }
+    .tl-year {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: 0.75rem;
+      font-variant-numeric: lining-nums tabular-nums;
+      color: var(--on-surface-variant);
+      padding-top: 2px;
+    }
+    .tl-name {
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.88rem;
+      line-height: 1.3;
+      color: var(--on-surface);
+    }
+    .tl-author {
+      font-family: var(--font-label);
+      font-size: 0.72rem;
+      color: var(--on-surface-variant);
+      display: block;
+      margin-top: 1px;
+    }
+
+    /* Section II: Graph & Matrix Split */
+    .network-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .network-canvas-wrap {
+      border: var(--rule-ink);
+      background: var(--background);
+      padding: var(--space-md);
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+    .legend-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--rule-column);
+      font-family: var(--font-label);
+      font-size: 0.75rem;
+      color: var(--on-surface-variant);
+      align-items: center;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-line {
+      width: 22px;
+      height: 0;
+      border-top-width: 2px;
+      display: inline-block;
+    }
+    .svg-scroll-frame {
+      width: 100%;
+      overflow-x: auto;
+      min-height: 440px;
+    }
+    svg#connections-svg {
+      width: 100%;
+      min-width: 720px;
+      height: auto;
+      display: block;
+    }
+    .svg-node {
+      cursor: pointer;
+      transition: opacity var(--dur-short) var(--ease-out);
+    }
+    .svg-node:focus-visible rect {
+      stroke: var(--focus);
+      stroke-width: 3;
+    }
+    .svg-edge {
+      fill: none;
+      transition: opacity var(--dur-short) var(--ease-out), stroke-width var(--dur-short) var(--ease-out);
+    }
+
+    /* Matrix Table */
+    .matrix-wrap {
+      overflow-x: auto;
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .broadsheet-table {
+      width: 100%;
+      border-collapse: collapse;
+      border-top: var(--rule-ink);
+      border-bottom: var(--rule-ink);
+      font-size: 0.875rem;
+    }
+    .broadsheet-table th {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: left;
+      padding: var(--space-sm);
+      border-bottom: var(--rule-ink);
+      background: var(--background);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .broadsheet-table td {
+      padding: var(--space-sm);
+      border-bottom: var(--rule-column);
+      vertical-align: top;
+      line-height: 1.4;
+    }
+    .table-link-btn {
+      background: transparent;
+      border: 0;
+      padding: 0;
+      text-align: left;
+      color: var(--primary);
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+    .table-link-btn:hover {
+      text-decoration-thickness: 2px;
+    }
+
+    /* Adjacent Inspector Panel */
+    .inspector-panel {
+      background: var(--surface-container-low);
+      border-top: var(--rule-masthead);
+      border-bottom: var(--rule-ink);
+      border-left: var(--rule-column);
+      border-right: var(--rule-column);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .inspector-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+    }
+    .inspector-block {
+      border-top: var(--rule-column);
+      padding-top: var(--space-sm);
+    }
+    .inspector-block h4 {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--space-xs);
+    }
+    .inspector-block p {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+    .conn-chip-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .conn-jump {
+      text-align: left;
+      background: var(--background);
+      border: 1px solid var(--outline-variant);
+      padding: var(--space-xs) var(--space-sm);
+      min-height: 40px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+    }
+    .conn-jump:hover {
+      background: var(--surface-container);
+      border-color: var(--outline);
+    }
+    .conn-jump-type {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    /* Section III: 30-Work Catalog Cards */
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+    .work-card {
+      border-top: 3px solid var(--outline);
+      border-bottom: var(--rule-ink);
+      border-left: var(--rule-column);
+      border-right: var(--rule-column);
+      padding: var(--space-md) var(--space-md) var(--space-lg);
+      background: var(--background);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      transition: background-color var(--dur-micro) var(--ease-out);
+    }
+    .work-card.is-active-card {
+      background: var(--primary-container);
+    }
+    .work-card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+    .work-year-author {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--on-surface-variant);
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    .work-subtitle {
+      font-size: 0.875rem;
+      font-style: italic;
+      color: var(--on-surface-variant);
+      margin: 0;
+    }
+    .work-summary-short {
+      font-size: 0.94rem;
+      line-height: 1.52;
+      margin: 0;
+      color: var(--on-surface);
+    }
+    .work-details {
+      border-top: var(--rule-column);
+      padding-top: var(--space-sm);
+      margin-top: var(--space-xs);
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .work-details[hidden] {
+      display: none;
+    }
+    .detail-heading {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      margin: 0 0 2px;
+    }
+    .detail-text {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.54;
+    }
+    .concept-list {
+      font-family: var(--font-label);
+      font-size: 0.8125rem;
+      color: var(--on-surface-variant);
+      margin: 0;
+    }
+    .work-card-actions {
+      margin-top: auto;
+      padding-top: var(--space-sm);
+      border-top: var(--rule-column);
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    /* Empty State */
+    .empty-state {
+      border: var(--rule-ink);
+      padding: var(--space-xl);
+      background: var(--surface-container-low);
+      display: grid;
+      gap: var(--space-sm);
+      justify-items: start;
+    }
+
+    /* Modal Dossier */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 24, 23, 0.72);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-lg);
+      z-index: 100;
+    }
+    .modal-backdrop[hidden] {
+      display: none;
+    }
+    .modal-sheet {
+      background: var(--background);
+      border: 2px solid var(--on-surface);
+      border-top: 4px solid var(--primary);
+      max-width: 820px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: var(--space-xl);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: var(--space-md);
+      border-bottom: var(--rule-masthead);
+      padding-bottom: var(--space-md);
+    }
+    .modal-close {
+      min-width: 44px;
+      min-height: 44px;
+      background: var(--surface-container-low);
+      border: 1px solid var(--outline);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    .modal-close:hover {
+      background: var(--on-surface);
+      color: var(--background);
+    }
+    .modal-two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
+      border-top: var(--rule-column);
+      border-bottom: var(--rule-column);
+      padding-block: var(--space-md);
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      padding-top: var(--space-sm);
+      border-top: var(--rule-ink);
+    }
+
+    /* Footer */
+    .page-footer {
+      border-top: var(--rule-masthead);
+      padding-top: var(--space-md);
+      font-size: 0.85rem;
+      color: var(--on-surface-variant);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    /* Axis borders for cards & timeline */
+    .axis-border-1 { border-top-color: var(--axis-1); }
+    .axis-border-2 { border-top-color: var(--axis-2); }
+    .axis-border-3 { border-top-color: var(--axis-3); }
+    .axis-border-4 { border-top-color: var(--axis-4); }
+    .axis-border-5 { border-top-color: var(--axis-5); }
+
+    .tl-axis-1 { border-left-color: var(--axis-1); }
+    .tl-axis-2 { border-left-color: var(--axis-2); }
+    .tl-axis-3 { border-left-color: var(--axis-3); }
+    .tl-axis-4 { border-left-color: var(--axis-4); }
+    .tl-axis-5 { border-left-color: var(--axis-5); }
+
+    .swatch-1 { background-color: var(--axis-1); }
+    .swatch-2 { background-color: var(--axis-2); }
+    .swatch-3 { background-color: var(--axis-3); }
+    .swatch-4 { background-color: var(--axis-4); }
+    .swatch-5 { background-color: var(--axis-5); }
+
+    .axis-text-1 { color: var(--axis-1); }
+    .axis-text-2 { color: var(--axis-2); }
+    .axis-text-3 { color: var(--axis-3); }
+    .axis-text-4 { color: var(--axis-4); }
+    .axis-text-5 { color: var(--axis-5); }
+
+    /* Responsive Breakpoints */
+    @media (max-width: 1024px) {
+      .network-workspace {
+        grid-template-columns: 1fr;
+      }
+      .timeline-eras {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .era-col:nth-child(3) {
+        border-left: 0;
+        padding-left: 0;
+        border-top: var(--rule-column);
+      }
+      .era-col:nth-child(4) {
+        border-top: var(--rule-column);
+      }
+      .trajectory-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-md) var(--space-sm) var(--space-xl);
+        gap: var(--space-lg);
+      }
+      .columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--space-md) 0;
+      }
+      .columns > .kpi-col:nth-child(3) {
+        border-left: 0;
+        padding-left: 0;
+      }
+      .controls-top {
+        grid-template-columns: 1fr;
+      }
+      .timeline-eras,
+      .trajectory-grid,
+      .modal-two-col {
+        grid-template-columns: 1fr;
+      }
+      .era-col {
+        border-left: 0;
+        padding-left: 0;
+        border-top: var(--rule-column);
+      }
+      .era-col:first-child {
+        border-top: 0;
+      }
+      .modal-sheet {
+        padding: var(--space-md);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-grid">
+    <!-- MASTHEAD -->
+    <header class="masthead">
+      <div class="masthead-line">
+        <span>Acervo Karl Marx &amp; Friedrich Engels · Atlas Conceitual (1837–1895)</span>
+        <nav class="masthead-nav" aria-label="Navegação por seções">
+          <button type="button" onclick="scrollToSection('sec-cronologia')">I. Cronologia</button>
+          <button type="button" onclick="scrollToSection('sec-conexoes')">II. Grafo e Matriz</button>
+          <button type="button" onclick="scrollToSection('sec-catalogo')">III. Fichário (30 Obras)</button>
+        </nav>
+      </div>
+      <h1>O Edifício Teórico de Marx e Engels: Obra por Obra</h1>
+      <p class="standfirst">
+        Infográfico analítico e guia completo de leitura do acervo: o conteúdo conceitual de cada livro, sua função teórica, metodológica e política no desenvolvimento do marxismo e as linhas de ruptura e continuidade que conectam os cinco eixos da coleção.
+      </p>
+
+      <div class="columns" aria-label="Indicadores do conjunto da obra">
+        <div class="kpi-col">
+          <div class="kpi-label">Obras Mapeadas</div>
+          <div class="kpi-value">30</div>
+          <div class="kpi-note">26 volumes do acervo + 4 obras citadas</div>
+        </div>
+        <div class="kpi-col">
+          <div class="kpi-label">Arco Histórico</div>
+          <div class="kpi-value">58 anos</div>
+          <div class="kpi-note">1837–1895 · Berlim, Paris, Bruxelas, Londres</div>
+        </div>
+        <div class="kpi-col">
+          <div class="kpi-label">Vínculos Diretos</div>
+          <div class="kpi-value" id="kpi-edge-count">46</div>
+          <div class="kpi-note">Rupturas, fundações e desdobramentos</div>
+        </div>
+        <div class="kpi-col">
+          <div class="kpi-label">Obras Filtradas</div>
+          <div class="kpi-value" id="kpi-visible-count">30</div>
+          <div class="kpi-note" id="kpi-filter-status">Exibindo todo o acervo</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTROLS DESK -->
+    <section class="controls-desk" aria-label="Filtros e linhas de evolução">
+      <div class="controls-top">
+        <div class="field-group">
+          <label class="field-label" for="search-input">Buscar por título, conceito, ano ou interlocutor</label>
+          <input
+            type="search"
+            id="search-input"
+            class="text-input"
+            placeholder="Ex.: mais-valor, Hegel, Comuna, Proudhon, 1848, alienação…"
+            oninput="handleSearchChange(this.value)"
+          >
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="author-select">Filtrar por autoria</label>
+          <select id="author-select" class="select-input" onchange="handleAuthorChange(this.value)">
+            <option value="all">Todas as autorias (30 obras)</option>
+            <option value="Marx">Karl Marx (17 obras)</option>
+            <option value="Engels">Friedrich Engels (7 obras)</option>
+            <option value="Coautoria">Coautoria · Marx &amp; Engels / Kautsky (6 obras)</option>
+          </select>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="resetAllFilters()">Limpar filtros</button>
+      </div>
+
+      <div class="field-group">
+        <span class="field-label">Eixos Temáticos</span>
+        <div class="filter-row" id="axis-filters" role="group" aria-label="Filtros por eixo temático"></div>
+      </div>
+
+      <div class="trajectory-strip">
+        <span class="field-label">Linhas de Evolução Intelectual (selecione um arco para rastrear a sequência teórica)</span>
+        <div class="trajectory-grid" id="trajectory-filters" role="group" aria-label="Linhas de evolução intelectual"></div>
+      </div>
+    </section>
+
+    <!-- SECTION I: INTERACTIVE CHRONOLOGY -->
+    <section class="section-open" id="sec-cronologia" aria-labelledby="heading-cronologia">
+      <div class="section-header-row">
+        <div>
+          <span class="section-label">Seção I · Cronologia Interativa (1837–1895)</span>
+          <h2 id="heading-cronologia">Percurso Histórico em Quatro Fases Decisivas</h2>
+        </div>
+        <span class="tag">Clique em qualquer obra para destacar conexões e abrir o painel analítico</span>
+      </div>
+      <div class="timeline-eras" id="timeline-container"></div>
+    </section>
+
+    <!-- SECTION II: CONNECTION GRAPH & MATRIX + INSPECTOR -->
+    <section class="section-open" id="sec-conexoes" aria-labelledby="heading-conexoes">
+      <div class="section-header-row">
+        <div>
+          <span class="section-label">Seção II · Rede de Inter-relações Conceituais</span>
+          <h2 id="heading-conexoes">Como as Obras se Conectam, se Superam e se Desdobram</h2>
+        </div>
+        <div class="filter-row" role="group" aria-label="Alternar visualização de rede">
+          <button type="button" id="btn-view-graph" class="btn btn-primary btn-compact" onclick="setNetworkView('graph')">Grafo Cronológico-Temático</button>
+          <button type="button" id="btn-view-matrix" class="btn btn-secondary btn-compact" onclick="setNetworkView('matrix')">Matriz de Vínculos</button>
+        </div>
+      </div>
+
+      <div class="network-workspace">
+        <div class="network-canvas-wrap">
+          <div class="legend-bar">
+            <span class="field-label">Tipos de vínculo:</span>
+            <span class="legend-item">
+              <span class="legend-line" style="border-top-style: dashed; border-top-color: var(--axis-1);"></span>
+              Ruptura / Acerto de contas
+            </span>
+            <span class="legend-item">
+              <span class="legend-line" style="border-top-style: solid; border-top-color: var(--axis-2);"></span>
+              Fundação / Continuidade
+            </span>
+            <span class="legend-item">
+              <span class="legend-line" style="border-top-style: solid; border-top-color: var(--axis-3);"></span>
+              Aprofundamento Econômico
+            </span>
+            <span class="legend-item">
+              <span class="legend-line" style="border-top-style: solid; border-top-color: var(--axis-4);"></span>
+              Conjuntura / Programa
+            </span>
+          </div>
+
+          <div id="graph-view" class="svg-scroll-frame">
+            <svg id="connections-svg" viewBox="0 0 980 510" role="img" aria-label="Grafo interativo de conexões entre as 30 obras de Marx e Engels"></svg>
+          </div>
+
+          <div id="matrix-view" class="matrix-wrap" hidden>
+            <table class="broadsheet-table">
+              <thead>
+                <tr>
+                  <th>Obra de Origem</th>
+                  <th>Tipo de Conexão</th>
+                  <th>Obra de Destino</th>
+                  <th>Nexo Teórico / Histórico</th>
+                </tr>
+              </thead>
+              <tbody id="matrix-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <aside class="inspector-panel" id="connection-inspector" aria-live="polite">
+          <!-- Populated dynamically -->
+        </aside>
+      </div>
+    </section>
+
+    <!-- SECTION III: FULL 30-WORK CATALOG -->
+    <section class="section-open" id="sec-catalogo" aria-labelledby="heading-catalogo">
+      <div class="section-header-row">
+        <div>
+          <span class="section-label">Seção III · Fichamento Obra por Obra</span>
+          <h2 id="heading-catalogo">Conjunto Completo das 30 Obras</h2>
+        </div>
+        <div class="filter-row">
+          <span class="tag" id="catalog-count-label">30 obras exibidas</span>
+          <button type="button" class="btn btn-secondary btn-compact" onclick="toggleAllCards(true)">Expandir todas</button>
+          <button type="button" class="btn btn-secondary btn-compact" onclick="toggleAllCards(false)">Recolher todas</button>
+        </div>
+      </div>
+
+      <div id="works-grid" class="works-grid"></div>
+      <div id="works-empty" class="empty-state" hidden>
+        <h3>Nenhuma obra corresponde aos filtros ativos</h3>
+        <p>Nenhum título, conceito ou interlocutor no acervo coincide com a combinação atual de busca, eixo temático e autoria.</p>
+        <button type="button" class="btn btn-primary" onclick="resetAllFilters()">Restaurar todas as 30 obras</button>
+      </div>
+    </section>
+
+    <footer class="page-footer">
+      <span>Fontes: Acervo Boitempo Editorial da Coleção Marx-Engels (26 volumes em arquivo e 4 obras complementares referenciadas em suas cronologias e aparatos críticos).</span>
+      <span>Atlas Conceitual · Materialismo Histórico, Crítica da Economia Política e Conjuntura.</span>
+    </footer>
+  </div>
+
+  <!-- READING MODAL -->
+  <div id="work-modal" class="modal-backdrop" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="handleBackdropClick(event)">
+    <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-head">
+        <div>
+          <div class="inspector-meta" id="modal-meta"></div>
+          <h2 id="modal-title"></h2>
+          <p class="work-subtitle" id="modal-subtitle"></p>
+        </div>
+        <button type="button" class="modal-close" aria-label="Fechar fichamento" onclick="closeModal()">✕</button>
+      </div>
+
+      <div id="modal-body-content"></div>
+
+      <div class="modal-footer">
+        <div class="filter-row">
+          <button type="button" class="btn btn-secondary btn-compact" id="modal-prev-btn" onclick="stepModal(-1)">← Obra anterior</button>
+          <button type="button" class="btn btn-secondary btn-compact" id="modal-next-btn" onclick="stepModal(1)">Próxima obra →</button>
+        </div>
+        <button type="button" class="btn btn-primary btn-compact" onclick="closeModal()">Voltar ao catálogo</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const AXES = [
+      {
+        id: 1,
+        short: `Crítica Filosófica e Jurídica`,
+        full: `Eixo I · Crítica Filosófica e Jurídica da Juventude`,
+        desc: `Da filosofia da autoconsciência à descoberta da sociedade civil e do trabalho estranhado (1837–1844).`
+      },
+      {
+        id: 2,
+        short: `Materialismo Histórico`,
+        full: `Eixo II · Fundação do Materialismo Histórico`,
+        desc: `Acerto de contas com os jovens hegelianos, síntese com a economia inglesa e programa comunista (1844–1848).`
+      },
+      {
+        id: 3,
+        short: `Economia Política e O Capital`,
+        full: `Eixo III · Crítica da Economia Política e O Capital`,
+        desc: `Investigação sistemática do valor, mais-valor, circulação, lucro e crises do capital (1857–1894).`
+      },
+      {
+        id: 4,
+        short: `História e Conjuntura Política`,
+        full: `Eixo IV · Análises Históricas e Conjuntura Política`,
+        desc: `Revoluções de 1848, bonapartismo, Guerra Civil Americana e a Comuna de Paris (1848–1871).`
+      },
+      {
+        id: 5,
+        short: `Programa e Maturidade / Engels`,
+        full: `Eixo V · Programa Proletário e Textos de Maturidade / Engels`,
+        desc: `Crítica programática, dialética da natureza, família e Estado, questão agrária e sistematização (1872–1894).`
+      }
+    ];
+
+    const ERAS = [
+      {
+        id: `era1`,
+        years: `1837–1844`,
+        title: `Ruptura Filosófica e Descoberta do Trabalho`,
+        desc: `Berlim, Colônia e Paris: do idealismo jovem-hegeliano à crítica do Estado, do direito e do trabalho estranhado.`
+      },
+      {
+        id: `era2`,
+        years: `1845–1852`,
+        title: `Materialismo Histórico e Revoluções de 1848`,
+        desc: `Bruxelas, Colônia e Londres: fundação da concepção materialista da história, Manifesto e balanço da derrota de 1848.`
+      },
+      {
+        id: `era3`,
+        years: `1857–1871`,
+        title: `Anatomia do Capital e Comuna de Paris`,
+        desc: `Museu Britânico e Primeira Internacional: dos Grundrisse ao Livro I d’O capital e à experiência operária de 1871.`
+      },
+      {
+        id: `era4`,
+        years: `1872–1895`,
+        title: `Programa, Ciência e Edição Póstuma`,
+        desc: `Gotha, Rússia e legado de Engels: combate ao lassallismo, dialética da natureza, etnologia e Livros II e III.`
+      }
+    ];
+
+    const TRAJECTORIES = [
+      {
+        id: `idealismo`,
+        title: `1. Ruptura com o Idealismo e Jovens Hegelianos`,
+        meta: `1837–1846 · 7 obras`,
+        ids: [`esc-felix`, `democrito-epicuro`, `despossuidos`, `critica-hegel`, `questao-judaica`, `sagrada-familia`, `ideologia-alema`]
+      },
+      {
+        id: `materialismo`,
+        title: `2. Transição para o Materialismo Histórico`,
+        meta: `1843–1848 · 7 obras`,
+        ids: [`critica-hegel`, `esboco-economia`, `manuscritos-1844`, `situacao-inglaterra`, `ideologia-alema`, `miseria-filosofia`, `manifesto-comunista`]
+      },
+      {
+        id: `economia`,
+        title: `3. Aprofundamento da Crítica da Economia Política`,
+        meta: `1844–1894 · 8 obras`,
+        ids: [`esboco-economia`, `manuscritos-1844`, `miseria-filosofia`, `grundrisse`, `capital-1`, `ultimos-escritos`, `capital-2`, `capital-3`]
+      },
+      {
+        id: `conjuntura`,
+        title: `4. Conjuntura Histórica e Programa Proletário`,
+        meta: `1848–1894 · 10 obras`,
+        ids: [`manifesto-comunista`, `lutas-alemanha`, `lutas-franca`, `18-brumario`, `guerra-civil-eua`, `guerra-civil-franca`, `questao-moradia`, `critica-gotha`, `lutas-russia`, `socialismo-juridico`]
+      }
+    ];
+
+    const WORKS = [
+      {
+        id: `esc-felix`,
+        order: 1,
+        yearNum: 1837,
+        yearLabel: `1837`,
+        era: `era1`,
+        axis: 1,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Escritos ficcionais: Escorpião e Félix / Oulanem`,
+        shortTitle: `Escritos ficcionais`,
+        subtitle: `Romance humorístico inacabado e tragédia dramática da juventude berlinense`,
+        sourceStatus: `Obra da coleção referenciada no catálogo do acervo`,
+        what: `Reúne os experimentos literários do jovem Marx universitário em Berlim: o romance satírico e fragmentário “Escorpião e Félix”, de verve sterniana contra o filistinismo burguês e jurídico, e a peça trágica “Oulanem”, marcada pela tensão romântica entre finitude, destino e negação do mundo.`,
+        purpose: `Serve para iluminar a pré-história intelectual de Marx antes de sua adesão sistemática a Hegel. Demonstra a precocidade de sua veia irônica e polêmica — que reaparecerá como estilo mordaz em “A sagrada família” e “O 18 de brumário” — e o esgotamento interno do romantismo subjetivo diante das contradições reais.`,
+        concepts: `Sátira ao filistinismo · Tensão romântica · Crítica literária juvenil · Pré-história do jovem Marx`,
+        interlocutors: `Laurence Sterne, E. T. A. Hoffmann, Goethe, Romantismo alemão`
+      },
+      {
+        id: `democrito-epicuro`,
+        order: 2,
+        yearNum: 1841,
+        yearLabel: `1841`,
+        era: `era1`,
+        axis: 1,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Diferença entre a filosofia da natureza de Demócrito e a de Epicuro`,
+        shortTitle: `Demócrito e Epicuro`,
+        subtitle: `Tese de doutorado defendida na Universidade de Iena`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Estudo filológico e filosófico que contrapõe dois sistemas atomistas antigos tidos como idênticos: enquanto Demócrito concebe o movimento dos átomos como necessidade mecânica cega, Epicuro introduz o desvio (clinamen) da linha reta, fundando a possibilidade da contingência, da liberdade humana e da autoconsciência na própria natureza material.`,
+        purpose: `Inaugura o percurso filosófico de Marx dentro da esquerda hegeliana. Serve para defender a autonomia crítica da filosofia contra a teologia e o determinismo passivo, formulando a exigência de que a filosofia se volte para o mundo exterior (“tornar-se mundo”) em vez de contemplá-lo.`,
+        concepts: `Clinamen (desvio) · Autoconsciência · Determinismo vs. liberdade · Práxis filosófica inicial`,
+        interlocutors: `Demócrito, Epicuro, Lucrécio, Hegel, Bruno Bauer`
+      },
+      {
+        id: `despossuidos`,
+        order: 3,
+        yearNum: 1842,
+        yearLabel: `1842`,
+        era: `era1`,
+        axis: 1,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Os despossuídos: debates sobre a lei referente ao furto de madeira`,
+        shortTitle: `Os despossuídos`,
+        subtitle: `Artigos publicados na Gazeta Renana (Rheinische Zeitung)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Série de reportagens e análises políticas sobre as sessões da 6ª Dieta da Província Renana, que transformavam o antigo direito consuetudinário dos camponeses pobres de recolher galhos secos nas florestas em crime de “furto”, submetendo a justiça pública ao interesse privado dos proprietários de terras.`,
+        purpose: `Representa o ponto de viragem empírico de Marx, conforme ele mesmo recordaria em 1859: ao enfrentar pela primeira vez “os chamados interesses materiais”, percebe que a lei e o Estado não encarnam a razão universal hegeliana, mas defendem privilégios patrimoniais particulares contra a massa despossuída.`,
+        concepts: `Direito consuetudinário vs. propriedade privada · Privatização do Estado · Interesses materiais · Censura prussiana`,
+        interlocutors: `Dieta Renana, Escola Histórica do Direito, Hegel`
+      },
+      {
+        id: `critica-hegel`,
+        order: 4,
+        yearNum: 1843,
+        yearLabel: `1843–1844`,
+        era: `era1`,
+        axis: 1,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Crítica da filosofia do direito de Hegel (e Introdução de 1844)`,
+        shortTitle: `Crítica do direito de Hegel`,
+        subtitle: `Manuscrito de Kreuznach (§§ 261–313) e artigo dos Anais Franco-Alemães`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `No manuscrito de 1843, Marx analisa parágrafo por parágrafo a teoria hegeliana do Estado e da monarquia constitucional prussiana, desmascarando a inversão especulativa que transforma a Ideia em sujeito e a sociedade civil e a família em meros predicados. Na “Introdução” de 1844, ultrapassa a democracia política formal rumo à revolução social e identifica o proletariado como classe universal portadora da emancipação humana.`,
+        purpose: `Serve como marco decisivo na estrada para o materialismo histórico: prova que é a sociedade civil que funda o Estado (e não o contrário), rompe com a conciliação liberal-monárquica e formula a célebre síntese entre as “armas da crítica” (teoria radical) e a “crítica das armas” (força material da classe trabalhadora).`,
+        concepts: `Inversão sujeito-predicado · Sociedade civil vs. Estado · Verdadeira democracia · Emancipação humana · Proletariado`,
+        interlocutors: `G. W. F. Hegel, Ludwig Feuerbach, Rousseau, Arnold Ruge`
+      },
+      {
+        id: `questao-judaica`,
+        order: 5,
+        yearNum: 1843,
+        yearLabel: `1843–1844`,
+        era: `era1`,
+        axis: 1,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Sobre a questão judaica`,
+        shortTitle: `Sobre a questão judaica`,
+        subtitle: `Publicado nos Anais Franco-Alemães (Paris, 1844)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Polêmica contra dois ensaios de Bruno Bauer sobre o pedido de igualdade civil dos judeus na Prússia. Marx mostra que o Estado político moderno pode se emancipar da religião (laicização) mantendo o homem escravizado pela religião e pelo egoísmo na sociedade civil, distinguindo rigorosamente “emancipação política” (direitos do cidadão e do homem burguês) de “emancipação humana”.`,
+        purpose: `Serve para criticar os limites estruturais do liberalismo político e dos direitos individuais burgueses. Revela que a cidadania abstrata iguala os indivíduos no céu do Estado apenas para deixá-los desiguais, atomizados e submetidos ao poder do dinheiro e da propriedade privada na vida real.`,
+        concepts: `Emancipação política vs. emancipação humana · Estado laico · Cidadão vs. burguês · Alienação religiosa e política`,
+        interlocutors: `Bruno Bauer, Declaração dos Direitos do Homem (1789), Feuerbach`
+      },
+      {
+        id: `esboco-economia`,
+        order: 6,
+        yearNum: 1844,
+        yearLabel: `1844`,
+        era: `era1`,
+        axis: 2,
+        authorGroup: `Engels`,
+        authorLabel: `Friedrich Engels`,
+        title: `Esboço para uma crítica da economia política`,
+        shortTitle: `Esboço de economia política`,
+        subtitle: `Ensaio publicado nos Anais Franco-Alemães (acompanhado de textos de juventude)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Escrito por Engels aos 23 anos a partir de sua vivência em Manchester, submete as categorias da economia política clássica — valor, comércio, propriedade privada, renda, capital, trabalho, concorrência e crises — a uma crítica dialética que expõe a imoralidade estrutural e as contradições inerentes ao sistema mercantil.`,
+        purpose: `É o documento inaugural da crítica marxista da economia política (“ensaio genial”, segundo Marx). Serve para deslocar o foco da crítica filosófica alemã para a anatomia econômica da sociedade burguesa, demonstrando que as crises comerciais periódicas e o empobrecimento operário decorrem das próprias leis da propriedade privada e da concorrência.`,
+        concepts: `Crítica da propriedade privada · Concorrência e monopólio · Crises periódicas · Antagonismo capital-trabalho`,
+        interlocutors: `Adam Smith, David Ricardo, J.-B. Say, Thomas Malthus, Proudhon`
+      },
+      {
+        id: `manuscritos-1844`,
+        order: 7,
+        yearNum: 1844,
+        yearLabel: `1844`,
+        era: `era1`,
+        axis: 1,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Manuscritos econômico-filosóficos`,
+        shortTitle: `Manuscritos de 1844`,
+        subtitle: `Os Manuscritos de Paris (Cadernos I, II e III)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Síntese inacabada das primeiras leituras de economia política de Marx articuladas à crítica da filosofia hegeliana. No núcleo do texto, Marx elabora a teoria do “trabalho estranhado” (Entfremdung) sob quatro aspectos: estranhamento diante do produto do trabalho, do próprio ato produtivo, do ser genérico humano e dos outros seres humanos.`,
+        purpose: `Serve como ponte fundadora entre filosofia e economia política. Estabelece o trabalho como atividade vital criadora do ser social e da consciência humana, localizando na propriedade privada e no assalariamento — e não na religião ou no pensamento puro — a raiz objetiva da alienação e o ponto de partida para o comunismo como superação positiva da propriedade privada.`,
+        concepts: `Trabalho estranhado (Entfremdung) · Salário, lucro e renda · Ser genérico · Comunismo como humanismo real`,
+        interlocutors: `Adam Smith, David Ricardo, J.-B. Say, Hegel, Feuerbach, Engels`
+      },
+      {
+        id: `situacao-inglaterra`,
+        order: 8,
+        yearNum: 1845,
+        yearLabel: `1845`,
+        era: `era2`,
+        axis: 2,
+        authorGroup: `Engels`,
+        authorLabel: `Friedrich Engels`,
+        title: `A situação da classe trabalhadora na Inglaterra`,
+        shortTitle: `Classe trabalhadora na Inglaterra`,
+        subtitle: `Investigação empírica sobre a Revolução Industrial e o operariado inglês`,
+        sourceStatus: `Obra da coleção referenciada nos textos do acervo`,
+        what: `Baseado em observação direta de bairros operários, relatórios médicos e inquéritos parlamentares em Manchester e Londres, Engels reconstitui a transformação da Inglaterra agrária em potência industrial, descrevendo a jornada extenuante, o trabalho infantil e feminino, as doenças urbanas, a formação do exército de reserva e a organização sindical e cartista.`,
+        purpose: `Serve como a primeira demonstração empírico-histórica de que a classe operária moderna não é apenas uma massa sofredora passiva, mas o produto necessário da grande indústria e a força social capaz de subvertê-la. Forneceu a Marx a compreensão concreta do funcionamento do capitalismo fabril.`,
+        concepts: `Revolução Industrial · Proletariado fabril · Cartismo e sindicatos · Exército industrial de reserva · Segregação urbana`,
+        interlocutors: `Movimento Cartista, relatórios de inspetores de fábrica britânicos, Robert Owen`
+      },
+      {
+        id: `sagrada-familia`,
+        order: 9,
+        yearNum: 1845,
+        yearLabel: `1845`,
+        era: `era2`,
+        axis: 2,
+        authorGroup: `Coautoria`,
+        authorLabel: `Karl Marx e Friedrich Engels`,
+        title: `A sagrada família, ou A crítica da crítica crítica`,
+        shortTitle: `A sagrada família`,
+        subtitle: `Contra Bruno Bauer e consortes (primeira obra em coautoria)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Polêmica satírica contra a “Crítica crítica” de Bruno Bauer e dos jovens hegelianos de Berlim. Desmonta o procedimento da “construção especulativa” idealista (que transforma “a fruta” em substância e as maçãs e peras reais em suas encarnações) e defende o materialismo francês e inglês como herança revolucionária ligada ao socialismo moderno.`,
+        purpose: `Marca o início da colaboração vitalícia entre Marx e Engels e o rompimento público definitivo com a esquerda hegeliana. Serve para afirmar que as ideias jamais realizam nada por si mesmas: a transformação histórica depende da ação prática das massas e do proletariado impulsionado por suas condições reais de existência.`,
+        concepts: `Crítica à construção especulativa · Espírito vs. massa · Materialismo francês · Valorização inicial de Proudhon`,
+        interlocutors: `Bruno Bauer, Edgar Bauer, Franz Szeliga, Eugène Sue, Hegel, Proudhon`
+      },
+      {
+        id: `ideologia-alema`,
+        order: 10,
+        yearNum: 1845,
+        yearLabel: `1845–1846`,
+        era: `era2`,
+        axis: 2,
+        authorGroup: `Coautoria`,
+        authorLabel: `Karl Marx e Friedrich Engels`,
+        title: `A ideologia alemã (com as Teses sobre Feuerbach)`,
+        shortTitle: `A ideologia alemã`,
+        subtitle: `Crítica a Feuerbach, B. Bauer, Max Stirner e ao “socialismo verdadeiro” (2 tomos no acervo)`,
+        sourceStatus: `Arquivo integral no acervo (presente em 2 arquivos)`,
+        what: `Obra monumental que acerta contas com toda a consciência filosófica pós-hegeliana (o “Concílio de Leipzig” de Bauer e Stirner, o materialismo contemplativo de Feuerbach e o sentimentalismo de Karl Grün). Na Primeira Parte e nas “Teses sobre Feuerbach”, enuncia sistematicamente as bases da concepção materialista da história: produção material da vida, forças produtivas, relações de produção, divisão social e sexual do trabalho, formas históricas de propriedade e gênese das ideias dominantes.`,
+        purpose: `Serve como certidão de nascimento do materialismo histórico. Supera tanto o idealismo especulativo quanto o materialismo abstrato ao demonstrar que a “ideologia” nasce da separação entre trabalho material e trabalho intelectual e da autonomização das condições sociais — e que “os filósofos apenas interpretaram o mundo de diferentes maneiras; o que importa é transformá-lo”.`,
+        concepts: `Materialismo histórico · Forças produtivas e relações de produção · Divisão do trabalho · Ideologia · Práxis revolucionária`,
+        interlocutors: `Ludwig Feuerbach, Max Stirner, Bruno Bauer, Karl Grün, Hegel`
+      },
+      {
+        id: `miseria-filosofia`,
+        order: 11,
+        yearNum: 1847,
+        yearLabel: `1847`,
+        era: `era2`,
+        axis: 2,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Miséria da filosofia`,
+        shortTitle: `Miséria da filosofia`,
+        subtitle: `Resposta à “Filosofia da miséria” de Pierre-Joseph Proudhon`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Escrita originalmente em francês, refuta ponto por ponto o projeto de Proudhon de reformar o capitalismo mediante o “valor constituído” pelo tempo de trabalho e bancos de crédito gratuito sem abolir a propriedade privada e a produção mercantil. Marx expõe a historicidade das categorias econômicas contra a eternização metafísica e analisa a função das greves e coalizões operárias.`,
+        purpose: `Primeira obra econômica que Marx considerou integrante de sua ciência madura. Serve para fundir o materialismo histórico com a crítica econômica de David Ricardo, derrotar o socialismo pequeno-burguês proudhonista no movimento operário europeu e formular a passagem do proletariado de “classe em si” para “classe para si”.`,
+        concepts: `Valor de troca histórico · Historicidade das categorias · Crítica ao proudhonismo · Classe em si vs. classe para si`,
+        interlocutors: `Pierre-Joseph Proudhon, David Ricardo, Adam Smith, Hegel`
+      },
+      {
+        id: `manifesto-comunista`,
+        order: 12,
+        yearNum: 1848,
+        yearLabel: `1848`,
+        era: `era2`,
+        axis: 2,
+        authorGroup: `Coautoria`,
+        authorLabel: `Karl Marx e Friedrich Engels`,
+        title: `Manifesto do Partido Comunista`,
+        shortTitle: `Manifesto Comunista`,
+        subtitle: `Programa da Liga dos Comunistas (precedido pelos “Princípios do comunismo” de Engels)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Síntese programática e histórica que abre declarando que “a história de todas as sociedades até hoje existentes é a história das lutas de classes”. Analisa a ascensão revolucionária da burguesia e a criação do mercado mundial, a contradição entre forças produtivas e relações burguesas de propriedade, a formação do proletariado como classe antagônica, a crítica aos socialismos reacionário, conservador e utópico, e as medidas transitórias do poder operário.`,
+        purpose: `Serve como manifesto fundacional do comunismo moderno: traduz décadas de pesquisa filosófica e econômica em programa político direto para a vanguarda operária europeia na véspera das revoluções de 1848, consagrando o internacionalismo proletário contra todo nacionalismo estreito.`,
+        concepts: `Luta de classes · Mercado mundial · Proletariado e burguesia · Crítica aos socialismos rivais · Internacionalismo`,
+        interlocutors: `Liga dos Comunistas, Saint-Simon, Fourier, Owen, Proudhon, Karl Grün`
+      },
+      {
+        id: `lutas-alemanha`,
+        order: 13,
+        yearNum: 1848,
+        yearLabel: `1848–1850`,
+        era: `era2`,
+        axis: 4,
+        authorGroup: `Coautoria`,
+        authorLabel: `Karl Marx e Friedrich Engels`,
+        title: `Lutas de classes na Alemanha`,
+        shortTitle: `Lutas de classes na Alemanha`,
+        subtitle: `Artigos da Nova Gazeta Renana e balanços da Revolução Alemã de 1848–1849`,
+        sourceStatus: `Obra da coleção referenciada no catálogo do acervo`,
+        what: `Reúne os escritos de combate de Marx e Engels na “Neue Rheinische Zeitung” de Colônia e documentos da Liga dos Comunistas durante a revolução de 1848–1849 nos Estados alemães, acompanhando a traição da burguesia liberal alemã — que preferiu aliar-se à aristocracia prussiana a enfrentar o povo armado — e as insurreições populares derrotadas.`,
+        purpose: `Serve para forjar a tática política autônoma da classe operária em países de desenvolvimento burguês tardio. Formula a necessidade de o proletariado manter organização e armamento independentes dos democratas pequeno-burgueses, sustentando a palavra de ordem da “revolução permanente”.`,
+        concepts: `Covardia da burguesia alemã · Revolução democrática vs. proletária · Revolução permanente · Independência de classe`,
+        interlocutors: `Assembleia de Frankfurt, burguesia liberal renana, Wilhelm Wolff, Liga dos Comunistas`
+      },
+      {
+        id: `lutas-franca`,
+        order: 14,
+        yearNum: 1850,
+        yearLabel: `1850`,
+        era: `era2`,
+        axis: 4,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `As lutas de classes na França de 1848 a 1850`,
+        shortTitle: `As lutas de classes na França`,
+        subtitle: `Artigos da Nova Gazeta Renana — Revista Político-Econômica (com Introdução de Engels, 1895)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Análise imediata do processo revolucionário francês entre fevereiro de 1848 e meados de 1850: a ilusão da república “social”, o massacre do proletariado parisiense nas jornadas de junho de 1848, a caricatura pequeno-burguesa da “Montanha” em junho de 1849, o domínio parlamentar do Partido da Ordem e a relação entre a prosperidade econômica de 1849–1850 e o refluxo revolucionário.`,
+        purpose: `É a primeira tentativa sistemática de explicar um fragmento de história contemporânea a partir do materialismo histórico. Serve para demonstrar a anatomia de classe da república burguesa, relacionar ciclos econômicos a conjunturas revolucionárias e introduzir explicitamente o conceito de “ditadura de classe do proletariado”.`,
+        concepts: `Jornadas de Junho (1848) · Frações burguesas (Partido da Ordem) · Pequena burguesia (“Montanha”) · Crises e revolução · Ditadura do proletariado`,
+        interlocutors: `Ledru-Rollin, Louis Blanc, Cavaignac, Thiers, Guizot, Engels (prefácio de 1895)`
+      },
+      {
+        id: `18-brumario`,
+        order: 15,
+        yearNum: 1852,
+        yearLabel: `1852`,
+        era: `era2`,
+        axis: 4,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `O 18 de brumário de Luís Bonaparte`,
+        shortTitle: `O 18 de brumário`,
+        subtitle: `Análise do golpe de Estado bonapartista de 2 de dezembro de 1851`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Disseca como um aventureiro medíocre (Luís Bonaparte) conseguiu dissolver a Assembleia Legislativa e instaurar um regime autocrático na França. Marx examina o equilíbrio catastrófico entre uma burguesia incapaz de continuar governando parlamentarmente (temendo o proletariado) e um proletariado derrotado, revelando a base social do bonapartismo no campesinato parcelar isolado e na hipertrofia da máquina burocrático-militar.`,
+        purpose: `Obra-prima da ciência política marxista. Serve para refinar a teoria da autonomia relativa do Estado e da representação política (“os homens fazem sua própria história, mas sob circunstâncias legadas pelo passado”), culminando na tese estratégica decisiva de que todas as revoluções anteriores aperfeiçoaram a máquina estatal, cabendo à revolução proletária destruí-la.`,
+        concepts: `Bonapartismo · Autonomia relativa do Estado · Campesinato parcelar · Máquina burocrático-militar · Tragédia e farsa`,
+        interlocutors: `Luís Bonaparte, Partido da Ordem, Victor Hugo, Proudhon`
+      },
+      {
+        id: `grundrisse`,
+        order: 16,
+        yearNum: 1857,
+        yearLabel: `1857–1858`,
+        era: `era3`,
+        axis: 3,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Grundrisse: manuscritos econômicos de 1857-1858`,
+        shortTitle: `Grundrisse`,
+        subtitle: `Esboços da crítica da economia política (“antes do dilúvio”)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Cadernos de pesquisa redigidos febrilmente ante a crise financeira de 1857. Contêm a celebre “Introdução de 1857” (sobre o método da economia política: ascensão do abstrato ao concreto pensado), o “Capítulo do dinheiro” e o monumental “Capítulo do capital”, no qual Marx descobre a força de trabalho como mercadoria, o mais-valor absoluto e relativo, o tempo de rotação, as formações econômicas pré-capitalistas e o impacto da automação científica (General Intellect) sobre a lei do valor.`,
+        purpose: `Constitui o verdadeiro laboratório teórico da maturidade de Marx. Serve para articular filosoficamente o método dialético materialista à dedução rigorosa das categorias do capital, revelando que o mais-valor é a objetivação estranhada da potência produtiva do trabalho social e que a própria dinâmica do capital cria as contradições de sua superação.`,
+        concepts: `Método do abstrato ao concreto · Dinheiro como mediação · Mais-valor vs. lucro · Trabalho vivo vs. trabalho objetivado · General Intellect`,
+        interlocutors: `Adam Smith, David Ricardo, Proudhon, Darimon, Hegel (Lógica)`
+      },
+      {
+        id: `guerra-civil-eua`,
+        order: 17,
+        yearNum: 1861,
+        yearLabel: `1861–1862`,
+        era: `era3`,
+        axis: 4,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `A guerra civil nos Estados Unidos`,
+        shortTitle: `Guerra Civil nos EUA`,
+        subtitle: `Despachos ao New York Daily Tribune e Die Presse (com análise militar de Engels)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Coletânea de artigos escritos durante os dois primeiros anos da Guerra de Secessão norte-americana. Marx refuta a imprensa britânica pró-Sul e demonstra que o conflito não gira apenas em torno de tarifas aduaneiras ou direitos dos Estados, mas do antagonismo irreconciliável entre a expansão territorial da oligarquia escravista sulista e o trabalho livre industrial do Norte, pressionando pela guerra revolucionária abolicionista.`,
+        purpose: `Serve para exemplificar a análise marxista da geopolítica e do mercado mundial, mostrando como formas arcaicas de exploração (escravidão moderna) se integram ao capitalismo mundial e como a solidariedade internacional da classe operária inglesa impediu a intervenção britânica a favor da Confederação escravista.`,
+        concepts: `Escravismo e capitalismo mundial · Guerra constitucional vs. guerra revolucionária · Abolição como necessidade militar · Internacionalismo operário`,
+        interlocutors: `Abraham Lincoln, imprensa tory britânica, McClellan, General Buell, Friedrich Engels`
+      },
+      {
+        id: `capital-1`,
+        order: 18,
+        yearNum: 1867,
+        yearLabel: `1867`,
+        era: `era3`,
+        axis: 3,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `O capital — Livro I: O processo de produção do capital`,
+        shortTitle: `O capital — Livro I`,
+        subtitle: `Crítica da economia política (obra central publicada em vida por Marx)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Parte da célula elementar da riqueza capitalista — a mercadoria e seu duplo caráter (valor de uso e valor) — para desvendar o fetichismo da mercadoria, a gênese do dinheiro, a transformação do dinheiro em capital e a extração do mais-valor na fábrica. Analisa a jornada de trabalho, a mais-valia absoluta e relativa, a passagem da cooperação à grande indústria, a lei geral da acumulação capitalista e a “assim chamada acumulação primitiva”.`,
+        purpose: `Obra magna do marxismo. Serve para provar cientificamente que a exploração capitalista não resulta de roubo ou fraude individual, mas ocorre estritamente segundo as leis da troca de equivalentes (compra da força de trabalho pelo seu valor, que produz valor superior ao de sua reprodução), demonstrando que a abolição da exploração exige abolir o sistema assalariado.`,
+        concepts: `Valor e trabalho abstrato · Fetichismo da mercadoria · Força de trabalho · Mais-valor absoluto e relativo · Acumulação primitiva`,
+        interlocutors: `Adam Smith, David Ricardo, Nassau Senior, Bentham, inspetores de fábrica ingleses`
+      },
+      {
+        id: `guerra-civil-franca`,
+        order: 19,
+        yearNum: 1871,
+        yearLabel: `1871`,
+        era: `era3`,
+        axis: 4,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `A guerra civil na França`,
+        shortTitle: `A guerra civil na França`,
+        subtitle: `Manifesto do Conselho Geral da Associação Internacional dos Trabalhadores sobre a Comuna de Paris`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Redigido imediatamente após a queda sangrenta da Comuna de Paris (março–maio de 1871), denuncia a barbárie da repressão de Thiers em Versalhes e extrai as lições institucionais inéditas do governo operário parisiense: abolição do exército permanente e da polícia autônoma, sufrágio universal com mandatos revogáveis a qualquer instante, remuneração dos representantes em nível de salário operário e fusão de poderes executivo e legislativo.`,
+        purpose: `Serve para completar a teoria política da transição socialista: reconhece na Comuna “a forma política enfim descoberta sob a qual se podia realizar a emancipação econômica do trabalho”, motivando a única correção que Marx e Engels fizeram ao Manifesto Comunista (no prefácio de 1872): a classe operária não pode simplesmente apossar-se da máquina estatal pronta.`,
+        concepts: `Comuna de Paris · Destruição do Estado burocrático · Mandato imperativo e revogável · Autogoverno dos produtores`,
+        interlocutors: `Adolphe Thiers, Jules Favre, Comuna de Paris (Frankel, Varlin), Bakunin`
+      },
+      {
+        id: `questao-moradia`,
+        order: 20,
+        yearNum: 1872,
+        yearLabel: `1872–1873`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Engels`,
+        authorLabel: `Friedrich Engels`,
+        title: `Sobre a questão da moradia`,
+        shortTitle: `Questão da moradia`,
+        subtitle: `Três ensaios polêmicos publicados no jornal Volksstaat`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Conjunto de três artigos combatendo as soluções proudhonistas (Arthur Mülberger) e o filantropismo burguês (Emil Sax) para a penúria habitacional nas metrópoles industriais alemãs. Engels explica que o déficit de moradias, os aluguéis extorsivos e as remoções (“método Haussmann”) são inerentes ao crescimento urbano capitalista e que transformar o operário em proprietário de sua casa apenas o amarra ao capitalista local.`,
+        purpose: `Serve para aplicar a teoria do valor e da renda fundiária à questão urbana. Demonstra que o problema da habitação é um sintoma secundário da exploração capitalista — não se resolve com reformas de crédito imobiliário, mas pela expropriação social e pela superação da divisão entre cidade e campo.`,
+        concepts: `Penúria habitacional · Método Haussmann · Crítica ao proudhonismo urbano · Renda do solo urbano · Cidade vs. campo`,
+        interlocutors: `Arthur Mülberger, Emil Sax, Proudhon, Barão Haussmann`
+      },
+      {
+        id: `dialetica-natureza`,
+        order: 21,
+        yearNum: 1873,
+        yearLabel: `1873–1883`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Engels`,
+        authorLabel: `Friedrich Engels`,
+        title: `Dialética da natureza`,
+        shortTitle: `Dialética da natureza`,
+        subtitle: `Manuscritos científicos e filosóficos (publicação póstuma)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Série de ensaios e fragmentos inacabados (destacando-se a “Introdução” e “O papel do trabalho na transformação do macaco em homem”) nos quais Engels investiga os avanços da física, química, termodinâmica, eletroquímica e biologia darwiniana do século XIX à luz da dialética materialista: transformação da quantidade em qualidade, interpenetração dos opostos e negação da negação.`,
+        purpose: `Serve para superar o materialismo mecanicista e o empirismo metafísico entre os cientistas naturais, fundamentando uma ontologia unitária em que natureza e história obedecem a processos dinâmicos de interação e evolução — e demonstrando como o trabalho humano foi o motor evolutivo da própria hominização e da linguagem.`,
+        concepts: `Leis da dialética · Interação vs. causalidade unilateral · Trabalho e hominização · Crítica ao mecanicismo`,
+        interlocutors: `Hegel, Charles Darwin, Hermann von Helmholtz, Clausius, Poggendorff`
+      },
+      {
+        id: `critica-gotha`,
+        order: 22,
+        yearNum: 1875,
+        yearLabel: `1875`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Crítica do Programa de Gotha`,
+        shortTitle: `Crítica do Programa de Gotha`,
+        subtitle: `Glosas marginais ao programa do Partido Operário Alemão (editado por Engels em 1891)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Carta e comentários críticos enviados aos dirigentes socialistas de Eisenach contra as concessões teóricas feitas aos seguidores de Ferdinand Lassalle no congresso de unificação de Gotha. Marx refuta a ideia de que o trabalho seja a “fonte única” de toda riqueza (esquecendo a natureza), a reivindicação vaga do “produto integral do trabalho”, a “lei de bronze dos salários”, o desprezo pelos camponeses como “massa reacionária” e o lema estatista do “Estado popular livre”.`,
+        purpose: `Texto indispensável da teoria marxista do socialismo e do partido. Serve para distinguir rigorosamente as duas fases da sociedade comunista (a primeira ainda regulada pelo direito burguês de troca de trabalho equivalente; a superior regida pelo princípio “de cada um segundo sua capacidade, a cada um segundo suas necessidades”) e reafirmar o caráter transitório da ditadura revolucionária do proletariado.`,
+        concepts: `Fases do comunismo · Crítica ao “direito igual” burguês · Trabalho e natureza · Crítica ao estatismo lassalliano · Período de transição`,
+        interlocutors: `Ferdinand Lassalle, Wilhelm Liebknecht, Wilhelm Bracke, August Bebel, Mikhail Bakunin`
+      },
+      {
+        id: `lutas-russia`,
+        order: 23,
+        yearNum: 1875,
+        yearLabel: `1875–1894`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Coautoria`,
+        authorLabel: `Karl Marx e Friedrich Engels`,
+        title: `Lutas de classes na Rússia`,
+        shortTitle: `Lutas de classes na Rússia`,
+        subtitle: `Correspondência com os populistas russos (Zasúlitch), prefácio de 1882 ao Manifesto e posfácio de Engels`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Reúne os rascunhos e a carta de Marx a Vera Zasúlitch (1881), a carta à revista “Otetchestvennie Zapiski” (1877), o prefácio à edição russa do Manifesto Comunista (1882) e os textos de Engels sobre a questão agrária russa. Debate se a comuna rural russa (obschina / mir) precisa obrigatoriamente ser destruída pelo capitalismo, como na Europa Ocidental, ou pode servir de base direta para a produção coletiva socialista.`,
+        purpose: `Serve como antídoto definitivo contra leituras economicistas, evolucionistas e eurocêntricas do marxismo. Marx recusa transformar a análise da acumulação primitiva inglesa numa “teoria histórico-filosófica de uma marcha geral fatalmente imposta a todos os povos”, abrindo o pensamento marxista à multiplicidade de vias revolucionárias na periferia do capitalismo.`,
+        concepts: `Comuna rural russa (mir / obschina) · Desenvolvimento desigual e multilinear · Crítica ao fatalismo histórico · Articulação revolução russa e ocidental`,
+        interlocutors: `Vera Zasúlitch, Nikolai Mikhailóvski, Piotr Tkatchóv, Gueorgui Plekhánov`
+      },
+      {
+        id: `anti-duhring`,
+        order: 24,
+        yearNum: 1878,
+        yearLabel: `1877–1878`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Engels`,
+        authorLabel: `Friedrich Engels`,
+        title: `Anti-Dühring`,
+        shortTitle: `Anti-Dühring`,
+        subtitle: `A subversão da ciência pelo senhor Eugen Dühring (com capítulo de Marx)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Obra polêmica em três grandes seções — Filosofia, Economia Política e Socialismo — redigida com conhecimento e colaboração direta de Marx (que assina o capítulo sobre história da economia) para refutar o sistema filosófico e socialista eclético de Eugen Dühring, professor berlinense que atraía quadros da social-democracia alemã.`,
+        purpose: `Serve como a primeira síntese enciclopédica e didática de toda a concepção marxista — articulando materialismo dialético, história, economia política (resumo didático da teoria do valor e do mais-valor) e socialismo científico — e cumpriu papel decisivo na formação teórica dos partidos operários da Segunda Internacional.`,
+        concepts: `Unidade do materialismo dialético e histórico · Moral de classe vs. verdades eternas · Violência e economia · Extinção do Estado`,
+        interlocutors: `Eugen Dühring, Hegel, Rousseau, Adam Smith, August Bebel`
+      },
+      {
+        id: `ultimos-escritos`,
+        order: 25,
+        yearNum: 1879,
+        yearLabel: `1879–1881`,
+        era: `era3`,
+        axis: 3,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx`,
+        title: `Últimos escritos econômicos`,
+        shortTitle: `Últimos escritos econômicos`,
+        subtitle: `Glosas marginais a Adolph Wagner e notas sobre dinâmica capitalista e sociedades comunitárias`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Reúne as “Glosas marginais ao Tratado de economia política de Adolph Wagner” (último texto teórico redigido por Marx sobre o valor) e apontamentos tardios sobre as crises econômicas, a circulação financeira e formas comunitárias não europeias. Marx refuta que tenha partido de um conceito abstrato de “valor” para deduzir a mercadoria, reafirmando que seu ponto de partida é o concreto histórico da mercadoria na sociedade burguesa.`,
+        purpose: `Serve para blindar o método d’O capital contra leituras metafísicas ou escolásticas (Wagner, Rodbertus) e comprovar que, até os últimos anos de vida, Marx manteve aberta sua oficina empírica — integrando crises financeiras contemporâneas, história agrária e crítica anticolonial.`,
+        concepts: `Ponto de partida na mercadoria · Valor de uso e valor de troca · Crítica ao socialismo de cátedra · Pesquisa empírica tardia`,
+        interlocutors: `Adolph Wagner, Johann Karl Rodbertus, Albert Schäffle`
+      },
+      {
+        id: `socialismo-utopico`,
+        order: 26,
+        yearNum: 1880,
+        yearLabel: `1880`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Engels`,
+        authorLabel: `Friedrich Engels`,
+        title: `Do socialismo utópico ao socialismo científico`,
+        shortTitle: `Socialismo utópico e científico`,
+        subtitle: `Edição autônoma de três capítulos do Anti-Dühring (com introdução de Marx na edição francesa)`,
+        sourceStatus: `Obra da coleção referenciada no acervo`,
+        what: `A pedido de Paul Lafargue, Engels reorganiza três capítulos centrais do Anti-Dühring num opúsculo claro e sistemático: reconstitui os méritos e limites dos socialistas utópicos (Saint-Simon, Fourier e Robert Owen), expõe o método dialético hegeliano e sua inversão materialista, e resume as duas grandes descobertas científicas de Marx — a concepção materialista da história e o segredo da produção capitalista via mais-valor.`,
+        purpose: `Serve como a introdução didática mais lida de toda a história do marxismo. Traduziu as descobertas filosóficas e econômicas complexas de Marx e Engels em ferramenta acessível de educação política para operários e militantes em todo o mundo.`,
+        concepts: `Três fontes do marxismo · Socialismo utópico vs. científico · Contradição produção social vs. apropriação privada · Salto da necessidade à liberdade`,
+        interlocutors: `Saint-Simon, Charles Fourier, Robert Owen, Hegel, Paul Lafargue`
+      },
+      {
+        id: `origem-familia`,
+        order: 27,
+        yearNum: 1884,
+        yearLabel: `1884`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Engels`,
+        authorLabel: `Friedrich Engels`,
+        title: `A origem da família, da propriedade privada e do Estado`,
+        shortTitle: `Origem da família e do Estado`,
+        subtitle: `Em conexão com as investigações de Lewis H. Morgan (a partir dos cadernos de Marx)`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Utilizando os extratos etnológicos deixados por Marx sobre “A sociedade antiga” de Morgan, Engels traça a transformação histórica da família (do casamento grupal e da gens matriarcal à família monogâmica patriarcal), vinculando a “derrota histórica mundial do sexo feminino” ao surgimento da propriedade privada de rebanhos e terras, da divisão do trabalho, do dinheiro, da escravidão e do Estado como força pública apartada da sociedade.`,
+        purpose: `Serve para desnaturalizar a família nuclear patriarcal, a propriedade privada e o Estado, provando que são produtos históricos transitórios ligados à cisão da sociedade em classes. É o texto clássico fundador da análise marxista sobre opressão das mulheres e gênese estatal.`,
+        concepts: `Família patriarcal e propriedade · Gens e sociedade gentílica · Direito materno vs. paterno · Gênese do Estado como poder armado`,
+        interlocutors: `Lewis Henry Morgan, Johann Jakob Bachofen, Theodor Mommsen, Karl Marx (cadernos etnológicos)`
+      },
+      {
+        id: `capital-2`,
+        order: 28,
+        yearNum: 1885,
+        yearLabel: `1885`,
+        era: `era3`,
+        axis: 3,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx (org. Friedrich Engels)`,
+        title: `O capital — Livro II: O processo de circulação do capital`,
+        shortTitle: `O capital — Livro II`,
+        subtitle: `Organizado e editado por Engels a partir dos manuscritos de 1865–1878`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Abandona o interior isolado da fábrica para examinar o movimento do capital no mercado e em escala social total. Analisa os três ciclos do capital (monetário, produtivo e mercadoria), os custos e o tempo de circulação, a rotação diferenciada entre capital fixo e capital circulante, e formula os célebres esquemas de reprodução simples e ampliada entre o Departamento I (meios de produção) e o Departamento II (meios de consumo).`,
+        purpose: `Serve para demonstrar que a exploração na produção (Livro I) não basta: o mais-valor precisa ser realizado na circulação. Os esquemas de reprodução revelam as delicadas condições de equilíbrio intersetorial e fundamentam a teoria marxista das crises de realização e do ciclo econômico capitalista.`,
+        concepts: `Ciclos D–M…P…M’–D’ · Tempo de rotação · Capital fixo vs. circulante · Esquemas de reprodução (Departamentos I e II)`,
+        interlocutors: `François Quesnay (Tableau Économique), Adam Smith, Thomas Tooke, Friedrich Engels`
+      },
+      {
+        id: `socialismo-juridico`,
+        order: 29,
+        yearNum: 1887,
+        yearLabel: `1887`,
+        era: `era4`,
+        axis: 5,
+        authorGroup: `Coautoria`,
+        authorLabel: `Friedrich Engels e Karl Kautsky`,
+        title: `O socialismo jurídico`,
+        shortTitle: `O socialismo jurídico`,
+        subtitle: `Artigo publicado sem assinatura na revista Neue Zeit contra Anton Menger`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Resposta incisiva de Engels (concluída com Kautsky) ao jurista austríaco Anton Menger, que propunha substituir a luta de classes revolucionária por reivindicações jurídicas baseadas em “direitos fundamentais” (como o direito ao produto integral do trabalho) e acusava Marx de copiar socialistas ricardianos ingleses.`,
+        purpose: `Serve para criticar a “visão de mundo jurídica” da burguesia — que substituiu a teologia medieval pelo fetichismo das normas legais — demonstrando que as formas jurídicas apenas sancionam relações econômicas preexistentes e que o movimento operário não se emancipa pedindo justiça formal aos códigos burgueses, mas transformando as bases materiais da produção.`,
+        concepts: `Ilusão jurídica burguesa · Direito como expressão das relações materiais · Crítica a Anton Menger · Autonomia da luta operária`,
+        interlocutors: `Anton Menger, socialistas ricardianos (Thompson, Bray, Hodgskin), Lassalle`
+      },
+      {
+        id: `capital-3`,
+        order: 30,
+        yearNum: 1894,
+        yearLabel: `1894`,
+        era: `era3`,
+        axis: 3,
+        authorGroup: `Marx`,
+        authorLabel: `Karl Marx (org. Friedrich Engels)`,
+        title: `O capital — Livro III: O processo global da produção capitalista`,
+        shortTitle: `O capital — Livro III`,
+        subtitle: `Último volume editado por Engels, sintetizando produção e circulação`,
+        sourceStatus: `Arquivo integral no acervo`,
+        what: `Reconcilia as leis abstratas do valor com os fenômenos visíveis da concorrência capitalista: explica a transformação do mais-valor em lucro e da taxa de mais-valor em taxa de lucro; a formação da taxa média de lucro e dos preços de produção; a lei da queda tendencial da taxa de lucro e suas causas contrarrestantes; a autonomização do capital comercial, do capital portador de juros, do crédito e do capital fictício; e a teoria da renda fundiária (diferencial I e II e absoluta).`,
+        purpose: `Fecha a arquitetura teórica d’O capital. Serve para explicar como o mais-valor extraído do trabalho vivo se reparte entre frações dominantes (lucro industrial, lucro comercial, juro bancário e renda da terra) e para desmistificar a “fórmula trinitária” que faz parecer que capital, terra e dinheiro geram valor por si sós.`,
+        concepts: `Taxa média de lucro e preço de produção · Queda tendencial da taxa de lucro · Capital fictício e juros · Renda fundiária · Fórmula trinitária`,
+        interlocutors: `David Ricardo, Thomas Tooke, Lord Overstone, Lei Bancária de 1844, Friedrich Engels`
+      }
+    ];
+
+    const CONNECTIONS = [
+      { from: `esc-felix`, to: `democrito-epicuro`, type: `fundacao`, label: `Continuidade`, note: `Da crítica literária juvenil à filosofia da autoconsciência e liberdade` },
+      { from: `democrito-epicuro`, to: `despossuidos`, type: `fundacao`, label: `Fundação`, note: `A filosofia volta-se para o mundo empírico dos interesses materiais` },
+      { from: `despossuidos`, to: `critica-hegel`, type: `ruptura`, label: `Ruptura`, note: `O choque com a lei da madeira desmonta o Estado racional de Hegel` },
+      { from: `critica-hegel`, to: `questao-judaica`, type: `fundacao`, label: `Desdobramento`, note: `Complemento direto nos Anais Franco-Alemães sobre Estado e emancipação` },
+      { from: `critica-hegel`, to: `manuscritos-1844`, type: `economia`, label: `Transição`, note: `A crítica do Estado leva à crítica da economia política e do trabalho` },
+      { from: `questao-judaica`, to: `sagrada-familia`, type: `ruptura`, label: `Ruptura`, note: `Aprofunda a polêmica contra o teologismo crítico de Bruno Bauer` },
+      { from: `esboco-economia`, to: `manuscritos-1844`, type: `economia`, label: `Impulso`, note: `O ensaio de Engels abre a crítica da economia política para Marx` },
+      { from: `esboco-economia`, to: `situacao-inglaterra`, type: `fundacao`, label: `Base Empírica`, note: `Engels testa na prática fabril inglesa as contradições do Esboço` },
+      { from: `manuscritos-1844`, to: `ideologia-alema`, type: `ruptura`, label: `Superação`, note: `Supera o humanismo feuerbachiano pelo materialismo histórico` },
+      { from: `manuscritos-1844`, to: `grundrisse`, type: `economia`, label: `Aprofundamento`, note: `O trabalho estranhado reaparece como objetivação do capital e mais-valor` },
+      { from: `situacao-inglaterra`, to: `manifesto-comunista`, type: `fundacao`, label: `Fundação`, note: `Base material para a formulação do proletariado como sujeito histórico` },
+      { from: `situacao-inglaterra`, to: `capital-1`, type: `economia`, label: `Matéria Empírica`, note: `Fornece dados fabris e compreensão do capital industrial ao Livro I` },
+      { from: `situacao-inglaterra`, to: `questao-moradia`, type: `conjuntura`, label: `Retomada`, note: `Engels retoma 27 anos depois a crise urbana e habitacional operária` },
+      { from: `sagrada-familia`, to: `ideologia-alema`, type: `ruptura`, label: `Ruptura Total`, note: `Amplia a crítica de Bauer a Stirner, Feuerbach e ao “socialismo verdadeiro”` },
+      { from: `ideologia-alema`, to: `miseria-filosofia`, type: `fundacao`, label: `Aplicação`, note: `Aplica o materialismo histórico contra o idealismo econômico de Proudhon` },
+      { from: `ideologia-alema`, to: `manifesto-comunista`, type: `fundacao`, label: `Síntese`, note: `Condensa a nova concepção da história em programa revolucionário` },
+      { from: `ideologia-alema`, to: `socialismo-juridico`, type: `ruptura`, label: `Crítica Ideológica`, note: `Desmonta a ilusão jurídica burguesa a partir das relações materiais` },
+      { from: `miseria-filosofia`, to: `manifesto-comunista`, type: `fundacao`, label: `Prelúdio`, note: `Antecipa a crítica aos socialismos não proletários e o papel das coalizões` },
+      { from: `miseria-filosofia`, to: `grundrisse`, type: `economia`, label: `Economia`, note: `Desenvolve a historicidade do valor e da divisão do trabalho` },
+      { from: `miseria-filosofia`, to: `questao-moradia`, type: `ruptura`, label: `Polêmica`, note: `Engels combate os novos proudhonistas alemães com os argumentos de Marx` },
+      { from: `manifesto-comunista`, to: `lutas-alemanha`, type: `conjuntura`, label: `Conjuntura`, note: `Teste prático imediato do programa de 1848 nas insurreições alemãs` },
+      { from: `manifesto-comunista`, to: `lutas-franca`, type: `conjuntura`, label: `Conjuntura`, note: `Confronta o programa revolucionário com as derrotas de junho de 1848` },
+      { from: `manifesto-comunista`, to: `guerra-civil-franca`, type: `ruptura`, label: `Correção (1872)`, note: `A Comuna obriga Marx e Engels a revisar a tese sobre o aparelho estatal` },
+      { from: `manifesto-comunista`, to: `lutas-russia`, type: `conjuntura`, label: `Prefácio 1882`, note: `Atualiza a perspectiva internacionalista diante da comuna rural russa` },
+      { from: `lutas-alemanha`, to: `lutas-franca`, type: `conjuntura`, label: `Continuidade`, note: `Complementa a análise de 1848 comparando a via alemã e a francesa` },
+      { from: `lutas-franca`, to: `18-brumario`, type: `conjuntura`, label: `Aprofundamento`, note: `Explica o desfecho bonapartista da crise de 1848–1851` },
+      { from: `18-brumario`, to: `guerra-civil-eua`, type: `conjuntura`, label: `Método Político`, note: `Aplica a análise das frações de classe e do executivo ao conflito americano` },
+      { from: `18-brumario`, to: `guerra-civil-franca`, type: `conjuntura`, label: `Confirmação`, note: `A Comuna confirma a tese de destruir a máquina estatal burocrática` },
+      { from: `18-brumario`, to: `origem-familia`, type: `fundacao`, label: `Teoria do Estado`, note: `Alarga a gênese histórica do Estado coercitivo além do bonapartismo` },
+      { from: `grundrisse`, to: `capital-1`, type: `economia`, label: `Matriz Teórica`, note: `As descobertas de 1857–58 ganham forma sistemática e expositiva no Livro I` },
+      { from: `grundrisse`, to: `capital-2`, type: `economia`, label: `Circulação`, note: `Os cadernos sobre tempo de rotação preparam o Livro II` },
+      { from: `grundrisse`, to: `capital-3`, type: `economia`, label: `Lucro e Crise`, note: `Antecipa a taxa de lucro, o crédito e as contradições globais do capital` },
+      { from: `guerra-civil-eua`, to: `capital-1`, type: `economia`, label: `Trabalho Livre`, note: `Ilumina o contraste entre escravidão e assalariamento no mercado mundial` },
+      { from: `capital-1`, to: `anti-duhring`, type: `fundacao`, label: `Divulgação`, note: `Engels sistematiza a teoria do valor e do mais-valor contra Dühring` },
+      { from: `capital-1`, to: `ultimos-escritos`, type: `economia`, label: `Defesa de Método`, note: `Marx precisa contra Wagner o ponto de partida na forma-mercadoria` },
+      { from: `capital-1`, to: `lutas-russia`, type: `conjuntura`, label: `Não Linearidade`, note: `Marx delimita que a acumulação primitiva inglesa não é lei fatal universal` },
+      { from: `capital-1`, to: `capital-2`, type: `economia`, label: `Sequência Direta`, note: `Passa da produção imediata do mais-valor à circulação e reprodução` },
+      { from: `guerra-civil-franca`, to: `critica-gotha`, type: `conjuntura`, label: `Anti-estatismo`, note: `A experiência da Comuna embasa a crítica ao “Estado popular livre”` },
+      { from: `dialetica-natureza`, to: `anti-duhring`, type: `fundacao`, label: `Síntese`, note: `As leis dialéticas e científicas formam a primeira seção do Anti-Dühring` },
+      { from: `dialetica-natureza`, to: `origem-familia`, type: `fundacao`, label: `Hominização`, note: `O papel do trabalho na evolução prepara a história das formas familiares` },
+      { from: `critica-gotha`, to: `socialismo-juridico`, type: `ruptura`, label: `Crítica ao Direito`, note: `Retoma o combate à fórmula lassalliana do “produto integral do trabalho”` },
+      { from: `anti-duhring`, to: `socialismo-utopico`, type: `fundacao`, label: `Edição Popular`, note: `Extrai três capítulos centrais como manual introdutório do marxismo` },
+      { from: `ultimos-escritos`, to: `origem-familia`, type: `fundacao`, label: `Cadernos Tardios`, note: `Os estudos etnológicos finais de Marx são executados por Engels em 1884` },
+      { from: `capital-2`, to: `capital-3`, type: `economia`, label: `Síntese Global`, note: `Une circulação e produção para explicar taxa média de lucro, juro e renda` },
+      { from: `questao-moradia`, to: `capital-3`, type: `economia`, label: `Renda Fundiária`, note: `Articula a crítica da especulação urbana à teoria da renda da terra` },
+      { from: `socialismo-utopico`, to: `lutas-russia`, type: `conjuntura`, label: `Debate Russo`, note: `Engels atualiza o prefácio e o posfácio para a edição russa` }
+    ];
+
+    // State
+    let state = {
+      axis: `all`,
+      author: `all`,
+      search: ``,
+      trajectory: null,
+      selectedWorkId: `capital-1`,
+      networkView: `graph`,
+      expandedIds: new Set([`capital-1`]),
+      modalWorkId: null
+    };
+
+    // Helpers
+    function getWorkById(id) {
+      return WORKS.find(function (w) { return w.id === id; }) || WORKS[0];
+    }
+
+    function getAxisObj(axisId) {
+      return AXES.find(function (a) { return a.id === axisId; }) || AXES[0];
+    }
+
+    function getFilteredWorks() {
+      const q = state.search.trim().toLowerCase();
+      let trajIds = null;
+      if (state.trajectory) {
+        const t = TRAJECTORIES.find(function (item) { return item.id === state.trajectory; });
+        if (t) trajIds = new Set(t.ids);
+      }
+      return WORKS.filter(function (w) {
+        if (state.axis !== `all` && w.axis !== Number(state.axis)) return false;
+        if (state.author !== `all` && w.authorGroup !== state.author) return false;
+        if (trajIds && !trajIds.has(w.id)) return false;
+        if (q) {
+          const hay = `${w.title} ${w.subtitle} ${w.yearLabel} ${w.authorLabel} ${w.what} ${w.purpose} ${w.concepts} ${w.interlocutors}`.toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+
+    function getConnectedSet(workId) {
+      const incoming = CONNECTIONS.filter(function (c) { return c.to === workId; });
+      const outgoing = CONNECTIONS.filter(function (c) { return c.from === workId; });
+      const ids = new Set([workId]);
+      incoming.forEach(function (c) { ids.add(c.from); });
+      outgoing.forEach(function (c) { ids.add(c.to); });
+      return { incoming: incoming, outgoing: outgoing, ids: ids };
+    }
+
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: `smooth`, block: `start` });
+    }
+
+    // Filter Handlers (all hoisted function declarations)
+    function handleSearchChange(val) {
+      state.search = val;
+      renderAll();
+    }
+
+    function handleAuthorChange(val) {
+      state.author = val;
+      renderAll();
+    }
+
+    function setAxisFilter(axisVal) {
+      state.axis = axisVal;
+      renderAll();
+    }
+
+    function toggleTrajectory(trajId) {
+      state.trajectory = (state.trajectory === trajId) ? null : trajId;
+      if (state.trajectory) {
+        const t = TRAJECTORIES.find(function (item) { return item.id === state.trajectory; });
+        if (t && t.ids.length > 0 && !t.ids.includes(state.selectedWorkId)) {
+          state.selectedWorkId = t.ids[0];
+        }
+      }
+      renderAll();
+    }
+
+    function resetAllFilters() {
+      state.axis = `all`;
+      state.author = `all`;
+      state.search = ``;
+      state.trajectory = null;
+      const searchEl = document.getElementById(`search-input`);
+      const authorEl = document.getElementById(`author-select`);
+      if (searchEl) searchEl.value = ``;
+      if (authorEl) authorEl.value = `all`;
+      renderAll();
+    }
+
+    function selectWork(workId, shouldScrollToGraph) {
+      state.selectedWorkId = workId;
+      state.expandedIds.add(workId);
+      renderAll();
+      if (shouldScrollToGraph) {
+        scrollToSection(`sec-conexoes`);
+      }
+    }
+
+    function setNetworkView(view) {
+      state.networkView = view;
+      const graphEl = document.getElementById(`graph-view`);
+      const matrixEl = document.getElementById(`matrix-view`);
+      const btnGraph = document.getElementById(`btn-view-graph`);
+      const btnMatrix = document.getElementById(`btn-view-matrix`);
+      if (graphEl && matrixEl && btnGraph && btnMatrix) {
+        const isGraph = view === `graph`;
+        graphEl.hidden = !isGraph;
+        matrixEl.hidden = isGraph;
+        btnGraph.className = isGraph ? `btn btn-primary btn-compact` : `btn btn-secondary btn-compact`;
+        btnMatrix.className = !isGraph ? `btn btn-primary btn-compact` : `btn btn-secondary btn-compact`;
+      }
+    }
+
+    function toggleCardExpand(workId) {
+      if (state.expandedIds.has(workId)) {
+        state.expandedIds.delete(workId);
+      } else {
+        state.expandedIds.add(workId);
+      }
+      renderCatalog();
+    }
+
+    function toggleAllCards(expand) {
+      const visible = getFilteredWorks();
+      if (expand) {
+        visible.forEach(function (w) { state.expandedIds.add(w.id); });
+      } else {
+        visible.forEach(function (w) { state.expandedIds.delete(w.id); });
+      }
+      renderCatalog();
+    }
+
+    // Modal handlers
+    function openModal(workId) {
+      state.modalWorkId = workId;
+      state.selectedWorkId = workId;
+      renderModal();
+      const modal = document.getElementById(`work-modal`);
+      if (modal) {
+        modal.hidden = false;
+        const closeBtn = modal.querySelector(`.modal-close`);
+        if (closeBtn) closeBtn.focus();
+      }
+      renderAll();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById(`work-modal`);
+      if (modal) modal.hidden = true;
+      state.modalWorkId = null;
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target && e.target.id === `work-modal`) {
+        closeModal();
+      }
+    }
+
+    function stepModal(delta) {
+      if (!state.modalWorkId) return;
+      const idx = WORKS.findIndex(function (w) { return w.id === state.modalWorkId; });
+      if (idx === -1) return;
+      const nextIdx = (idx + delta + WORKS.length) % WORKS.length;
+      openModal(WORKS[nextIdx].id);
+    }
+
+    // Renderers
+    function renderFilters() {
+      const axisContainer = document.getElementById(`axis-filters`);
+      if (axisContainer) {
+        let html = `<button type="button" class="axis-btn" aria-pressed="${state.axis === `all`}" onclick="setAxisFilter('all')">Todas as Obras (${WORKS.length})</button>`;
+        AXES.forEach(function (ax) {
+          const count = WORKS.filter(function (w) { return w.axis === ax.id; }).length;
+          const active = String(state.axis) === String(ax.id);
+          html += `<button type="button" class="axis-btn" aria-pressed="${active}" onclick="setAxisFilter('${ax.id}')">` +
+            `<span class="axis-swatch swatch-${ax.id}" aria-hidden="true"></span>` +
+            `<span>${ax.short} (${count})</span>` +
+            `</button>`;
+        });
+        axisContainer.innerHTML = html;
+      }
+
+      const trajContainer = document.getElementById(`trajectory-filters`);
+      if (trajContainer) {
+        let html = ``;
+        TRAJECTORIES.forEach(function (t) {
+          const active = state.trajectory === t.id;
+          html += `<button type="button" class="traj-btn" aria-pressed="${active}" onclick="toggleTrajectory('${t.id}')">` +
+            `<span class="traj-title">${t.title}</span>` +
+            `<span class="traj-meta">${t.meta}</span>` +
+            `</button>`;
+        });
+        trajContainer.innerHTML = html;
+      }
+    }
+
+    function renderKPIs(filtered) {
+      const countEl = document.getElementById(`kpi-visible-count`);
+      const statusEl = document.getElementById(`kpi-filter-status`);
+      const edgeEl = document.getElementById(`kpi-edge-count`);
+      if (countEl) countEl.textContent = String(filtered.length);
+      if (edgeEl) edgeEl.textContent = String(CONNECTIONS.length);
+      if (statusEl) {
+        if (filtered.length === WORKS.length) {
+          statusEl.textContent = `Exibindo todo o acervo`;
+        } else {
+          statusEl.textContent = `Filtro ativo (${filtered.length} de 30 obras)`;
+        }
+      }
+    }
+
+    function renderTimeline(filtered) {
+      const container = document.getElementById(`timeline-container`);
+      if (!container) return;
+      const visibleIds = new Set(filtered.map(function (w) { return w.id; }));
+      const conn = getConnectedSet(state.selectedWorkId);
+
+      let html = ``;
+      ERAS.forEach(function (era) {
+        const eraWorks = WORKS.filter(function (w) { return w.era === era.id; });
+        html += `<div class="era-col">` +
+          `<div class="era-head">` +
+          `<div class="era-years">${era.years}</div>` +
+          `<div class="era-title">${era.title}</div>` +
+          `<p class="era-desc">${era.desc}</p>` +
+          `</div>` +
+          `<div class="timeline-list">`;
+
+        eraWorks.forEach(function (w) {
+          const isVisible = visibleIds.has(w.id);
+          const isSel = state.selectedWorkId === w.id;
+          const isConn = !isSel && conn.ids.has(w.id);
+          const classes = [
+            `tl-item`,
+            `tl-axis-${w.axis}`,
+            isSel ? `is-selected` : ``,
+            isConn ? `is-connected` : ``,
+            !isVisible ? `is-dimmed` : ``
+          ].filter(Boolean).join(` `);
+
+          html += `<button type="button" class="${classes}" onclick="selectWork('${w.id}', false)" aria-pressed="${isSel}">` +
+            `<span class="tl-year">${w.yearLabel}</span>` +
+            `<span>` +
+            `<span class="tl-name">${w.shortTitle}</span>` +
+            `<span class="tl-author">${w.authorLabel}</span>` +
+            `</span>` +
+            `</button>`;
+        });
+
+        html += `</div></div>`;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function renderGraph(filtered) {
+      const svg = document.getElementById(`connections-svg`);
+      if (!svg) return;
+
+      const visibleIds = new Set(filtered.map(function (w) { return w.id; }));
+      const conn = getConnectedSet(state.selectedWorkId);
+
+      const W = 980;
+      const H = 510;
+      const leftMargin = 165;
+      const rightMargin = 45;
+      const topMargin = 44;
+      const laneHeight = 86;
+      const minYear = 1837;
+      const maxYear = 1894;
+
+      // Compute deterministic non-overlapping node coordinates by Era/Order within each axis swimlane
+      const nodeCoords = {};
+      const axisStacks = { 1: [], 2: [], 3: [], 4: [], 5: [] };
+      WORKS.forEach(function (w) {
+        axisStacks[w.axis].push(w);
+      });
+
+      Object.keys(axisStacks).forEach(function (axisKey) {
+        const list = axisStacks[axisKey];
+        const laneY = topMargin + (Number(axisKey) - 1) * laneHeight + laneHeight / 2;
+        list.forEach(function (w, idx) {
+          // Base x from year, adjusted slightly if neighbors in same lane are very close
+          const ratio = (w.yearNum - minYear) / (maxYear - minYear);
+          let x = leftMargin + ratio * (W - leftMargin - rightMargin);
+          let yOffset = (idx % 2 === 0 ? -13 : 13);
+          if (list.length <= 5) yOffset = (idx % 2 === 0 ? -10 : 10);
+          // Slight horizontal nudges for identical years in same lane
+          if (idx > 0) {
+            const prev = nodeCoords[list[idx - 1].id];
+            if (prev && Math.abs(x - prev.x) < 62) {
+              x = prev.x + 62;
+            }
+          }
+          if (x > W - rightMargin) x = W - rightMargin;
+          nodeCoords[w.id] = { x: x, y: laneY + yOffset };
+        });
+      });
+
+      const typeColors = {
+        ruptura: `var(--axis-1)`,
+        fundacao: `var(--axis-2)`,
+        economia: `var(--axis-3)`,
+        conjuntura: `var(--axis-4)`
+      };
+
+      let svgContent = ``;
+
+      // Swimlane bands & labels
+      AXES.forEach(function (ax, idx) {
+        const yTop = topMargin + idx * laneHeight;
+        const fill = idx % 2 === 0 ? `var(--background)` : `var(--surface-container-low)`;
+        svgContent += `<rect x="0" y="${yTop}" width="${W}" height="${laneHeight}" fill="${fill}" />`;
+        svgContent += `<line x1="0" y1="${yTop}" x2="${W}" y2="${yTop}" stroke="var(--outline-variant)" stroke-width="1" />`;
+        svgContent += `<rect x="8" y="${yTop + 14}" width="4" height="${laneHeight - 28}" fill="var(--axis-${ax.id})" />`;
+        svgContent += `<text x="20" y="${yTop + 37}" font-family="var(--font-label)" font-weight="700" font-size="11" fill="var(--axis-${ax.id})">EIXO ${ax.id}</text>`;
+        svgContent += `<text x="20" y="${yTop + 54}" font-family="var(--font-label)" font-weight="600" font-size="10.5" fill="var(--on-surface-variant)">${ax.short}</text>`;
+      });
+
+      // Year ticks along top
+      const ticks = [1837, 1844, 1848, 1857, 1867, 1875, 1885, 1894];
+      ticks.forEach(function (yr) {
+        const x = leftMargin + ((yr - minYear) / (maxYear - minYear)) * (W - leftMargin - rightMargin);
+        svgContent += `<line x1="${x}" y1="${topMargin - 8}" x2="${x}" y2="${H - 18}" stroke="var(--outline-variant)" stroke-width="1" stroke-dasharray="2 3" />`;
+        svgContent += `<text x="${x}" y="${topMargin - 16}" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="11" fill="var(--on-surface-variant)">${yr}</text>`;
+      });
+
+      // Edges
+      CONNECTIONS.forEach(function (c) {
+        const p1 = nodeCoords[c.from];
+        const p2 = nodeCoords[c.to];
+        if (!p1 || !p2) return;
+        const isActiveEdge = c.from === state.selectedWorkId || c.to === state.selectedWorkId;
+        const bothVisible = visibleIds.has(c.from) && visibleIds.has(c.to);
+        const opacity = isActiveEdge ? `0.95` : (bothVisible ? `0.16` : `0.05`);
+        const strokeWidth = isActiveEdge ? `2.4` : `1.2`;
+        const dash = c.type === `ruptura` ? `stroke-dasharray="5 3"` : ``;
+        const dx = (p2.x - p1.x) * 0.45;
+        const pathD = `M ${p1.x} ${p1.y} C ${p1.x + dx} ${p1.y}, ${p2.x - dx} ${p2.y}, ${p2.x} ${p2.y}`;
+        svgContent += `<path class="svg-edge" d="${pathD}" stroke="${typeColors[c.type] || `var(--outline)`}" stroke-width="${strokeWidth}" stroke-opacity="${opacity}" ${dash} />`;
+      });
+
+      // Nodes
+      WORKS.forEach(function (w) {
+        const pos = nodeCoords[w.id];
+        if (!pos) return;
+        const isSelected = w.id === state.selectedWorkId;
+        const isConnected = conn.ids.has(w.id);
+        const isVisible = visibleIds.has(w.id);
+        const opacity = isSelected || isConnected ? `1` : (isVisible ? `0.78` : `0.2`);
+        const boxW = 86;
+        const boxH = 26;
+        const fill = isSelected ? `var(--primary)` : (isConnected ? `var(--primary-container)` : `var(--background)`);
+        const textFill = isSelected ? `var(--on-primary)` : `var(--on-surface)`;
+        const stroke = isSelected ? `var(--on-surface)` : `var(--axis-${w.axis})`;
+        const strokeW = isSelected ? `2.5` : (isConnected ? `2` : `1.25`);
+
+        // Trim label cleanly
+        const label = w.shortTitle.length > 15 ? `${w.shortTitle.slice(0, 14)}…` : w.shortTitle;
+
+        svgContent += `<g class="svg-node" transform="translate(${pos.x - boxW / 2}, ${pos.y - boxH / 2})" opacity="${opacity}" role="button" tabindex="0" aria-label="${w.title} (${w.yearLabel})" onclick="selectWork('${w.id}', false)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectWork('${w.id}', false);}">` +
+          `<rect x="0" y="0" width="${boxW}" height="${boxH}" fill="${fill}" stroke="${stroke}" stroke-width="${strokeW}" />` +
+          `<text x="${boxW / 2}" y="11" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="8.5" fill="${isSelected ? `var(--on-primary)` : `var(--axis-${w.axis})`}">${w.yearNum}</text>` +
+          `<text x="${boxW / 2}" y="21" text-anchor="middle" font-family="var(--font-label)" font-weight="600" font-size="9" fill="${textFill}">${label}</text>` +
+          `</g>`;
+      });
+
+      svg.innerHTML = svgContent;
+    }
+
+    function renderMatrix(filtered) {
+      const tbody = document.getElementById(`matrix-tbody`);
+      if (!tbody) return;
+      const visibleIds = new Set(filtered.map(function (w) { return w.id; }));
+
+      const rows = CONNECTIONS.filter(function (c) {
+        return visibleIds.has(c.from) || visibleIds.has(c.to);
+      });
+
+      let html = ``;
+      rows.forEach(function (c) {
+        const wFrom = getWorkById(c.from);
+        const wTo = getWorkById(c.to);
+        html += `<tr>` +
+          `<td><button type="button" class="table-link-btn" onclick="selectWork('${wFrom.id}', false)">${wFrom.shortTitle} (${wFrom.yearNum})</button></td>` +
+          `<td><span class="tag">${c.label}</span></td>` +
+          `<td><button type="button" class="table-link-btn" onclick="selectWork('${wTo.id}', false)">${wTo.shortTitle} (${wTo.yearNum})</button></td>` +
+          `<td>${c.note}</td>` +
+          `</tr>`;
+      });
+
+      tbody.innerHTML = html || `<tr><td colspan="4">Nenhum vínculo encontrado para os filtros atuais.</td></tr>`;
+    }
+
+    function renderInspector() {
+      const panel = document.getElementById(`connection-inspector`);
+      if (!panel) return;
+      const w = getWorkById(state.selectedWorkId);
+      const ax = getAxisObj(w.axis);
+      const conn = getConnectedSet(w.id);
+
+      let inHtml = ``;
+      if (conn.incoming.length === 0) {
+        inHtml = `<p class="kpi-note">Marco inicial da série cronológica.</p>`;
+      } else {
+        inHtml = `<div class="conn-chip-list">` + conn.incoming.map(function (c) {
+          const prev = getWorkById(c.from);
+          return `<button type="button" class="conn-jump" onclick="selectWork('${prev.id}', false)" title="${c.note}">` +
+            `<span><strong>${prev.shortTitle}</strong> (${prev.yearNum}) — ${c.note}</span>` +
+            `<span class="conn-jump-type">${c.label}</span>` +
+            `</button>`;
+        }).join(``) + `</div>`;
+      }
+
+      let outHtml = ``;
+      if (conn.outgoing.length === 0) {
+        outHtml = `<p class="kpi-note">Obra de síntese terminal do acervo.</p>`;
+      } else {
+        outHtml = `<div class="conn-chip-list">` + conn.outgoing.map(function (c) {
+          const next = getWorkById(c.to);
+          return `<button type="button" class="conn-jump" onclick="selectWork('${next.id}', false)" title="${c.note}">` +
+            `<span><strong>${next.shortTitle}</strong> (${next.yearNum}) — ${c.note}</span>` +
+            `<span class="conn-jump-type">${c.label}</span>` +
+            `</button>`;
+        }).join(``) + `</div>`;
+      }
+
+      panel.innerHTML =
+        `<div class="inspector-meta">` +
+        `<span>${w.yearLabel}</span>` +
+        `<span>·</span>` +
+        `<span>${w.authorLabel}</span>` +
+        `<span>·</span>` +
+        `<span class="axis-text-${w.axis}">Eixo ${w.axis}</span>` +
+        `</div>` +
+        `<div>` +
+        `<h3>${w.title}</h3>` +
+        `<p class="work-subtitle">${ax.short} · ${w.sourceStatus}</p>` +
+        `</div>` +
+        `<div class="inspector-block">` +
+        `<h4>Do que trata</h4>` +
+        `<p>${w.what}</p>` +
+        `</div>` +
+        `<div class="inspector-block">` +
+        `<h4>Para que serve</h4>` +
+        `<p>${w.purpose}</p>` +
+        `</div>` +
+        `<div class="inspector-block">` +
+        `<h4>Antecedentes e Rupturas (${conn.incoming.length})</h4>` +
+        inHtml +
+        `</div>` +
+        `<div class="inspector-block">` +
+        `<h4>Desdobramentos (${conn.outgoing.length})</h4>` +
+        outHtml +
+        `</div>` +
+        `<div class="filter-row">` +
+        `<button type="button" class="btn btn-primary" onclick="openModal('${w.id}')">Abrir Fichamento Completo</button>` +
+        `</div>`;
+    }
+
+    function renderCatalog(filteredArg) {
+      const filtered = filteredArg || getFilteredWorks();
+      const grid = document.getElementById(`works-grid`);
+      const empty = document.getElementById(`works-empty`);
+      const countLbl = document.getElementById(`catalog-count-label`);
+
+      if (countLbl) {
+        countLbl.textContent = `${filtered.length} ${filtered.length === 1 ? `obra exibida` : `obras exibidas`}`;
+      }
+      if (!grid || !empty) return;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = ``;
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+      let html = ``;
+      filtered.forEach(function (w) {
+        const ax = getAxisObj(w.axis);
+        const isExpanded = state.expandedIds.has(w.id);
+        const isActive = state.selectedWorkId === w.id;
+        const conn = getConnectedSet(w.id);
+
+        const relatedButtons = [];
+        conn.incoming.forEach(function (c) {
+          const prev = getWorkById(c.from);
+          relatedButtons.push(`<button type="button" class="conn-jump" onclick="selectWork('${prev.id}', false)"><span>← ${prev.shortTitle} (${prev.yearNum})</span><span class="conn-jump-type">${c.label}</span></button>`);
+        });
+        conn.outgoing.forEach(function (c) {
+          const next = getWorkById(c.to);
+          relatedButtons.push(`<button type="button" class="conn-jump" onclick="selectWork('${next.id}', false)"><span>→ ${next.shortTitle} (${next.yearNum})</span><span class="conn-jump-type">${c.label}</span></button>`);
+        });
+
+        html += `<article class="work-card axis-border-${w.axis} ${isActive ? `is-active-card` : ``}" id="card-${w.id}">` +
+          `<div class="work-card-top">` +
+          `<span class="work-year-author">${w.order}. ${w.yearLabel} · ${w.authorLabel}</span>` +
+          `<span class="tag ${isActive ? `axis-text-1` : ``}">${ax.short}</span>` +
+          `</div>` +
+          `<h3>${w.title}</h3>` +
+          `<p class="work-subtitle">${w.subtitle}</p>` +
+          `<p class="work-summary-short">${w.what}</p>` +
+          `<div class="work-details" ${isExpanded ? `` : `hidden`}>` +
+          `<div>` +
+          `<p class="detail-heading">Para que serve (função teórica, metodológica e política)</p>` +
+          `<p class="detail-text">${w.purpose}</p>` +
+          `</div>` +
+          `<div>` +
+          `<p class="detail-heading">Conceitos-chave &amp; Interlocutores</p>` +
+          `<p class="concept-list"><strong>Conceitos:</strong> ${w.concepts}</p>` +
+          `<p class="concept-list"><strong>Interlocução:</strong> ${w.interlocutors} · <strong>Registro:</strong> ${w.sourceStatus}</p>` +
+          `</div>` +
+          `<div>` +
+          `<p class="detail-heading">Conexões na rede (${relatedButtons.length})</p>` +
+          `<div class="conn-chip-list">${relatedButtons.join(``)}</div>` +
+          `</div>` +
+          `</div>` +
+          `<div class="work-card-actions">` +
+          `<button type="button" class="btn btn-secondary btn-compact" aria-expanded="${isExpanded}" onclick="toggleCardExpand('${w.id}')">${isExpanded ? `Recolher ficha` : `Expandir ficha`}</button>` +
+          `<button type="button" class="btn btn-compact" onclick="selectWork('${w.id}', true)">Ver no Grafo</button>` +
+          `<button type="button" class="btn btn-primary btn-compact" onclick="openModal('${w.id}')">Fichamento (Modal)</button>` +
+          `</div>` +
+          `</article>`;
+      });
+
+      grid.innerHTML = html;
+    }
+
+    function renderModal() {
+      if (!state.modalWorkId) return;
+      const w = getWorkById(state.modalWorkId);
+      const ax = getAxisObj(w.axis);
+      const conn = getConnectedSet(w.id);
+
+      const metaEl = document.getElementById(`modal-meta`);
+      const titleEl = document.getElementById(`modal-title`);
+      const subEl = document.getElementById(`modal-subtitle`);
+      const bodyEl = document.getElementById(`modal-body-content`);
+
+      if (metaEl) metaEl.innerHTML = `<span>Obra ${w.order} de 30</span><span>·</span><span>${w.yearLabel}</span><span>·</span><span>${w.authorLabel}</span><span>·</span><span class="axis-text-${w.axis}">${ax.full}</span>`;
+      if (titleEl) titleEl.textContent = w.title;
+      if (subEl) subEl.textContent = `${w.subtitle} · ${w.sourceStatus}`;
+
+      if (bodyEl) {
+        const inHtml = conn.incoming.length
+          ? conn.incoming.map(function (c) {
+              const p = getWorkById(c.from);
+              return `<button type="button" class="conn-jump" onclick="openModal('${p.id}')"><span><strong>${p.title}</strong> (${p.yearNum}) — ${c.note}</span><span class="conn-jump-type">${c.label}</span></button>`;
+            }).join(``)
+          : `<p class="kpi-note">Ponto de partida da série cronológica.</p>`;
+
+        const outHtml = conn.outgoing.length
+          ? conn.outgoing.map(function (c) {
+              const n = getWorkById(c.to);
+              return `<button type="button" class="conn-jump" onclick="openModal('${n.id}')"><span><strong>${n.title}</strong> (${n.yearNum}) — ${c.note}</span><span class="conn-jump-type">${c.label}</span></button>`;
+            }).join(``)
+          : `<p class="kpi-note">Obra de síntese final do acervo.</p>`;
+
+        bodyEl.innerHTML =
+          `<div class="modal-two-col">` +
+          `<div>` +
+          `<p class="detail-heading">1. Do que trata a obra</p>` +
+          `<p class="detail-text">${w.what}</p>` +
+          `</div>` +
+          `<div>` +
+          `<p class="detail-heading">2. Para que serve no pensamento marxista</p>` +
+          `<p class="detail-text">${w.purpose}</p>` +
+          `</div>` +
+          `</div>` +
+          `<div class="inspector-block">` +
+          `<h4>3. Núcleo Conceitual e Interlocutores Históricos</h4>` +
+          `<p><strong>Conceitos centrais:</strong> ${w.concepts}</p>` +
+          `<p><strong>Diálogo e polêmica:</strong> ${w.interlocutors}</p>` +
+          `</div>` +
+          `<div class="modal-two-col">` +
+          `<div>` +
+          `<p class="detail-heading">Obras que preparam ou sofrem ruptura aqui</p>` +
+          `<div class="conn-chip-list">${inHtml}</div>` +
+          `</div>` +
+          `<div>` +
+          `<p class="detail-heading">Desdobramentos posteriores</p>` +
+          `<div class="conn-chip-list">${outHtml}</div>` +
+          `</div>` +
+          `</div>`;
+      }
+    }
+
+    function renderAll() {
+      const filtered = getFilteredWorks();
+      renderFilters();
+      renderKPIs(filtered);
+      renderTimeline(filtered);
+      renderGraph(filtered);
+      renderMatrix(filtered);
+      renderInspector();
+      renderCatalog(filtered);
+    }
+
+    document.addEventListener(`keydown`, function (e) {
+      if (e.key === `Escape` && state.modalWorkId) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener(`DOMContentLoaded`, function () {
+      renderAll();
+    });
+  </script>
+</body>
+</html>

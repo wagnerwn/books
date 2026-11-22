@@ -1,0 +1,3593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Future as Cultural Fact — Infográfico Interativo (Arjun Appadurai)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Merriweather:ital,wght@0,700;0,900;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS — PALETA AZUL MARINHO E AMARELO EDITORIAL
+       ========================================================================== */
+    :root {
+      --navy-950: #0A192F;
+      --navy-900: #112240;
+      --navy-700: #1D3557;
+      --navy-100: #E6EDF7;
+      --navy-50:  #F4F6FA;
+
+      --gold-500: #F4C430;
+      --gold-400: #FFD166;
+      --gold-100: #FEF3C7;
+      --gold-50:  #FFF8DC;
+
+      --white:      #FFFFFF;
+      --text-main:  #1E293B;
+      --text-muted: #475569;
+      --border:     #D8E1EE;
+
+      --font-serif: 'Merriweather', Georgia, 'Times New Roman', serif;
+      --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      --topbar-h: 102px;
+      --sidebar-w: 320px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 2px 8px rgba(10, 25, 47, 0.06);
+      --shadow-md: 0 8px 24px rgba(10, 25, 47, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--navy-50);
+      color: var(--text-main);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       BARRA SUPERIOR FIXA + FILTRO DE PARTES + BARRA DE PROGRESSO
+       ========================================================================== */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 100%);
+      color: var(--white);
+      box-shadow: 0 4px 18px rgba(10, 25, 47, 0.25);
+    }
+
+    .topbar-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px 10px;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: rgba(244, 196, 48, 0.14);
+      border: 1px solid var(--gold-500);
+      color: var(--gold-400);
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: 0.82rem;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.18rem;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .brand-title span {
+      color: var(--gold-500);
+    }
+
+    .brand-sub {
+      font-size: 0.75rem;
+      color: #CBD5E1;
+      margin-top: 2px;
+    }
+
+    .parts-filter {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .part-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      color: #E2E8F0;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .part-btn:hover {
+      border-color: var(--gold-400);
+      color: var(--gold-400);
+    }
+
+    .part-btn.active {
+      background: var(--gold-500);
+      border-color: var(--gold-500);
+      color: var(--navy-950);
+      font-weight: 700;
+    }
+
+    /* Barra de progresso de leitura */
+    .progress-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 5px 24px 8px;
+      background: rgba(10, 25, 47, 0.55);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 3px solid var(--gold-500);
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 6.25%;
+      background: linear-gradient(90deg, var(--gold-500), var(--gold-400));
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--gold-400);
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       LAYOUT PRINCIPAL: SIDEBAR + CONTEÚDO
+       ========================================================================== */
+    .app-layout {
+      display: flex;
+      padding-top: var(--topbar-h);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      background: var(--navy-950);
+      color: #E2E8F0;
+      overflow-y: auto;
+      padding: 16px 12px 48px;
+      border-right: 1px solid var(--navy-700);
+      z-index: 900;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 6px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--navy-700); border-radius: 4px; }
+
+    .sidebar-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 6px 12px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-heading {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold-400);
+    }
+
+    .toggle-all-btn {
+      background: rgba(244, 196, 48, 0.14);
+      border: 1px solid rgba(244, 196, 48, 0.45);
+      color: var(--gold-400);
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .toggle-all-btn:hover {
+      background: rgba(244, 196, 48, 0.25);
+    }
+
+    .sidebar-part-label {
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: var(--gold-500);
+      margin: 16px 6px 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(244, 196, 48, 0.25);
+    }
+
+    .nav-item {
+      margin-bottom: 6px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .nav-item.active-chapter {
+      background: rgba(29, 53, 87, 0.65);
+      border-color: var(--gold-500);
+    }
+
+    .nav-item-header {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .nav-chap-btn {
+      flex: 1;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--white);
+      padding: 9px 8px 9px 10px;
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.35;
+    }
+
+    .nav-chap-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-num {
+      flex: 0 0 auto;
+      background: var(--navy-700);
+      color: var(--gold-400);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 1px;
+    }
+
+    .nav-item.active-chapter .nav-num {
+      background: var(--gold-500);
+      color: var(--navy-950);
+    }
+
+    .nav-expand-btn {
+      width: 30px;
+      background: transparent;
+      border: none;
+      border-left: 1px solid rgba(255, 255, 255, 0.07);
+      color: #94A3B8;
+      cursor: pointer;
+      font-size: 0.72rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, color 0.2s;
+    }
+
+    .nav-expand-btn:hover {
+      color: var(--gold-400);
+    }
+
+    .nav-item.expanded .nav-expand-btn {
+      color: var(--gold-500);
+      transform: rotate(90deg);
+    }
+
+    .nav-sub-list {
+      display: none;
+      list-style: none;
+      padding: 4px 8px 8px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(10, 25, 47, 0.45);
+    }
+
+    .nav-item.expanded .nav-sub-list {
+      display: block;
+    }
+
+    .nav-sub-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-left: 2px solid rgba(255, 255, 255, 0.18);
+      color: #CBD5E1;
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+      padding: 5px 8px 5px 10px;
+      cursor: pointer;
+      line-height: 1.35;
+      transition: all 0.15s;
+    }
+
+    .nav-sub-btn:hover {
+      color: var(--gold-400);
+      border-left-color: var(--gold-400);
+    }
+
+    .nav-sub-btn.active-sub {
+      color: var(--gold-500);
+      border-left-color: var(--gold-500);
+      font-weight: 700;
+      background: rgba(244, 196, 48, 0.1);
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 25, 47, 0.6);
+      z-index: 850;
+    }
+
+    /* ==========================================================================
+       ÁREA PRINCIPAL DE LEITURA
+       ========================================================================== */
+    .main-stage {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      max-width: calc(100% - var(--sidebar-w));
+      padding: 30px 36px 72px;
+    }
+
+    .chapter-container {
+      max-width: 1060px;
+      margin: 0 auto;
+      animation: fadeUp 0.25s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cabeçalho do Capítulo */
+    .hero-card {
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 65%, var(--navy-700) 100%);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      border-left: 6px solid var(--gold-500);
+      box-shadow: var(--shadow-md);
+      margin-bottom: 22px;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .badge-gold {
+      background: var(--gold-500);
+      color: var(--navy-950);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .badge-outline {
+      border: 1px solid rgba(255, 209, 102, 0.55);
+      color: var(--gold-400);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      font-weight: 900;
+      line-height: 1.25;
+      margin-bottom: 6px;
+      color: var(--white);
+    }
+
+    .hero-orig {
+      font-size: 0.84rem;
+      color: var(--gold-400);
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .hero-summary {
+      font-size: 0.96rem;
+      color: #E2E8F0;
+      max-width: 880px;
+    }
+
+    /* Caixa de Tese Central */
+    .thesis-banner {
+      background: var(--gold-50);
+      border: 1px solid #F2D377;
+      border-left: 5px solid var(--gold-500);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .thesis-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--navy-900);
+      margin-bottom: 6px;
+    }
+
+    .thesis-text {
+      font-size: 0.95rem;
+      color: var(--navy-950);
+      font-weight: 500;
+    }
+
+    /* Pílulas de navegação rápida para subcapítulos */
+    .sub-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 26px;
+    }
+
+    .sub-pill-btn {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--navy-900);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sub-pill-btn:hover {
+      background: var(--navy-900);
+      color: var(--gold-400);
+      border-color: var(--navy-900);
+    }
+
+    /* Títulos de Seção */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 28px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--navy-100);
+    }
+
+    .section-divider h3 {
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      color: var(--navy-950);
+    }
+
+    .section-tag {
+      background: var(--navy-900);
+      color: var(--gold-400);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ==========================================================================
+       CARDS DE ESQUEMAS EXPLICATIVOS VISUAIS
+       ========================================================================== */
+    .schema-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .schema-card.nested {
+      background: #FCFDFE;
+      border: 1px solid #D3DFEF;
+      margin-top: 14px;
+      margin-bottom: 10px;
+      padding: 18px 20px;
+    }
+
+    .schema-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .schema-badge {
+      background: var(--navy-950);
+      color: var(--gold-500);
+      font-size: 0.68rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+
+    .schema-badge.sub-badge {
+      background: var(--gold-500);
+      color: var(--navy-950);
+    }
+
+    .schema-title {
+      font-family: var(--font-serif);
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+
+    .schema-caption {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      padding-top: 9px;
+      border-top: 1px dashed var(--border);
+    }
+
+    /* --- Componente 1: Fluxograma Horizontal --- */
+    .diag-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .diag-node {
+      flex: 1;
+      background: var(--navy-50);
+      border: 1px solid #C9D7EA;
+      border-top: 4px solid var(--navy-700);
+      border-radius: var(--radius-md);
+      padding: 13px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .diag-node.tone-navy {
+      background: var(--navy-950);
+      border-color: var(--navy-950);
+      border-top: 4px solid var(--gold-500);
+      color: var(--white);
+    }
+
+    .diag-node.tone-navy h5 { color: var(--gold-400); }
+    .diag-node.tone-navy p, .diag-node.tone-navy li { color: #E2E8F0; }
+
+    .diag-node.tone-gold {
+      background: var(--gold-100);
+      border-color: #ECCE6E;
+      border-top: 4px solid var(--gold-500);
+    }
+
+    .diag-node.tone-gold h5 { color: var(--navy-950); }
+    .diag-node.tone-gold p, .diag-node.tone-gold li { color: #334155; }
+
+    .diag-node h5 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      line-height: 1.3;
+    }
+
+    .diag-node p, .diag-node li {
+      font-size: 0.79rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .diag-node ul {
+      padding-left: 15px;
+      margin-top: 2px;
+    }
+
+    .diag-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy-700);
+      font-size: 1.3rem;
+      font-weight: 800;
+      padding: 0 2px;
+      user-select: none;
+    }
+
+    .diag-arrow.gold-arrow {
+      color: #D4A106;
+    }
+
+    /* --- Componente 2: Grade de Blocos --- */
+    .diag-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .diag-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .diag-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .diag-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+    .diag-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+
+    /* --- Componente 3: Tensão Bipolar (A <-> B) --- */
+    .diag-tension {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .tension-mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--gold-500);
+      color: var(--navy-950);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      min-width: 118px;
+      max-width: 160px;
+      text-align: center;
+      font-size: 0.76rem;
+      font-weight: 800;
+      line-height: 1.3;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .tension-mid span.sym {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+    }
+
+    /* --- Componente 4: Tabela Comparativa Visual --- */
+    .diag-table-wrap {
+      overflow-x: auto;
+    }
+
+    .diag-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.81rem;
+    }
+
+    .diag-table th {
+      background: var(--navy-950);
+      color: var(--gold-400);
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 700;
+      border: 1px solid var(--navy-900);
+    }
+
+    .diag-table td {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-main);
+    }
+
+    .diag-table tr:nth-child(even) td {
+      background: var(--navy-50);
+    }
+
+    .diag-table td:first-child {
+      font-weight: 700;
+      color: var(--navy-900);
+      background: #EEF3FA;
+    }
+
+    /* --- Componente 5: Matriz 2x2 --- */
+    .diag-matrix {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr;
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .matrix-corner {
+      background: var(--navy-950);
+      color: var(--gold-400);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .matrix-col-hdr {
+      background: var(--navy-900);
+      color: var(--gold-400);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+
+    .matrix-row-hdr {
+      background: var(--navy-700);
+      color: var(--white);
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 10px 10px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-width: 108px;
+    }
+
+    .matrix-cell {
+      background: var(--navy-50);
+      border: 1px solid #CBD8EB;
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+
+    .matrix-cell.highlight {
+      background: var(--gold-100);
+      border-color: var(--gold-500);
+    }
+
+    .matrix-cell h5 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      margin-bottom: 4px;
+    }
+
+    .matrix-cell p {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* --- Componente 6: Escada / Camadas Verticais --- */
+    .diag-ladder {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ladder-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      background: var(--navy-50);
+      border: 1px solid #C9D7EA;
+      border-left: 5px solid var(--navy-700);
+    }
+
+    .ladder-step.top-step {
+      background: var(--navy-950);
+      border-color: var(--navy-950);
+      border-left: 5px solid var(--gold-500);
+      color: var(--white);
+    }
+
+    .ladder-step.top-step h5 { color: var(--gold-400); }
+    .ladder-step.top-step p { color: #E2E8F0; }
+
+    .ladder-step.gold-step {
+      background: var(--gold-100);
+      border-color: #ECCE6E;
+      border-left: 5px solid var(--gold-500);
+    }
+
+    .ladder-num {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--navy-900);
+      color: var(--gold-400);
+      font-size: 0.76rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ladder-step.top-step .ladder-num {
+      background: var(--gold-500);
+      color: var(--navy-950);
+    }
+
+    .ladder-step h5 {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      margin-bottom: 2px;
+    }
+
+    .ladder-step p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* --- Componente 7: Gráfico Proporcional Estático --- */
+    .diag-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 78px;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.81rem;
+    }
+
+    .bar-lbl {
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+
+    .bar-bg {
+      background: var(--navy-100);
+      height: 22px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-val-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--navy-950), var(--navy-700));
+      color: var(--white);
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      white-space: nowrap;
+    }
+
+    .bar-val-fill.gold {
+      background: linear-gradient(90deg, var(--gold-500), var(--gold-400));
+      color: var(--navy-950);
+    }
+
+    .bar-num {
+      font-weight: 800;
+      color: var(--navy-900);
+      text-align: right;
+    }
+
+    /* --- Componente 8: Triângulo SVG --- */
+    .svg-box {
+      width: 100%;
+      overflow-x: auto;
+      text-align: center;
+    }
+
+    .svg-box svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       CARDS DE SUBCAPÍTULOS
+       ========================================================================== */
+    .sub-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 26px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: calc(var(--topbar-h) + 18px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .sub-card.flash-focus {
+      border-color: var(--gold-500);
+      box-shadow: 0 0 0 4px rgba(244, 196, 48, 0.35);
+    }
+
+    .sub-card-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sub-code {
+      background: var(--navy-100);
+      color: var(--navy-950);
+      font-size: 0.74rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .sub-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+
+    .sub-orig {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .sub-text {
+      font-size: 0.92rem;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    /* ==========================================================================
+       MAPA GERAL DO LIVRO (NA INTRODUÇÃO)
+       ========================================================================== */
+    .book-map-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .map-part-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 5px solid var(--navy-950);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .map-part-card.part-accent {
+      border-top-color: var(--gold-500);
+    }
+
+    .map-part-title {
+      font-family: var(--font-serif);
+      font-size: 0.95rem;
+      font-weight: 900;
+      color: var(--navy-950);
+      margin-bottom: 4px;
+    }
+
+    .map-part-desc {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .map-chap-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .map-chap-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--navy-50);
+      border: 1px solid #D5E0F0;
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--navy-950);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+    }
+
+    .map-chap-btn:hover {
+      background: var(--navy-950);
+      color: var(--gold-400);
+      border-color: var(--navy-950);
+    }
+
+    .map-chap-btn span.num {
+      background: var(--gold-500);
+      color: var(--navy-950);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       BOTÕES DE PAGINAÇÃO NO RODAPÉ
+       ========================================================================== */
+    .pager-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 2px solid var(--border);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pager-btn {
+      background: var(--navy-950);
+      color: var(--white);
+      border: 2px solid var(--navy-950);
+      padding: 11px 18px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pager-btn:hover {
+      background: var(--navy-700);
+      border-color: var(--gold-500);
+      color: var(--gold-400);
+    }
+
+    .pager-btn.next {
+      background: var(--gold-500);
+      border-color: var(--gold-500);
+      color: var(--navy-950);
+      margin-left: auto;
+    }
+
+    .pager-btn.next:hover {
+      background: var(--gold-400);
+      border-color: var(--navy-950);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      :root { --topbar-h: 112px; }
+
+      .mobile-menu-btn { display: inline-flex; }
+
+      .sidebar {
+        transform: translateX(-100%);
+        width: 300px;
+        box-shadow: 6px 0 28px rgba(10, 25, 47, 0.4);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+
+      .main-stage {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 22px 16px 64px;
+      }
+
+      .diag-flow { flex-direction: column; }
+      .diag-arrow { transform: rotate(90deg); padding: 2px 0; }
+      .diag-tension { grid-template-columns: 1fr; }
+      .tension-mid { max-width: 100%; }
+      .diag-grid.cols-2, .diag-grid.cols-3, .diag-grid.cols-4, .diag-grid.cols-5, .book-map-grid {
+        grid-template-columns: 1fr;
+      }
+      .bar-row { grid-template-columns: 120px 1fr 64px; }
+      .hero-card { padding: 22px 20px; }
+      .hero-title { font-size: 1.45rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR FIXA -->
+  <header class="topbar">
+    <div class="topbar-main">
+      <div class="brand-left">
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir sumário">☰ Índice</button>
+        <div>
+          <h1 class="brand-title">The Future as <span>Cultural Fact</span></h1>
+          <div class="brand-sub">Arjun Appadurai (2013) • Ensaios sobre a Condição Global — Infográfico Explicativo</div>
+        </div>
+      </div>
+      <nav class="parts-filter" aria-label="Filtro rápido por partes do livro">
+        <button class="part-btn active" data-part-jump="cap-0" data-part-id="part-0">Introdução</button>
+        <button class="part-btn" data-part-jump="cap-1" data-part-id="part-1">Parte 1: Geografias</button>
+        <button class="part-btn" data-part-jump="cap-6" data-part-id="part-2">Parte 2: Mumbai</button>
+        <button class="part-btn" data-part-jump="cap-11" data-part-id="part-3">Parte 3: Futuro</button>
+      </nav>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="progress-label" id="progressLabel">Seção 1 de 16 • Introdução</div>
+    </div>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-layout">
+    <!-- MENU LATERAL FIXO (GERADO AUTOMATICAMENTE COM TODOS OS CAPÍTULOS E SUBCAPÍTULOS) -->
+    <aside class="sidebar" id="sidebar" aria-label="Sumário completo do livro">
+      <div class="sidebar-controls">
+        <span class="sidebar-heading">Sumário Interativo</span>
+        <button class="toggle-all-btn" id="toggleAllBtn">Expandir Todos</button>
+      </div>
+      <div id="sidebarNavRoot"></div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="main-stage">
+      <div class="chapter-container" id="chapterRoot"></div>
+    </main>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       BANCO DE DADOS COMPLETO E RIGOROSO DO LIVRO (INTRODUÇÃO + 15 CAPÍTULOS)
+       ========================================================================== */
+    const BOOK_DATA = [
+      /* ------------------------------------------------------------------------
+         0. INTRODUÇÃO
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-0",
+        num: "Intro",
+        partId: "part-0",
+        partLabel: "Visão Geral",
+        title: "O Futuro como Horizonte Cultural",
+        origTitle: "Introduction",
+        summary: "Arjun Appadurai situa este livro como a terceira etapa de sua reflexão sobre a globalização pós-1989. Diante da expansão global do risco calculável (crise financeira de 2007–2010), propõe uma antropologia voltada para o futuro, capaz de fortalecer a política da possibilidade contra a ética da probabilidade.",
+        thesis: "A globalização contemporânea não se define apenas por fluxos de bens e pessoas, mas pelo embate entre a gestão estatística do risco (ética da probabilidade) e a luta coletiva por imaginação, esperança e dignidade (política da possibilidade).",
+        showBookMap: true,
+        schemas: [
+          {
+            title: "A Trilogia de Appadurai sobre a Globalização (1996–2013)",
+            type: "flow",
+            nodes: [
+              { title: "1996 • Modernity at Large", body: "Foco nos fluxos culturais globais (scapes), mídia, migração e o trabalho da imaginação pós-Muro de Berlim." },
+              { title: "2006 • Fear of Small Numbers", body: "Autocrítica e foco nos bloqueios, fronteiras, violência etnocida dos anos 1990 e guerras civilizacionais.", tone: "gold" },
+              { title: "2013 • The Future as Cultural Fact", body: "Síntese crítica: sociedade do risco, ativismo em Mumbai e construção de uma Antropologia do Futuro.", tone: "navy" }
+            ],
+            caption: "O livro revisita a circulação de coisas (Parte 1), mergulha no ativismo urbano em Mumbai (Parte 2) e propõe ferramentas para projetar o futuro (Parte 3)."
+          },
+          {
+            title: "A Grande Tensão do Livro: Probabilidade vs. Possibilidade",
+            type: "tension",
+            left: {
+              title: "Ética da Probabilidade",
+              tone: "navy",
+              bullets: [
+                "Reduz toda incerteza da vida a risco estatístico calculável.",
+                "Domina mercados financeiros, derivativos, seguros e governança tecnocrática.",
+                "Transforma crises e catástrofes em oportunidade de lucro especulativo."
+              ]
+            },
+            mid: { sym: "⚔", text: "Disputa pelo Futuro" },
+            right: {
+              title: "Política da Possibilidade",
+              tone: "gold",
+              bullets: [
+                "Aposta na imaginação coletiva, na esperança e na capacidade de aspirar.",
+                "Movimentos de base (SPARC/SDI, PUKAR) em megacidades como Mumbai.",
+                "Usa design democrático e o direito à pesquisa para ampliar horizontes."
+              ]
+            },
+            caption: "Para Appadurai, a economia monopolizou o estudo do futuro via cálculo de risco; cabe às ciências sociais e à antropologia resgatar o futuro como fato cultural."
+          }
+        ],
+        subchapters: []
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 1 — CAPÍTULO 1
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-1",
+        num: "Cap. 1",
+        partId: "part-1",
+        partLabel: "Parte 1: Geografias em Movimento",
+        title: "Mercadorias e a Política do Valor",
+        origTitle: "Commodities and the Politics of Value",
+        summary: "Publicado originalmente em 1986 em The Social Life of Things, este ensaio seminal propõe seguir 'as coisas em movimento'. Objetos não são mudos nem passivos: eles têm vidas sociais, entram e saem do estado de mercadoria conforme regimes culturais de valor e disputas políticas.",
+        thesis: "A troca econômica cria valor, o valor encarna-se em mercadorias, e o elo que conecta troca e valor é a política — entendida em sentido amplo como relações e disputas de poder.",
+        schemas: [
+          {
+            title: "A Fórmula de Appadurai (a partir de Georg Simmel)",
+            type: "flow",
+            nodes: [
+              { title: "Troca Econômica", body: "Supera a distância entre desejo e posse através da troca recíproca de sacrifícios." },
+              { title: "Criação de Valor", body: "O valor não é inerente ao objeto; nasce na própria troca e no julgamento social.", tone: "gold" },
+              { title: "Mercadorias em Movimento", body: "Fetichismo metodológico: seguir a trajetória das coisas revela seu contexto humano." },
+              { title: "POLÍTICA (Elo Mediador)", body: "Poder, privilégio e disputa definem o que circula, a que preço e para quem.", tone: "navy" }
+            ],
+            caption: "Contra a visão puramente focada na produção, Appadurai mostra que as trajetórias de circulação e consumo moldam o valor."
+          },
+          {
+            title: "A 'Situação Mercadoria' em 3 Eixos",
+            type: "grid",
+            cols: 3,
+            items: [
+              { title: "1. Fase Mercadoria (Tempo)", body: "Momento na biografia social de um objeto em que sua trocabilidade se torna seu traço central (pode ser temporária ou reversível)." },
+              { title: "2. Candidatura (Cultura)", body: "Padrões simbólicos e morais — ou 'regimes de valor' — que determinam se algo pode ser trocado (mesmo com baixo compartilhamento cultural).", tone: "gold" },
+              { title: "3. Contexto (Arena Social)", body: "O espaço social que conecta candidatura e fase: leilões de arte, bazares, casamentos, comércio silencioso com estrangeiros.", tone: "navy" }
+            ],
+            caption: "Mercadoria não é um tipo fixo de objeto, mas uma situação específica pela qual quase qualquer coisa pode passar."
+          },
+          {
+            title: "Os 4 Tipos de Mercadoria",
+            type: "grid",
+            cols: 4,
+            items: [
+              { title: "Por Destinação", body: "Objetos fabricados desde o início especificamente para serem trocados no mercado." },
+              { title: "Por Metamorfose", body: "Coisas feitas para outros fins (uso doméstico, ritual) que acabam inseridas no circuito de troca." },
+              { title: "Por Desvio", body: "Caso extremo: objetos originalmente protegidos contra venda que são desviados para o mercado (ex.: arte turística, saque).", tone: "gold" },
+              { title: "Ex-mercadorias", body: "Objetos retirados temporária ou definitivamente da circulação comercial (relíquias, heranças de família).", tone: "navy" }
+            ],
+            caption: "Adaptação de Jacques Maquet: a fronteira entre o comercializável e o sagrado/singular é dinâmica e historicamente mutável."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-1-1",
+            code: "1.1",
+            title: "O Espírito da Mercadoria",
+            orig: "The Spirit of the Commodity",
+            text: "Appadurai critica a oposição rígida da antropologia clássica entre Dádiva (Mauss: solidariedade, vínculo pessoal) e Mercadoria (Marx: cálculo frio, capitalismo moderno), bem como o Escambo. Apoiando-se em Pierre Bourdieu, mostra que o intervalo de tempo na dádiva disfarça o cálculo estratégico — logo, cálculo e sociabilidade coexistem em diferentes graus em todas as formas de troca.",
+            schemas: [
+              {
+                title: "Continuum das Trocas: Cálculo e Sociabilidade",
+                type: "compare",
+                headers: ["Dimensão", "Escambo (Troca Direta)", "Dádiva (Mauss / Bourdieu)", "Mercadoria Capitalista"],
+                rows: [
+                  ["Papel do Dinheiro", "Ausente ou apenas unidade de conta.", "Ausente; mediada por reciprocidade pessoal.", "Central; equivalente geral impessoal."],
+                  ["Cálculo / Interesse", "Alto e explícito; busca reduzir custos sociais.", "Presente, mas disfarçado pelo intervalo de tempo.", "Explícito, instantâneo e contratual."],
+                  ["Regulação Cultural", "Existe: define o que, quando e com quem trocar.", "Altíssima etiqueta social e prestígio.", "Regida por regimes de valor, moda e mercado."]
+                ],
+                caption: "Mercadorias não são monopólio do capitalismo industrial; existem em múltiplas sociedades em graus variados de intensidade."
+              }
+            ]
+          },
+          {
+            id: "sub-1-2",
+            code: "1.2",
+            title: "Caminhos e Desvios",
+            orig: "Paths and Diversions",
+            text: "A circulação de bens oscila entre caminhos culturalmente regulados e desvios estratégicos. No sistema Kula da Melanésia, colares e braceletes percorrem rotas (keda) que constroem a fama dos homens; bens chamados kitoum conectam o circuito de prestígio às trocas locais. Eventos como o Kula e os leilões de arte ocidentais funcionam como 'Torneios de Valor'. Enquanto elites criam 'enclaves' (monopólios reais, relíquias medievais, rituais) para congelar o status, indivíduos e crises promovem 'desvios' (saques, arte turística, estética do objeto encontrado).",
+            schemas: [
+              {
+                title: "Dialética do Fluxo: Enclaves vs. Desvios",
+                type: "tension",
+                left: {
+                  title: "Enclaves (Caminhos Fixos)",
+                  tone: "navy",
+                  bullets: [
+                    "Estratégia de grupos poderosos e elites.",
+                    "Protege bens da mercantilização ('desmercantilização por cima').",
+                    "Exemplos: bens reais Lozi, relíquias, objetos rituais terminais."
+                  ]
+                },
+                mid: { sym: "⇄", text: "Motor da Mudança Cultural" },
+                right: {
+                  title: "Desvios (Novos Caminhos)",
+                  tone: "gold",
+                  bullets: [
+                    "Estratégia de empreendedores, artistas ou efeito de crises/guerras.",
+                    "Descontextualiza objetos e cria valor pela novidade ou raridade.",
+                    "Exemplos: saque de guerra, arte turística, moda Bauhaus."
+                  ]
+                },
+                caption: "Quando um desvio se torna previsível, transforma-se em um novo caminho — gerando o ciclo histórico de renovação do valor."
+              }
+            ]
+          },
+          {
+            id: "sub-1-3",
+            code: "1.3",
+            title: "Desejo e Demanda",
+            orig: "Desire and Demand",
+            text: "A demanda não brota de necessidades biológicas fixas nem de desejos naturais infinitos: é a expressão econômica de uma lógica política de consumo. Entre os Muria Gond da Índia, ricos praticam 'parcimônia conspícua' para preservar a igualdade comunitária; já Gandhi politizou o tecido indiano (khadi) contra o império britânico. Appadurai resgata Werner Sombart para mostrar o papel do luxo na origem do capitalismo e opõe leis suntuárias pré-modernas à moda moderna.",
+            schemas: [
+              {
+                title: "Regulação Social da Demanda: Leis Suntuárias vs. Moda",
+                type: "compare",
+                headers: ["Característica", "Leis Suntuárias e Tabus (Pré-moderno)", "Sistema da Moda (Capitalismo Moderno)"],
+                rows: [
+                  ["Mecanismo de Controle", "Restringe legal/moralmente quem pode usar certos bens.", "Controla o 'bom gosto' por meio de formadores de opinião."],
+                  ["Velocidade", "Lenta, rígida e voltada à estabilidade hierárquica.", "Altíssima rotatividade e obsolescência constante."],
+                  ["Efeito Social", "Mantém posições fixas de casta, estamento ou linhagem.", "Cria ilusão de acesso democrático, mas reproduz distinção de classe."]
+                ]
+              },
+              {
+                title: "Os 5 Atributos do 'Registro do Luxo' (Sombart / Appadurai)",
+                type: "grid",
+                cols: 5,
+                items: [
+                  { title: "1. Restrição", body: "Acesso limitado às elites por lei ou preço." },
+                  { title: "2. Aquisição Complexa", body: "Dificuldade de obter (escassez real ou social)." },
+                  { title: "3. Virtuosismo Semiótico", body: "Alta capacidade de emitir sinais sociais complexos.", tone: "gold" },
+                  { title: "4. Saber Especializado", body: "Exige conhecimento de moda/etiqueta para consumo adequado." },
+                  { title: "5. Vínculo Corporal", body: "Forte associação ao corpo, à pessoa e à personalidade.", tone: "navy" }
+                ],
+                caption: "O luxo não é uma classe fixa de objetos, mas um 'registro' retórico e político que responde a necessidades de poder."
+              }
+            ]
+          },
+          {
+            id: "sub-1-4",
+            code: "1.4",
+            title: "Conhecimento e Mercadorias",
+            orig: "Knowledge and Commodities",
+            text: "Quanto maior a distância geográfica e social entre produtores e consumidores, maiores são as lacunas de conhecimento — abrindo espaço para intermediários, disputas por 'autenticidade' (como nos tapetes orientais, obras de arte e relíquias) e a mercantilização da própria expertise e publicidade ('fetichismo do consumidor'). Essa desconexão gera três tipos de mitologias sobre a circulação de bens.",
+            schemas: [
+              {
+                title: "As 3 Mitologias da Alienação na Circulação de Mercadorias",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "1. Comerciantes / Especuladores", body: "Ex.: Bolsa de Grãos de Chicago (mercados futuros). Separação radical entre preço e valor: busca quase mágica por fórmulas para prever oscilações (metafetichização).", tone: "navy" },
+                  { title: "2. Consumidores Alienados", body: "Ex.: Cultos de Carga na Oceania. Sem conhecer a produção europeia, nativos imitam rituais e signos ocidentais para atrair bens de prestígio.", tone: "gold" },
+                  { title: "3. Produtores Alienados", body: "Ex.: Minas de estanho na Bolívia (Taussig). Trabalhadores desconectados do mercado global personificam o risco e a ganância do capital na figura ritual do Diabo." }
+                ],
+                caption: "O afastamento entre produção, troca e consumo não gera transparência racional, mas mitologias específicas em cada polo."
+              }
+            ]
+          },
+          {
+            id: "sub-1-5",
+            code: "1.5",
+            title: "Conclusão: Política e Valor",
+            orig: "Conclusion: Politics and Value",
+            text: "No cotidiano, a troca parece rotineira e neutra, mas ela se sustenta sobre acordos políticos tácitos. A política do valor nasce de uma contradição estrutural no topo das sociedades: as elites desejam congelar o sistema de bens para proteger seus privilégios, mas competem entre si e precisam incorporar novidades, desestabilizando as próprias regras.",
+            schemas: [
+              {
+                title: "O Paradoxo das Elites: O 'Cavalo de Troia' da Mudança de Valor",
+                type: "flow",
+                nodes: [
+                  { title: "Desejo de Congelamento", body: "Elites tentam fechar o universo de mercadorias (enclaves, tabus, leis suntuárias) para preservar status.", tone: "navy" },
+                  { title: "Disputa Interna pelo Poder", body: "Rivais e aspirantes à elite buscam diferenciação usando bens estrangeiros ou desvios.", tone: "gold" },
+                  { title: "Abertura de Brechas", body: "Regras se afrouxam, novos fluxos entram e transformam o regime de valor de toda a sociedade." }
+                ],
+                caption: "A política desmistifica o lado da demanda, assim como a economia política clássica desmistificou o lado da produção."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 1 — CAPÍTULO 2
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-2",
+        num: "Cap. 2",
+        partId: "part-1",
+        partLabel: "Parte 1: Geografias em Movimento",
+        title: "Como Histórias Fazem Geografias",
+        origTitle: "How Histories Make Geographies: Circulation and Context in a Global Perspective",
+        summary: "Appadurai revisita os estudos de área e os fluxos culturais globais para propor uma inversão teórica fundamental: as geografias não são palcos naturais fixos onde a história acontece, mas produtos históricos construídos por agentes, imaginações e circuitos — cheios de atritos e bloqueios.",
+        thesis: "Não são as geografias que moldam as histórias, mas as histórias (agentes, fluxos e o trabalho da imaginação) que fabricam as geografias — por meio da tensão constante entre a 'circulação de formas' e as 'formas de circulação'.",
+        schemas: [
+          {
+            title: "A Inversão Epistemológica: Histórias Produzem Geografias",
+            type: "tension",
+            left: {
+              title: "Visão Tradicional (Refutada)",
+              bullets: [
+                "Geografia como paisagem física fixa e preexistente.",
+                "Regiões e civilizações como caixas estáticas.",
+                "História apenas 'acontece' sobre o mapa."
+              ]
+            },
+            mid: { sym: "➜", text: "Inversão de Appadurai" },
+            right: {
+              title: "Geografias Historicamente Produzidas",
+              tone: "navy",
+              bullets: [
+                "Agentes, instituições, comércio, guerras e imaginação criam geografias.",
+                "Existem múltiplas geografias sobrepostas (comerciais, religiosas, criminais).",
+                "A localidade é sempre um trabalho em construção, não um dado natural."
+              ]
+            },
+            caption: "Essa virada supera a rigidez dos estudos de área tradicionais e ajuda a entender regiões e megacidades globais."
+          },
+          {
+            title: "A Dupla Dinâmica Global e os 'Solavancos' (Bumps)",
+            type: "flow",
+            nodes: [
+              { title: "Circulação de Formas", body: "Estilos, gêneros e moldes (nação, romance, constituição, mangá, ativismo) que viajam globalmente.", tone: "gold" },
+              { title: "Formas de Circulação", body: "Circuitos concretos, velocidades e escalas distintas pelos quais coisas e ideias trafegam.", tone: "navy" },
+              { title: "Atrito e Localidade", body: "Do encontro desigual entre ambas surgem bloqueios, censuras, novas fronteiras e localidades únicas." }
+            ],
+            caption: "A globalização não homogeneíza o planeta porque a própria mecânica da circulação gera seus próprios obstáculos."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-2-1",
+            code: "2.1",
+            title: "Fluxos Culturais Globais",
+            orig: "Global Cultural Flows",
+            text: "Os fluxos acelerados pela internet e pelas corporações (finanças, biotecnologia, direitos humanos, mídia) entrelaçam-se a circuitos ilegais e paralelos (tráfico de órgãos, armas, diamantes de sangue, crime organizado ligando Mumbai, Karachi e Dubai). Fluxos novos 'pegam carona' em cadeias antigas e geram reações contraditórias — como censura estatal na China ou xenofobia na Europa.",
+            schemas: [
+              {
+                title: "Entrelaçamento de Circuitos Legais e Ilegais",
+                type: "flow",
+                nodes: [
+                  { title: "Fluxos Legais e Digitais", body: "Finanças globais, direitos humanos, terceirização e mídia eletrônica." },
+                  { title: "Sobreposição em Megacidades", body: "Desigualdades urbanas e fronteiras porosas conectam capital global a redes clandestinas.", tone: "gold" },
+                  { title: "Circuitos Ilegais e Atritos", body: "Armas, diamantes, crime transnacional e reações defensivas de Estados (bloqueios).", tone: "navy" }
+                ],
+                caption: "Os fluxos globais hoje entram na própria 'fábrica' de produção de subjetividades locais, e não apenas na superfície das culturas."
+              }
+            ]
+          },
+          {
+            id: "sub-2-2",
+            code: "2.2",
+            title: "Alguns Dilemas de Método",
+            orig: "Some Dilemmas of Method",
+            text: "A comparação clássica nas ciências sociais supunha que os objetos comparados eram independentes entre si. Num mundo interligado, como comparar sem ignorar as conexões? Appadurai propõe separar analiticamente Conectividade (laços estruturais/históricos) de Circulação (intensidade e volume de trocas em movimento).",
+            schemas: [
+              {
+                title: "Matriz 2x2: Conectividade vs. Circulação",
+                type: "matrix2x2",
+                corner: "Circulação \\ Conectividade",
+                colHeaders: ["Baixa Conectividade", "Alta Conectividade"],
+                rowHeaders: ["Baixa Circulação", "Alta Circulação"],
+                cells: [
+                  { title: "Sociedades Isoladas", body: "Sociedades de baixa tecnologia e geograficamente isoladas: poucos vínculos externos e baixo fluxo." },
+                  { title: "Budismo na Ásia (1º Milênio)", body: "Alta conectividade cultural e religiosa de longa duração sem alto volume constante de circulação cotidiana." },
+                  { title: "Turcos na Alemanha", body: "Alta circulação de trabalhadores migrantes entre Turquia e Alemanha, mas sem integração/conectividade proporcional." },
+                  { title: "Globalização Contemporânea", body: "Altíssima conectividade estrutural combinada com circulação veloz e maciça de capitais, imagens e pessoas.", highlight: true }
+                ],
+                caption: "A política do valor (Cap. 1) nasce exatamente no atrito entre circulação e conectividade."
+              }
+            ]
+          },
+          {
+            id: "sub-2-3",
+            code: "2.3",
+            title: "A Circulação de Formas",
+            orig: "The Circulation of Forms",
+            text: "Mais importante do que o hibridismo de conteúdos isolados é a coabitação de 'formas' (como a forma-nação, a forma-romance de Benedict Anderson ou o performativo 'Nós, o Povo'). Como há nações sem romances e romances sem nações, essas formas viajam em ritmos desiguais e criam novos contextos locais ao se tensionarem mutuamente.",
+            schemas: [
+              {
+                title: "Além da Mistura de Conteúdos: A Coabitação de Formas",
+                type: "flow",
+                nodes: [
+                  { title: "Formas Circulantes", body: "Forma-nação, romance, constituição, ativismo de base." },
+                  { title: "Negociação Local", body: "Trabalho da imaginação adapta e tensiona formas diferentes no mesmo espaço.", tone: "gold" },
+                  { title: "Novos 'Contêineres' Locais", body: "Surgem localidades inéditas que moldam os conteúdos da prática cotidiana.", tone: "navy" }
+                ],
+                caption: "O global não é uma mistura confusa de conteúdos, mas o local da transformação mútua de formas circulantes."
+              }
+            ]
+          },
+          {
+            id: "sub-2-4",
+            code: "2.4",
+            title: "As Formas de Circulação",
+            orig: "The Forms of Circulation",
+            text: "Nem tudo trafega pelos mesmos canais, velocidades ou escalas. Appadurai usa o exemplo asiático: o cinema de Mumbai filma em Hong Kong e Singapura, mas o cinema chinês ou japonês raramente olha para a Índia. Fuzis AK-47 circulam mais rápido que universidades. As modernidades emergem justamente na tensão entre o tráfego pesado e os congestionamentos.",
+            schemas: [
+              {
+                title: "Tráfego Rápido vs. Bloqueios Culturais e Políticos",
+                type: "tension",
+                left: {
+                  title: "Tráfego Rápido e Pesado",
+                  tone: "gold",
+                  bullets: [
+                    "Impulsionado por mercados, capital e empreendedorismo.",
+                    "Ex.: armas (AK-47), derivativos, moda, mercadorias globais."
+                  ]
+                },
+                mid: { sym: "⚡", text: "Descompasso de Velocidades" },
+                right: {
+                  title: "Tráfego Lento e Bloqueios",
+                  tone: "navy",
+                  bullets: [
+                    "Freados por preconceitos culturais e fronteiras estatais.",
+                    "Ex.: intercâmbio universitário, cinema indiano na China, empatia política."
+                  ]
+                },
+                caption: "As localidades são negociações temporárias entre formas globais — e constituem a principal evidência empírica da globalização."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 1 — CAPÍTULO 3
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-3",
+        num: "Cap. 3",
+        partId: "part-1",
+        partLabel: "Parte 1: Geografias em Movimento",
+        title: "A Moralidade da Recusa",
+        origTitle: "The Morality of Refusal",
+        summary: "Appadurai desconstrói a imagem simplista da não-violência de Mahatma Gandhi como mera passividade ou pacifismo ocidental. Ele revela suas duas raízes indianas — o ascetismo da abstenção e a tradição militante do sacrifício guerreiro — e mostra como violência e não-violência se relacionam à produção da ordem cotidiana.",
+        thesis: "A não-violência gandhiana não é inação, mas uma forma militante de ação política com dupla genealogia (ascetismo + sacrifício real/guerreiro). Tanto a violência quanto a não-violência devem ser entendidas em relação a um terceiro desafio: o trabalho constante de produzir ordem cotidiana.",
+        schemas: [
+          {
+            title: "A Dupla Genealogia da Não-Violência Gandhiana",
+            type: "flow",
+            nodes: [
+              { title: "Genealogia 1: Ascetismo", body: "Ahimsa (não causar dano), jejum, celibato, abstenção e controle rigoroso dos apetites corporais.", tone: "gold" },
+              { title: "Genealogia 2: Sacrifício e Guerra", body: "Tradição védica da realeza (yajna) e do asceta guerreiro militante que mobiliza força pública.", tone: "navy" },
+              { title: "Síntese em Gandhi (Satyagraha)", body: "Recusa ativa e militante (desobediência civil, jejuns até a morte, Marcha do Sal) que desarma o poder imperial." }
+            ],
+            caption: "Essa mesma raiz ambivalente explica por que Gujarat é ao mesmo tempo a terra de Gandhi e palco da militância hindu violenta moderna."
+          },
+          {
+            title: "Reenquadramento: Além da Oposição Simples",
+            type: "triangle",
+            top: "Produção da Ordem Cotidiana",
+            left: "Violência",
+            right: "Não-Violência",
+            center: "Ação Política",
+            caption: "Violência e não-violência não são meros opostos espelhados: são princípios independentes de ação que disputam como gerar previsibilidade e ordem social."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-3-1",
+            code: "3.1",
+            title: "A Dupla Genealogia da Não-Violência na Índia",
+            orig: "The Double Genealogy of Non-Violence in India",
+            text: "Gandhi sintetizou tradições hindus e ideias modernas ocidentais, mas sua não-violência carrega uma tensão interna herdada da própria história indiana: a convivência entre o ascetismo que evita ferir seres vivos e o ascetismo guerreiro que exerce força militante.",
+            schemas: [
+              {
+                title: "A Figura Ambivalente do Asceta Guerreiro",
+                type: "tension",
+                left: { title: "Polo da Abstenção", bullets: ["Controle do corpo e dos sentidos", "Evitar violência (ahimsa)", "Disciplina moral interior"] },
+                mid: { sym: "+", text: "Fusão Histórica" },
+                right: { title: "Polo da Militância", tone: "navy", bullets: ["Proeza marcial e sacrifício", "Força coletiva organizada", "Disputa pelo espaço público"] },
+                caption: "Essa fusão tanto alimentou o satyagraha pacífico quanto foi apropriada pelo nacionalismo hindu radical."
+              }
+            ]
+          },
+          {
+            id: "sub-3-2",
+            code: "3.2",
+            title: "A Não-Violência como Forma de Ação",
+            orig: "Non-Violence as a Form of Action",
+            text: "Dialogando com Hannah Arendt, Appadurai lembra que 'ação' (diferente de comportamento rotineiro) significa inaugurar algo radicalmente novo no espaço público diante de outros seres humanos. A questão central é o que a não-violência inaugura no mundo.",
+            schemas: [
+              {
+                title: "Comportamento vs. Ação Política (Hannah Arendt)",
+                type: "compare",
+                headers: ["Dimensão", "Comportamento", "Ação Política (Não-Violência)"],
+                rows: [
+                  ["Natureza", "Automático, repetitivo, conformista.", "Público, deliberado, inaugura algo novo no mundo."],
+                  ["Relação com o Outro", "Interage com rotinas ou máquinas.", "Exige presença e enfrentamento ético com outros humanos."],
+                  ["Exemplo", "Obediência passiva às leis coloniais.", "Desobediência civil pública e aberta."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-3-3",
+            code: "3.3",
+            title: "Não-Violência e Abstenção",
+            orig: "Non-Violence and Abstention",
+            text: "No Bhagavad Gita, Krishna aconselha Arjuna a agir com desapego aos frutos da ação (phala), dentro da ontologia da aparência (maya — não 'ilusão', mas 'estrutura da aparência'). Appadurai mostra que Gandhi separa pragmaticamente dois tipos de consequências: desapego aos efeitos corporais (dor) e compromisso total com o resultado moral (vitória sobre o domínio britânico).",
+            schemas: [
+              {
+                title: "Pragmatismo Ascético: Efeitos vs. Resultados",
+                type: "flow",
+                nodes: [
+                  { title: "Ação de Abstenção", body: "Desapego intramundano (estar no mundo sem ser dominado por ele)." },
+                  { title: "Efeitos Imediatos (Ignorados)", body: "Dor física, prisões e agressão policial britânica — suportados com desapego.", tone: "gold" },
+                  { title: "Resultado Desejado (Foco)", body: "Vitória moral e colapso da legitimidade do Império Britânico.", tone: "navy" }
+                ],
+                caption: "A abstenção não é passividade: é uma tecnologia ativa de desvinculação sensorial para produzir efeitos políticos poderosos."
+              }
+            ]
+          },
+          {
+            id: "sub-3-4",
+            code: "3.4",
+            title: "Não-Violência e Sacrifício",
+            orig: "Non-Violence and Sacrifice",
+            text: "Retomando Louis Dumont e Richard Burghart, Appadurai aponta uma tensão triangular na sociedade hindu clássica entre o Brâmane (dádiva/dana), o Rei (sacrifício/yajna) e o Asceta (indivíduo fora das castas, mas capaz de força guerreira). Na Índia contemporânea, a direita hindu reativa o asceta militante (tridente/trisula) para transformar violência contra muçulmanos em 'sacrifício' pela pátria.",
+            schemas: [
+              {
+                title: "O Triângulo Moral da Sociedade Indiana (Dumont / Burghart)",
+                type: "triangle",
+                top: "Asceta (Sadhu / Força Militante)",
+                left: "Rei (Sacrifício / Yajna)",
+                right: "Brâmane (Dádiva / Dana)",
+                center: "Hierarquias Múltiplas",
+                caption: "A afinidade histórica entre o Rei (sacrifício) e o Asceta (militância) sobrevive hoje nas ruas da política indiana."
+              }
+            ]
+          },
+          {
+            id: "sub-3-5",
+            code: "3.5",
+            title: "A Moralidade da Recusa",
+            orig: "The Morality of Refusal",
+            text: "Gandhi transformou a recusa pessoal (jejum, celibato, rejeição ao luxo) em arma política coletiva: desobediência civil, Marcha do Sal, boicote a tecidos britânicos e produção de khadi (swadeshi). Ao marchar desarmados contra tropas coloniais, os satyagrahis forçavam a violência estatal legalizada a se materializar brutalmente e perder sua autoridade moral.",
+            schemas: [
+              {
+                title: "Como a Recusa Ativa Desarma o Poder Imperial",
+                type: "flow",
+                nodes: [
+                  { title: "Recusa Disciplinada", body: "Boicote (hartal), jejum e desobediência civil pacífica.", tone: "gold" },
+                  { title: "Exposição da Violência", body: "Força o Estado colonial a abandonar a ameaça abstrata e exercer brutalidade física visível." },
+                  { title: "Falência Moral do Império", body: "A violência legalizada perde legitimidade diante da disciplina militante do asceta.", tone: "navy" }
+                ],
+                caption: "A moralidade da recusa exige cuidado: sua carga sacrificial também pode ser capturada por projetos nacionalistas violentos."
+              }
+            ]
+          },
+          {
+            id: "sub-3-6",
+            code: "3.6",
+            title: "Conclusão: A Produção da Ordem",
+            orig: "Conclusion: The Production of Order",
+            text: "A teoria social costuma tratar a paz e a rotina como o estado 'normal' e natural, e a violência como desvio. Appadurai inverte isso: em um mundo de megacidades superlotadas, favelas, campos de refugiados e desastres, a rotina pacífica é um 'milagre de cooperação' que exige esforço diário, improvisação e o trabalho da imaginação.",
+            schemas: [
+              {
+                title: "A Ordem Cotidiana como Conquista Frágil",
+                type: "tension",
+                left: {
+                  title: "Forças da Exceção",
+                  bullets: ["Superlotação (trens de Mumbai)", "Desastres e deslocamentos", "Propaganda de ódio e crime"]
+                },
+                mid: { sym: "🛡️", text: "Trabalho Diário de Cooperação" },
+                right: {
+                  title: "Previsibilidade Cotidiana",
+                  tone: "navy",
+                  bullets: ["Rotina improvisada e ativa", "Tolerância construída dia a dia", "Não-violência como recusa militante do caos"]
+                },
+                caption: "A paz não é um piloto automático: comunidades pobres arrancam a previsibilidade das garras da exceção todos os dias."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 1 — CAPÍTULO 4
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-4",
+        num: "Cap. 4",
+        partId: "part-1",
+        partLabel: "Parte 1: Geografias em Movimento",
+        title: "A Parte Ofensiva: Sacrifício e Etnocídio",
+        origTitle: "The Offending Part: Sacrifice and Ethnocide in the Era of Globalization",
+        summary: "Por que a era da globalização produziu explosões de crueldade corporal extrema (mutilações, amputações, estupros em massa) em lugares como Ruanda, Bósnia, Serra Leoa e Índia? Appadurai analisa como a busca por pureza nacional se funde à lógica sacrificial e cirúrgica de extirpar a 'parte ofensiva'.",
+        thesis: "A violência etnocida contemporânea excede o cálculo político racional: ela nasce da colisão entre a incerteza identitária gerada pela globalização e a 'ansiedade da incompletude' das maiorias nacionais, operando como uma 'cirurgia política' para purificar o corpo da nação.",
+        schemas: [
+          {
+            title: "A Espiral do Etnocídio na Globalização",
+            type: "flow",
+            nodes: [
+              { title: "Fluxos Globais", body: "Erodem fronteiras, soberania econômica e certezas sobre quem é 'nós' e 'eles'." },
+              { title: "Incerteza + Incompletude", body: "Minorias lembram à maioria a pequena distância que falta para a 'pureza nacional total'.", tone: "gold" },
+              { title: "Maiorias Predatórias", body: "A diferença em si torna-se intolerável; surge um 'excedente de raiva'." },
+              { title: "Violência Extrema", body: "Limpeza étnica e mutilação corporal como tentativas brutais de criar certeza.", tone: "navy" }
+            ],
+            caption: "A violência em larga escala não apenas expressa identidades fixas — ela é o próprio mecanismo usado para fabricar a ilusão de identidades puras."
+          },
+          {
+            title: "A Metáfora da 'Parte Ofensiva' na Cirurgia Política",
+            type: "flow",
+            nodes: [
+              { title: "Raiz Bíblica e Sacrificial", body: "'Se a tua mão te faz tropeçar, corta-a' + purgação ritual (katharma / pharmakos)." },
+              { title: "Medicina e Cirurgia", body: "Linguagem de doença, malignidade, sujeira e excisão de partes 'doentes'.", tone: "gold" },
+              { title: "Cirurgia Política", body: "Amputação, verificação corporal e remoção de minorias vistas como 'câncer' do corpo nacional.", tone: "navy" }
+            ],
+            caption: "Tecnologias modernas de terapia e corte fundem-se a rituais arcaicos de purificação para produzir formas inéditas de crueldade."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-4-1",
+            code: "4.1",
+            title: "Partes e Todos",
+            orig: "Parts and Wholes",
+            text: "Desde o século XVII, o Estado-nação tornou-se o 'todo sagrado' supremo da modernidade, sustentado por atributos somáticos (solo, sangue, língua, raça) e dispositivos burocráticos (fronteiras, censos). Isso gera uma tensão permanente entre a cidadania política formal e a fantasia de pureza étnica do povo.",
+            schemas: [
+              {
+                title: "A Tensão Estrutural do Estado-Nação Moderno",
+                type: "tension",
+                left: { title: "Cidadania Formal (Política)", bullets: ["Contrato legal e direitos universais", "Representação eleitoral e procedimentos", "Inclusão de subgrupos e minorias"] },
+                mid: { sym: "⚖", text: "Conflito Permanente" },
+                right: { title: "Povo Substantivo (Ethnos)", tone: "navy", bullets: ["Afinidade pré-contratual (sangue e solo)", "Obsessão por singularidade e pureza", "Vê minorias como ameaça ao todo sagrado"] },
+                caption: "Quando o ideal de pureza étnica sobrepuja a cidadania formal, as minorias passam a ser vistas como 'partes problemáticas'."
+              }
+            ]
+          },
+          {
+            id: "sub-4-2",
+            code: "4.2",
+            title: "Sangue, Sacrifício, Guerra",
+            orig: "Blood, Sacrifice, War",
+            text: "Apoiando-se em René Girard (vítima substitutiva que contém a vingança; pharmakos/katharma), Mary Douglas (pureza e sujeira como 'matéria fora do lugar'), Benedict Anderson e Étienne Balibar, Appadurai mostra que a guerra moderna não é apenas consequência do sentimento nacional — ela é a máquina pedagógica que produz a camaradagem horizontal da nação através do sacrifício.",
+            schemas: [
+              {
+                title: "A Aliança entre Sangue Compartilhado e Sangue Derramado",
+                type: "flow",
+                nodes: [
+                  { title: "Sangue Compartilhado", body: "Ideia de família, linhagem e pureza do corpo étnico (Mary Douglas)." },
+                  { title: "Guerra e Sacrifício", body: "Mobilização militar transforma jovens em vítimas substitutivas e algozes (Girard / Balibar).", tone: "gold" },
+                  { title: "Comunidade Imaginada", body: "O sangue derramado cimenta a fraternidade, a memória e a sacralidade da nação.", tone: "navy" }
+                ],
+                caption: "Contudo, após os anos 1980, a violência desloca-se das guerras entre Estados para guerras civis e atrocidades intraestatais."
+              }
+            ]
+          },
+          {
+            id: "sub-4-3",
+            code: "4.3",
+            title: "Medo dos Pequenos Números",
+            orig: "Fear of Small Numbers",
+            text: "Por que minorias numericamente minúsculas provocam fúria desproporcional? Porque nas democracias modernas as categorias de 'maioria' e 'minoria' são móveis e instáveis (censos, eleições, migrações). Quando a incerteza social encontra a ansiedade da incompletude, o alvo deixa de ser apenas um grupo específico e passa a ser a eliminação da própria diferença — gerando frustração e excesso brutal.",
+            schemas: [
+              {
+                title: "Equação da Mobilização Etnocida",
+                type: "flow",
+                nodes: [
+                  { title: "Condições Necessárias", body: "Alta Incerteza Social + Alta Ansiedade de Incompletude (maiorias predatórias).", tone: "gold" },
+                  { title: "Condições Suficientes", body: "Estado desonesto (Iraque), legado colonial (Ruanda), constituição etnicizada (Iugoslávia) ou partição (Índia)." },
+                  { title: "Excedente de Raiva", body: "Violência pública entre vizinhos com humilhação extrema e destruição corporal.", tone: "navy" }
+                ],
+                caption: "O 'narcisismo das pequenas diferenças' torna-se letal quando a fronteira entre maioria e minoria parece ameaçada."
+              }
+            ]
+          },
+          {
+            id: "sub-4-4",
+            code: "4.4",
+            title: "Cirurgia Política e a Parte Ofensiva",
+            orig: "Political Surgery and the Offending Part",
+            text: "Appadurai cunha o termo 'cirurgia política' para descrever operações violentas sobre partes do corpo (amputações em Serra Leoa, mutilação genital, verificação corporal de circuncisão em motins na Índia, estupros de guerra na Bósnia). Diferente da frieza industrial do Holocausto, essa violência muitas vezes produz danos parciais e inesquecíveis: inscreve a incompletude no corpo do outro.",
+            schemas: [
+              {
+                title: "As Duas Funções da Cirurgia Política",
+                type: "grid",
+                cols: 2,
+                items: [
+                  { title: "1. Função Vivisseccionista / Verificação", body: "Usar o corte e o exame do corpo para 'descobrir' e fixar certezas identitárias onde fronteiras são misturadas (ex.: checar circuncisão em motins hindu-muçulmanos).", tone: "navy" },
+                  { title: "2. Função Comunicativa / Alegórica", body: "Amputar mãos ou braços (ex.: Serra Leoa) para criar terror, destruir capacidade produtiva e inscrever no corpo minoritário a incompletude temida pela maioria.", tone: "gold" }
+                ],
+                caption: "Como observou Philip Gourevitch sobre Ruanda, até o genocídio tem uma ambição social distópica: construir comunidade por meio da purgação."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 1 — CAPÍTULO 5
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-5",
+        num: "Cap. 5",
+        partId: "part-1",
+        partLabel: "Parte 1: Geografias em Movimento",
+        title: "Na Nação do Meu Pai",
+        origTitle: "In My Father's Nation: Reflections on Biography, Memory, Family",
+        summary: "Combinando teoria social e memória autobiográfica, Appadurai narra a trajetória de seu pai — jornalista que se juntou ao líder nacionalista rebelde Subhas Chandra Bose e ao Exército Nacional Indiano (INA) na Segunda Guerra — para explicar como uma abstração moderna como a nação se torna objeto de profundo afeto íntimo.",
+        thesis: "O afeto nacional não nasce de laços familiares que se expandem naturalmente para cima (primordialismo); ao contrário, é a nação — armada com a linguagem do sangue, da violência e do sacrifício — que implode e satura a vida íntima da família.",
+        schemas: [
+          {
+            title: "Crítica ao Primordialismo: A Inversão da Seta do Afeto",
+            type: "tension",
+            left: {
+              title: "Tese Primordialista (Refutada)",
+              bullets: [
+                "Afetos naturais de família e parentesco 'sobem' e se ampliam até virar nação.",
+                "Não explica por que a nação gera paixão mortal e outras coletividades (ex.: matemáticos) não."
+              ]
+            },
+            mid: { sym: "⇅", text: "Inversão de Appadurai" },
+            right: {
+              title: "Implosão da Nação na Família",
+              tone: "navy",
+              bullets: [
+                "Uma vez criada, a nação desce e satura o espaço doméstico com seus símbolos.",
+                "Sangue derramado (guerra/sacrifício) conecta-se ao sangue compartilhado (família).",
+                "A casa vira 'lugar de memória' da nação."
+              ]
+            },
+            caption: "O sangue é um universal humano não por sua biologia, mas por sua disponibilidade metafórica para unir nascimento, família, guerra e pátria."
+          },
+          {
+            title: "Crescendo em Duas Nações na Índia Pós-1947",
+            type: "compare",
+            headers: ["Dimensão", "A Nação Oficial (Nehru / Congresso)", "A Nação da Narração (Pai / Netaji Bose)"],
+            rows: [
+              ["Espaço Principal", "Escola, livros didáticos, feriados públicos, parlamento.", "Sala de casa em Bombaim, visitas, álbuns, bandeiras e medalhas."],
+              ["Estilo e Ethos", "Científico, secular, socialista, planejamento estatal.", "Romântico, aventureiro, militarizado, carismático e meio sedicioso."],
+              ["Geografia Sagrada", "Fronteiras oficiais da República da Índia (1947).", "Geografia a Leste: Bangkok, Singapura, Rangoon, Birmânia, Tóquio."],
+              ["Modo de Existência", "História oficial e arquivos do Estado.", "Memória viva por anedotas, saudação 'Jai Hind' e sacrifício mimético."]
+            ],
+            caption: "Quase todos os grupos na Índia (comunistas, dalits, mulheres, deslocados da Partição) vivem em alguma 'nação da narração' em tensão com a narrativa oficial."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-5-1",
+            code: "5.1",
+            title: "A Nação Íntima",
+            orig: "The Intimate Nation",
+            text: "Por que uma forma política recente, vasta e abstrata desperta paixões tão intensas? Appadurai descarta o primordialismo e propõe que a nação captura a energia afetiva da intimidade ao fundir o sangue dos ciclos vitais (família) com o sangue do sacrifício heroico (guerra) através de narrativas que penetram o lar.",
+            schemas: [
+              {
+                title: "Como a Nação Captura a Intimidade",
+                type: "flow",
+                nodes: [
+                  { title: "Forma Abstrata e Recente", body: "O Estado-nação moderno é vasto e impessoal." },
+                  { title: "Ponte Metafórica do Sangue", body: "Narrativas de valor, heroísmo e sacrifício ligam guerra à família.", tone: "gold" },
+                  { title: "Nação Íntima", body: "A pátria passa a ser sentida como 'mãe', 'pai' e consanguinidade.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-5-2",
+            code: "5.2",
+            title: "A Produtividade da Violência",
+            orig: "The Productivity of Violence",
+            text: "Embora maligna, a violência coletiva é socialmente produtiva: cria camaradagem intensa entre soldados, torcedores violentos ou militantes, e renova laços comunitários. O monopólio estatal da força, ligado à ideia de um 'povo' (ethnos), transforma a defesa militar em motor de pertencimento e, sob estresse, de racismo e limpeza étnica.",
+            schemas: [
+              {
+                title: "A Cadeia Produtiva da Violência Nacional",
+                type: "flow",
+                nodes: [
+                  { title: "Guerra e Sacrifício", body: "Treinamento militar, combate e perda de vidas pelo coletivo." },
+                  { title: "Solidariedade Agressiva", body: "Gera forte identificação grupal e xenofobia de guerra.", tone: "gold" },
+                  { title: "Consanguinidade Ameaçada", body: "Reescreve a família como núcleo de pureza que precisa ser defendido.", tone: "navy" }
+                ],
+                caption: "A sacralidade sentida da nação apoia-se historicamente nas práticas concretas de violência organizada."
+              }
+            ]
+          },
+          {
+            id: "sub-5-3",
+            code: "5.3",
+            title: "A Nação do Meu Pai",
+            orig: "My Father's Nation",
+            text: "S. A. Ayer, pai de Appadurai, deixou o emprego na Reuters em Bangkok em 1941 para tornar-se Ministro da Propaganda de Subhas Chandra Bose (Netaji), líder do Exército Nacional Indiano (INA) aliado ao Japão contra os britânicos. Após a derrota e morte de Bose (1945), o Congresso de Nehru marginalizou a história do INA. Em Bombaim, a casa da família tornou-se um santuário vivo de memória, visitas de veteranos e histórias dessa nação paralela.",
+            schemas: [
+              {
+                title: "Trajetória da 'Nação Paralela' (1941–1980)",
+                type: "ladder",
+                steps: [
+                  { title: "1941–1945 • O Exílio Armado", body: "S. A. Ayer une-se a Netaji Bose e ao INA no Sudeste Asiático contra o domínio britânico.", tone: "top-step" },
+                  { title: "1945–1947 • Derrota e Julgamento do Forte Vermelho", body: "Morte de Bose em acidente aéreo; julgamento de oficiais do INA inflama o nacionalismo indiano." },
+                  { title: "Pós-1947 • Marginalização Oficial", body: "O Partido do Congresso suprime o legado do INA por sua aliança com o Eixo; surgem rumores de que Bose estaria vivo.", tone: "gold-step" },
+                  { title: "Anos 1950–1980 • A Nação no Apartamento em Bombaim", body: "Livros, fotos, veteranos e histórias cotidianas mantêm viva uma nação íntima 'a leste da Índia'." }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-5-4",
+            code: "5.4",
+            title: "Sangue, Memória, Família",
+            orig: "Blood, Memory, Family",
+            text: "A nação privada do pai nunca existiu isolada da Índia oficial: ela dialogava o tempo todo com Nehru, Gandhi e os dilemas do pós-independência ('a verdade de Netaji falando ao poder de Nehru'). As famílias do INA viviam um sacrifício mimético que devolvia à nação pública sua carga emocional de perda, honra e sangue.",
+            schemas: [
+              {
+                title: "Ciclo Bidirecional: Espaço Doméstico ↔ Esfera Pública",
+                type: "tension",
+                left: { title: "Espaço Doméstico (Família)", tone: "gold", bullets: ["Histórias íntimas e anedotas", "Memória do sacrifício pessoal", "Afeto e respeito próprio"] },
+                mid: { sym: "⇄", text: "Diálogo Constante" },
+                right: { title: "Esfera Pública (Nação Oficial)", tone: "navy", bullets: ["Dramas políticos de 1947", "Identidade nacional indiana", "Recarga de magia e afeto nacional"] },
+                caption: "Ninguém é 'imaculadamente concebido' pela narrativa oficial: é no atrito com memórias familiares que o afeto nacional ganha corpo."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 2 — CAPÍTULO 6
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-6",
+        num: "Cap. 6",
+        partId: "part-2",
+        partLabel: "Parte 2: A Visão a Partir de Mumbai",
+        title: "Moradia e Esperança",
+        origTitle: "Housing and Hope",
+        summary: "Abrindo a Parte 2 dedicada a Mumbai, Appadurai analisa a crise global de moradia dos pobres urbanos. Ele demonstra como a falta de habitação segura reduz milhões à 'cidadania nua' e como movimentos de base transformam espera e precariedade em esperança política organizada.",
+        thesis: "Moradia segura não é apenas abrigo biológico, mas a ponte indispensável entre a 'cidadania nua' e a cidadania política e social plena. Contra a ameaça constante de remoção, ativistas de favelas constroem uma política de esperança baseada em paciência, precedentes e risco colaborativo.",
+        schemas: [
+          {
+            title: "A Moradia como Ponte da Cidadania",
+            type: "flow",
+            nodes: [
+              { title: "Sem Moradia Segura", body: "Remoções, despejos e invisibilidade legal reduzem pobres à 'Cidadania Nua' (Agamben: zoe).", tone: "navy" },
+              { title: "MORADIA SEGURA (Ponte)", body: "Endereço reconhecido, estabilidade espacial e dignidade doméstica.", tone: "gold" },
+              { title: "Cidadania Plena (Bios)", body: "Acesso à Cidadania Política (Estado, serviços, voto) e Social (trabalho, crédito, hospitalidade)." }
+            ],
+            caption: "Destruir sistematicamente a moradia segura dos pobres urbanos é uma violação massiva de direitos humanos que dissolve sua existência cívica."
+          },
+          {
+            title: "A Arquitetura da Esperança Política",
+            type: "tension",
+            left: {
+              title: "Política da Catástrofe / Emergência",
+              bullets: ["Demolições estatais repentinas", "Especulação imobiliária voraz", "Incerteza tóxica e paralisante"]
+            },
+            mid: { sym: "★", text: "ESPERANÇA ATIVA\n(Precedentes +\nRisco Colaborativo)" },
+            right: {
+              title: "Disciplina da Paciência",
+              tone: "navy",
+              bullets: ["Converte 'esperar POR' (passivo) em 'esperar PARA' (ativo)", "Negociação de longo prazo sem capitulação", "Transforma incerteza em risco calculável"]
+            },
+            caption: "Esperança política não é devaneio passivo: é a mediação disciplinada entre a urgência da emergência e o tempo longo da mudança estrutural."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-6-1",
+            code: "6.1",
+            title: "Abrigando a Humanidade, Construindo a Localidade",
+            orig: "Housing Humanity, Building Locality",
+            text: "Historicamente, morar não era uma mercadoria imobiliária, mas o modo como comunidades expressavam cosmologia, parentesco e dignidade. Mesmo nas favelas mais precárias do Brasil (James Holston), da África do Sul ou nas calçadas da Índia, os pobres organizam seus escassos materiais com estética e cuidado — praticando o 'habitar' (Heidegger/Levinas) como produção ativa de localidade.",
+            schemas: [
+              {
+                title: "Além do Abrigo Físico: O Significado Humano da Casa",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Proteção e Intimidade", body: "Escudo contra o clima e o olhar invasivo de estranhos." },
+                  { title: "Cosmologia e Estética", body: "Expressa valores de família, gênero, ordem e respeitabilidade.", tone: "gold" },
+                  { title: "Produção de Localidade", body: "Âncora material que afirma a humanidade mesmo em meio ao caos.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-6-2",
+            code: "6.2",
+            title: "Insegurança e Cidadania Nua",
+            orig: "Insecurity and Bare Citizenship",
+            text: "Com o avanço da demografia e dos estudos de desenvolvimento, a pobreza saiu do campo ético e virou uma 'aberração estatística'. Inspirado em Arendt e Agamben ('vida nua'), Appadurai estima entre 75 e 100 milhões de 'cidadãos nus' no mundo (despejados, deslocados internos/IDPs, refugiados, traficados), tratados como obstáculo aos investimentos globais.",
+            schemas: [
+              {
+                title: "Da Pobreza Ética à Cidadania Nua",
+                type: "flow",
+                nodes: [
+                  { title: "Pobreza Pré-Moderna", body: "Inserida em códigos éticos, religiosos e obrigações de caridade." },
+                  { title: "Medição Estatística", body: "Pobres viram massa abstrata, 'doença numérica' e falha de políticas.", tone: "gold" },
+                  { title: "Estado de Exceção Urbano", body: "Demolições e despejos criam milhões de 'cidadãos nus' invisíveis à lei.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-6-3",
+            code: "6.3",
+            title: "Cidadania Sem-Teto",
+            orig: "Unhoused Citizenship",
+            text: "Sem endereço reconhecido, o pobre urbano perde cartões de racionamento, acesso a água, saneamento, polícia, empregos confiáveis e até a capacidade de hospedar parentes — corroendo seu capital social. A casa segura possui um papel duplo indispensável para a cidadania ativa.",
+            schemas: [
+              {
+                title: "O Duplo Movimento da Moradia Segura",
+                type: "grid",
+                cols: 2,
+                items: [
+                  { title: "Foco Centrífugo (Para Dentro)", body: "Garante privacidade, intimidade doméstica, proteção familiar e descanso seguro.", tone: "gold" },
+                  { title: "Foco Centrípeto (Para Fora)", body: "Atrai direitos, documentos, ofertas de trabalho, crédito, redes de confiança e dignidade pública.", tone: "navy" }
+                ],
+                caption: "Sem o chão firme de um endereço, a volatilidade da megacidade vira um pesadelo duplo."
+              }
+            ]
+          },
+          {
+            id: "sub-6-4",
+            code: "6.4",
+            title: "Resíduos Humanos e Humanos Descartáveis",
+            orig: "Human Waste and Waste Humans",
+            text: "Na megafavela de Dharavi (Mumbai), quase um milhão de pessoas transformaram pântanos e aterros de lixo em um vibrante ecossistema produtivo e habitável. Hoje, especuladores querem tomar essa terra valorizada ($1.500/pé² por apenas $150/pé²). A resistência de Dharavi prova que 'resíduos humanos' não significam 'humanos descartáveis'.",
+            schemas: [
+              {
+                title: "O Conflito de Dharavi: Construir-pelo-Habitar vs. Estigma",
+                type: "tension",
+                left: { title: "Olhar Especulador / Estatal", bullets: ["Enxerga 'cidade de descarte' e lixo", "Trata moradores como descartáveis", "Busca 'destruição criativa' imobiliária"] },
+                mid: { sym: "⚔", text: "Resistência Organizada" },
+                right: { title: "Realidade de Dharavi", tone: "navy", bullets: ["Habitar-pelo-construir sobre aterro", "Economia de reciclagem e microempresas", "Autogoverno, censos próprios e diversidade"] }
+              }
+            ]
+          },
+          {
+            id: "sub-6-5",
+            code: "6.5",
+            title: "Paciência, Risco e Esperança",
+            orig: "Patience, Risk, and Hope",
+            text: "A Aliança de Mumbai (SPARC, NSDF e Mahila Milan, ligada à rede SDI) combate a paralisia da incerteza por meio de duas táticas-chave: a criação de 'precedentes' (projetos concretos que geram confiança mútua com o Estado) e o 'risco colaborativo'. Retomando Frank Knight, isso converte incerteza imensurável em risco compartilhável e experimentação democrática.",
+            schemas: [
+              {
+                title: "Conversão Knightiana na Luta por Moradia",
+                type: "flow",
+                nodes: [
+                  { title: "Incerteza Tóxica", body: "Ameaça imprevisível de despejo impede planejamento e mantém cidadania nua." },
+                  { title: "Precedentes + Risco Colaborativo", body: "Pobres e agentes estatais testam soluções conjuntas (banheiros, crédito, obras).", tone: "gold" },
+                  { title: "Cidadania Ativa", body: "Participar do desenho do próprio futuro já é exercer cidadania plena antes mesmo da titulação.", tone: "navy" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 2 — CAPÍTULO 7
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-7",
+        num: "Cap. 7",
+        partId: "part-2",
+        partLabel: "Parte 2: A Visão a Partir de Mumbai",
+        title: "Moradia Espectral e Limpeza Urbana",
+        origTitle: "Spectral Housing and Urban Cleansing: Notes on Millennial Mumbai",
+        summary: "Um mergulho etnográfico na transformação de Bombaim (cosmópole comercial e industrial) em Mumbai (palco de especulação imobiliária alucinada e pogroms antimuçulmanos em 1992–93). Appadurai investiga a conexão entre escassez espacial, dinheiro vivo e violência étnica.",
+        thesis: "Em Mumbai, a desmaterialização econômica (fuga das fábricas têxteis e capital financeiro especulativo) colidiu com a escassez extrema de espaço urbano, criando o terreno para que a política xenófoba do Shiv Sena reescrevesse o pesadelo habitacional como uma utopia violenta de limpeza étnica.",
+        schemas: [
+          {
+            title: "A Grande Contradição de Mumbai (Anos 1970–1990)",
+            type: "tension",
+            left: {
+              title: "Desmaterialização Econômica",
+              tone: "gold",
+              bullets: [
+                "Declínio e fuga das fábricas têxteis fordistas.",
+                "Capital financeiro ansioso e especulação global.",
+                "Economia de serviços precários e comércio de rua."
+              ]
+            },
+            mid: { sym: "⇄", text: "Crise Espacial & Violência" },
+            right: {
+              title: "Hipermaterialização Étnica",
+              tone: "navy",
+              bullets: [
+                "Ascensão do partido regional xenófobo Shiv Sena.",
+                "Corpos muçulmanos viram alvo físico da crise de espaço.",
+                "Reescrita violenta da cidade como território nacional hindu."
+              ]
+            },
+            caption: "A violência de 1992–93 concentrou-se exatamente nos bairros mais superlotados e disputados pelo mercado imobiliário ilegal."
+          },
+          {
+            title: "Desigualdade Espacial Brutal em Mumbai (43.000 hectares)",
+            type: "bars",
+            bars: [
+              { label: "População em favelas e calçadas", pct: 60, text: "~50% favelas + ~10% calçadas (>5 milhões)", val: "~60%", gold: true },
+              { label: "Terra urbana ocupada pelos pobres", pct: 8, text: "8% do solo", val: "8%", gold: false },
+              { label: "Terra de elites, indústria e vazios", pct: 92, text: "92% do solo (elites, Estado, fábricas vazias)", val: "92%", gold: false }
+            ],
+            caption: "Mais de 5 milhões de trabalhadores pobres espremidos em apenas 8% da área de uma cidade menor que Manhattan e seus arredores."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-7-1",
+            code: "7.1",
+            title: "Breve História da Descosmopolitanização",
+            orig: "A Brief History of Decosmopolitanization",
+            text: "Até os anos 1960, Bombaim era um modelo cívico indiano: comércio cosmopolita, indústria têxtil sólida, transporte digno e filas respeitadas. A partir dos anos 1970, a superlotação, o desemprego e a crise urbana abriram espaço para o Shiv Sena (fundado em 1966), que fundiu nativismo linguístico marathi ao nacionalismo hindu radical (Hindutva).",
+            schemas: [
+              {
+                title: "A Mutação Urbana: Bombaim vs. Mumbai do Milênio",
+                type: "compare",
+                headers: ["Dimensão", "Bombaim (até c. 1970)", "Mumbai do Milênio (pós-1970)"],
+                rows: [
+                  ["Base Econômica", "Cidade fordista: fábricas têxteis, porto e comércio.", "Desindustrialização, serviços, finanças e economia informal."],
+                  ["Ethos Público", "Cosmopolitismo comercial ('o que vale é a cor do dinheiro').", "Nativismo marathi e Hindutva (bodes expiatórios étnicos)."],
+                  ["Serviços e Espaço", "Transporte acessível, moradia operária (chawls) estável.", "Favelização massiva, elites em condomínios blindados e crime."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-7-2",
+            code: "7.2",
+            title: "Cidade do Dinheiro Vivo",
+            orig: "City of Cash",
+            text: "Em Mumbai, 'cash is king': pilhas de notas financiam Bollywood (dinheiro paralelo), diamantes, subornos, aluguéis e o jogo do bicho local (matka). O dinheiro vivo não indica falta de confiança — ao contrário, exige enorme confiança social e dá materialidade visível a riquezas abstratas. O problema contemporâneo é o descompasso entre esse dinheiro circulante e o capital produtivo em fuga.",
+            schemas: [
+              {
+                title: "A Disjunção entre Dinheiro Vivo e Capital",
+                type: "tension",
+                left: { title: "Dinheiro Vivo (Cash)", tone: "gold", bullets: ["Circulação rápida, visível e sensorial", "Alimenta cinema, comércio de rua e sociabilidade", "Exige redes intensas de confiança local"] },
+                mid: { sym: "≠", text: "Descompasso Pós-1970" },
+                right: { title: "Capital (Industrial / Financeiro)", tone: "navy", bullets: ["Indústria foge para cidades menores (mão de obra barata)", "Capital financeiro ansioso e especulativo", "Inflaciona imóveis sem sustentar empregos estáveis"] }
+              }
+            ]
+          },
+          {
+            id: "sub-7-3",
+            code: "7.3",
+            title: "Moradia Espectral",
+            orig: "Spectral Housing",
+            text: "Appadurai chama a habitação em Mumbai de 'espectral' porque a escassez brutal convive com ausências, fantasias e especulação: apartamentos antigos vazios e trancados pela velha lei do inquilinato (com mercado negro de luvas, o pagri), rumores sobre milhares de acres de fábricas falidas que magicamente abrigariam os pobres, corpos que dormem na rua e bancas vendendo utensílios de casa para quem não tem casa ('domesticidade sem casa').",
+            schemas: [
+              {
+                title: "A Escada da Moradia Espectral em Mumbai",
+                type: "ladder",
+                steps: [
+                  { title: "1. Corpos que são sua própria casa", body: "Dormir em público (calçadas, bancos, estações): o grau zero da moradia espectral.", tone: "top-step" },
+                  { title: "2. Espaços intersticiais e favelas", body: "Calçadas, jopad-pattis, chawls e telhados mediados por aluguel e extorsão." },
+                  { title: "3. Prédios trancados e Pagri", body: "Imóveis congelados por leis antigas viram 'mausoléus vazios' enquanto luvas em dinheiro vivo disparam.", tone: "gold-step" },
+                  { title: "4. O Espectro das Terras Fabris", body: "Fantasia especulativa de que terrenos de fábricas têxteis falidas trarão o paraíso habitacional." },
+                  { title: "5. Domesticidade Sem Casa", body: "Pobres compram objetos domésticos (lençóis, revistas de decoração) nas calçadas como reivindicação imaginária de lar." }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-7-4",
+            code: "7.4",
+            title: "Limpeza Urbana",
+            orig: "Urban Cleansing",
+            text: "A renomeação oficial para Mumbai (1996) buscou apagar o passado cosmopolita e afirmar uma cidade marathi e hindu. Em dez/1992 e jan/1993, após a destruição da mesquita Babri Masjid, demolições municipais contra ambulantes em áreas muçulmanas fundiram-se à campanha do Shiv Sena (rituais públicos maha arati, boatos de invasão paquistanesa), transformando a disputa por espaço em pogroms. Ainda assim, comitês de bairro e ONGs defendem a 'Bombaim real' secular e inclusiva.",
+            schemas: [
+              {
+                title: "Conjuntura da Violência de 1992–1993",
+                type: "flow",
+                nodes: [
+                  { title: "Estresse Espacial Extremo", body: "Disputa de soma zero por moradia, calçadas e demolições municipais." },
+                  { title: "Sutura Política (Shiv Sena)", body: "Associa o muçulmano local ao crime imobiliário e ao 'inimigo paquistanês'.", tone: "gold" },
+                  { title: "Utopia Monstruosa", body: "Violência e rituais de rua tentam criar um espaço hindu 'limpo' (mas aberto ao capital global).", tone: "navy" }
+                ],
+                caption: "Na conclusão do capítulo ('Arguments for the Real'), Appadurai destaca os comitês de paz (mohulla) e ONGs que mantêm viva a luta por uma Mumbai justa."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 2 — CAPÍTULO 8
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-8",
+        num: "Cap. 8",
+        partId: "part-2",
+        partLabel: "Parte 2: A Visão a Partir de Mumbai",
+        title: "Democracia Profunda",
+        origTitle: "Deep Democracy: Urban Governmentality and the Horizon of Politics",
+        summary: "Com o esgotamento do marxismo estatal e do desenvolvimentismo tecnocrático pós-1989, surge uma nova forma de política emancipatória: a 'democracia profunda'. Appadurai analisa a Aliança de Mumbai e sua rede global (SDI) como exemplos de governamentalidade por baixo e globalização por baixo.",
+        thesis: "A 'democracia profunda' combina raízes locais intensas (auto-organização, poupança e controle técnico pelos pobres) com redes horizontais sem fronteiras, invertendo os instrumentos da governamentalidade estatal a favor dos moradores de favelas.",
+        schemas: [
+          {
+            title: "Os Dois Eixos da Democracia Profunda",
+            type: "tension",
+            left: {
+              title: "Eixo Vertical (Raízes Locais)",
+              tone: "navy",
+              bullets: [
+                "Inclusão, transparência e participação direta nas favelas.",
+                "Negociação paciente com burocracias municipais, estaduais e federais.",
+                "Liderança dos próprios pobres (especialmente mulheres)."
+              ]
+            },
+            mid: { sym: "+", text: "DEMOCRACIA\nPROFUNDA" },
+            right: {
+              title: "Eixo Horizontal (Alcance Global)",
+              tone: "gold",
+              bullets: [
+                "Rede SDI (Shack/Slum Dwellers International) em 14+ países.",
+                "Trocas horizontais de aprendizado favela-a-favela.",
+                "Crítica interna franca a distância e prestígio diante de governos."
+              ]
+            },
+            caption: "A lateralidade global fortalece a profundidade local, criando um ciclo que sustenta uma 'democracia sem fronteiras'."
+          },
+          {
+            title: "Governamentalidade por Baixo (Foucault Invertido)",
+            type: "flow",
+            nodes: [
+              { title: "Governamentalidade Estatal", body: "Censos, mapas e planejamento feitos de cima para vigiar e controlar populações." },
+              { title: "Apropriação pela Aliança", body: "Moradores fazem seus próprios censos, projetos de casas e gestão de banheiros.", tone: "gold" },
+              { title: "Contra-Governamentalidade", body: "Os pobres deixam de ser invisíveis e passam a negociar políticas públicas em seus próprios termos.", tone: "navy" }
+            ],
+            caption: "A Aliança vira as ferramentas técnicas do Estado contra a própria exclusão estatal."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-8-1",
+            code: "8.1",
+            title: "A Aliança de Mumbai (O Tripé Organizacional)",
+            orig: "Globalization from Below / The Story / Theoretical Points of Entry",
+            text: "Formada em 1987 no contexto da crise de redundância do Estado-nação e do crescimento das ONGs globais, a Aliança de Mumbai une três organizações com perfis complementares, além do movimento de crianças de rua Sadak Chaap. Seu princípio fundador é anti-especialista: ninguém sabe mais sobre sobreviver à pobreza do que os próprios pobres.",
+            schemas: [
+              {
+                title: "O Tripé da Aliança de Mumbai",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "SPARC (ONG, 1984)", body: "Assistentes sociais e técnicos de classe média: fazem ponte jurídica, contábil e internacional com doadores e Estado.", tone: "navy" },
+                  { title: "NSDF (Federação, 1974)", body: "Lideranças comunitárias (como A. Jockin): trazem o modelo de 'federação' de favelas e negociação política radical." },
+                  { title: "Mahila Milan (Mulheres, 1986)", body: "Mulheres pobres das calçadas (muitas ex-trabalhadoras do sexo muçulmanas): lideram os círculos de poupança diária.", tone: "gold" }
+                ],
+                caption: "A união de saberes técnicos, federação comunitária e protagonismo feminino cria uma força política secular e autônoma."
+              }
+            ]
+          },
+          {
+            id: "sub-8-2",
+            code: "8.2",
+            title: "Política da Paciência e Negociação sem Partidarismo",
+            orig: "The Politics of Patience",
+            text: "A Aliança recusa virar 'curral eleitoral' de qualquer partido — praticando uma 'política sem partidos' que negocia com quem estiver no poder (inclusive o Shiv Sena, quando necessário) para arrancar conquistas concretas. Também rejeita a lógica de curto prazo dos 'projetos' de doadores, apostando na construção lenta de capacidades e na disciplina moral da poupança diária.",
+            schemas: [
+              {
+                title: "Confronto/Cooptação vs. Política da Paciência",
+                type: "compare",
+                headers: ["Estratégia", "Política Partidária / Projetos Curtos", "Política da Paciência (Aliança)"],
+                rows: [
+                  ["Relação com Partidos", "Aliança fixa ou troca de votos por favores.", "Autonomia total: negocia com a burocracia de qualquer governo."],
+                  ["Horizonte Temporal", "Prazos curtos de financiadores ('projetização').", "Tempo longo, aprendizado cumulativo contra a 'tirania da emergência'."],
+                  ["Método", "Confronto estéril ou assistencialismo.", "Precedentes práticos ('fazer primeiro, falar depois') e poupança diária."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-8-3",
+            code: "8.3",
+            title: "Tecnologias de Visibilidade: Censos, Exposições e Banheiros",
+            orig: "Words and Deeds",
+            text: "O vocabulário da Aliança (federação, poupança como disciplina espiritual, precedentes) ganha corpo em três tecnologias políticas que subvertem a invisibilidade e a humilhação de classe dos pobres urbanos.",
+            schemas: [
+              {
+                title: "As 3 Tecnologias Políticas de Auto-Empoderamento",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "1. Autoenumeração (Autocensos)", body: "Moradores levantam dados precisos de famílias e tempo de ocupação, validados por vizinhos — tornando-se indispensáveis ao Estado.", tone: "navy" },
+                  { title: "2. Exposições de Moradia", body: "Pobres constroem maquetes em tamanho real e debatem custos e materiais com engenheiros e autoridades, invertendo o monopólio do saber.", tone: "gold" },
+                  { title: "3. Festivais de Banheiros (Sandas Mela)", body: "'Política da merda': inauguração festiva de banheiros geridos pela comunidade transforma humilhação em dignidade e reconhecimento (até no saguão da ONU em 2001)." }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-8-4",
+            code: "8.4",
+            title: "Globalização por Baixo e Horizontes Políticos",
+            orig: "The International Horizon / Conclusion: Deep Democracy",
+            text: "Através da rede SDI (criada em 1996), moradores de favelas da Índia, África do Sul, Tailândia, Filipinas e outros países visitam uns aos outros para ver, ouvir e trocar experiências práticas — buscando 'ganhar escala' (scaling up), 'acelerar' (speeding up), criar fundos próprios e exercer crítica mútua honesta.",
+            schemas: [
+              {
+                title: "Globalização por Cima vs. Globalização por Baixo",
+                type: "compare",
+                headers: ["Eixo", "Globalização por Cima", "Globalização por Baixo (SDI)"],
+                rows: [
+                  ["Atores Centrais", "Capital financeiro, corporações, FMI, Estados.", "Federações de pobres urbanos e redes horizontais."],
+                  ["Modo de Fluxo", "Vertical, tecnocrático e padronizado.", "Horizontal: visitas de imersão ('ver e ouvir', não 'ensinar')."],
+                  ["Efeito Político", "Amplia desigualdades e invisibiliza os pobres.", "Gera prestígio cosmopolita, crítica interna e poder de negociação local."]
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 2 — CAPÍTULO 9
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-9",
+        num: "Cap. 9",
+        partId: "part-2",
+        partLabel: "Parte 2: A Visão a Partir de Mumbai",
+        title: "A Capacidade de Aspirar",
+        origTitle: "The Capacity to Aspire: Culture and the Terms of Recognition",
+        summary: "Um dos capítulos mais influentes de Appadurai: por que a cultura importa para o combate à pobreza? Porque a cultura não é apenas passado e tradição — ela abriga a 'capacidade de aspirar', uma capacidade de navegação rumo ao futuro que é desigualmente distribuída entre ricos e pobres.",
+        thesis: "A pobreza não é apenas falta de renda, mas também uma distribuição desigual da 'capacidade de aspirar' e termos adversos de reconhecimento cultural. Empoderar os pobres exige expandir sua voz e adensar seu mapa cultural de navegação para o futuro.",
+        schemas: [
+          {
+            title: "Quebrando a Falsa Divisão Disciplinar",
+            type: "tension",
+            left: {
+              title: "Divisão Clássica (Equivocada)",
+              bullets: [
+                "Economia = Futuro (planos, metas, cálculo, desenvolvimento).",
+                "Cultura / Antropologia = Passado (hábito, tradição, obstáculo à mudança)."
+              ]
+            },
+            mid: { sym: "➜", text: "Virada de Appadurai" },
+            right: {
+              title: "Cultura Orientada para o Futuro",
+              tone: "navy",
+              bullets: [
+                "Cultura é um diálogo entre tradições sedimentadas e aspirações futuras.",
+                "Aspirações não são desejos individuais isolados, mas normas sociais e ideias da 'boa vida'.",
+                "Aliada natural do desenvolvimento justo e das 'capacidades' (Amartya Sen)."
+              ]
+            },
+            caption: "Ao devolver a futuridade à cultura, a antropologia pode dialogar de igual para igual com a economia do desenvolvimento."
+          },
+          {
+            title: "A Capacidade de Aspirar como Metacapacidade de Navegação",
+            type: "flow",
+            nodes: [
+              { title: "Normas Gerais da 'Boa Vida'", body: "Ideias culturais amplas sobre dignidade, família, justiça e bem-estar." },
+              { title: "Contextos Intermediários", body: "Trabalho, casamento, saúde, crédito, moradia e respeitabilidade local.", tone: "gold" },
+              { title: "Escolhas e Desejos Concretos", body: "Um teto de zinco, um médico para o filho, um emprego específico.", tone: "navy" }
+            ],
+            caption: "A capacidade de aspirar consiste em saber navegar os caminhos concretos entre desejos imediatos e grandes horizontes de futuro."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-9-1",
+            code: "9.1",
+            title: "Cultura, Passado e Desenvolvimento",
+            orig: "The Argument / Getting Past Definitions / Bringing the Future Back In",
+            text: "A antropologia moderna já reconhece que a cultura é relacional, contém dissenso interno e tem fronteiras porosas, mas ainda a associa ao passado. Para trazer o futuro de volta à cultura, Appadurai dialoga com Charles Taylor (reconhecimento), Albert Hirschman (voz), Amartya Sen (capacidades), Mary Douglas (risco/consumo) e James Fernandez (rituais de consenso).",
+            schemas: [
+              {
+                title: "Os 5 Interlocutores da Cultura Orientada ao Futuro",
+                type: "grid",
+                cols: 5,
+                items: [
+                  { title: "Charles Taylor", body: "Política do reconhecimento e dignidade cultural." },
+                  { title: "Albert Hirschman", body: "Fortalecer a 'Voz' (Voice) contra Lealdade cega e Saída.", tone: "gold" },
+                  { title: "Amartya Sen", body: "Diálogo entre capacidade de aspirar e capacidades (liberdade)." },
+                  { title: "Mary Douglas", body: "Designs culturais de antecipação e risco no cotidiano." },
+                  { title: "James Fernandez", body: "Rituais e performances como fábricas de consenso.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-9-2",
+            code: "9.2",
+            title: "O Mapa de Navegação das Aspirações",
+            orig: "The Capacity to Aspire",
+            text: "Não é que os pobres não saibam desejar ou planejar — não há déficit cognitivo. O problema é experiencial: como têm menos recursos e menor margem para errar e experimentar, seu mapa de navegação rumo ao futuro tem menos nós e rotas mais frágeis do que o das elites.",
+            schemas: [
+              {
+                title: "Desigualdade Experiencial: Mapa Denso vs. Mapa Rarefeito",
+                type: "compare",
+                headers: ["Característica", "Elites / Privilegiados (Mapa Denso)", "Pobres / Marginalizados (Mapa Rarefeito)"],
+                rows: [
+                  ["Experiência com o Futuro", "Múltiplas tentativas, testes, erros absorvíveis e repertório compartilhado.", "Poucas oportunidades de experimentar sem risco de ruína."],
+                  ["Conexões Meios ↔ Fins", "Rotas flexíveis e variadas ligando desejos imediatos a grandes metas.", "Caminhos rígidos, finos e vulneráveis a choques."],
+                  ["Efeito Acumulativo", "'Os ricos ficam mais ricos' também em capacidade de navegar o futuro.", "Horizonte de aspirações mais frágil; oscila entre ceticismo e submissão."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-9-3",
+            code: "9.3",
+            title: "Termos de Reconhecimento e Voz (Voice)",
+            orig: "The Capacity to Aspire (Terms of Recognition)",
+            text: "Os pobres vivem sob 'termos adversos de reconhecimento': frequentemente aderem a normas culturais (como destino, casta ou deferência) que reproduzem sua própria subordinação, ou são reconhecidos apenas como categoria abstrata em slogans eleitorais. Fortalecer a 'Voz' (Hirschman) em linguagem culturalmente ressonante é o único caminho para alterar esses termos e unir reconhecimento a redistribuição.",
+            schemas: [
+              {
+                title: "Saída, Lealdade e Voz sob Termos Adversos (Hirschman)",
+                type: "flow",
+                nodes: [
+                  { title: "Termos Adversos", body: "Pobres presos entre Lealdade submissa (aceitar a opressão) e Saída (apatia ou revolta)." },
+                  { title: "Cultivo da VOZ", body: "Debate público e performances com força cultural local.", tone: "gold" },
+                  { title: "Novos Termos de Reconhecimento", body: "Pobres são reconhecidos como parceiros legítimos, alterando a redistribuição material.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-9-4",
+            code: "9.4",
+            title: "Rituais Públicos e Expansão da Aspiração",
+            orig: "Changing the Terms of Recognition / Consensus / Nuts and Bolts / Coda",
+            text: "Na prática, a Aliança em Mumbai adensa o mapa de aspirações dos pobres através de rituais produtivos (contratos comunitários de banheiros, precedentes, exposições, poupança). Para agências de desenvolvimento (como o Banco Mundial), nutrir a capacidade de aspirar significa apoiar esses rituais de consenso, incentivar a voz e mapear aspirações locais antes de impor projetos técnicos.",
+            schemas: [
+              {
+                title: "Ciclo Virtuoso da Expansão da Aspiração",
+                type: "flow",
+                nodes: [
+                  { title: "Rituais Coletivos", body: "Poupança, exposições e obras geridas pelos próprios moradores." },
+                  { title: "Exercício de Voz", body: "Negociação direta com bancos, prefeituras e doadores.", tone: "gold" },
+                  { title: "Conquistas e Precedentes", body: "Comprovam competência técnica e mudam o olhar das elites." },
+                  { title: "Mapa Mais Denso", body: "Novas histórias de sucesso fortalecem a capacidade de aspirar e outras capacidades (Sen).", tone: "navy" }
+                ],
+                caption: "A capacidade de aspirar transforma 'desejo ilusório' (wishful thinking) em 'desejo refletido' (thoughtful wishing)."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 2 — CAPÍTULO 10
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-10",
+        num: "Cap. 10",
+        partId: "part-2",
+        partLabel: "Parte 2: A Visão a Partir de Mumbai",
+        title: "Cosmopolitismo por Baixo",
+        origTitle: "Cosmopolitanism from Below: Some Ethical Lessons from the Slums of Mumbai",
+        summary: "Tradicionalmente associado a elites cultas e viajadas, o cosmopolitismo ganha outro sentido nas favelas de Mumbai. Appadurai mostra como moradores pobres, sem educação formal privilegiada, desenvolvem um 'cosmopolitismo compulsório' baseado na tradução cotidiana entre línguas, religiões e redes globais de solidariedade.",
+        thesis: "Existe um cosmopolitismo vernacular produzido por baixo, impulsionado pelas exigências da exclusão e não pelos privilégios da inclusão. Nas favelas de Mumbai, esse cosmopolitismo compulsório é condição indispensável para a democracia profunda e para a capacidade de aspirar.",
+        schemas: [
+          {
+            title: "Dois Cosmopolitismos em Contraste",
+            type: "compare",
+            headers: ["Dimensão", "Cosmopolitismo por Cima (Elite)", "Cosmopolitismo por Baixo (Favelas)"],
+            rows: [
+              ["Motor", "Privilégio, lazer, viagens, educação superior e abstração.", "Exigência de sobrevivência, exclusão e busca por dignidade."],
+              ["Ponto de Partida", "Desprendimento das raízes locais; ideal universal abstrato.", "Começa perto de casa (calçadas, favelas) e estica horizontes locais."],
+              ["Prática Central", "Consumo multicultural e cidadania pós-nacional elitista.", "Tradução linguística diária, secularismo de base e trocas favela-a-favela."]
+            ],
+            caption: "O cosmopolitismo por baixo não dissolve a intimidade do local — ele a expande para combater suas indignidades."
+          },
+          {
+            title: "A Ética Prática da Favela em Mumbai",
+            type: "flow",
+            nodes: [
+              { title: "Diversidade Obrigatória", body: "8 milhões de pobres divididos por língua (hindi, marathi, tâmil, telugu), casta e religião." },
+              { title: "Tradução e Negociação Diária", body: "Mulheres muçulmanas (Mahila Milan) + homens tâmeis (NSDF) negociam poupança, espaço e paz.", tone: "gold" },
+              { title: "Secularismo de Base", body: "Conteve violência intercomunitária em 1992–93 e inspirou ação global (ex.: maquete na ONU, 2001).", tone: "navy" }
+            ],
+            caption: "O secularismo vivido no cotidiano das favelas tem mais peso prático do que discursos constitucionais abstratos."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-10-1",
+            code: "10.1",
+            title: "Para Além do Cosmopolitismo de Elite e o Espaço de Mumbai",
+            orig: "The Field of Debate / Urban Housing as a Window / Mumbai as a Cosmopolitan Space",
+            text: "Mumbai é historicamente uma cidade de 'estrangeiros' ligados ao Oceano Índico, ao comércio e a Bollywood — cuja língua híbrida (o Bambaiyya Hindi, mesclado de urdu, marathi e gujarati) expressa uma convivência multilíngue constante, resistindo até mesmo ao monoculturalismo agressivo do Shiv Sena.",
+            schemas: [
+              {
+                title: "Fontes Históricas do Cosmopolitismo Vernacular de Mumbai",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Comércio Marítimo", body: "Comunidades parsis, muçulmanas, judias, católicas e migrantes de toda a Índia." },
+                  { title: "Bollywood e Língua", body: "Cinema e rádio misturaram poesia urdu/persa, marathi e gujarati no Bambaiyya Hindi.", tone: "gold" },
+                  { title: "Trabalho e Sobrevivência", body: "Nenhuma classe social em Mumbai — da elite aos trabalhadores das docas — é monolíngue.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-10-2",
+            code: "10.2",
+            title: "Lições Éticas da Convivência na Escassez",
+            orig: "The Cosmopolitanism of the Urban Poor",
+            text: "Na Aliança, mulheres muçulmanas de língua telugu (ex-trabalhadoras do sexo em Nagpada) aprenderam a construir solidariedade horizontal com homens tâmeis de Dharavi, além de dialogar com banqueiros, engenheiros e líderes mundiais (como Kofi Annan na ONU). A tradução linguística e cultural é o alicerce invisível dessa emancipação.",
+            schemas: [
+              {
+                title: "Os 3 Pilares Éticos do Microcosmopolitismo",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Tradução Contínua", body: "Alternar entre dialetos e línguas para incluir os mais velhos e menos escolarizados." },
+                  { title: "Hospitalidade e Confiança", body: "Debater coletivamente o uso de poupanças escassas entre vizinhos de religiões diferentes.", tone: "gold" },
+                  { title: "Inversão de Palcos Globais", body: "Levar a casa-modelo e o banheiro comunitário para o saguão da ONU (2001), capturando seu carisma.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-10-3",
+            code: "10.3",
+            title: "Conexões Translocais e a Política da Esperança",
+            orig: "Cosmopolitanism and the Politics of Hope",
+            text: "A educação formal tradicional foca apenas em alfabetização técnica, esquecendo o valor político do cosmopolitismo como instrumento de cidadania. O 'cosmopolitismo compulsório' dos pobres sustenta a democracia profunda e alimenta a capacidade de aspirar com histórias reais de conquista vindas de outras favelas do mundo.",
+            schemas: [
+              {
+                title: "A Tríade da Política da Esperança (Síntese da Parte 2)",
+                type: "triangle",
+                top: "Cosmopolitismo por Baixo",
+                left: "Democracia Profunda",
+                right: "Capacidade de Aspirar",
+                center: "Política da Esperança",
+                caption: "Esticar os horizontes culturais na vida diária abre acesso a histórias críveis de transformação e fortalece a democracia local."
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 3 — CAPÍTULO 11
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-11",
+        num: "Cap. 11",
+        partId: "part-3",
+        partLabel: "Parte 3: Fazendo o Futuro",
+        title: "O Espírito de Weber",
+        origTitle: "The Spirit of Weber",
+        summary: "Abrindo a Parte 3, Appadurai revisita Max Weber e a teoria da modernização. Ele critica o vício ocidental do 'trajetorismo' (a crença de que o tempo tem uma seta única rumo à Europa), mas resgata virtudes éticas e metodológicas de Weber indispensáveis para analisar o capitalismo global contemporâneo.",
+        thesis: "A teoria da modernização falhou em suas previsões porque caiu na armadilha do 'trajetorismo' eurocêntrico. Ainda assim, devemos resgatar o espírito de Weber — que articula cultura, ética, carisma, metodicidade e cálculo — para compreender o capitalismo financeiro atual.",
+        schemas: [
+          {
+            title: "A Armadilha do 'Trajetorismo' (Tempo e Espaço)",
+            type: "flow",
+            nodes: [
+              { title: "Raiz Epistemológica", body: "Hábito ocidental de supor que a seta do tempo tem um destino único e cumulativo (telos)." },
+              { title: "Projeção Espacial (Império)", body: "A Europa se vê como o destino do planeta; modernidade ocidental exige expansão global.", tone: "gold" },
+              { title: "Falha Preditiva", body: "A teoria da modernização não previu o retorno da religião, a internet radicalizada nem a perda de soberania estatal.", tone: "navy" }
+            ],
+            caption: "O trajetorismo não é apenas evolucionismo temporal, mas também uma ideologia espacial que vinculou Iluminismo e império."
+          },
+          {
+            title: "Mutação do Espírito do Capitalismo (Weber no Séc. XXI)",
+            type: "compare",
+            headers: ["Conceito Weberiano", "Capitalismo Clássico (Séc. XVI–XIX)", "Capitalismo Global Contemporâneo (Séc. XXI)"],
+            rows: [
+              ["Metodicidade", "Disciplina ascética puritana voltada à poupança e vocação.", "Metodicidade voltada às tecnologias da incerteza (bolsas, fusões, apostas)."],
+              ["Carisma", "Desafio clássico: a rotinização do carisma em burocracia.", "Novo desafio: efemeridade e volatilidade extrema do carisma midiático."],
+              ["Grupos de Status (Stände)", "Estamentos definidos por estilo de vida e honra social.", "Consumo produtivo que cria hegemonias além das relações de produção."]
+            ],
+            caption: "Em um mundo brutalizado pela ilegalidade e pela exceção, o rigor comparativo e ético de Weber volta a ser vital."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-11-1",
+            code: "11.1",
+            title: "Weber, Modernização e a Falha das Previsões",
+            orig: "Discovering Max Weber / Is Modernization Theory All Bad? / The World and the Theory / Modernization and Prediction",
+            text: "A teoria da modernização nos EUA apoiou-se em Weber (via Parsons e Shils) para prometer convergência global via educação, mercado e democracia. Ela falhou não apenas por ser eurocêntrica, mas porque o mundo trouxe surpresas radicais: a força política da religião, eleições que não geram tolerância e a separação entre educação e informação na internet.",
+            schemas: [
+              {
+                title: "Promessas da Modernização vs. Surpresas do Mundo Real",
+                type: "compare",
+                headers: ["Esfera", "Previsão da Modernização", "Surpresa Histórica Real"],
+                rows: [
+                  ["Religião", "Secularização progressiva pela ciência.", "Ressurgimento global de fundamentalismos."],
+                  ["Democracia", "Eleições trariam moderação e tolerância.", "Voz popular também pode mobilizar vingança e etnocídio."],
+                  ["Comunicação", "Convergência cultural e esclarecimento.", "Internet fortalece bolhas, ódio e redes extremistas."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-11-2",
+            code: "11.2",
+            title: "Trajetorismo e a Dialética do Cosmopolitismo Europeu",
+            orig: "The Trap of Trajectorism / Trajectories in Time and Space / The Inner Dialectic of European Cosmopolitanism / A Risk Worth Taking",
+            text: "O que a Europa exportou no império não foi um consenso harmonioso, mas suas próprias contradições não resolvidas (Igreja vs. Estado, lei vs. massas, propriedade privada vs. coletiva). Hoje, em vez de erguer uma 'Fortaleza Europa', o risco saudável é separar cosmópolis de império e dialogar com outras tradições cosmopolitas do mundo.",
+            schemas: [
+              {
+                title: "O Risco Saudável para a Europa Hoje",
+                type: "tension",
+                left: { title: "Caminho Defensivo", bullets: ["Manter o trajetorismo imperial", "Construir a 'Fortaleza Europa'", "Fechamento xenófobo a migrantes"] },
+                mid: { sym: "⇄", text: "Escolha Histórica" },
+                right: { title: "Diálogo de Cosmópolis", tone: "navy", bullets: ["Revisar criticamente o próprio arquivo", "Separar cosmopolitismo de dominação", "Aprender com cosmópolis não-europeias"] }
+              }
+            ]
+          },
+          {
+            id: "sub-11-3",
+            code: "11.3",
+            title: "Virtudes Resgatáveis e o Retorno a Max Weber",
+            orig: "The Arguments for Redemption / Back to Max Weber",
+            text: "Apesar de seus erros, a teoria da modernização guarda 5 virtudes: vincula teoria a projetos de mudança social; é formalmente inclusiva (contra o racismo do 'choque de civilizações'); leva ideias e éticas a sério; tem impulso utópico voltado à justiça; e escapa do reducionismo individualista da 'escolha racional' ao unir racionalidade de valores e racionalidade instrumental.",
+            schemas: [
+              {
+                title: "As 5 Virtudes Resgatáveis (Raiz Weberiana)",
+                type: "grid",
+                cols: 5,
+                items: [
+                  { title: "1. Projeto de Valor", body: "Não esconde seu compromisso com mudança social." },
+                  { title: "2. Justiça Inclusiva", body: "Não exclui nenhuma cultura a priori do progresso.", tone: "gold" },
+                  { title: "3. Força das Ideias", body: "Reconhece o peso de éticas e disposições culturais." },
+                  { title: "4. Impulso Utópico", body: "Precursora da política da esperança e da aspiração." },
+                  { title: "5. Além da Escolha Racional", body: "Integra valores coletivos e cálculo (Wertrationalität + Zweckrationalität).", tone: "navy" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 3 — CAPÍTULO 12
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-12",
+        num: "Cap. 12",
+        partId: "part-3",
+        partLabel: "Parte 3: Fazendo o Futuro",
+        title: "O Fantasma na Máquina Financeira",
+        origTitle: "The Ghost in the Financial Machine",
+        summary: "Para entender a crise financeira de 2007–2008, Appadurai combina Marcel Mauss (o espírito da dádiva e o potlatch), Max Weber (o espírito do capitalismo e a contabilidade de capital) e Frank Knight (risco vs. incerteza). Ele revela que por trás dos algoritmos financeiros frios opera um ethos carismático e quase mágico.",
+        thesis: "Os dispositivos financeiros contemporâneos são hipermetódicos e algorítmicos, mas o 'fantasma' que os anima é um ethos carismático e contrarian de operadores que acreditam possuir 'graça' para domar a incerteza incalculável e lucrar com o colapso.",
+        schemas: [
+          {
+            title: "O Curto-Circuito da Crise Financeira (Risco vs. Incerteza)",
+            type: "flow",
+            nodes: [
+              { title: "Incerteza Knightiana", body: "O futuro econômico é radicalmente aberto e não possui distribuição de probabilidade conhecida." },
+              { title: "Ilusão dos Modelos de Risco", body: "Dispositivos (derivativos, swaps, gráficos) fingem converter incerteza em risco calculável.", tone: "gold" },
+              { title: "Exploração da Incerteza", body: "Operadores de elite (short sellers) usam intuição carismática para apostar na queda e lucrar com a crise.", tone: "navy" }
+            ],
+            caption: "O lucro extraordinário em finanças não nasce de gerenciar riscos conhecidos, mas de enfrentar (ou explorar) a incerteza radical."
+          },
+          {
+            title: "O 'Fantasma' na Máquina Financeira",
+            type: "tension",
+            left: {
+              title: "A Máquina (Dispositivos de Callon)",
+              bullets: [
+                "Hipermetódica, quantificada e algorítmica.",
+                "Telas, derivativos, contabilidade e contratos.",
+                "Aparência de frieza técnica e impessoalidade."
+              ]
+            },
+            mid: { sym: "👻", text: "Disjunção / Torque Sistêmico" },
+            right: {
+              title: "O Fantasma (Espírito Weberiano)",
+              tone: "navy",
+              bullets: [
+                "Operadores carismáticos, excessivos e aventureiros.",
+                "Crença quase religiosa na própria 'graça' para acertar o timing.",
+                "Lógica agonística do potlatch (apostas destrutivas de tudo ou nada)."
+              ]
+            },
+            caption: "Contra uma leitura mecânica da Teoria Ator-Rede (Callon/Latour), Appadurai mostra que dispositivos técnicos não se animam sozinhos: precisam de um ethos."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-12-1",
+            code: "12.1",
+            title: "Espírito em Weber, Risco e Incerteza em Frank Knight",
+            orig: "The Spirit in Weber / Animating Modern Capitalism / Risk and Grace in Weber",
+            text: "Em Weber, o calvinista não buscava lucro por ganância, mas fazia uma 'aposta derivativa' diante da incerteza radical sobre sua salvação (graça divina). Já no capitalismo financeirizado desde os anos 1970, a ciência econômica esqueceu a distinção de Frank Knight (1921) entre risco (mensurável) e incerteza (incalculável), focando só no risco modelável.",
+            schemas: [
+              {
+                title: "Distinção Fundamental de Frank Knight (1921)",
+                type: "compare",
+                headers: ["Critério", "Risco (Risk)", "Incerteza (Uncertainty)"],
+                rows: [
+                  ["Probabilidade", "Distribuição de probabilidade conhecida a priori.", "Distribuição desconhecida e impossível de calcular."],
+                  ["Tratamento", "Pode ser modelado estatisticamente e segurado.", "Resiste a fórmulas; exige julgamento, intuição e ethos."],
+                  ["Papel nas Finanças", "Base dos modelos matemáticos e precificação padrão.", "Verdadeira fonte dos lucros (e dos colapsos) sistêmicos."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-12-2",
+            code: "12.2",
+            title: "O Imaginário da Incerteza e a Nova Magia dos Mercados",
+            orig: "The Uncertainty Imaginary / Uncertainty and Calculation",
+            text: "Os grandes operadores financeiros de hoje (como os vendedores a descoberto / short sellers: George Soros, John Paulson) são o oposto do puritano sóbrio de Weber: são pessimistas estruturais que apostam na velocidade da queda. Ao mesmo tempo, o mercado ressuscitou o que Weber chamava de 'magia' (procedimentos divinatórios como a análise gráfica / chartism e a fé cega no mercado), além de misturar finanças a cassino e loteria.",
+            schemas: [
+              {
+                title: "A Contradição das Finanças Contemporâneas",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Ethos do 'Urso' (Short Seller)", body: "Confiança contrarian na queda e no timing do colapso — a nova 'graça' financeira.", tone: "navy" },
+                  { title: "Nova Magia (Chartism)", body: "Gráficos de preços sem análise causal funcionam como tarô ou astrologia moderna.", tone: "gold" },
+                  { title: "Ética Corporativa Imanente", body: "Autorregulação voluntária ('conflito de interesses', Sarbanes-Oxley) substitui éticas externas e falha em conter fraudes." }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-12-3",
+            code: "12.3",
+            title: "Contabilidade, Potlatch e a Obrigação de Retorno",
+            orig: "Accounting for Uncertainty / Mauss and the Problem of Return / The Ghost in the Machine",
+            text: "Weber mostrou que a contabilidade de capital (partidas dobradas) não apenas registra o lucro — ela o cria ao medir expectativas futuras. Retornando a Marcel Mauss, Appadurai compara os derivativos e apostas sobre hipotecas subprime ao potlatch indígena: jogos agonísticos de honra, crédito e apostas destrutivas onde todos ficam presos à obrigação de retorno.",
+            schemas: [
+              {
+                title: "Do Potlatch (Mauss) aos Derivativos Subprime",
+                type: "flow",
+                nodes: [
+                  { title: "Aposta Exorbitante", body: "No potlatch, destrói-se riqueza para desafiar o rival; nos derivativos, empacotam-se promessas tóxicas." },
+                  { title: "Obrigação de Retorno", body: "O espírito do contrato/dispositivo obriga o pagamento quando a queda ocorre.", tone: "gold" },
+                  { title: "Espiral Sistêmica", body: "Lucros gigantescos para poucos 'ursos' e prejuízos socializados na crise global.", tone: "navy" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 3 — CAPÍTULO 13
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-13",
+        num: "Cap. 13",
+        partId: "part-3",
+        partLabel: "Parte 3: Fazendo o Futuro",
+        title: "A Vida Social do Design",
+        origTitle: "The Social Life of Design",
+        summary: "Appadurai amplia a ideia de 'design' para além de produtos de consumo e estética: o design é uma capacidade humana fundamental que produz a própria ordem cotidiana. Ele examina a relação entre objetos e contextos, a tensão entre design e moda, e a necessidade de reaproximar o design do planejamento sustentável.",
+        thesis: "Todo ser humano é designer da vida cotidiana. No mundo dos objetos, o design não serve à infinitude efêmera da moda — ele a disciplina ao criar contextos legíveis. Para construir futuros habitáveis, o design precisa reencontrar o planejamento social e a sustentabilidade.",
+        schemas: [
+          {
+            title: "A Escada Reguladora: Moda → Design → Planejamento",
+            type: "flow",
+            nodes: [
+              { title: "Moda (Efemeridade)", body: "Agita os contextos e multiplica combinações infinitas e descartáveis de objetos." },
+              { title: "Design (Disciplina)", body: "Limita a infinitude da moda, criando conjuntos e contextos credíveis e utilizáveis.", tone: "gold" },
+              { title: "Planejamento (Sustentabilidade)", body: "É o 'design com consciência social': foca no longo prazo, na justiça e na ecologia.", tone: "navy" }
+            ],
+            caption: "Cada camada exerce uma função reguladora criativa sobre a anterior, conectando imaginação material e futuro coletivo."
+          },
+          {
+            title: "A Dupla Identidade de Todo Objeto Projetado",
+            type: "tension",
+            left: {
+              title: "Objeto em Si",
+              bullets: [
+                "A ilusão do designer como artista singular.",
+                "Foco isolado no relógio, na cadeira ou no prédio.",
+                "Competição de produto contra produto no mercado."
+              ]
+            },
+            mid: { sym: "◈", text: "Nenhum Objeto é uma Ilha" },
+            right: {
+              title: "Objeto como Contexto",
+              tone: "navy",
+              bullets: [
+                "Todo objeto evoca conjuntos e sequências (ex.: design de interiores).",
+                "Contexto não é 'espaço vazio', mas gerador ativo de significados.",
+                "O grande design equilibra o objeto e os contextos que ele cria."
+              ]
+            },
+            caption: "O design medeia arte (singularidade), engenharia (técnica) e mercado (repetição) criando gramáticas emergentes de objetos."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-13-1",
+            code: "13.1",
+            title: "O Design da Vida Cotidiana na Longa Duração",
+            orig: "The Design of Everyday Life / Design in the Longue Durée",
+            text: "A ordem social diária não é um subproduto automático, mas o produto primário do design humano — a produção constante de localidade. Sociedades pré-industriais já criavam designs sofisticados de parentesco, calendários e habitação. A partir do capitalismo industrial (séc. XVII–XIX), abriu-se uma dupla lacuna: entre o design profissional (mercado/moda) e o design cotidiano, e entre o design e o planejamento estatal.",
+            schemas: [
+              {
+                title: "A Dupla Ruptura da Era Industrial",
+                type: "grid",
+                cols: 2,
+                items: [
+                  { title: "Ruptura 1: Profissional vs. Cotidiano", body: "O design virou profissão ligada à moda e ao consumo, ocultando que pessoas comuns projetam suas vidas todo dia.", tone: "gold" },
+                  { title: "Ruptura 2: Design vs. Planejamento", body: "O design ficou restrito a mercadorias individuais, enquanto o planejamento ficou nas mãos de Estados e burocratas.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-13-2",
+            code: "13.2",
+            title: "Objetos como Agentes e a Gramática dos Contextos",
+            orig: "Objects as Agents / Objects and Contexts / The Context as Object",
+            text: "Appadurai dialoga criticamente com Bruno Latour e a Teoria Ator-Rede (ANT): dar agência aos objetos não pode significar apagar emoções humanas (angústia ética, hipocrisia, expectativas). Mais importante: objetos são 'coisas projetadas' que sempre existem em conjuntos e exigem contextos. Na era da 'humanidade projetada' (designer humanity), o design disciplina a profusão caótica da moda.",
+            schemas: [
+              {
+                title: "Da Coisa Isolada ao Contexto Projetado",
+                type: "flow",
+                nodes: [
+                  { title: "Coisa (Thing)", body: "Matéria fora do olhar e do projeto humano." },
+                  { title: "Objeto (Coisa Projetada)", body: "Inserido em conjuntos, memórias materiais e usos sociais.", tone: "gold" },
+                  { title: "Contexto Ativo", body: "Um interior ou cidade é simultaneamente objeto e palco para outros objetos e vidas.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-13-3",
+            code: "13.3",
+            title: "Planejamento, Sustentabilidade e Futuro Democrático",
+            orig: "Planning and the Future of Design",
+            text: "Enquanto o design foca no curto prazo do mercado, o planejamento (nascido sob o Estado no séc. XX, como analisou James Scott em Seeing Like a State) foca em metas coletivas. A palavra-chave que os reconecta é 'sustentabilidade' — como corretivo às falhas do mercado. Isso exige reconhecer que cidadãos comuns (como os moradores de favelas em Mumbai) já são planejadores e co-designers legítimos de seus futuros.",
+            schemas: [
+              {
+                title: "Design Imposto vs. Co-Design Sustentável",
+                type: "compare",
+                headers: ["Dimensão", "Design / Planejamento de Cima", "Co-Design Democrático e Sustentável"],
+                rows: [
+                  ["Foco Temporal", "Obsolescência rápida (moda) ou rigidez estatal.", "Durabilidade, justiça espacial e sustentabilidade."],
+                  ["Visão do Usuário", "Consumidor passivo ou número estatístico.", "Agente ativo que já planeja e projeta seu habitar."],
+                  ["Relação com o Mercado", "Confia no curto prazo e no preço.", "Corrige falhas de mercado com consciência ecológica e social."]
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 3 — CAPÍTULO 14
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-14",
+        num: "Cap. 14",
+        partId: "part-3",
+        partLabel: "Parte 3: Fazendo o Futuro",
+        title: "A Pesquisa como Direito Humano",
+        origTitle: "Research as a Human Right",
+        summary: "Num mundo globalizado em que a informação muda diariamente, pesquisar não pode continuar sendo privilégio de doutores em universidades ricas. Appadurai propõe 'desparoquializar' a pesquisa, reconhecê-la como direito humano básico para a cidadania informada e apresenta a experiência prática do coletivo PUKAR em Mumbai.",
+        thesis: "Pesquisa é a capacidade sistemática de investigar o que ainda não sabemos, mas precisamos saber para sobreviver e agir como cidadãos. Democratizar o direito à pesquisa é condição essencial para nutrir a capacidade de aspirar e construir novos futuros.",
+        schemas: [
+          {
+            title: "A Pirâmide Global do Conhecimento (Onde Atua o Direito à Pesquisa)",
+            type: "ladder",
+            steps: [
+              { title: "Topo (~20%) • Elite Global do Metaconhecimento", body: "Escolhe carreiras, aposta em caminhos de saber e muda de área com autonomia.", tone: "top-step" },
+              { title: "Faixa Intermediária (~30% / ~1,5 bilhão) • Alvo Central do Capítulo", body: "Alcança o ensino médio/superior, mas é empurrada para 'fábricas de diplomas' vocacionais sem acesso à pesquisa crítica.", tone: "gold-step" },
+              { title: "Base (~50%) • Excluídos do Jogo do Conhecimento", body: "Pobreza extrema, fome e marginalização severa impedem o acesso básico à educação." }
+            ],
+            caption: "Há um abismo crescente entre a 'globalização do conhecimento' e o 'conhecimento da globalização' disponível aos cidadãos comuns."
+          },
+          {
+            title: "Pesquisa e Aspiração: Dois Motores Inseparáveis",
+            type: "tension",
+            left: {
+              title: "Capacidade de Aspirar",
+              tone: "gold",
+              bullets: [
+                "Cria a motivação e a pressão para querer saber mais.",
+                "Sem pesquisa, a aspiração degenera em fantasia ou desespero."
+              ]
+            },
+            mid: { sym: "⇄", text: "Cidadania Informada" },
+            right: {
+              title: "Direito à Pesquisa",
+              tone: "navy",
+              bullets: [
+                "Fornece ferramentas sistemáticas para buscar e validar informação.",
+                "Sem novo conhecimento, não é possível criar novos futuros."
+              ]
+            },
+            caption: "Ser um cidadão informado numa democracia exige saber distinguir fato de boato, tendência de anedota e notícia de propaganda."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-14-1",
+            code: "14.1",
+            title: "Deselitizando a Pesquisa e a Ética Moderna da Pesquisa",
+            orig: "Deparochializing Research / The Modern Research Ethic",
+            text: "A pesquisa acadêmica moderna no Ocidente apoia-se em protocolos específicos: sistematicidade, literatura prévia, avaliação por pares, replicabilidade ('re-search'), neutralidade de valores (Weber) e foco metodológico. Essa profissionalização gerou avanços, mas afastou a pesquisa da vida cotidiana e de intelectuais públicos fora do Ocidente.",
+            schemas: [
+              {
+                title: "Pesquisa Acadêmica Tradicional vs. Pesquisa como Direito Humano",
+                type: "compare",
+                headers: ["Dimensão", "Ética Acadêmica Fechada", "Pesquisa como Direito Humano"],
+                rows: [
+                  ["Quem Pesquisa", "Especialistas credenciados em universidades.", "Qualquer cidadão (jovens, pacientes, jornalistas, trabalhadores)."],
+                  ["Objetivo", "Originalidade avaliada por pares ('prazo de validade' citacional).", "Aumentar sistematicamente o próprio horizonte de saber para agir e decidir."],
+                  ["Relação com Valores", "Ideal de neutralidade (value-free).", "Explicitamente ligada à sobrevivência, dignidade e cidadania."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-14-2",
+            code: "14.2",
+            title: "A Crise dos Direitos e o Mercado de Diplomas",
+            orig: "The Crisis of Rights",
+            text: "A expansão dos direitos humanos ocorre em meio à erosão da soberania econômica dos Estados e à privatização acelerada do ensino superior em países como Índia e China. O boom de cursos vocacionais estrangeiros e locais aprofunda duas divisões nocivas: separa ensino de treinamento, e treinamento de pesquisa — empurrando jovens para credenciais mecânicas sem autonomia investigativa.",
+            schemas: [
+              {
+                title: "O Circuito das 'Fábricas de Diplomas'",
+                type: "flow",
+                nodes: [
+                  { title: "Demanda por Credenciais", body: "Jovens buscam diplomas 'globais' para sobreviver no mercado." },
+                  { title: "Treinamento sem Pesquisa", body: "Instituições privadas separam treinamento técnico da investigação crítica.", tone: "gold" },
+                  { title: "Déficit Cívico", body: "Jovens conseguem empregos precários, mas sem ferramentas para questionar ou mudar de rumo.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-14-3",
+            code: "14.3",
+            title: "A Experiência do PUKAR: Documentação como Intervenção",
+            orig: "Democratizing the Right to Research / Documentation as Intervention / Why the Right to Research?",
+            text: "Fundado por Appadurai e colegas em Mumbai no ano 2000, o coletivo sem fins lucrativos PUKAR (Partners for Urban Knowledge Action and Research) capacita jovens de classes populares e não-anglófonos a pesquisar suas próprias ruas, prédios e comunidades (Projeto de Bairro / Youth Fellowship). Sob o lema 'documentação é intervenção', os jovens adquirem a tripla capacidade de investigar, analisar e comunicar.",
+            schemas: [
+              {
+                title: "O Ciclo PUKAR em Mumbai ('Documentação é Intervenção')",
+                type: "flow",
+                nodes: [
+                  { title: "Jovens Locais", body: "Estudantes de origens humildes (marathi, hindi, gujarati) que se sentiam 'fora' da cidade." },
+                  { title: "Ferramentas de Documentação", body: "Ensaios, fotografia, vídeo, arquivos oficiais e pesquisa de campo nos próprios bairros.", tone: "gold" },
+                  { title: "Tripla Capacidade", body: "Investigar + Analisar + Comunicar resultados em espaços públicos." },
+                  { title: "Cidadania Ativa", body: "Transforma jovens e comunidades em produtores de conhecimento capazes de contestar dados oficiais.", tone: "navy" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         PARTE 3 — CAPÍTULO 15
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-15",
+        num: "Cap. 15",
+        partId: "part-3",
+        partLabel: "Parte 3: Fazendo o Futuro",
+        title: "O Futuro como Fato Cultural",
+        origTitle: "The Future as Cultural Fact",
+        summary: "No ensaio final que dá título ao livro, Appadurai propõe uma virada histórica na antropologia: romper com o viés exclusivo do passado e da reprodução para construir uma 'Antropologia do Futuro', fundada na interação entre imaginação, aspiração e antecipação, e comprometida com a ética da possibilidade.",
+        thesis: "O futuro não é um espaço neutro nem propriedade exclusiva dos modelos estatísticos da economia: ele é um fato cultural, carregado de afetos e disputado entre a 'ética da probabilidade' (capitalismo de desastre e cassino) e a 'ética da possibilidade' (esperança democrática).",
+        schemas: [
+          {
+            title: "Os 3 Pilares Culturais que Fabricam o Futuro",
+            type: "triangle",
+            top: "Imaginação (Trabalho Cotidiano)",
+            left: "Aspiração (Política da Esperança)",
+            right: "Antecipação (Risco e Incerteza)",
+            center: "O Futuro como\nFato Cultural",
+            caption: "Essas três práticas humanas são sempre atravessadas por afetos e sensações (espanto, vertigem, medo, entusiasmo ou trauma)."
+          },
+          {
+            title: "A Grande Batalha do Século XXI (Síntese Final do Livro)",
+            type: "compare",
+            headers: ["Dimensão", "Ética da Probabilidade", "Ética da Possibilidade"],
+            rows: [
+              ["Lógica Central", "'Avalanche de números' (Hacking), diagnóstico, cálculo e controle.", "Expansão dos horizontes de esperança, imaginação e cidadania crítica."],
+              ["Atores Principais", "Capital financeiro especulativo, hedge funds, Estados corruptos.", "Movimentos civis transnacionais, pobres organizados, design democrático."],
+              ["Instrumentos", "Derivativos, títulos de catástrofe ('cat bonds'), privatização de desastres.", "Capacidade de aspirar, cosmopolitismo por baixo, direito à pesquisa."],
+              ["Relação com a Crise", "Lucra com o desastre ('capitalismo de desastre', Naomi Klein).", "Enfrenta a emergência com paciência, solidariedade e design justo."]
+            ],
+            caption: "Appadurai assume explicitamente posição partidária: as ciências sociais devem atuar como mediadoras e promotoras da ética da possibilidade."
+          },
+          {
+            title: "Por uma Antropologia do Futuro",
+            type: "flow",
+            nodes: [
+              { title: "Antropologia do Passado", body: "Focada em costume, memória, reprodução, permanência e 'gabinete de curiosidades'." },
+              { title: "Crise Planetária Atual", body: "Aquecimento global, desigualdade extrema e finanças predatórias ameaçam o futuro humano.", tone: "gold" },
+              { title: "Antropologia do Futuro", body: "Debate colaborativo e plural sobre a 'boa vida' e o desenho democrático de futuros habitáveis.", tone: "navy" }
+            ],
+            caption: "A antropologia do futuro e o futuro da antropologia fornecem uma à outra suas melhores energias críticas."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-15-1",
+            code: "15.1",
+            title: "Imaginação e Aspiração: Visões Plurais da 'Boa Vida'",
+            orig: "Introduction / The Future as Cultural Fact / The Work of the Imagination / Aspiration and the Politics of Hope",
+            text: "A imaginação não ocorre só em rituais excepcionais (liminaridade de Victor Turner), mas no trabalho diário de manter a localidade viva e transformar arquivos pessoais de memória em mapas para o futuro (Veena Das). Já a aspiração — contraparte política da imaginação — é sempre moldada por visões culturalmente específicas da 'boa vida' (como no evangelicalismo americano ou nas variadas tradições islâmicas), e não por uma racionalidade abstrata única.",
+            schemas: [
+              {
+                title: "Da Reprodução do Passado ao Mapa da 'Boa Vida'",
+                type: "flow",
+                nodes: [
+                  { title: "Arquivos Pessoais e Memória", body: "Não servem só para lembrar o passado, mas para orientar caminhos de dignidade." },
+                  { title: "Visões Culturais da Boa Vida", body: "Valores locais, religiosos e éticos definem o que vale a pena desejar.", tone: "gold" },
+                  { title: "Política da Esperança", body: "Conecta a imaginação cotidiana a projetos coletivos de mudança desejável.", tone: "navy" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-15-2",
+            code: "15.2",
+            title: "Antecipação, Risco e o Capitalismo de Desastre",
+            orig: "Anticipation, Risk, and Speculation",
+            text: "A antropologia estudou o medo do infortúnio (feitiçaria em Evans-Pritchard, pureza/risco em Mary Douglas), mas pouco abordou o risco atuarial moderno. Citando Naomi Klein (capitalismo de desastre e 'cidades-contrato' privadas após o furacão Katrina e o Iraque) e Michael Lewis (títulos de catástrofe / 'cat bonds' no 'cassino da natureza'), Appadurai expõe como a ética da probabilidade transforma sofrimento e eventos extremos em mercadoria lucrativa.",
+            schemas: [
+              {
+                title: "A Máquina do Capitalismo de Desastre (Klein + Lewis)",
+                type: "flow",
+                nodes: [
+                  { title: "Crise / Catástrofe", body: "Furacões, guerras ou colapsos financeiros atingem populações vulneráveis." },
+                  { title: "Precificação do Caos", body: "Seguradoras e fundos negociam 'cat bonds' apostando em riscos extremos (tail risks).", tone: "gold" },
+                  { title: "Apartheid do Desastre", body: "Esvaziamento do Estado público; enclaves privados para ricos e trauma futuro para 50% do planeta.", tone: "navy" }
+                ],
+                caption: "Para metade da humanidade, o futuro hoje se apresenta como trauma — exigindo uma resposta ética e política urgente."
+              }
+            ]
+          },
+          {
+            id: "sub-15-3",
+            code: "15.3",
+            title: "Nossas Disciplinas, Nós Mesmos",
+            orig: "Our Disciplines, Ourselves",
+            text: "A reconexão entre todos os ensaios do livro (da vida social das coisas em 1986 às finanças, ao design e à pesquisa) exige um compromisso ético dentro da própria academia: reformar instituições, métodos e disciplinas para que a produção de conhecimento fortaleça a ética da possibilidade e a pluralidade de visões da boa vida. 'Neste aspecto, não temos nada a perder senão nossas correntes.'",
+            schemas: [
+              {
+                title: "A Virada Disciplinar Proposta por Appadurai",
+                type: "tension",
+                left: { title: "Academia Voltada ao Passado", bullets: ["Foco exclusivo em permanência e tradição", "Conhecimento fechado em especialistas", "Submissão passiva à avalanche de números"] },
+                mid: { sym: "➜", text: "Compromisso Ético" },
+                right: { title: "Ciências Sociais para a Possibilidade", tone: "navy", bullets: ["Estudo ativo do futuro como fato cultural", "Abertura ao direito humano à pesquisa", "Mediação de futuros plurais, justos e habitáveis"] }
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       RENDERIZADOR DE ESQUEMAS VISUAIS (HTML/CSS + SVG)
+       ========================================================================== */
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderNodeCard(item) {
+      const toneClass = item.tone ? `tone-${item.tone}` : "";
+      const bulletsHtml = item.bullets
+        ? `<ul>${item.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join("")}</ul>`
+        : "";
+      const bodyHtml = item.body ? `<p>${escapeHtml(item.body)}</p>` : "";
+      return `
+        <div class="diag-node ${toneClass}">
+          <h5>${escapeHtml(item.title)}</h5>
+          ${bodyHtml}
+          ${bulletsHtml}
+        </div>
+      `;
+    }
+
+    function renderTriangleSVG(schema) {
+      return `
+        <div class="svg-box">
+          <svg viewBox="0 0 680 250" width="680" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(schema.title)}">
+            <rect x="0" y="0" width="680" height="250" rx="10" fill="#F4F6FA"/>
+            <!-- Triângulo conector -->
+            <polygon points="340,56 145,196 535,196" fill="#FEF3C7" fill-opacity="0.55" stroke="#1D3557" stroke-width="3" stroke-linejoin="round"/>
+            <!-- Centro -->
+            <circle cx="340" cy="148" r="44" fill="#0A192F" stroke="#F4C430" stroke-width="3.5"/>
+            <text x="340" y="144" text-anchor="middle" fill="#FFD166" font-size="10.5" font-weight="800" font-family="Inter, sans-serif">
+              ${escapeHtml(schema.center.split('\n')[0])}
+            </text>
+            ${schema.center.includes('\n') ? `<text x="340" y="159" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="600" font-family="Inter, sans-serif">${escapeHtml(schema.center.split('\n')[1])}</text>` : ""}
+
+            <!-- Vértice Topo -->
+            <rect x="210" y="14" width="260" height="44" rx="8" fill="#0A192F" stroke="#F4C430" stroke-width="2.5"/>
+            <text x="340" y="41" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700" font-family="Inter, sans-serif">${escapeHtml(schema.top)}</text>
+
+            <!-- Vértice Esquerdo -->
+            <rect x="24" y="182" width="235" height="48" rx="8" fill="#112240" stroke="#FFD166" stroke-width="2"/>
+            <text x="141" y="211" text-anchor="middle" fill="#FFD166" font-size="11.5" font-weight="700" font-family="Inter, sans-serif">${escapeHtml(schema.left)}</text>
+
+            <!-- Vértice Direito -->
+            <rect x="421" y="182" width="235" height="48" rx="8" fill="#112240" stroke="#FFD166" stroke-width="2"/>
+            <text x="538" y="211" text-anchor="middle" fill="#FFD166" font-size="11.5" font-weight="700" font-family="Inter, sans-serif">${escapeHtml(schema.right)}</text>
+          </svg>
+        </div>
+      `;
+    }
+
+    function renderSchemaBody(schema) {
+      if (schema.type === "flow") {
+        return `
+          <div class="diag-flow">
+            ${schema.nodes.map((n, i) => `
+              ${renderNodeCard(n)}
+              ${i < schema.nodes.length - 1 ? `<div class="diag-arrow gold-arrow">→</div>` : ""}
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "grid") {
+        const cols = schema.cols || 3;
+        return `
+          <div class="diag-grid cols-${cols}">
+            ${schema.items.map(renderNodeCard).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "tension") {
+        const midLines = escapeHtml(schema.mid.text).replace(/\n/g, "<br>");
+        return `
+          <div class="diag-tension">
+            ${renderNodeCard(schema.left)}
+            <div class="tension-mid">
+              <span class="sym">${escapeHtml(schema.mid.sym)}</span>
+              <div>${midLines}</div>
+            </div>
+            ${renderNodeCard(schema.right)}
+          </div>
+        `;
+      }
+
+      if (schema.type === "compare") {
+        return `
+          <div class="diag-table-wrap">
+            <table class="diag-table">
+              <thead>
+                <tr>${schema.headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr>
+              </thead>
+              <tbody>
+                ${schema.rows.map(r => `
+                  <tr>${r.map(c => `<td>${escapeHtml(c)}</td>`).join("")}</tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      if (schema.type === "matrix2x2") {
+        return `
+          <div class="diag-matrix">
+            <div class="matrix-corner">${escapeHtml(schema.corner)}</div>
+            <div class="matrix-col-hdr">${escapeHtml(schema.colHeaders[0])}</div>
+            <div class="matrix-col-hdr">${escapeHtml(schema.colHeaders[1])}</div>
+
+            <div class="matrix-row-hdr">${escapeHtml(schema.rowHeaders[0])}</div>
+            <div class="matrix-cell ${schema.cells[0].highlight ? "highlight" : ""}">
+              <h5>${escapeHtml(schema.cells[0].title)}</h5>
+              <p>${escapeHtml(schema.cells[0].body)}</p>
+            </div>
+            <div class="matrix-cell ${schema.cells[1].highlight ? "highlight" : ""}">
+              <h5>${escapeHtml(schema.cells[1].title)}</h5>
+              <p>${escapeHtml(schema.cells[1].body)}</p>
+            </div>
+
+            <div class="matrix-row-hdr">${escapeHtml(schema.rowHeaders[1])}</div>
+            <div class="matrix-cell ${schema.cells[2].highlight ? "highlight" : ""}">
+              <h5>${escapeHtml(schema.cells[2].title)}</h5>
+              <p>${escapeHtml(schema.cells[2].body)}</p>
+            </div>
+            <div class="matrix-cell ${schema.cells[3].highlight ? "highlight" : ""}">
+              <h5>${escapeHtml(schema.cells[3].title)}</h5>
+              <p>${escapeHtml(schema.cells[3].body)}</p>
+            </div>
+          </div>
+        `;
+      }
+
+      if (schema.type === "ladder") {
+        return `
+          <div class="diag-ladder">
+            ${schema.steps.map((s, idx) => `
+              <div class="ladder-step ${s.tone || ""}">
+                <div class="ladder-num">${idx + 1}</div>
+                <div>
+                  <h5>${escapeHtml(s.title)}</h5>
+                  <p>${escapeHtml(s.body)}</p>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "bars") {
+        return `
+          <div class="diag-bars">
+            ${schema.bars.map(b => `
+              <div class="bar-row">
+                <span class="bar-lbl">${escapeHtml(b.label)}</span>
+                <div class="bar-bg">
+                  <div class="bar-val-fill ${b.gold ? "gold" : ""}" style="width: ${Math.max(b.pct, 12)}%;">
+                    ${escapeHtml(b.text)}
+                  </div>
+                </div>
+                <span class="bar-num">${escapeHtml(b.val)}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "triangle") {
+        return renderTriangleSVG(schema);
+      }
+
+      return "";
+    }
+
+    function renderSchemaCard(schema, index, isNested = false) {
+      const badgeLabel = isNested ? `Esquema do Subcapítulo` : `Esquema Central ${index + 1}`;
+      return `
+        <div class="schema-card ${isNested ? "nested" : ""}">
+          <div class="schema-top">
+            <span class="schema-badge ${isNested ? "sub-badge" : ""}">${badgeLabel}</span>
+            <h4 class="schema-title">${escapeHtml(schema.title)}</h4>
+          </div>
+          ${renderSchemaBody(schema)}
+          ${schema.caption ? `<p class="schema-caption">${escapeHtml(schema.caption)}</p>` : ""}
+        </div>
+      `;
+    }
+
+    function renderBookMap() {
+      const parts = [
+        {
+          id: "part-1",
+          title: "Parte 1: Geografias em Movimento",
+          desc: "Circulação de mercadorias, formas culturais, não-violência, etnocídio e memória nacional.",
+          accent: false
+        },
+        {
+          id: "part-2",
+          title: "Parte 2: A Visão a Partir de Mumbai",
+          desc: "Moradia, limpeza urbana, democracia profunda, capacidade de aspirar e cosmopolitismo por baixo.",
+          accent: true
+        },
+        {
+          id: "part-3",
+          title: "Parte 3: Fazendo o Futuro",
+          desc: "Legado de Weber, crise financeira, design social, direito à pesquisa e antropologia do futuro.",
+          accent: false
+        }
+      ];
+
+      return `
+        <div class="section-divider">
+          <h3>Mapa Geral do Livro (Clique para Navegar)</h3>
+          <span class="section-tag">3 Partes • 15 Capítulos</span>
+        </div>
+        <div class="book-map-grid">
+          ${parts.map(p => {
+            const chaps = BOOK_DATA.filter(c => c.partId === p.id);
+            return `
+              <div class="map-part-card ${p.accent ? "part-accent" : ""}">
+                <div class="map-part-title">${escapeHtml(p.title)}</div>
+                <div class="map-part-desc">${escapeHtml(p.desc)}</div>
+                <ul class="map-chap-list">
+                  ${chaps.map(c => `
+                    <li>
+                      <button class="map-chap-btn" data-goto-chap="${c.id}">
+                        <span class="num">${escapeHtml(c.num)}</span>
+                        <span>${escapeHtml(c.title)}</span>
+                      </button>
+                    </li>
+                  `).join("")}
+                </ul>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
+    /* ==========================================================================
+       CONTROLE DE ESTADO E NAVEGAÇÃO
+       ========================================================================== */
+    let currentChapterId = "cap-0";
+    let allExpanded = false;
+
+    const sidebarNavRoot = document.getElementById("sidebarNavRoot");
+    const chapterRoot = document.getElementById("chapterRoot");
+    const progressFill = document.getElementById("progressFill");
+    const progressLabel = document.getElementById("progressLabel");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const toggleAllBtn = document.getElementById("toggleAllBtn");
+    const partBtns = document.querySelectorAll(".part-btn");
+
+    function closeMobileSidebar() {
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("open");
+    }
+
+    mobileMenuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      sidebarOverlay.classList.toggle("open");
+    });
+
+    sidebarOverlay.addEventListener("click", closeMobileSidebar);
+
+    function buildSidebar() {
+      const partHeaders = {
+        "part-1": "Parte 1 • Geografias em Movimento",
+        "part-2": "Parte 2 • A Visão a Partir de Mumbai",
+        "part-3": "Parte 3 • Fazendo o Futuro"
+      };
+
+      let lastPart = "part-0";
+      let html = "";
+
+      BOOK_DATA.forEach(chap => {
+        if (chap.partId !== lastPart && partHeaders[chap.partId]) {
+          html += `<div class="sidebar-part-label">${escapeHtml(partHeaders[chap.partId])}</div>`;
+          lastPart = chap.partId;
+        }
+
+        const hasSubs = chap.subchapters && chap.subchapters.length > 0;
+        html += `
+          <div class="nav-item" data-nav-chap="${chap.id}">
+            <div class="nav-item-header">
+              <button class="nav-chap-btn" data-open-chap="${chap.id}">
+                <span class="nav-num">${escapeHtml(chap.num)}</span>
+                <span>${escapeHtml(chap.title)}</span>
+              </button>
+              ${hasSubs ? `<button class="nav-expand-btn" data-expand-chap="${chap.id}" aria-label="Expandir subcapítulos">▸</button>` : ""}
+            </div>
+            ${hasSubs ? `
+              <ul class="nav-sub-list">
+                ${chap.subchapters.map(sub => `
+                  <li>
+                    <button class="nav-sub-btn" data-open-chap="${chap.id}" data-open-sub="${sub.id}">
+                      ${escapeHtml(sub.code)} ${escapeHtml(sub.title)}
+                    </button>
+                  </li>
+                `).join("")}
+              </ul>
+            ` : ""}
+          </div>
+        `;
+      });
+
+      sidebarNavRoot.innerHTML = html;
+
+      // Eventos de clique na sidebar
+      sidebarNavRoot.querySelectorAll("[data-open-chap]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const cid = btn.dataset.openChap;
+          const sid = btn.dataset.openSub || null;
+          renderChapter(cid, sid);
+        });
+      });
+
+      sidebarNavRoot.querySelectorAll("[data-expand-chap]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const item = btn.closest(".nav-item");
+          item.classList.toggle("expanded");
+        });
+      });
+    }
+
+    toggleAllBtn.addEventListener("click", () => {
+      allExpanded = !allExpanded;
+      sidebarNavRoot.querySelectorAll(".nav-item").forEach(item => {
+        if (item.querySelector(".nav-sub-list")) {
+          item.classList.toggle("expanded", allExpanded);
+        }
+      });
+      toggleAllBtn.textContent = allExpanded ? "Recolher Todos" : "Expandir Todos";
+    });
+
+    partBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        renderChapter(btn.dataset.partJump);
+      });
+    });
+
+    function renderChapter(chapterId, subId = null) {
+      const idx = BOOK_DATA.findIndex(c => c.id === chapterId);
+      if (idx === -1) return;
+
+      currentChapterId = chapterId;
+      const chap = BOOK_DATA[idx];
+      const prevChap = idx > 0 ? BOOK_DATA[idx - 1] : null;
+      const nextChap = idx < BOOK_DATA.length - 1 ? BOOK_DATA[idx + 1] : null;
+
+      // Atualiza barra de progresso
+      const pct = ((idx + 1) / BOOK_DATA.length) * 100;
+      progressFill.style.width = `${pct}%`;
+      progressLabel.textContent = `Seção ${idx + 1} de ${BOOK_DATA.length} • ${chap.num}`;
+
+      // Atualiza filtros de Parte no topo
+      partBtns.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.partId === chap.partId);
+      });
+
+      // Atualiza estado ativo na sidebar e expande o capítulo atual
+      sidebarNavRoot.querySelectorAll(".nav-item").forEach(item => {
+        const isCurrent = item.dataset.navChap === chapterId;
+        item.classList.toggle("active-chapter", isCurrent);
+        if (isCurrent && item.querySelector(".nav-sub-list")) {
+          item.classList.add("expanded");
+        }
+      });
+
+      sidebarNavRoot.querySelectorAll(".nav-sub-btn").forEach(btn => {
+        btn.classList.toggle("active-sub", Boolean(subId && btn.dataset.openSub === subId));
+      });
+
+      // Monta o HTML da área principal
+      const hasSubs = chap.subchapters && chap.subchapters.length > 0;
+
+      chapterRoot.innerHTML = `
+        <div class="hero-card">
+          <div class="hero-meta">
+            <span class="badge-gold">${escapeHtml(chap.num)}</span>
+            <span class="badge-outline">${escapeHtml(chap.partLabel)}</span>
+          </div>
+          <h2 class="hero-title">${escapeHtml(chap.title)}</h2>
+          <div class="hero-orig">${escapeHtml(chap.origTitle)}</div>
+          <p class="hero-summary">${escapeHtml(chap.summary)}</p>
+        </div>
+
+        <div class="thesis-banner">
+          <div class="thesis-label">◆ Argumento / Questão Central</div>
+          <p class="thesis-text">${escapeHtml(chap.thesis)}</p>
+        </div>
+
+        ${hasSubs ? `
+          <div class="sub-pills" aria-label="Atalhos para subcapítulos">
+            ${chap.subchapters.map(s => `
+              <button class="sub-pill-btn" data-jump-sub="${s.id}">
+                ${escapeHtml(s.code)} ${escapeHtml(s.title)}
+              </button>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        <div class="section-divider">
+          <h3>Esquemas Explicativos do Capítulo</h3>
+          <span class="section-tag">${chap.schemas.length} Diagramas</span>
+        </div>
+
+        ${chap.schemas.map((sc, i) => renderSchemaCard(sc, i, false)).join("")}
+
+        ${chap.showBookMap ? renderBookMap() : ""}
+
+        ${hasSubs ? `
+          <div class="section-divider">
+            <h3>Subcapítulos e Esquemas Específicos</h3>
+            <span class="section-tag">${chap.subchapters.length} Subcapítulos</span>
+          </div>
+
+          ${chap.subchapters.map(sub => `
+            <article class="sub-card" id="${sub.id}">
+              <div class="sub-card-head">
+                <span class="sub-code">${escapeHtml(sub.code)}</span>
+                <h4 class="sub-title">${escapeHtml(sub.title)}</h4>
+                <span class="sub-orig">(${escapeHtml(sub.orig)})</span>
+              </div>
+              <p class="sub-text">${escapeHtml(sub.text)}</p>
+              ${sub.schemas.map((sc, i) => renderSchemaCard(sc, i, true)).join("")}
+            </article>
+          `).join("")}
+        ` : ""}
+
+        <div class="pager-nav">
+          ${prevChap ? `<button class="pager-btn" data-goto-chap="${prevChap.id}">← Anterior: ${escapeHtml(prevChap.num)} — ${escapeHtml(prevChap.title)}</button>` : "<span></span>"}
+          ${nextChap ? `<button class="pager-btn next" data-goto-chap="${nextChap.id}">Próximo: ${escapeHtml(nextChap.num)} — ${escapeHtml(nextChap.title)} →</button>` : `<button class="pager-btn next" data-goto-chap="cap-0">Voltar à Introdução ↺</button>`}
+        </div>
+      `;
+
+      // Liga eventos de botões internos (mapa do livro, paginação e pílulas de subcapítulo)
+      chapterRoot.querySelectorAll("[data-goto-chap]").forEach(btn => {
+        btn.addEventListener("click", () => renderChapter(btn.dataset.gotoChap));
+      });
+
+      chapterRoot.querySelectorAll("[data-jump-sub]").forEach(btn => {
+        btn.addEventListener("click", () => scrollToSubchapter(btn.dataset.jumpSub));
+      });
+
+      closeMobileSidebar();
+
+      if (subId) {
+        setTimeout(() => scrollToSubchapter(subId), 50);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function scrollToSubchapter(subId) {
+      const el = document.getElementById(subId);
+      if (!el) return;
+
+      sidebarNavRoot.querySelectorAll(".nav-sub-btn").forEach(btn => {
+        btn.classList.toggle("active-sub", btn.dataset.openSub === subId);
+      });
+
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.remove("flash-focus");
+      void el.offsetWidth;
+      el.classList.add("flash-focus");
+      setTimeout(() => el.classList.remove("flash-focus"), 1800);
+    }
+
+    // Inicialização
+    buildSidebar();
+    renderChapter("cap-0");
+  </script>
+</body>
+</html>

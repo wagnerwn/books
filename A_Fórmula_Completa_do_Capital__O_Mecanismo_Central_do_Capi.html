@@ -1,0 +1,2088 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="broadsheet">
+  <title>A Fórmula Completa do Capital — O Mecanismo Central do Capitalismo segundo Karl Marx</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,500..800;1,400..700&family=Source+Sans+3:wght@400;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/scrollama@3.2.0/build/scrollama.min.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+
+      /* Page and surfaces (Broadsheet) */
+      --background: #f7f3eb;
+      --surface-container-low: #efe8da;
+      --surface-container: #e6ddcc;
+      --surface-container-high: #ddd2be;
+
+      /* Ink */
+      --on-surface: #1a1817;
+      --on-surface-variant: #4d4845;
+
+      /* Rules */
+      --outline: #33302e;
+      --outline-variant: #cdc3b2;
+
+      /* Accents */
+      --primary: #990f3d;
+      --on-primary: #ffffff;
+      --primary-container: #f4dce2;
+      --on-primary-container: #6b0a2a;
+      --secondary: #0d7680;
+      --tertiary: #0f5499;
+      --error: #b3261e;
+      --on-error: #ffffff;
+
+      /* Data series */
+      --data-1: #990f3d;
+      --data-2: #0d7680;
+      --data-3: #0f5499;
+      --data-4: #9a6312;
+      --data-context: #bfb5a4;
+
+      /* Fonts */
+      --font-headline: 'Bitter', serif;
+      --font-body: 'Source Serif 4', serif;
+      --font-label: 'Source Sans 3', sans-serif;
+
+      /* Shape */
+      --rounded: 0;
+      --rounded-lg: 0;
+      --rounded-full: 0;
+
+      /* Style effects */
+      --rule-masthead: 3px double var(--on-surface);
+      --rule-ink: 1px solid var(--on-surface);
+      --rule-section: 2px solid var(--outline);
+      --rule-column: 1px solid var(--outline-variant);
+      --rule-primary: 2px solid var(--primary);
+
+      /* Shared tokens */
+      --positive: #0d7680;
+      --warning: #9a6312;
+      --focus: var(--primary);
+
+      /* Type scale (Narrative) */
+      --display-size: clamp(2.35rem, 1.4rem + 3.4vw, 4.1rem);
+      --headline-size: clamp(1.75rem, 1.2rem + 1.9vw, 2.5rem);
+      --subhead-size: clamp(1.2rem, 1.05rem + 0.55vw, 1.45rem);
+      --body-size: clamp(1.0625rem, 1rem + 0.2vw, 1.15rem);
+      --label-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.6;
+      font-optical-sizing: auto;
+      scroll-behavior: smooth;
+    }
+
+    header { position: static !important; }
+
+    button, input, select, textarea {
+      font-family: inherit;
+      border-radius: var(--rounded);
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Main reading container — overflow-x: clip ONLY so sticky figure works */
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: var(--space-lg);
+      overflow-x: clip;
+    }
+    .wrap * { min-width: 0; }
+
+    /* Broadsheet typography */
+    h1, h2, h3, h4 {
+      font-family: var(--font-headline);
+      color: var(--on-surface);
+      margin: 0;
+    }
+    h1 {
+      font-size: var(--display-size);
+      font-weight: 800;
+      line-height: 1.06;
+      letter-spacing: -0.015em;
+      max-width: 24ch;
+    }
+    h2 {
+      font-size: var(--headline-size);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+    }
+    h3 {
+      font-size: var(--subhead-size);
+      font-weight: 700;
+      line-height: 1.18;
+    }
+    p {
+      margin: 0 0 var(--space-md);
+      max-width: 65ch;
+    }
+    p:last-child { margin-bottom: 0; }
+
+    .lede {
+      font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.35rem);
+      line-height: 1.5;
+      color: var(--on-surface-variant);
+      max-width: 58ch;
+      margin-top: var(--space-md);
+    }
+
+    .label-voice {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .section-label {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      display: block;
+      margin-bottom: var(--space-xs);
+    }
+
+    .tag {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--secondary);
+      background: transparent;
+      padding: 0;
+      display: inline-block;
+    }
+
+    .num {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+
+    /* Masthead (used ONCE at top of page) */
+    .masthead-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm) var(--space-lg);
+      border-bottom: var(--rule-masthead);
+      padding-bottom: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    .masthead-brand {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface);
+    }
+    .masthead-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      align-items: center;
+    }
+    .masthead-nav a {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      text-decoration: none;
+      padding-block: var(--space-xs);
+      border-bottom: 1px solid transparent;
+      transition: color var(--dur-micro) var(--ease-out);
+    }
+    .masthead-nav a:hover { color: var(--primary); }
+    .masthead-nav a.is-current { color: var(--primary); }
+
+    .masthead {
+      border-bottom: var(--rule-ink);
+      padding-bottom: var(--space-xl);
+      margin-bottom: var(--space-2xl);
+    }
+
+    /* Formula display strip in hero */
+    .formula-banner {
+      margin-top: var(--space-xl);
+      border-top: var(--rule-section);
+      padding-top: var(--space-md);
+    }
+    .formula-equation {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: clamp(1.3rem, 1.05rem + 1.1vw, 2rem);
+      line-height: 1.2;
+      margin: var(--space-sm) 0 var(--space-lg);
+    }
+    .formula-token {
+      padding: var(--space-xs) var(--space-sm);
+      border-bottom: 2px solid var(--outline);
+      background: transparent;
+      color: var(--on-surface);
+    }
+    .formula-token.is-capital { color: var(--primary); border-bottom-color: var(--primary); }
+    .formula-token.is-labor { color: var(--secondary); border-bottom-color: var(--secondary); }
+    .formula-token.is-mp { color: var(--tertiary); border-bottom-color: var(--tertiary); }
+    .formula-token.is-prod {
+      background: var(--surface-container-low);
+      border-bottom-color: var(--outline);
+    }
+    .formula-op {
+      color: var(--on-surface-variant);
+      font-weight: 500;
+    }
+
+    /* Broadsheet hairline columns */
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
+      border-top: var(--rule-column);
+      padding-top: var(--space-md);
+    }
+    .columns > * {
+      border-left: var(--rule-column);
+      padding: var(--space-xs) var(--space-lg);
+      background: transparent;
+    }
+    .columns > :first-child {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .columns > :last-child {
+      padding-right: 0;
+    }
+
+    .col-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .col-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .stat-label {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      display: block;
+      margin-bottom: var(--space-xs);
+    }
+    .stat-value {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: clamp(1.5rem, 1.25rem + 0.8vw, 2.05rem);
+      line-height: 1.1;
+      font-variant-numeric: lining-nums tabular-nums;
+      color: var(--on-surface);
+      display: block;
+    }
+    .stat-value.is-primary { color: var(--primary); }
+    .stat-value.is-secondary { color: var(--secondary); }
+    .stat-value.is-tertiary { color: var(--tertiary); }
+    .stat-delta {
+      font-family: var(--font-label);
+      font-weight: 600;
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      margin-top: var(--space-xs);
+      display: block;
+    }
+    .stat-delta.is-teal { color: var(--secondary); }
+
+    /* Sections */
+    .section-block {
+      border-top: var(--rule-section);
+      padding-top: var(--space-lg);
+      margin-bottom: var(--space-2xl);
+    }
+    .section-head {
+      margin-bottom: var(--space-lg);
+    }
+    .section-head h2 {
+      max-width: 28ch;
+      margin-bottom: var(--space-sm);
+    }
+
+    /* Buttons (Broadsheet square) */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border: 1px solid var(--outline);
+      background: var(--surface-container-low);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+    }
+    .btn:hover { background: var(--surface-container); }
+    .btn:active { background: var(--surface-container-high); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .btn-primary:hover { background: var(--on-primary-container); }
+    .btn-primary.is-active,
+    .btn.is-selected {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    /* Section 1: MDM vs DMD' comparison */
+    .circuit-compare-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0;
+      border-top: var(--rule-ink);
+      border-bottom: var(--rule-ink);
+      margin-top: var(--space-lg);
+    }
+    .circuit-col {
+      padding: var(--space-lg);
+      padding-left: 0;
+    }
+    .circuit-col + .circuit-col {
+      border-left: var(--rule-column);
+      padding-left: var(--space-lg);
+      padding-right: 0;
+    }
+    .circuit-svg-wrap {
+      margin: var(--space-md) 0;
+      padding: var(--space-md);
+      background: var(--surface-container-low);
+      border-top: var(--rule-column);
+      border-bottom: var(--rule-column);
+    }
+    .circuit-svg-wrap svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .compare-list {
+      list-style: none;
+      padding: 0;
+      margin: var(--space-md) 0 0;
+    }
+    .compare-list li {
+      padding: var(--space-sm) 0;
+      border-top: var(--rule-column);
+      font-size: 0.96rem;
+    }
+    .compare-list strong {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: block;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--space-xs);
+    }
+
+    /* ══ PIN CORE — Sticky Scrollytelling (kept structurally verbatim) ══ */
+    .scrolly {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+      gap: var(--space-xl);
+      align-items: start;
+      margin-top: var(--space-lg);
+    }
+    .scrolly-graphic {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: grid;
+      align-content: center;
+      margin: 0;
+      padding-block: var(--space-md);
+    }
+    .steps {
+      padding: 20vh 0 28vh;
+    }
+    .step {
+      min-height: 72vh;
+      display: grid;
+      align-content: center;
+    }
+    @media (max-width: 880px) {
+      .scrolly { grid-template-columns: 1fr; }
+      .scrolly-graphic {
+        height: auto;
+        min-height: 44vh;
+        background: var(--background);
+        border-bottom: var(--rule-ink);
+        z-index: 10;
+        padding-block: var(--space-sm);
+      }
+      .steps { padding: var(--space-xl) 0; }
+      .step { min-height: 52vh; }
+    }
+    /* ══ end PIN CORE ══ */
+
+    /* Broadsheet step cards */
+    .step-card {
+      border-top: var(--rule-section);
+      border-bottom: var(--rule-column);
+      padding: var(--space-lg) 0;
+      background: var(--background);
+      opacity: 0.42;
+      transform: translateY(6px);
+      transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
+    }
+    .step.is-active .step-card {
+      opacity: 1;
+      transform: none;
+      border-top-color: var(--primary);
+    }
+    .step-kicker {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xs);
+    }
+    .step-formula-pill {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--primary);
+    }
+    .step-card h3 {
+      margin-bottom: var(--space-sm);
+    }
+    .step-quote {
+      margin-top: var(--space-md);
+      padding-left: var(--space-md);
+      border-left: 2px solid var(--primary);
+      font-style: italic;
+      color: var(--on-surface-variant);
+      font-size: 0.95rem;
+    }
+    .step-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+      margin-top: var(--space-md);
+      border-top: var(--rule-column);
+      padding-top: var(--space-sm);
+    }
+    .step-metrics > div + div {
+      border-left: var(--rule-column);
+      padding-left: var(--space-md);
+    }
+
+    /* Sticky graphic editorial frame */
+    .graphic-frame {
+      border-top: var(--rule-section);
+      border-bottom: var(--rule-ink);
+      background: var(--background);
+      padding: var(--space-md) 0;
+      width: 100%;
+    }
+    .graphic-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-md);
+      margin-bottom: var(--space-sm);
+      border-bottom: var(--rule-column);
+      padding-bottom: var(--space-sm);
+    }
+    .graphic-title {
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .graphic-svg-box {
+      width: 100%;
+      min-height: 300px;
+    }
+    .graphic-svg-box svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .graphic-footer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      border-top: var(--rule-column);
+      padding-top: var(--space-sm);
+      margin-top: var(--space-sm);
+    }
+    .graphic-readout {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      font-weight: 600;
+    }
+    .graphic-readout strong {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Interactive SVG node states */
+    .svg-node {
+      cursor: pointer;
+      transition: opacity var(--dur-short) var(--ease-out);
+    }
+    .svg-node.is-dimmed { opacity: 0.34; }
+    .svg-node.is-active { opacity: 1; }
+    .svg-flow {
+      transition: opacity var(--dur-short) var(--ease-out), stroke-width var(--dur-short) var(--ease-out);
+    }
+    .svg-flow.is-dimmed { opacity: 0.2; }
+    .svg-flow.is-active { opacity: 1; }
+    .svg-bar-seg {
+      transition: width var(--dur-long) var(--ease-out), opacity var(--dur-short) var(--ease-out);
+    }
+
+    /* Section 3: Three circuits explorer */
+    .cycles-panel {
+      background: var(--surface-container-low);
+      border-top: var(--rule-ink);
+      border-bottom: var(--rule-ink);
+      padding: var(--space-lg);
+      margin-top: var(--space-md);
+    }
+    .cycle-diagram-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: var(--space-sm);
+      align-items: stretch;
+      margin: var(--space-lg) 0;
+    }
+    .cycle-stage-box {
+      border-top: var(--rule-section);
+      padding: var(--space-sm) var(--space-sm) var(--space-md);
+      background: var(--background);
+    }
+    .cycle-stage-box.is-endpoint {
+      border-top-color: var(--primary);
+      background: var(--primary-container);
+    }
+    .cycle-stage-box.is-endpoint .cycle-stage-code {
+      color: var(--on-primary-container);
+    }
+    .cycle-stage-code {
+      font-family: var(--font-headline);
+      font-weight: 800;
+      font-size: 1.2rem;
+      display: block;
+      margin-bottom: var(--space-xs);
+    }
+    .cycle-stage-desc {
+      font-size: 0.88rem;
+      line-height: 1.35;
+      color: var(--on-surface-variant);
+      display: block;
+    }
+
+    /* Section 4: Simulator */
+    .sim-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.3fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+    .sim-controls {
+      background: var(--surface-container-low);
+      border-top: var(--rule-section);
+      border-bottom: var(--rule-ink);
+      padding: var(--space-lg);
+    }
+    .control-group {
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-md);
+      border-bottom: var(--rule-column);
+    }
+    .control-group:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+    .control-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-xs);
+    }
+    .control-label {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface);
+    }
+    .control-hint {
+      font-size: 0.88rem;
+      color: var(--on-surface-variant);
+      margin-bottom: var(--space-xs);
+      display: block;
+    }
+    .control-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 96px;
+      gap: var(--space-sm);
+      align-items: end;
+    }
+    input[type="range"] {
+      width: 100%;
+      min-height: 44px;
+      accent-color: var(--primary);
+      cursor: pointer;
+      margin: 0;
+    }
+    input[type="number"] {
+      width: 100%;
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-sm);
+      border: 1px solid var(--outline);
+      background: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-headline);
+      font-weight: 700;
+      font-size: 1rem;
+      font-variant-numeric: lining-nums tabular-nums;
+      text-align: right;
+    }
+    input[type="number"]:focus {
+      border-color: var(--primary);
+    }
+
+    .crisis-alert {
+      border-left: 3px solid var(--error);
+      background: var(--background);
+      padding: var(--space-sm) var(--space-md);
+      margin-top: var(--space-md);
+      font-size: 0.94rem;
+    }
+    .crisis-alert strong {
+      color: var(--error);
+      font-family: var(--font-label);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: var(--label-size);
+      display: block;
+      margin-bottom: var(--space-xs);
+    }
+
+    .chart-box {
+      margin-top: var(--space-lg);
+      border-top: var(--rule-ink);
+      padding-top: var(--space-md);
+      min-height: 260px;
+    }
+    .chart-box svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .chart-caption {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      margin-top: var(--space-xs);
+    }
+
+    /* Workday breakdown bar */
+    .workday-bar-wrap {
+      margin-top: var(--space-lg);
+      border-top: var(--rule-column);
+      padding-top: var(--space-md);
+    }
+    .workday-track {
+      display: flex;
+      width: 100%;
+      height: 36px;
+      border: 1px solid var(--outline);
+      background: var(--surface-container-low);
+    }
+    .workday-nec {
+      background: var(--data-2);
+      color: var(--on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      white-space: nowrap;
+      overflow: hidden;
+      padding-inline: var(--space-xs);
+      transition: width var(--dur-short) var(--ease-out);
+    }
+    .workday-sur {
+      background: var(--data-1);
+      color: var(--on-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      white-space: nowrap;
+      overflow: hidden;
+      padding-inline: var(--space-xs);
+      transition: width var(--dur-short) var(--ease-out);
+    }
+
+    /* Broadsheet Table */
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: var(--space-lg);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border-top: var(--rule-ink);
+      border-bottom: var(--rule-ink);
+    }
+    th {
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--on-surface-variant);
+      text-align: right;
+      padding: var(--space-sm) var(--space-sm);
+      border-bottom: var(--rule-ink);
+    }
+    th:first-child { text-align: left; }
+    td {
+      padding: var(--space-sm) var(--space-sm);
+      border-bottom: var(--rule-column);
+      text-align: right;
+      font-variant-numeric: lining-nums tabular-nums;
+      font-size: 0.95rem;
+    }
+    td:first-child {
+      text-align: left;
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+    }
+    tr:last-child td { border-bottom: 0; }
+    tr.is-crisis td { color: var(--error); }
+
+    /* Method & Sources details */
+    details.sources-box {
+      border-top: var(--rule-column);
+      border-bottom: var(--rule-column);
+      padding: var(--space-md) 0;
+    }
+    details.sources-box summary {
+      cursor: pointer;
+      font-family: var(--font-label);
+      font-weight: 700;
+      font-size: var(--label-size);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--primary);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    .sources-content {
+      padding-top: var(--space-md);
+      color: var(--on-surface-variant);
+      font-size: 0.95rem;
+    }
+
+    .footer-note {
+      border-top: var(--rule-ink);
+      padding-top: var(--space-md);
+      margin-top: var(--space-2xl);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-sm);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 900px) {
+      .sim-layout { grid-template-columns: 1fr; }
+      .columns { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--space-md); }
+      .columns > * { padding: var(--space-sm); }
+      .columns > :nth-child(odd) { border-left: 0; padding-left: 0; }
+      .col-3 { grid-template-columns: 1fr; }
+      .col-3 > * { border-left: 0; border-top: var(--rule-column); padding: var(--space-md) 0; }
+      .col-3 > :first-child { border-top: 0; padding-top: 0; }
+      .cycle-diagram-strip { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      .wrap { padding: var(--space-md); }
+      .circuit-compare-grid { grid-template-columns: 1fr; }
+      .circuit-col { padding: var(--space-md) 0; }
+      .circuit-col + .circuit-col { border-left: 0; border-top: var(--rule-column); padding: var(--space-md) 0; }
+      .columns { grid-template-columns: 1fr; }
+      .columns > * { border-left: 0; border-top: var(--rule-column); padding: var(--space-sm) 0; }
+      .columns > :first-child { border-top: 0; }
+      .step-metrics { grid-template-columns: 1fr; gap: var(--space-sm); }
+      .step-metrics > div + div { border-left: 0; padding-left: 0; border-top: var(--rule-column); padding-top: var(--space-sm); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- Masthead (única ocorrência da regra dupla de 3px) -->
+    <div class="masthead-bar">
+      <span class="masthead-brand">Caderno de Economia Política · O Capital, Livros I, II e III</span>
+      <nav class="masthead-nav" aria-label="Seções do infográfico">
+        <a href="#contraste" class="is-current">Circulação</a>
+        <a href="#anatomia">Fórmula Completa</a>
+        <a href="#tres-ciclos">Os Três Ciclos</a>
+        <a href="#simulador">Simulador</a>
+      </nav>
+    </div>
+
+    <header class="masthead">
+      <span class="section-label">Anatomia da Valorização do Capital</span>
+      <h1>A Fórmula Completa do Capital: como o dinheiro se multiplica pela produção</h1>
+      <p class="lede">
+        No Livro II de <em>O Capital</em>, Karl Marx condensa o motor do modo de produção capitalista numa única equação de movimento:
+        <strong>D — M &lt; {T, Mp} ··· P ··· M’ — D’</strong>. Ao acompanhar uma fiação de algodão que transforma £422 em £500 por semana, revela-se por que o lucro não nasce da astúcia no mercado, mas de uma interrupção oculta na esfera da produção.
+      </p>
+
+      <div class="formula-banner">
+        <span class="tag">Equação de Movimento · Exemplo clássico de Marx (10.000 lb de fio)</span>
+        <div class="formula-equation" aria-label="Fórmula completa do capital: D traço M que se divide em T e Mp, reticências P reticências, M linha traço D linha">
+          <span class="formula-token is-capital">D</span>
+          <span class="formula-op">—</span>
+          <span class="formula-token">M</span>
+          <span class="formula-op">&lt;</span>
+          <span class="formula-token is-labor">T</span>
+          <span class="formula-op">,</span>
+          <span class="formula-token is-mp">Mp</span>
+          <span class="formula-op">···</span>
+          <span class="formula-token is-prod">P</span>
+          <span class="formula-op">···</span>
+          <span class="formula-token is-capital">M’</span>
+          <span class="formula-op">—</span>
+          <span class="formula-token is-capital">D’</span>
+        </div>
+
+        <div class="columns" role="region" aria-label="Números de referência do exemplo de Marx">
+          <div>
+            <span class="stat-label">1. Capital Adiantado (D)</span>
+            <span class="stat-value">£422</span>
+            <span class="stat-delta">£372 em Mp + £50 em T</span>
+          </div>
+          <div>
+            <span class="stat-label">2. Trabalho Vivo em P</span>
+            <span class="stat-value is-secondary">+£128</span>
+            <span class="stat-delta is-teal">Valor novo em 60h de fiação</span>
+          </div>
+          <div>
+            <span class="stat-label">3. Mais-Valor Gerado (m)</span>
+            <span class="stat-value is-primary">+£78</span>
+            <span class="stat-delta">156% sobre o salário (£50)</span>
+          </div>
+          <div>
+            <span class="stat-label">4. Capital Realizado (D’)</span>
+            <span class="stat-value is-primary">£500</span>
+            <span class="stat-delta">10.000 lb de fio vendidas</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Seção 1: Contraste M-D-M vs D-M-D' -->
+    <section id="contraste" class="section-block">
+      <div class="section-head">
+        <span class="section-label">Seção I · O Ponto de Partida (Livro I, Cap. 4)</span>
+        <h2>Vender para comprar não é comprar para vender</h2>
+        <p>
+          Antes de abrir os portões da fábrica, Marx mostra por que a simples circulação de mercadorias obedece a uma lógica oposta à do capital. Embora ambas usem dinheiro e mercadorias, os extremos se invertem e alteram por completo o sentido do movimento.
+        </p>
+      </div>
+
+      <div class="circuit-compare-grid">
+        <div class="circuit-col">
+          <span class="tag">Circulação Simples de Mercadorias</span>
+          <h3>M — D — M: o fim é o consumo</h3>
+          <div class="circuit-svg-wrap">
+            <svg viewBox="0 0 420 110" aria-hidden="true">
+              <line x1="20" y1="54" x2="395" y2="54" stroke="var(--data-context)" stroke-width="2" />
+              <rect x="14" y="30" width="66" height="48" fill="var(--background)" stroke="var(--outline)" stroke-width="1.5" />
+              <text x="47" y="52" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="18" fill="var(--on-surface)">M₁</text>
+              <text x="47" y="69" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">Linho (£2)</text>
+
+              <text x="128" y="42" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-surface-variant)">VENDA</text>
+              <polygon points="164,54 155,49 155,59" fill="var(--outline)" />
+
+              <rect x="172" y="30" width="76" height="48" fill="var(--surface-container)" stroke="var(--outline)" stroke-width="1.5" />
+              <text x="210" y="52" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="18" fill="var(--on-surface)">D</text>
+              <text x="210" y="69" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">Dinheiro (£2)</text>
+
+              <text x="292" y="42" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-surface-variant)">COMPRA</text>
+              <polygon points="332,54 323,49 323,59" fill="var(--outline)" />
+
+              <rect x="336" y="30" width="70" height="48" fill="var(--background)" stroke="var(--outline)" stroke-width="1.5" />
+              <text x="371" y="52" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="18" fill="var(--on-surface)">M₂</text>
+              <text x="371" y="69" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">Bíblia (£2)</text>
+
+              <text x="210" y="99" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="11" fill="var(--on-surface-variant)">M₁ ≠ M₂ EM VALOR DE USO · MESMA GRANDEZA DE VALOR</text>
+            </svg>
+          </div>
+          <p>
+            O tecelão vende linho por £2 e compra outra mercadoria útil (£2). O dinheiro apenas medeia a troca e é gasto de modo definitivo. O ciclo se encerra quando o produto sai de circulação para satisfazer uma necessidade.
+          </p>
+          <ul class="compare-list">
+            <li><strong>Finalidade</strong>Valor de uso e consumo individual; limite dado pela carência humana.</li>
+            <li><strong>Papel do dinheiro</strong>Meio transitório; sai das mãos do produtor para nunca mais voltar pela mesma operação.</li>
+          </ul>
+        </div>
+
+        <div class="circuit-col">
+          <span class="section-label">Circulação Geral do Capital</span>
+          <h3>D — M — D’: o fim é a expansão quantitativa</h3>
+          <div class="circuit-svg-wrap">
+            <svg viewBox="0 0 420 110" aria-hidden="true">
+              <line x1="20" y1="54" x2="395" y2="54" stroke="var(--data-1)" stroke-width="2" />
+              <rect x="14" y="30" width="72" height="48" fill="var(--background)" stroke="var(--primary)" stroke-width="2" />
+              <text x="50" y="52" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="18" fill="var(--primary)">D</text>
+              <text x="50" y="69" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">Adiantado</text>
+
+              <text x="128" y="42" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--primary)">COMPRA</text>
+              <polygon points="164,54 155,49 155,59" fill="var(--primary)" />
+
+              <rect x="172" y="30" width="76" height="48" fill="var(--background)" stroke="var(--outline)" stroke-width="1.5" />
+              <text x="210" y="52" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="18" fill="var(--on-surface)">M</text>
+              <text x="210" y="69" text-anchor="middle" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">Mercadoria</text>
+
+              <text x="292" y="42" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--primary)">VENDA</text>
+              <polygon points="326,54 317,49 317,59" fill="var(--primary)" />
+
+              <rect x="330" y="26" width="78" height="54" fill="var(--primary)" />
+              <text x="369" y="50" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="18" fill="var(--on-primary)">D’</text>
+              <text x="369" y="68" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-primary)">D + d (ΔD)</text>
+
+              <text x="210" y="99" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="11" fill="var(--primary)">EXTREMOS QUALITATIVAMENTE IGUAIS · DIFERENÇA QUANTITATIVA (D’ &gt; D)</text>
+            </svg>
+          </div>
+          <p>
+            Trocar £100 por £100 seria absurdo. Em D — M — D’, o dinheiro é apenas <em>adiantado</em> com a intenção de retornar aumentado (D’ = D + d). Como o valor de troca não possui medida natural de saciedade, esse movimento não tem fim.
+          </p>
+          <ul class="compare-list">
+            <li><strong>Finalidade</strong>Valor de troca e valorização incessante; crescimento ilimitado da quantidade.</li>
+            <li><strong>O paradoxo</strong>Na troca de equivalentes ninguém enriquece. De onde vem o acréscimo <em>d</em>? A resposta exige descer à produção.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção 2: Sticky Scrollytelling — Anatomia da Fórmula Completa -->
+    <section id="anatomia" class="section-block">
+      <div class="section-head">
+        <span class="section-label">Seção II · O Circuito Desdobrado (Livro II, Cap. 1)</span>
+        <h2>Etapa por etapa: como a fórmula completa resolve o enigma do mais-valor</h2>
+        <p>
+          Role pelas seis etapas abaixo — ou clique diretamente nos blocos da equação ao lado — para acompanhar como £422 de capital monetário atravessam a circulação, mergulham na produção e retornam como £500.
+        </p>
+      </div>
+
+      <div class="scrolly">
+        <figure class="scrolly-graphic" aria-label="Diagrama interativo da fórmula completa do capital">
+          <div class="graphic-frame">
+            <div class="graphic-header">
+              <span class="graphic-title" id="graphic-stage-title">Etapa 1 de 6 — O Capital Monetário (D)</span>
+              <span class="tag" id="graphic-sphere-tag">Esfera: Circulação</span>
+            </div>
+
+            <div class="graphic-svg-box">
+              <svg id="circuit-svg" viewBox="0 0 680 465" role="img" aria-label="Esquema interativo do ciclo D menos M igual T e Mp, produção P, M linha menos D linha">
+                <!-- Background zones -->
+                <rect x="10" y="8" width="660" height="146" fill="var(--background)" stroke="var(--outline-variant)" stroke-width="1" />
+                <text x="20" y="25" font-family="var(--font-label)" font-weight="700" font-size="10" letter-spacing="0.8" fill="var(--on-surface-variant)">ESFERA DA CIRCULAÇÃO (MERCADO)</text>
+
+                <rect x="10" y="164" width="660" height="196" fill="var(--surface-container-low)" stroke="var(--outline)" stroke-width="1.5" />
+                <text x="20" y="182" font-family="var(--font-label)" font-weight="700" font-size="10" letter-spacing="0.8" fill="var(--primary)">ESFERA DA PRODUÇÃO · CIRCULAÇÃO INTERROMPIDA (··· P ···)</text>
+
+                <rect x="10" y="368" width="660" height="88" fill="var(--background)" stroke="var(--outline-variant)" stroke-width="1" />
+                <text x="20" y="385" font-family="var(--font-label)" font-weight="700" font-size="10" letter-spacing="0.8" fill="var(--on-surface-variant)">DESTINO DE D’ E RENOVAÇÃO DO CICLO</text>
+
+                <!-- Flow connectors -->
+                <!-- D -> Mp and D -> T -->
+                <g id="flow-dm" class="svg-flow">
+                  <path d="M 96 76 L 130 76 L 130 56 L 154 56" fill="none" stroke="var(--data-3)" stroke-width="2.5" />
+                  <polygon points="158,56 150,52 150,60" fill="var(--data-3)" />
+                  <text x="126" y="48" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--data-3)">D–Mp</text>
+
+                  <path d="M 96 96 L 130 96 L 130 120 L 154 120" fill="none" stroke="var(--data-2)" stroke-width="2.5" />
+                  <polygon points="158,120 150,116 150,124" fill="var(--data-2)" />
+                  <text x="126" y="135" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--data-2)">D–T</text>
+                </g>
+
+                <!-- Interruption arrows into P -->
+                <g id="flow-into-p" class="svg-flow">
+                  <path d="M 294 56 L 326 56 L 326 196" fill="none" stroke="var(--data-3)" stroke-width="2" stroke-dasharray="4 3" />
+                  <path d="M 294 120 L 314 120 L 314 196" fill="none" stroke="var(--data-2)" stroke-width="2" stroke-dasharray="4 3" />
+                  <rect x="296" y="148" width="44" height="18" fill="var(--background)" />
+                  <text x="318" y="161" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="14" fill="var(--primary)">···</text>
+                </g>
+
+                <!-- Exit P into M' -->
+                <g id="flow-out-p" class="svg-flow">
+                  <path d="M 436 196 L 436 124" fill="none" stroke="var(--data-1)" stroke-width="2.5" stroke-dasharray="4 3" />
+                  <polygon points="436,120 432,128 440,128" fill="var(--data-1)" />
+                  <rect x="414" y="148" width="44" height="18" fill="var(--background)" />
+                  <text x="436" y="161" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="14" fill="var(--primary)">···</text>
+                </g>
+
+                <!-- M' -> D' realization -->
+                <g id="flow-md" class="svg-flow">
+                  <line x1="504" y1="86" x2="564" y2="86" stroke="var(--data-1)" stroke-width="3" />
+                  <polygon points="568,86 559,81 559,91" fill="var(--data-1)" />
+                  <text x="534" y="75" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--primary)">M’–D’</text>
+                  <text x="534" y="102" text-anchor="middle" font-family="var(--font-label)" font-size="9" fill="var(--on-surface-variant)">Venda</text>
+                </g>
+
+                <!-- Feedback loops (Simple vs Expanded Reproduction) -->
+                <g id="flow-repro" class="svg-flow">
+                  <!-- Return from D' down to bottom channel -->
+                  <path d="M 612 122 L 612 414 L 58 414 L 58 124" fill="none" stroke="var(--data-1)" stroke-width="2.5" />
+                  <polygon points="58,120 53,129 63,129" fill="var(--data-1)" />
+                  <text x="335" y="406" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--primary)">REPRODUÇÃO AMPLIADA (ESPIRAL): £500 REINVESTIDOS → PRÓXIMO CICLO PRODUZ £592</text>
+
+                  <!-- Simple reproduction branch -->
+                  <path d="M 612 414 L 612 440 L 420 440" fill="none" stroke="var(--data-4)" stroke-width="2" stroke-dasharray="3 3" />
+                  <text x="412" y="444" text-anchor="end" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--data-4)">REPRODUÇÃO SIMPLES: d (£78) GASTO COMO RENDA (m–d–m); D FICA EM £422</text>
+                </g>
+
+                <!-- Node 0: D -->
+                <g id="node-d" class="svg-node" role="button" tabindex="0" aria-label="Etapa 1: Capital Monetário D" onclick="jumpToStep(0)">
+                  <rect x="22" y="48" width="74" height="72" fill="var(--background)" stroke="var(--primary)" stroke-width="2.5" />
+                  <text x="59" y="78" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="24" fill="var(--primary)">D</text>
+                  <text x="59" y="96" text-anchor="middle" font-family="var(--font-headline)" font-weight="700" font-size="13" fill="var(--on-surface)">£422</text>
+                  <text x="59" y="111" text-anchor="middle" font-family="var(--font-label)" font-size="9" fill="var(--on-surface-variant)">Capital-dinheiro</text>
+                </g>
+
+                <!-- Node 1a: Mp -->
+                <g id="node-mp" class="svg-node" role="button" tabindex="0" aria-label="Etapa 2: Meios de Produção Mp" onclick="jumpToStep(1)">
+                  <rect x="160" y="34" width="134" height="46" fill="var(--background)" stroke="var(--data-3)" stroke-width="2" />
+                  <text x="170" y="53" font-family="var(--font-headline)" font-weight="800" font-size="14" fill="var(--data-3)">Mp · £372 (c)</text>
+                  <text x="170" y="70" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">10.600 lb algodão + máquinas</text>
+                </g>
+
+                <!-- Node 1b: T -->
+                <g id="node-t" class="svg-node" role="button" tabindex="0" aria-label="Etapa 2: Força de Trabalho T" onclick="jumpToStep(1)">
+                  <rect x="160" y="92" width="134" height="48" fill="var(--background)" stroke="var(--data-2)" stroke-width="2" />
+                  <text x="170" y="111" font-family="var(--font-headline)" font-weight="800" font-size="14" fill="var(--data-2)">T · £50 (v)</text>
+                  <text x="170" y="128" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">Força de trabalho (60h/sem)</text>
+                </g>
+
+                <!-- Node 2 & 3: Production Chamber P -->
+                <g id="node-p" class="svg-node" role="button" tabindex="0" aria-label="Etapas 3 e 4: Esfera da Produção P" onclick="jumpToStep(3)">
+                  <rect x="28" y="196" width="624" height="150" fill="var(--background)" stroke="var(--outline)" stroke-width="1.5" />
+                  <text x="42" y="218" font-family="var(--font-headline)" font-weight="800" font-size="16" fill="var(--on-surface)">P — Consumo Produtivo &amp; Dupla Ação do Trabalho Vivo</text>
+
+                  <!-- Left column inside P: Conservation -->
+                  <rect x="42" y="230" width="276" height="48" fill="var(--surface-container-low)" stroke="var(--data-3)" stroke-width="1.5" />
+                  <text x="52" y="249" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--data-3)">1. QUALIDADE ÚTIL (FIAÇÃO CONCRETA)</text>
+                  <text x="52" y="266" font-family="var(--font-body)" font-size="11.5" fill="var(--on-surface)">Conserva e transfere £372 de Mp sem custo extra</text>
+
+                  <!-- Right column inside P: New Value Creation -->
+                  <rect x="332" y="230" width="306" height="48" fill="var(--surface-container-low)" stroke="var(--primary)" stroke-width="1.5" />
+                  <text x="342" y="249" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--primary)">2. TEMPO DE TRABALHO (QUANTIDADE ABSTRATA)</text>
+                  <text x="342" y="266" font-family="var(--font-body)" font-size="11.5" fill="var(--on-surface)">Cria £128 novos = £50 (salário v) + £78 (mais-valor m)</text>
+
+                  <!-- Proportional value bar inside P (£500 total across 596px) -->
+                  <text x="42" y="295" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-surface-variant)">VALOR INCORPORADO NO NOVO PRODUTO (M’ = £500):</text>
+                  <rect x="42" y="302" width="596" height="30" fill="var(--surface-container)" stroke="var(--outline)" stroke-width="1" />
+                  <!-- c = 372/500 * 596 = 443 -->
+                  <rect id="bar-c" class="svg-bar-seg" x="42" y="302" width="443" height="30" fill="var(--data-3)" />
+                  <!-- v = 50/500 * 596 = 60 -->
+                  <rect id="bar-v" class="svg-bar-seg" x="485" y="302" width="60" height="30" fill="var(--data-2)" />
+                  <!-- m = 78/500 * 596 = 93 -->
+                  <rect id="bar-m" class="svg-bar-seg" x="545" y="302" width="93" height="30" fill="var(--data-1)" />
+
+                  <text x="263" y="321" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="11" fill="var(--on-primary)">c = £372 (transferido)</text>
+                  <text x="515" y="321" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-primary)">v £50</text>
+                  <text id="bar-m-label" x="591" y="321" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-primary)">m +£78</text>
+                </g>
+
+                <!-- Node 4: M' -->
+                <g id="node-mprime" class="svg-node" role="button" tabindex="0" aria-label="Etapa 5: Capital-Mercadoria M linha" onclick="jumpToStep(4)">
+                  <rect x="372" y="42" width="132" height="78" fill="var(--background)" stroke="var(--primary)" stroke-width="2" />
+                  <text x="438" y="67" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="20" fill="var(--on-surface)">M’ · £500</text>
+                  <text x="438" y="85" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--primary)">10.000 lb de fio</text>
+                  <text x="438" y="100" text-anchor="middle" font-family="var(--font-label)" font-size="9.5" fill="var(--on-surface-variant)">8.440 lb (M) + 1.560 lb (m)</text>
+                  <text x="438" y="113" text-anchor="middle" font-family="var(--font-label)" font-size="9" fill="var(--on-surface-variant)">1 xelim / libra</text>
+                </g>
+
+                <!-- Node 5: D' -->
+                <g id="node-dprime" class="svg-node" role="button" tabindex="0" aria-label="Etapa 6: Capital Realizado D linha" onclick="jumpToStep(5)">
+                  <rect x="568" y="42" width="88" height="78" fill="var(--primary)" />
+                  <text x="612" y="69" text-anchor="middle" font-family="var(--font-headline)" font-weight="800" font-size="22" fill="var(--on-primary)">D’</text>
+                  <text x="612" y="90" text-anchor="middle" font-family="var(--font-headline)" font-weight="700" font-size="14" fill="var(--on-primary)">£500</text>
+                  <text x="612" y="108" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="9.5" fill="var(--on-primary)">£422 + £78</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="graphic-footer">
+              <div class="graphic-readout" id="graphic-readout">
+                Estado: <strong>Adiantamento inicial (D = £422)</strong>
+              </div>
+              <div class="btn-row">
+                <button type="button" class="btn" id="btn-prev-step" onclick="stepRelative(-1)" aria-label="Etapa anterior">← Anterior</button>
+                <button type="button" class="btn btn-primary" id="btn-next-step" onclick="stepRelative(1)" aria-label="Próxima etapa">Próxima →</button>
+              </div>
+            </div>
+          </div>
+        </figure>
+
+        <div class="steps" id="steps"></div>
+      </div>
+    </section>
+
+    <!-- Seção 3: Os Três Ciclos Simultâneos -->
+    <section id="tres-ciclos" class="section-block">
+      <div class="section-head">
+        <span class="section-label">Seção III · Unidade dos Três Ciclos (Livro II, Caps. 1–4)</span>
+        <h2>Cada capital industrial percorre três figuras ao mesmo tempo</h2>
+        <p>
+          O capital não existe apenas em uma etapa por vez: numa fábrica em movimento contínuo, uma fração está em dinheiro comprando algodão, outra está nos fusos produzindo fio e outra está sendo vendida no mercado. Marx mostra que privilegiar apenas um dos três ângulos altera o que enxergamos — e o que deixamos de ver.
+        </p>
+      </div>
+
+      <div class="btn-row" role="group" aria-label="Selecionar perspectiva do ciclo">
+        <button type="button" class="btn is-selected" id="cycle-btn-D" onclick="selectCycleView('D')">I. Ciclo Monetário (D ··· D’)</button>
+        <button type="button" class="btn" id="cycle-btn-P" onclick="selectCycleView('P')">II. Ciclo Produtivo (P ··· P’)</button>
+        <button type="button" class="btn" id="cycle-btn-M" onclick="selectCycleView('M')">III. Ciclo da Mercadoria (M’ ··· M’)</button>
+      </div>
+
+      <div class="cycles-panel" id="cycle-detail-panel" aria-live="polite">
+        <div class="graphic-header">
+          <h3 id="cycle-panel-title">I. Ciclo do Capital Monetário: D — M ··· P ··· M’ — D’</h3>
+          <span class="label-voice" id="cycle-panel-formula" style="color: var(--primary);">D ··· D’</span>
+        </div>
+        <p id="cycle-panel-desc"></p>
+
+        <div class="cycle-diagram-strip" id="cycle-diagram-strip"></div>
+
+        <div class="columns col-2">
+          <div>
+            <span class="stat-label">O que esta perspectiva revela</span>
+            <p id="cycle-reveals" style="margin-top: var(--space-xs);"></p>
+          </div>
+          <div>
+            <span class="stat-label">Ilusão ou ponto cego se isolada</span>
+            <p id="cycle-hides" style="margin-top: var(--space-xs);"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção 4: Simulador Interativo -->
+    <section id="simulador" class="section-block">
+      <div class="section-head">
+        <span class="section-label">Seção IV · Laboratório da Valorização, Lucro e Crise</span>
+        <h2>Simule a jornada de trabalho, a taxa de lucro e a espiral da acumulação</h2>
+        <p>
+          Ajuste os componentes do capital adiantado e observe como o trabalho vivo determina o mais-valor, por que a mecanização altera a taxa de lucro e como o bloqueio na venda de M’ interrompe toda a rotação.
+        </p>
+      </div>
+
+      <div class="btn-row" style="margin-bottom: var(--space-lg);" role="group" aria-label="Cenários históricos e teóricos">
+        <button type="button" class="btn btn-primary" onclick="applyPreset('marx')">Exemplo de Marx (Fiação: £422 → £500)</button>
+        <button type="button" class="btn" onclick="applyPreset('absoluto')">Mais-Valor Absoluto (Jornada + Longa)</button>
+        <button type="button" class="btn" onclick="applyPreset('organica')">Alta Composição Orgânica (Mecanização)</button>
+        <button type="button" class="btn" onclick="applyPreset('simples')">Reprodução Simples (0% Acumulação)</button>
+        <button type="button" class="btn" onclick="applyPreset('crise')">Crise de Realização (35% Encalhado)</button>
+      </div>
+
+      <div class="sim-layout">
+        <div class="sim-controls">
+          <div class="control-group">
+            <div class="control-header">
+              <label for="input-c" class="control-label">Capital Constante (Mp / c)</label>
+              <span class="num" id="disp-c-pct">88,2% de D</span>
+            </div>
+            <span class="control-hint">Matéria-prima e desgaste de máquinas transferidos ao produto (£).</span>
+            <div class="control-row">
+              <input type="range" id="slider-c" min="50" max="1000" step="2" value="372" oninput="syncFromSlider('c', this.value)">
+              <input type="number" id="input-c" min="50" max="1000" step="2" value="372" oninput="syncFromNumber('c', this.value)">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label for="input-v" class="control-label">Capital Variável (T / v)</label>
+              <span class="num" id="disp-v-pct">11,8% de D</span>
+            </div>
+            <span class="control-hint">Salário adiantado para comprar força de trabalho viva (£).</span>
+            <div class="control-row">
+              <input type="range" id="slider-v" min="10" max="400" step="2" value="50" oninput="syncFromSlider('v', this.value)">
+              <input type="number" id="input-v" min="10" max="400" step="2" value="50" oninput="syncFromNumber('v', this.value)">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label for="input-e" class="control-label">Taxa de Mais-Valor (m / v)</label>
+              <span class="num" id="disp-e-hours">7,3h mais-trabalho / 12h</span>
+            </div>
+            <span class="control-hint">Grau de exploração: razão entre mais-trabalho e trabalho necessário (%).</span>
+            <div class="control-row">
+              <input type="range" id="slider-e" min="20" max="300" step="1" value="156" oninput="syncFromSlider('e', this.value)">
+              <input type="number" id="input-e" min="20" max="300" step="1" value="156" oninput="syncFromNumber('e', this.value)">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label for="input-a" class="control-label">Taxa de Acumulação (Reinvestimento de m)</label>
+              <span class="num" id="disp-a-split">100% capitalizado</span>
+            </div>
+            <span class="control-hint">Parcela do mais-valor convertido em capital novo vs. gasto em renda (%).</span>
+            <div class="control-row">
+              <input type="range" id="slider-a" min="0" max="100" step="5" value="100" oninput="syncFromSlider('a', this.value)">
+              <input type="number" id="input-a" min="0" max="100" step="5" value="100" oninput="syncFromNumber('a', this.value)">
+            </div>
+          </div>
+
+          <div class="control-group">
+            <div class="control-header">
+              <label for="input-r" class="control-label">Realização no Mercado (Venda de M’)</label>
+              <span class="num" id="disp-r-status">100% vendido</span>
+            </div>
+            <span class="control-hint">Percentual de mercadorias que atravessam M’ — D’ sem encalhar (%).</span>
+            <div class="control-row">
+              <input type="range" id="slider-r" min="50" max="100" step="1" value="100" oninput="syncFromSlider('r', this.value)">
+              <input type="number" id="input-r" min="50" max="100" step="1" value="100" oninput="syncFromNumber('r', this.value)">
+            </div>
+          </div>
+
+          <div id="sim-crisis-alert" class="crisis-alert" hidden>
+            <strong>Alerta de Estancamento na Circulação</strong>
+            <span id="sim-crisis-text"></span>
+          </div>
+        </div>
+
+        <div>
+          <div class="columns" aria-live="polite">
+            <div>
+              <span class="stat-label">Capital Adiantado (D)</span>
+              <span class="stat-value" id="out-D">£422</span>
+              <span class="stat-delta" id="out-comp">Composição c/v: 7,4:1</span>
+            </div>
+            <div>
+              <span class="stat-label">Mais-Valor Produzido (m)</span>
+              <span class="stat-value is-primary" id="out-m">£78</span>
+              <span class="stat-delta" id="out-mv">m/v = 156%</span>
+            </div>
+            <div>
+              <span class="stat-label">Taxa de Lucro (m / D)</span>
+              <span class="stat-value is-tertiary" id="out-profit-rate">18,5%</span>
+              <span class="stat-delta" id="out-Mprime">Valor M’ = £500</span>
+            </div>
+            <div>
+              <span class="stat-label">Capital no Ciclo 6</span>
+              <span class="stat-value is-secondary" id="out-D6">£1.119</span>
+              <span class="stat-delta is-teal" id="out-growth">+165% acumulado</span>
+            </div>
+          </div>
+
+          <!-- Jornada de Trabalho -->
+          <div class="workday-bar-wrap">
+            <div class="control-header">
+              <span class="stat-label">Divisão da Jornada de 12 Horas do Trabalhador</span>
+              <span class="label-voice" id="workday-caption" style="color: var(--on-surface-variant);">4,7h necessárias + 7,3h excedentes</span>
+            </div>
+            <div class="workday-track" role="img" aria-label="Proporção entre tempo de trabalho necessário e mais-trabalho">
+              <div class="workday-nec" id="workday-nec-bar" style="width: 39%;">Nec. 4,7h</div>
+              <div class="workday-sur" id="workday-sur-bar" style="width: 61%;">Mais-trabalho 7,3h</div>
+            </div>
+          </div>
+
+          <!-- Gráfico da Espiral de Acumulação -->
+          <div class="chart-box">
+            <div class="control-header">
+              <h3>Trajetória ao longo de 6 rotações: Reprodução Ampliada vs. Simples</h3>
+              <span class="label-voice" style="color: var(--on-surface-variant);">Valores em £</span>
+            </div>
+            <svg id="spiral-chart-svg" viewBox="0 0 640 240" role="img" aria-label="Gráfico comparando a evolução do capital na reprodução ampliada e na reprodução simples ao longo de 6 ciclos"></svg>
+            <div class="chart-caption">
+              Linha carmim: capital adiantado com reinvestimento. Linha cinza tracejada: referência da reprodução simples (capital estagnado em D₁).
+            </div>
+          </div>
+
+          <!-- Tabela dos 6 ciclos -->
+          <div class="table-wrap">
+            <table aria-label="Detalhamento dos 6 ciclos de acumulação">
+              <thead>
+                <tr>
+                  <th>Ciclo</th>
+                  <th>D (c + v)</th>
+                  <th>Mp (c)</th>
+                  <th>T (v)</th>
+                  <th>Mais-valor (m)</th>
+                  <th>M’ Total</th>
+                  <th>Vendido (D’)</th>
+                  <th>Renda Gasta</th>
+                </tr>
+              </thead>
+              <tbody id="cycles-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção 5: Fontes e Nota Conceitual -->
+    <section class="section-block">
+      <details class="sources-box">
+        <summary>Referências conceituais e fontes da exposição</summary>
+        <div class="sources-content">
+          <p>
+            <strong>O Capital — Crítica da economia política, Livro I (Seções II, III, IV e VII):</strong>
+            Contraste entre circulação simples (M–D–M) e fórmula geral do capital (D–M–D’); compra e venda da força de trabalho; trabalho vivo como criador de valor novo e conservador do valor dos meios de produção; mais-valor absoluto e relativo; reprodução ampliada como espiral.
+          </p>
+          <p>
+            <strong>O Capital — Crítica da economia política, Livro II (Seção I, Caps. 1–4, e Seção III):</strong>
+            Desdobramento da fórmula completa do ciclo do capital industrial (D–M &lt; {T, Mp} ··· P ··· M’–D’) e o exemplo numérico da fiação de 10.000 libras de fio de algodão (£372 em meios de produção, £50 em força de trabalho, £78 de mais-valor, taxa de exploração de 156% e £500 de produto); unidade dos três ciclos (monetário, produtivo e mercadoria); condições de realização e estancamento nas crises.
+          </p>
+          <p>
+            <strong>O Capital — Crítica da economia política, Livro III (Seção I e III) &amp; Grundrisse:</strong>
+            Diferenciação entre taxa de mais-valor (m/v) e taxa de lucro (m/(c+v)), papel da composição orgânica do capital e da rotação do capital na dinâmica das crises comerciais.
+          </p>
+        </div>
+      </details>
+
+      <footer class="footer-note">
+        <span>Infográfico Didático · Fórmula Completa do Capital (Karl Marx)</span>
+        <span>Valores baseados no Livro II, Cap. 1 de O Capital</span>
+      </footer>
+    </section>
+  </div>
+
+  <api-shim></api-shim>
+  <script>
+    // ═══ DADOS DO SCROLLYTELLING (6 ETAPAS) ═══════════════════════════════════
+    const STEPS = [
+      {
+        kicker: `Etapa 1 · Ponto de Partida`,
+        formula: `D (£422)`,
+        title: `O dinheiro entra como capital monetário potencial`,
+        body: `O capitalista inicia a operação com £422 em forma-dinheiro (D). Esse valor não é gasto para consumo pessoal — ele é apenas adiantado com a intenção de retornar aumentado. Em forma de dinheiro, o valor é universal e líquido, mas estéril: dinheiro parado no cofre não cria um centavo de mais-valor.`,
+        quote: `“Na compra da mercadoria, ele lança dinheiro na circulação, para dela retirá-lo novamente por meio da venda da mesma mercadoria. O dinheiro é, portanto, apenas adiantado.” — O Capital, Livro I`,
+        m1Label: `Forma funcional`,
+        m1Val: `Capital Monetário`,
+        m2Label: `Valor adiantado`,
+        m2Val: `£422`,
+        readout: `Etapa 1/6 · Capital adiantado: D = £422 (pronto para comprar Mp e T)`,
+        sphere: `Esfera: Circulação`,
+        activeNodes: [`node-d`],
+        activeFlows: []
+      },
+      {
+        kicker: `Etapa 2 · Primeiro Estágio`,
+        formula: `D — M < {T, Mp}`,
+        title: `A divisão entre meios de produção (Mp) e força de trabalho (T)`,
+        body: `No mercado, D se converte em duas mercadorias de naturezas distintas: £372 compram Meios de Produção (Mp — 10.600 lb de algodão, energia e o desgaste semanal de máquinas e edifícios fabris) e £50 compram Força de Trabalho (T) por 60 horas semanais. Essa compra pressupõe a existência histórica de trabalhadores livres, porém separados dos meios de produzir por conta própria.`,
+        quote: `“O característico não é que a mercadoria força de trabalho seja comprável, mas que a força de trabalho apareça como mercadoria.” — O Capital, Livro II`,
+        m1Label: `Capital Constante (Mp)`,
+        m1Val: `£372 (88,2%)`,
+        m2Label: `Capital Variável (T)`,
+        m2Val: `£50 (11,8%)`,
+        readout: `Etapa 2/6 · D (£422) converte-se em Mp (£372) + T (£50)`,
+        sphere: `Esfera: Circulação`,
+        activeNodes: [`node-d`, `node-mp`, `node-t`],
+        activeFlows: [`flow-dm`]
+      },
+      {
+        kicker: `Etapa 3 · A Interrupção`,
+        formula: `··· P ···`,
+        title: `A circulação se interrompe nos portões da fábrica`,
+        body: `As reticências (···) antes e depois de P têm sentido literal na teoria de Marx: a circulação mercantil é suspensa. Nem as máquinas nem o trabalhador continuam circulando no mercado; eles entram no consumo produtivo. O capital abandona a vitrine da troca de equivalentes e ingressa na oficina oculta da produção.`,
+        quote: `“Com a transformação do capital monetário em capital produtivo, o valor de capital conservou uma forma natural na qual ele não pode continuar a circular, mas tem de entrar no consumo produtivo.” — O Capital, Livro II`,
+        m1Label: `Status no mercado`,
+        m1Val: `Circulação suspensa`,
+        m2Label: `Forma funcional`,
+        m2Val: `Capital Produtivo (P)`,
+        readout: `Etapa 3/6 · P = Mp + T sai do mercado para o consumo produtivo`,
+        sphere: `Esfera: Produção`,
+        activeNodes: [`node-mp`, `node-t`, `node-p`],
+        activeFlows: [`flow-into-p`]
+      },
+      {
+        kicker: `Etapa 4 · O Segredo do Mais-Valor`,
+        formula: `c + v + m = £500`,
+        title: `O trabalho vivo conserva o valor antigo e cria o mais-valor`,
+        body: `Sem trabalho vivo, o ferro enferruja e o algodão se perde. Ao fiar durante 60 horas, o trabalhador executa dois atos simultâneos: por seu trabalho concreto, transfere integralmente os £372 de Mp ao fio sem custo para o capital; por seu trabalho abstrato, cria £128 de valor novo — £50 repõem o seu salário (v) e £78 formam o mais-valor (m), uma taxa de exploração de 156%.`,
+        quote: `“A capacidade de conservar valor ao mesmo tempo que adiciona valor é um dom natural da força de trabalho em ação, que não custa nada ao trabalhador, mas é muito rentável para o capitalista.” — O Capital, Livro I`,
+        m1Label: `Valor novo criado`,
+        m1Val: `£128 (£50 v + £78 m)`,
+        m2Label: `Taxa de mais-valor`,
+        m2Val: `156% (m / v)`,
+        readout: `Etapa 4/6 · Trabalho vivo conserva £372 e adiciona £128 (£50 v + £78 m)`,
+        sphere: `Esfera: Produção`,
+        activeNodes: [`node-p`],
+        activeFlows: []
+      },
+      {
+        kicker: `Etapa 5 · Terceiro Estágio`,
+        formula: `M’ — D’`,
+        title: `A realização mercantil: 10.000 libras de fio voltam ao mercado`,
+        body: `Do processo produtivo sai uma mercadoria material e valorativamente distinta: M’ (10.000 lb de fio de algodão valendo £500, dos quais 8.440 lb equivalem ao capital gasto e 1.560 lb carregam o mais-produto). Mas o mais-valor ainda é apenas potencial: o fio precisa encontrar comprador e atravessar a venda M’ — D’ a 1 xelim por libra. Se não vender, o ciclo estanca.`,
+        quote: `“O fio não pode ser vendido antes de ter sido fiado. Mas, se M’ não encontra venda, cada estancamento num estágio causa um estancamento em todo o ciclo.” — O Capital, Livro II`,
+        m1Label: `Produto-mercadoria`,
+        m1Val: `10.000 lb = £500`,
+        m2Label: `Mais-produto`,
+        m2Val: `1.560 lb (£78)`,
+        readout: `Etapa 5/6 · M’ (£500) atravessa M’–D’ para realizar seu valor em dinheiro`,
+        sphere: `Esfera: Circulação`,
+        activeNodes: [`node-p`, `node-mprime`, `node-dprime`],
+        activeFlows: [`flow-out-p`, `flow-md`]
+      },
+      {
+        kicker: `Etapa 6 · Retorno e Espiral`,
+        formula: `D’ (£500) → D₁`,
+        title: `Reprodução simples ou espiral da acumulação ampliada`,
+        body: `Realizado em D’ (£500 = £422 + £78), o ciclo chega à encruzilhada: se o capitalista consome os £78 como renda pessoal (m–d–m), temos reprodução simples e tudo recomeça nos mesmos £422. Mas a concorrência força a capitalização de m em novos meios de produção e força de trabalho — transformando o círculo numa espiral crescente.`,
+        quote: `“Ao descrever o seu círculo, o capital se amplia como sujeito do círculo e descreve assim um círculo que se expande, uma espiral.” — Grundrisse / O Capital`,
+        m1Label: `Reprodução simples`,
+        m1Val: `£422 constantes`,
+        m2Label: `Reprodução ampliada`,
+        m2Val: `£500 → £592 → £702…`,
+        readout: `Etapa 6/6 · D’ (£500) reinicia o ciclo em escala ampliada`,
+        sphere: `Esfera: Circulação → Produção`,
+        activeNodes: [`node-dprime`, `node-d`],
+        activeFlows: [`flow-repro`]
+      }
+    ];
+
+    // ═══ DADOS DOS TRÊS CICLOS (LIVRO II) ══════════════════════════════════════
+    const CYCLES_DATA = {
+      D: {
+        title: `I. Ciclo do Capital Monetário: D — M ··· P ··· M’ — D’`,
+        formula: `D ··· D’`,
+        desc: `O capital industrial parte do dinheiro adiantado (D) e retorna ao dinheiro valorizado (D’ = D + d). O dinheiro aparece como alfa e ômega da operação: o processo produtivo surge apenas como um elo intermediário inevitável para fazer dinheiro gerar mais dinheiro.`,
+        reveals: `Torna palpável o motivo propulsor do capitalismo: o valor de troca e o enriquecimento quantitativo sem fim, apagando qualquer vestígio do valor de uso nos extremos.`,
+        hides: `Quando fixado de modo isolado, alimenta a ilusão especulativa de que seria possível fazer dinheiro parir dinheiro diretamente no mercado financeiro sem passar pela produção de valor.`,
+        stages: [
+          { code: `D`, desc: `Capital monetário adiantado (£422)`, endpoint: true },
+          { code: `— M`, desc: `Compra de T e Mp na circulação`, endpoint: false },
+          { code: `··· P ···`, desc: `Interrupção: consumo produtivo`, endpoint: false },
+          { code: `M’ —`, desc: `Saída e venda do produto (£500)`, endpoint: false },
+          { code: `D’`, desc: `Dinheiro valorizado (£422 + £78)`, endpoint: true }
+        ]
+      },
+      P: {
+        title: `II. Ciclo do Capital Produtivo: P ··· M’ — D’ — M ··· P (ou P’)`,
+        formula: `P ··· P’`,
+        desc: `A economia política clássica enxergava o capital sobretudo sob esta ótica: a produção contínua e periódica. A circulação aparece como mediação entre dois atos produtivos, tornando visível se o ciclo apenas repete sua escala (P ··· P) ou acumula capital novo (P ··· P’).`,
+        reveals: `Evidencia a reprodução real dos fatores materiais e da classe assalariada, além de distinguir o gasto improdutivo do mais-valor como renda (m–d–m) de sua capitalização.`,
+        hides: `Tende a naturalizar o processo produtivo como mera criação técnica de coisas úteis, ocultando que os bens precisam necessariamente ser vendidos em forma-dinheiro para evitar crises.`,
+        stages: [
+          { code: `P`, desc: `Capital produtivo em ação (Mp + T)`, endpoint: true },
+          { code: `··· M’`, desc: `Mercadoria pronta com mais-valor`, endpoint: false },
+          { code: `— D’`, desc: `Realização monetária e separação de d`, endpoint: false },
+          { code: `— M ···`, desc: `Reposição (ou ampliação) de T e Mp`, endpoint: false },
+          { code: `P / P’`, desc: `Reinício na mesma escala ou ampliada`, endpoint: true }
+        ]
+      },
+      M: {
+        title: `III. Ciclo do Capital-Mercadoria: M’ — D’ — M ··· P ··· M’`,
+        formula: `M’ ··· M’`,
+        desc: `O único ciclo que já começa com o valor de capital acrescido do mais-valor em forma-mercadoria (M’ = M + m). Como M’ precisa ser comprada por outros agentes e reposta por elementos produtivos produzidos por outros capitais, esta figura conecta o capital individual ao capital social total.`,
+        reveals: `Integra na mesma fórmula o consumo produtivo das empresas e o consumo individual dos trabalhadores e capitalistas, fundamentando os esquemas de reprodução entre Setor I e Setor II.`,
+        hides: `Como começa e termina em M’ (mercadoria), pode mascarar a diferença quantitativa de valor quando analisada apenas em reprodução simples, além de depender totalmente de outros ciclos externos.`,
+        stages: [
+          { code: `M’`, desc: `Produto total valorizado (£500)`, endpoint: true },
+          { code: `— D’`, desc: `Venda no mercado social`, endpoint: false },
+          { code: `— M`, desc: `Recompra de T e Mp de outros setores`, endpoint: false },
+          { code: `··· P ···`, desc: `Novo processo de trabalho vivo`, endpoint: false },
+          { code: `M’ (M’’)`, desc: `Novo produto-mercadoria pronto`, endpoint: true }
+        ]
+      }
+    };
+
+    // ═══ PRESETS DO SIMULADOR ═════════════════════════════════════════════════
+    const PRESETS = {
+      marx: { c: 372, v: 50, e: 156, a: 100, r: 100 },
+      absoluto: { c: 372, v: 50, e: 220, a: 100, r: 100 },
+      organica: { c: 760, v: 40, e: 200, a: 100, r: 100 },
+      simples: { c: 372, v: 50, e: 156, a: 0, r: 100 },
+      crise: { c: 372, v: 50, e: 156, a: 100, r: 65 }
+    };
+
+    // ═══ ESTADO GLOBAL & PERSISTÊNCIA ═════════════════════════════════════════
+    let currentStep = 0;
+    let currentCycleView = 'D';
+    let simParams = { c: 372, v: 50, e: 156, a: 100, r: 100 };
+
+    async function persistState() {
+      if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === 'function') {
+        try {
+          await window.notebookAppApi.setAppState({
+            currentStep: currentStep,
+            currentCycleView: currentCycleView,
+            simParams: simParams
+          });
+        } catch (err) {
+          // Silently ignore persistence errors in offline preview
+        }
+      }
+    }
+
+    // ═══ SCROLLYTELLING ENGINE ════════════════════════════════════════════════
+    const stepsContainer = document.getElementById('steps');
+    if (stepsContainer) {
+      STEPS.forEach((s, i) => {
+        stepsContainer.insertAdjacentHTML('beforeend',
+          `<div class="step" data-step="${i}">` +
+            `<div class="step-card">` +
+              `<div class="step-kicker">` +
+                `<span class="section-label" style="margin:0;">${s.kicker}</span>` +
+                `<span class="step-formula-pill">${s.formula}</span>` +
+              `</div>` +
+              `<h3>${s.title}</h3>` +
+              `<p>${s.body}</p>` +
+              `<div class="step-quote">${s.quote}</div>` +
+              `<div class="step-metrics">` +
+                `<div><span class="stat-label">${s.m1Label}</span><span class="num">${s.m1Val}</span></div>` +
+                `<div><span class="stat-label">${s.m2Label}</span><span class="num" style="color:var(--primary);">${s.m2Val}</span></div>` +
+              `</div>` +
+            `</div>` +
+          `</div>`
+        );
+      });
+    }
+
+    function renderGraphic(i) {
+      const s = STEPS[i];
+      if (!s) return;
+      currentStep = i;
+
+      const titleEl = document.getElementById('graphic-stage-title');
+      const tagEl = document.getElementById('graphic-sphere-tag');
+      const readoutEl = document.getElementById('graphic-readout');
+      if (titleEl) titleEl.textContent = `Etapa ${i + 1} de ${STEPS.length} — ${s.formula}`;
+      if (tagEl) tagEl.textContent = s.sphere;
+      if (readoutEl) readoutEl.innerHTML = `<strong>${s.readout}</strong>`;
+
+      const prevBtn = document.getElementById('btn-prev-step');
+      const nextBtn = document.getElementById('btn-next-step');
+      if (prevBtn) prevBtn.disabled = (i === 0);
+      if (nextBtn) nextBtn.disabled = (i === STEPS.length - 1);
+
+      const allNodes = [`node-d`, `node-mp`, `node-t`, `node-p`, `node-mprime`, `node-dprime`];
+      allNodes.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const active = s.activeNodes.indexOf(id) !== -1;
+        el.classList.toggle('is-active', active);
+        el.classList.toggle('is-dimmed', !active);
+      });
+
+      const allFlows = [`flow-dm`, `flow-into-p`, `flow-out-p`, `flow-md`, `flow-repro`];
+      allFlows.forEach((id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const active = s.activeFlows.indexOf(id) !== -1;
+        el.classList.toggle('is-active', active);
+        el.classList.toggle('is-dimmed', !active && s.activeFlows.length > 0);
+      });
+
+      // Animate proportional surplus-value bar inside P when reaching stage 4+
+      const barM = document.getElementById('bar-m');
+      const barMLabel = document.getElementById('bar-m-label');
+      if (barM && barMLabel) {
+        if (i >= 3) {
+          barM.setAttribute('width', '93');
+          barM.style.opacity = '1';
+          barMLabel.style.opacity = '1';
+        } else {
+          barM.setAttribute('width', '0');
+          barM.style.opacity = '0';
+          barMLabel.style.opacity = '0';
+        }
+      }
+    }
+
+    const stepNodes = document.querySelectorAll('.scrolly .step');
+    function activate(i) {
+      stepNodes.forEach((n) => n.classList.remove('is-active'));
+      if (stepNodes[i]) stepNodes[i].classList.add('is-active');
+      renderGraphic(i);
+    }
+
+    function jumpToStep(i) {
+      const idx = Math.max(0, Math.min(STEPS.length - 1, i));
+      activate(idx);
+      if (stepNodes[idx]) {
+        stepNodes[idx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      persistState();
+    }
+
+    function stepRelative(delta) {
+      jumpToStep(currentStep + delta);
+    }
+
+    // Keyboard support for SVG nodes
+    document.querySelectorAll('.svg-node').forEach((node) => {
+      node.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          node.click();
+        }
+      });
+    });
+
+    // ═══ EXPLORADOR DOS TRÊS CICLOS ═══════════════════════════════════════════
+    function selectCycleView(key) {
+      const data = CYCLES_DATA[key];
+      if (!data) return;
+      currentCycleView = key;
+
+      ['D', 'P', 'M'].forEach((k) => {
+        const btn = document.getElementById(`cycle-btn-${k}`);
+        if (btn) btn.classList.toggle('is-selected', k === key);
+      });
+
+      const titleEl = document.getElementById('cycle-panel-title');
+      const formulaEl = document.getElementById('cycle-panel-formula');
+      const descEl = document.getElementById('cycle-panel-desc');
+      const revealsEl = document.getElementById('cycle-reveals');
+      const hidesEl = document.getElementById('cycle-hides');
+      const stripEl = document.getElementById('cycle-diagram-strip');
+
+      if (titleEl) titleEl.textContent = data.title;
+      if (formulaEl) formulaEl.textContent = data.formula;
+      if (descEl) descEl.textContent = data.desc;
+      if (revealsEl) revealsEl.textContent = data.reveals;
+      if (hidesEl) hidesEl.textContent = data.hides;
+      if (stripEl) {
+        stripEl.innerHTML = data.stages.map((st) => (
+          `<div class="cycle-stage-box ${st.endpoint ? 'is-endpoint' : ''}">` +
+            `<span class="cycle-stage-code">${st.code}</span>` +
+            `<span class="cycle-stage-desc">${st.desc}</span>` +
+          `</div>`
+        )).join('');
+      }
+      persistState();
+    }
+
+    // ═══ SIMULADOR DA ACUMULAÇÃO & CRISE ══════════════════════════════════════
+    function formatGBP(val) {
+      return `£${Math.round(val).toLocaleString('pt-BR')}`;
+    }
+
+    function clampParam(key, raw) {
+      const num = Number(raw);
+      if (Number.isNaN(num)) return simParams[key];
+      const limits = {
+        c: [50, 1000],
+        v: [10, 400],
+        e: [20, 300],
+        a: [0, 100],
+        r: [50, 100]
+      };
+      const lim = limits[key];
+      return Math.max(lim[0], Math.min(lim[1], num));
+    }
+
+    function syncFromSlider(key, val) {
+      const clean = clampParam(key, val);
+      simParams[key] = clean;
+      const numInput = document.getElementById(`input-${key}`);
+      if (numInput) numInput.value = clean;
+      updateSimulator();
+      persistState();
+    }
+
+    function syncFromNumber(key, val) {
+      const clean = clampParam(key, val);
+      simParams[key] = clean;
+      const slider = document.getElementById(`slider-${key}`);
+      if (slider) slider.value = clean;
+      updateSimulator();
+      persistState();
+    }
+
+    function applyPreset(name) {
+      const p = PRESETS[name];
+      if (!p) return;
+      simParams = { c: p.c, v: p.v, e: p.e, a: p.a, r: p.r };
+      ['c', 'v', 'e', 'a', 'r'].forEach((k) => {
+        const sEl = document.getElementById(`slider-${k}`);
+        const nEl = document.getElementById(`input-${k}`);
+        if (sEl) sEl.value = simParams[k];
+        if (nEl) nEl.value = simParams[k];
+      });
+      updateSimulator();
+      persistState();
+    }
+
+    function updateSimulator() {
+      const c = simParams.c;
+      const v = simParams.v;
+      const e = simParams.e;
+      const a = simParams.a;
+      const r = simParams.r;
+
+      const D1 = c + v;
+      const cShare = c / D1;
+      const vShare = v / D1;
+      const m1 = v * (e / 100);
+      const M1 = D1 + m1;
+      const profitRate = (m1 / D1) * 100;
+      const orgComp = c / v;
+
+      // 12-hour workday split
+      const necHours = 12 / (1 + e / 100);
+      const surHours = 12 - necHours;
+      const necPct = (necHours / 12) * 100;
+      const surPct = 100 - necPct;
+
+      // Update input labels
+      const dispCPct = document.getElementById('disp-c-pct');
+      const dispVPct = document.getElementById('disp-v-pct');
+      const dispEHours = document.getElementById('disp-e-hours');
+      const dispASplit = document.getElementById('disp-a-split');
+      const dispRStatus = document.getElementById('disp-r-status');
+
+      if (dispCPct) dispCPct.textContent = `${(cShare * 100).toFixed(1).replace('.', ',')}% de D`;
+      if (dispVPct) dispVPct.textContent = `${(vShare * 100).toFixed(1).replace('.', ',')}% de D`;
+      if (dispEHours) dispEHours.textContent = `${surHours.toFixed(1).replace('.', ',')}h mais-trabalho / 12h`;
+      if (dispASplit) dispASplit.textContent = `${a}% capitalizado`;
+      if (dispRStatus) dispRStatus.textContent = r === 100 ? `100% vendido` : `${100 - r}% encalhado`;
+
+      // Update workday bar
+      const necBar = document.getElementById('workday-nec-bar');
+      const surBar = document.getElementById('workday-sur-bar');
+      const wdCap = document.getElementById('workday-caption');
+      if (necBar) {
+        necBar.style.width = `${necPct.toFixed(1)}%`;
+        necBar.textContent = necPct > 18 ? `Nec. ${necHours.toFixed(1).replace('.', ',')}h` : `${necHours.toFixed(1)}h`;
+      }
+      if (surBar) {
+        surBar.style.width = `${surPct.toFixed(1)}%`;
+        surBar.textContent = surPct > 22 ? `Mais-trabalho ${surHours.toFixed(1).replace('.', ',')}h` : `${surHours.toFixed(1)}h`;
+      }
+      if (wdCap) {
+        wdCap.textContent = `${necHours.toFixed(1).replace('.', ',')}h necessárias + ${surHours.toFixed(1).replace('.', ',')}h excedentes`;
+      }
+
+      // Compute 6 cycles
+      const rows = [];
+      let curD = D1;
+      for (let k = 1; k <= 6; k++) {
+        const curC = curD * cShare;
+        const curV = curD * vShare;
+        const curM = curV * (e / 100);
+        const curMPrime = curD + curM;
+        const realized = curMPrime * (r / 100);
+        const surplusRealized = realized - curD;
+
+        let renda = 0;
+        let reinvest = 0;
+        let nextD = curD;
+
+        if (surplusRealized > 0) {
+          reinvest = surplusRealized * (a / 100);
+          renda = surplusRealized - reinvest;
+          nextD = curD + reinvest;
+        } else {
+          // Realization crisis: cannot even recover original capital D
+          nextD = Math.max(10, realized);
+        }
+
+        rows.push({
+          cycle: k,
+          D: curD,
+          c: curC,
+          v: curV,
+          m: curM,
+          MPrime: curMPrime,
+          realized: realized,
+          renda: renda,
+          crisis: surplusRealized <= 0
+        });
+        curD = nextD;
+      }
+
+      const lastRow = rows[rows.length - 1];
+      const totalGrowthPct = ((lastRow.D - D1) / D1) * 100;
+
+      // Update key output cards
+      const outD = document.getElementById('out-D');
+      const outComp = document.getElementById('out-comp');
+      const outM = document.getElementById('out-m');
+      const outMv = document.getElementById('out-mv');
+      const outProfit = document.getElementById('out-profit-rate');
+      const outMPrime = document.getElementById('out-Mprime');
+      const outD6 = document.getElementById('out-D6');
+      const outGrowth = document.getElementById('out-growth');
+
+      if (outD) outD.textContent = formatGBP(D1);
+      if (outComp) outComp.textContent = `Composição c/v: ${orgComp.toFixed(1).replace('.', ',')}:1`;
+      if (outM) outM.textContent = formatGBP(m1);
+      if (outMv) outMv.textContent = `m/v = ${e}%`;
+      if (outProfit) outProfit.textContent = `${profitRate.toFixed(1).replace('.', ',')}%`;
+      if (outMPrime) outMPrime.textContent = `Valor M’ = ${formatGBP(M1)}`;
+      if (outD6) outD6.textContent = formatGBP(lastRow.D);
+      if (outGrowth) {
+        const sign = totalGrowthPct >= 0 ? `+` : ``;
+        outGrowth.textContent = `${sign}${totalGrowthPct.toFixed(0)}% frente ao Ciclo 1`;
+      }
+
+      // Crisis alert banner
+      const alertBox = document.getElementById('sim-crisis-alert');
+      const alertText = document.getElementById('sim-crisis-text');
+      if (alertBox && alertText) {
+        if (r < 100) {
+          alertBox.hidden = false;
+          const unsold = M1 - rows[0].realized;
+          if (rows[0].crisis) {
+            alertText.textContent = `Com apenas ${r}% de M’ vendido no mercado (${formatGBP(unsold)} encalhados no Ciclo 1), o retorno D’ (${formatGBP(rows[0].realized)}) nem sequer repõe o capital adiantado (${formatGBP(D1)}). A reprodução entra em contração forçada.`;
+          } else {
+            alertText.textContent = `Com ${100 - r}% da produção encalhada (${formatGBP(unsold)} não realizados em D’), parte do mais-valor fica imobilizada como mercadoria e desacelera a acumulação nos ciclos seguintes.`;
+          }
+        } else {
+          alertBox.hidden = true;
+        }
+      }
+
+      // Update table
+      const tbody = document.getElementById('cycles-tbody');
+      if (tbody) {
+        tbody.innerHTML = rows.map((row) => (
+          `<tr class="${row.crisis ? 'is-crisis' : ''}">` +
+            `<td>Ciclo ${row.cycle}</td>` +
+            `<td>${formatGBP(row.D)}</td>` +
+            `<td>${formatGBP(row.c)}</td>` +
+            `<td>${formatGBP(row.v)}</td>` +
+            `<td>${formatGBP(row.m)}</td>` +
+            `<td>${formatGBP(row.MPrime)}</td>` +
+            `<td>${formatGBP(row.realized)}</td>` +
+            `<td>${formatGBP(row.renda)}</td>` +
+          `</tr>`
+        )).join('');
+      }
+
+      renderSpiralChart(rows, D1);
+    }
+
+    function renderSpiralChart(rows, baseD) {
+      const svg = document.getElementById('spiral-chart-svg');
+      if (!svg) return;
+
+      const W = 640;
+      const H = 240;
+      const padL = 58;
+      const padR = 76;
+      const padT = 20;
+      const padB = 34;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      const maxVal = Math.max(baseD * 1.35, ...rows.map((r) => r.MPrime));
+      const minVal = 0;
+
+      function xPos(idx) {
+        return padL + (idx / (rows.length - 1)) * plotW;
+      }
+      function yPos(val) {
+        return padT + plotH - ((val - minVal) / (maxVal - minVal)) * plotH;
+      }
+
+      // Horizontal gridlines (4 ticks)
+      let gridHtml = '';
+      for (let t = 0; t <= 4; t++) {
+        const val = (maxVal / 4) * t;
+        const y = yPos(val);
+        const stroke = t === 0 ? `var(--on-surface)` : `var(--outline-variant)`;
+        const width = t === 0 ? 1.5 : 1;
+        gridHtml += `<line x1="${padL}" y1="${y.toFixed(1)}" x2="${W - padR}" y2="${y.toFixed(1)}" stroke="${stroke}" stroke-width="${width}" />`;
+        gridHtml += `<text x="${padL - 8}" y="${(y + 4).toFixed(1)}" text-anchor="end" font-family="var(--font-label)" font-size="10" fill="var(--on-surface-variant)">${formatGBP(val)}</text>`;
+      }
+
+      // Simple reproduction baseline (D1 flat)
+      const yBase = yPos(baseD).toFixed(1);
+      const baseLine = `<line x1="${padL}" y1="${yBase}" x2="${W - padR}" y2="${yBase}" stroke="var(--data-context)" stroke-width="2" stroke-dasharray="4 4" />`;
+      const baseLabel = `<text x="${W - padR + 6}" y="${Number(yBase) + 4}" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-surface-variant)">Simples</text>`;
+
+      // Expanded capital D curve
+      const ptsD = rows.map((r, i) => `${xPos(i).toFixed(1)},${yPos(r.D).toFixed(1)}`).join(' ');
+      const lineD = `<polyline points="${ptsD}" fill="none" stroke="var(--data-1)" stroke-width="2.5" stroke-linecap="square" />`;
+
+      // Realized D' curve
+      const ptsReal = rows.map((r, i) => `${xPos(i).toFixed(1)},${yPos(r.realized).toFixed(1)}`).join(' ');
+      const lineReal = `<polyline points="${ptsReal}" fill="none" stroke="var(--data-2)" stroke-width="2" stroke-linecap="square" />`;
+
+      // Markers & X axis labels
+      let markersHtml = '';
+      rows.forEach((r, i) => {
+        const x = xPos(i).toFixed(1);
+        const yd = yPos(r.D).toFixed(1);
+        const yr = yPos(r.realized).toFixed(1);
+        markersHtml += `<rect x="${Number(x) - 3}" y="${Number(yd) - 3}" width="6" height="6" fill="var(--data-1)" />`;
+        markersHtml += `<rect x="${Number(x) - 2.5}" y="${Number(yr) - 2.5}" width="5" height="5" fill="var(--data-2)" />`;
+        markersHtml += `<text x="${x}" y="${H - 12}" text-anchor="middle" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--on-surface-variant)">Ciclo ${r.cycle}</text>`;
+      });
+
+      const lastD = rows[rows.length - 1];
+      const yEndD = yPos(lastD.D).toFixed(1);
+      const yEndR = yPos(lastD.realized).toFixed(1);
+      const endLabels =
+        `<text x="${W - padR + 6}" y="${Number(yEndD) + 4}" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--data-1)">D: ${formatGBP(lastD.D)}</text>` +
+        `<text x="${W - padR + 6}" y="${Number(yEndR) + 4}" font-family="var(--font-label)" font-weight="700" font-size="10" fill="var(--data-2)">D’: ${formatGBP(lastD.realized)}</text>`;
+
+      svg.innerHTML = gridHtml + baseLine + baseLabel + lineReal + lineD + markersHtml + endLabels;
+    }
+
+    // ═══ INICIALIZAÇÃO & RESTAURAÇÃO DE ESTADO ════════════════════════════════
+    async function initApp() {
+      // Load saved state via notebookAppApi if available
+      if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === 'function') {
+        try {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved) {
+            if (typeof saved.currentStep === 'number' && saved.currentStep >= 0 && saved.currentStep < STEPS.length) {
+              currentStep = saved.currentStep;
+            }
+            if (saved.currentCycleView && CYCLES_DATA[saved.currentCycleView]) {
+              currentCycleView = saved.currentCycleView;
+            }
+            if (saved.simParams) {
+              ['c', 'v', 'e', 'a', 'r'].forEach((k) => {
+                if (typeof saved.simParams[k] === 'number') {
+                  simParams[k] = clampParam(k, saved.simParams[k]);
+                  const sEl = document.getElementById(`slider-${k}`);
+                  const nEl = document.getElementById(`input-${k}`);
+                  if (sEl) sEl.value = simParams[k];
+                  if (nEl) nEl.value = simParams[k];
+                }
+              });
+            }
+          }
+        } catch (err) {
+          // Proceed with defaults
+        }
+      }
+
+      // Render initial valid frames
+      activate(currentStep);
+      selectCycleView(currentCycleView);
+      updateSimulator();
+
+      // Wire Scrollama or native IntersectionObserver fallback
+      if (window.scrollama) {
+        const sc = scrollama();
+        sc.setup({ step: '.scrolly .step', offset: 0.55 })
+          .onStepEnter(({ index }) => {
+            activate(index);
+            persistState();
+          });
+        window.addEventListener('resize', sc.resize);
+      } else {
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              activate(Number(e.target.dataset.step));
+              persistState();
+            }
+          });
+        }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+        stepNodes.forEach((n) => io.observe(n));
+      }
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === 'function') {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    initApp();
+  </script>
+</body>
+</html>

@@ -1,0 +1,2789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertical (Stephen Graham) — Parte 1: Do Espaço aos Arranha-céus</title>
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS — PALETA ESTRITAMENTE AZUL MARINHO E CINZA CLARO
+       ========================================================================== */
+    :root {
+      --navy-950: #0b1d36;
+      --navy-900: #102a4c;
+      --navy-700: #1d3f6e;
+      --navy-600: #2d5585;
+      --navy-400: #4a6f99;
+
+      --gray-50:  #f2f5f9;
+      --gray-100: #e6ecf3;
+      --gray-200: #d8e1ec;
+      --white:    #ffffff;
+
+      --text-main:  #0f172a;
+      --text-body:  #334155;
+      --text-muted: #5b6b80;
+      --border:     #cbd5e1;
+
+      --font-serif: Georgia, 'Times New Roman', serif;
+      --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      --sidebar-w: 318px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 2px 8px rgba(11, 29, 54, 0.06);
+      --shadow-md: 0 8px 24px rgba(11, 29, 54, 0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--gray-50);
+      color: var(--text-main);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       BARRA MOBILE (APENAS TELAS PEQUENAS)
+       ========================================================================== */
+    .mobile-bar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 58px;
+      background: var(--navy-950);
+      color: var(--white);
+      padding: 0 16px;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 1000;
+      border-bottom: 2px solid var(--navy-600);
+      box-shadow: 0 4px 12px rgba(11, 29, 54, 0.25);
+    }
+
+    .mobile-brand {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .mobile-brand span {
+      color: var(--gray-200);
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      font-weight: 500;
+      margin-left: 6px;
+    }
+
+    .mobile-toggle {
+      background: var(--navy-700);
+      border: 1px solid var(--navy-400);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       LAYOUT PRINCIPAL: SIDEBAR FIXA + ÁREA EDITORIAL
+       ========================================================================== */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 100%);
+      color: var(--gray-100);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--navy-700);
+      z-index: 950;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar-head {
+      padding: 20px 16px 14px;
+      border-bottom: 1px solid rgba(216, 225, 236, 0.16);
+    }
+
+    .sidebar-kicker {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9cb4cf;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-title {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .sidebar-author {
+      font-size: 0.76rem;
+      color: #b7c8dc;
+      margin-top: 3px;
+    }
+
+    .sidebar-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .btn-sidebar-ctrl {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(216, 225, 236, 0.24);
+      color: var(--gray-50);
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-sidebar-ctrl:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 12px 20px;
+    }
+
+    .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--navy-700); border-radius: 4px; }
+
+    .nav-overview-btn {
+      width: 100%;
+      text-align: left;
+      background: rgba(74, 111, 153, 0.25);
+      border: 1px solid rgba(216, 225, 236, 0.28);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.81rem;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      transition: all 0.15s;
+    }
+
+    .nav-overview-btn:hover {
+      background: rgba(74, 111, 153, 0.42);
+    }
+
+    .nav-overview-btn.active {
+      background: var(--gray-100);
+      color: var(--navy-950);
+      border-color: var(--white);
+    }
+
+    .nav-group-label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94aec9;
+      padding: 8px 6px 5px;
+      margin-top: 6px;
+    }
+
+    .nav-item {
+      margin-bottom: 6px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(216, 225, 236, 0.09);
+      overflow: hidden;
+    }
+
+    .nav-item.active-chapter {
+      background: rgba(45, 85, 133, 0.45);
+      border-color: var(--gray-200);
+    }
+
+    .nav-item-row {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .nav-chap-btn {
+      flex: 1;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--gray-50);
+      font-family: var(--font-sans);
+      font-size: 0.79rem;
+      font-weight: 600;
+      padding: 9px 8px 9px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.35;
+    }
+
+    .nav-chap-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-badge {
+      flex: 0 0 auto;
+      background: var(--navy-700);
+      color: var(--gray-100);
+      font-size: 0.67rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 1px;
+    }
+
+    .nav-item.active-chapter .nav-badge {
+      background: var(--white);
+      color: var(--navy-950);
+    }
+
+    .nav-toggle-sub {
+      width: 30px;
+      background: transparent;
+      border: none;
+      border-left: 1px solid rgba(216, 225, 236, 0.12);
+      color: #9cb4cf;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, color 0.15s;
+    }
+
+    .nav-toggle-sub:hover { color: var(--white); }
+    .nav-item.expanded .nav-toggle-sub {
+      transform: rotate(90deg);
+      color: var(--white);
+    }
+
+    .nav-sub-list {
+      display: none;
+      list-style: none;
+      padding: 4px 8px 8px 16px;
+      border-top: 1px solid rgba(216, 225, 236, 0.1);
+      background: rgba(11, 29, 54, 0.45);
+    }
+
+    .nav-item.expanded .nav-sub-list {
+      display: block;
+    }
+
+    .nav-sub-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-left: 2px solid rgba(216, 225, 236, 0.25);
+      color: #c8d6e6;
+      font-family: var(--font-sans);
+      font-size: 0.74rem;
+      padding: 5px 8px 5px 10px;
+      cursor: pointer;
+      line-height: 1.35;
+      transition: all 0.15s;
+    }
+
+    .nav-sub-btn:hover {
+      color: var(--white);
+      border-left-color: var(--white);
+    }
+
+    .nav-sub-btn.active-sub {
+      color: var(--white);
+      font-weight: 700;
+      border-left-color: var(--white);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-foot {
+      padding: 12px 16px;
+      border-top: 1px solid rgba(216, 225, 236, 0.16);
+      background: rgba(11, 29, 54, 0.7);
+      font-size: 0.72rem;
+      color: #a9bed6;
+      line-height: 1.45;
+    }
+
+    .sidebar-foot strong {
+      color: var(--white);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 29, 54, 0.55);
+      z-index: 900;
+    }
+
+    /* ==========================================================================
+       ÁREA PRINCIPAL DE CONTEÚDO
+       ========================================================================== */
+    .main-stage {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      max-width: calc(100% - var(--sidebar-w));
+      padding: 32px 40px 76px;
+    }
+
+    .content-wrap {
+      max-width: 1020px;
+      margin: 0 auto;
+      animation: fadeIn 0.22s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cabeçalho de Seção */
+    .hero-card {
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 65%, var(--navy-700) 100%);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-md);
+      border-left: 6px solid var(--navy-400);
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .tag-solid {
+      background: var(--gray-100);
+      color: var(--navy-950);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .tag-ghost {
+      border: 1px solid rgba(216, 225, 236, 0.4);
+      color: var(--gray-100);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 1.9rem;
+      font-weight: 700;
+      line-height: 1.24;
+      color: var(--white);
+      margin-bottom: 5px;
+    }
+
+    .hero-orig {
+      font-size: 0.84rem;
+      color: #b7c8dc;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .hero-lead {
+      font-size: 0.96rem;
+      color: var(--gray-100);
+      max-width: 860px;
+    }
+
+    /* Caixa de Tese Central */
+    .thesis-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--navy-900);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .thesis-kicker {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--navy-700);
+      margin-bottom: 6px;
+    }
+
+    .thesis-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    /* Pílulas de Subcapítulos */
+    .sub-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 26px;
+    }
+
+    .sub-pill {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--navy-900);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sub-pill:hover {
+      background: var(--navy-900);
+      color: var(--white);
+      border-color: var(--navy-900);
+    }
+
+    /* Divisor de Bloco */
+    .block-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 28px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .block-head h3 {
+      font-family: var(--font-serif);
+      font-size: 1.28rem;
+      color: var(--navy-950);
+    }
+
+    .block-pill {
+      background: var(--navy-900);
+      color: var(--gray-50);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ==========================================================================
+       CARDS DE ESQUEMAS EXPLICATIVOS (TEXTUAIS + SVG)
+       ========================================================================== */
+    .schema-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .schema-card.nested {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      margin-top: 14px;
+      margin-bottom: 8px;
+      padding: 18px 20px;
+    }
+
+    .schema-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .schema-tag {
+      background: var(--navy-950);
+      color: var(--white);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+
+    .schema-tag.svg-tag {
+      background: var(--navy-700);
+    }
+
+    .schema-tag.sub-tag {
+      background: var(--gray-200);
+      color: var(--navy-950);
+    }
+
+    .schema-title {
+      font-family: var(--font-serif);
+      font-size: 1.03rem;
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+
+    .schema-caption {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    /* Container de SVG */
+    .svg-frame {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 10px;
+    }
+
+    .svg-frame svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* Camadas clicáveis no SVG do Corte Geral */
+    .svg-layer-link {
+      cursor: pointer;
+      transition: opacity 0.18s ease;
+    }
+
+    .svg-layer-link:hover {
+      opacity: 0.88;
+    }
+
+    .svg-layer-link:hover .layer-box {
+      stroke: #0b1d36;
+      stroke-width: 2.5;
+    }
+
+    /* Fluxograma Horizontal */
+    .diag-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .diag-node {
+      flex: 1;
+      background: var(--gray-50);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--navy-600);
+      border-radius: var(--radius-md);
+      padding: 13px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .diag-node.tone-dark {
+      background: var(--navy-950);
+      border-color: var(--navy-950);
+      border-top: 4px solid var(--navy-400);
+      color: var(--white);
+    }
+
+    .diag-node.tone-dark h5 { color: var(--white); }
+    .diag-node.tone-dark p, .diag-node.tone-dark li { color: var(--gray-100); }
+
+    .diag-node.tone-mid {
+      background: var(--gray-100);
+      border-color: #b8c7da;
+      border-top: 4px solid var(--navy-900);
+    }
+
+    .diag-node.tone-mid h5 { color: var(--navy-950); }
+
+    .diag-node h5 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      line-height: 1.3;
+    }
+
+    .diag-node p, .diag-node li {
+      font-size: 0.8rem;
+      color: var(--text-body);
+      line-height: 1.46;
+    }
+
+    .diag-node ul {
+      padding-left: 16px;
+      margin-top: 2px;
+    }
+
+    .diag-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy-600);
+      font-size: 1.25rem;
+      font-weight: 800;
+      padding: 0 2px;
+      user-select: none;
+    }
+
+    /* Grade de Cartões */
+    .diag-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .diag-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .diag-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .diag-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* Tensão / Contraste Bipolar */
+    .diag-tension {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .tension-mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy-900);
+      color: var(--white);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      min-width: 112px;
+      max-width: 155px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .tension-mid .sym {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+      color: var(--gray-200);
+    }
+
+    /* Tabela Comparativa */
+    .diag-table-wrap {
+      overflow-x: auto;
+    }
+
+    .diag-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .diag-table th {
+      background: var(--navy-950);
+      color: var(--white);
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 700;
+      border: 1px solid var(--navy-900);
+    }
+
+    .diag-table td {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-body);
+    }
+
+    .diag-table tr:nth-child(even) td {
+      background: var(--gray-50);
+    }
+
+    .diag-table td:first-child {
+      font-weight: 700;
+      color: var(--navy-950);
+      background: var(--gray-100);
+    }
+
+    /* Camadas / Escada Vertical */
+    .diag-ladder {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ladder-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      background: var(--gray-50);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--navy-600);
+    }
+
+    .ladder-step.tone-dark {
+      background: var(--navy-950);
+      border-color: var(--navy-950);
+      border-left: 5px solid var(--navy-400);
+      color: var(--white);
+    }
+
+    .ladder-step.tone-dark h5 { color: var(--white); }
+    .ladder-step.tone-dark p { color: var(--gray-100); }
+
+    .ladder-step.tone-mid {
+      background: var(--gray-100);
+      border-left: 5px solid var(--navy-900);
+    }
+
+    .ladder-num {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--navy-900);
+      color: var(--white);
+      font-size: 0.76rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ladder-step.tone-dark .ladder-num {
+      background: var(--gray-100);
+      color: var(--navy-950);
+    }
+
+    .ladder-step h5 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      margin-bottom: 2px;
+    }
+
+    .ladder-step p {
+      font-size: 0.79rem;
+      color: var(--text-body);
+      line-height: 1.44;
+    }
+
+    /* ==========================================================================
+       CARDS DE SUBCAPÍTULOS
+       ========================================================================== */
+    .sub-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: 24px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .sub-card.flash-focus {
+      border-color: var(--navy-700);
+      box-shadow: 0 0 0 4px rgba(29, 63, 110, 0.22);
+    }
+
+    .sub-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .sub-code {
+      background: var(--navy-900);
+      color: var(--white);
+      font-size: 0.73rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .sub-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+
+    .sub-orig {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .sub-body {
+      font-size: 0.92rem;
+      color: var(--text-body);
+      margin-bottom: 10px;
+    }
+
+    /* Cartões de Atalho na Visão Geral */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .overview-card-btn {
+      text-align: left;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--navy-700);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.16s;
+      box-shadow: var(--shadow-sm);
+      font-family: var(--font-sans);
+    }
+
+    .overview-card-btn:hover {
+      border-color: var(--navy-950);
+      background: var(--gray-100);
+      transform: translateY(-2px);
+    }
+
+    .overview-card-btn .ov-num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--navy-600);
+      margin-bottom: 4px;
+    }
+
+    .overview-card-btn .ov-title {
+      font-family: var(--font-serif);
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      margin-bottom: 4px;
+    }
+
+    .overview-card-btn .ov-desc {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       PAGINAÇÃO ANTERIOR / PRÓXIMO
+       ========================================================================== */
+    .pager-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 2px solid var(--gray-200);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pager-btn {
+      background: var(--white);
+      color: var(--navy-950);
+      border: 1.5px solid var(--navy-700);
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .pager-btn:hover {
+      background: var(--gray-100);
+    }
+
+    .pager-btn.next {
+      background: var(--navy-950);
+      color: var(--white);
+      border-color: var(--navy-950);
+      margin-left: auto;
+    }
+
+    .pager-btn.next:hover {
+      background: var(--navy-700);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE
+       ========================================================================== */
+    @media (max-width: 980px) {
+      .mobile-bar { display: flex; }
+
+      .sidebar {
+        top: 58px;
+        transform: translateX(-100%);
+        width: 295px;
+        box-shadow: 6px 0 24px rgba(11, 29, 54, 0.35);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+
+      .main-stage {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 78px 16px 64px;
+      }
+
+      .sub-card { scroll-margin-top: 74px; }
+      .diag-flow { flex-direction: column; }
+      .diag-arrow { transform: rotate(90deg); padding: 2px 0; }
+      .diag-tension { grid-template-columns: 1fr; }
+      .tension-mid { max-width: 100%; }
+      .diag-grid.cols-2, .diag-grid.cols-3, .diag-grid.cols-4, .overview-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-card { padding: 22px 20px; }
+      .hero-title { font-size: 1.48rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA MOBILE -->
+  <header class="mobile-bar">
+    <div class="mobile-brand">VERTICAL <span>Parte 1/2</span></div>
+    <button class="mobile-toggle" id="mobileToggleBtn" aria-label="Abrir sumário">☰ Sumário</button>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-shell">
+    <!-- SIDEBAR FIXA -->
+    <aside class="sidebar" id="sidebar" aria-label="Navegação da Parte 1 de Vertical">
+      <div class="sidebar-head">
+        <div class="sidebar-kicker">Infográfico Editorial</div>
+        <h1 class="sidebar-title">VERTICAL — Parte 1/2</h1>
+        <div class="sidebar-author">Stephen Graham (2016) • Do Espaço aos Arranha-céus</div>
+        <div class="sidebar-actions">
+          <button class="btn-sidebar-ctrl" id="toggleExpandBtn">Expandir subcapítulos</button>
+        </div>
+      </div>
+
+      <div class="sidebar-scroll" id="sidebarNavRoot"></div>
+
+      <div class="sidebar-foot">
+        <strong>Parte 1 de 2 (Acima)</strong>
+        Cobre Visão Geral, Prefácio, Introdução e Capítulos 1 a 7. A <em>Parte 2</em> (Capítulos 8 a 15 + Posfácio) completa a obra até os bunkers e minas.
+      </div>
+    </aside>
+
+    <!-- PALCO PRINCIPAL -->
+    <main class="main-stage">
+      <div class="content-wrap" id="stageRoot"></div>
+    </main>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       BIBLIOTECA DE DIAGRAMAS VETORIAIS EM SVG (PALETA AZUL MARINHO + CINZA)
+       ========================================================================== */
+    const SVG_LIBRARY = {
+      /* 0. VISÃO GERAL — CORTE VERTICAL CLICÁVEL DA CIDADE */
+      overviewCutaway: `
+        <svg viewBox="0 0 780 510" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte vertical da cidade de 35.786 km de órbita até 4 km no subsolo">
+          <defs>
+            <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0b1d36"/>
+              <stop offset="38%" stop-color="#1d3f6e"/>
+              <stop offset="68%" stop-color="#d8e1ec"/>
+              <stop offset="100%" stop-color="#e6ecf3"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Fundo estratificado -->
+          <rect x="0" y="0" width="780" height="370" rx="8" fill="url(#skyGrad)"/>
+          <rect x="0" y="370" width="780" height="140" rx="8" fill="#102a4c"/>
+          <line x1="0" y1="370" x2="780" y2="370" stroke="#ffffff" stroke-width="2.5" stroke-dasharray="6,4"/>
+
+          <!-- Eixo de Altitude à esquerda -->
+          <line x1="88" y1="22" x2="88" y2="492" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="78" y="38" text-anchor="end" fill="#e6ecf3" font-size="10.5" font-weight="700" font-family="sans-serif">+35.786 km</text>
+          <text x="78" y="108" text-anchor="end" fill="#e6ecf3" font-size="10.5" font-weight="700" font-family="sans-serif">12–15 km</text>
+          <text x="78" y="176" text-anchor="end" fill="#e6ecf3" font-size="10.5" font-weight="700" font-family="sans-serif">1,5–5 km</text>
+          <text x="78" y="242" text-anchor="end" fill="#102a4c" font-size="10.5" font-weight="700" font-family="sans-serif">100–500 m</text>
+          <text x="78" y="320" text-anchor="end" fill="#0b1d36" font-size="10.5" font-weight="700" font-family="sans-serif">0 a 1 km</text>
+          <text x="78" y="374" text-anchor="end" fill="#ffffff" font-size="10.5" font-weight="800" font-family="sans-serif">SOLO (0 m)</text>
+          <text x="78" y="452" text-anchor="end" fill="#cbd5e1" font-size="10.5" font-weight="700" font-family="sans-serif">-4 km</text>
+
+          <!-- Camada 1: Cap. 1 Satélites -->
+          <g class="svg-layer-link" data-svg-goto="cap-1">
+            <rect class="layer-box" x="108" y="14" width="648" height="56" rx="8" fill="#0b1d36" fill-opacity="0.82" stroke="#4a6f99" stroke-width="1.5"/>
+            <!-- Ícone Satélite -->
+            <rect x="136" y="34" width="20" height="14" rx="2" fill="#e6ecf3"/>
+            <rect x="118" y="37" width="15" height="8" fill="#4a6f99"/>
+            <rect x="159" y="37" width="15" height="8" fill="#4a6f99"/>
+            <text x="192" y="37" fill="#ffffff" font-size="13" font-weight="700" font-family="Georgia, serif">Cap. 1 • Órbita: Satélites (LEO, MEO, GEO)</text>
+            <text x="192" y="55" fill="#cbd5e1" font-size="10.5" font-family="sans-serif">GPS, vigilância militar, Google Earth e armas espaciais • Clique para abrir</text>
+          </g>
+
+          <!-- Camada 2: Cap. 2 Bombardeiros -->
+          <g class="svg-layer-link" data-svg-goto="cap-2">
+            <rect class="layer-box" x="108" y="80" width="648" height="56" rx="8" fill="#102a4c" fill-opacity="0.88" stroke="#4a6f99" stroke-width="1.5"/>
+            <!-- Ícone Avião/Bombardeiro -->
+            <polygon points="146,96 154,118 146,114 138,118" fill="#e6ecf3"/>
+            <line x1="126" y1="108" x2="166" y2="108" stroke="#e6ecf3" stroke-width="3"/>
+            <text x="192" y="103" fill="#ffffff" font-size="13" font-weight="700" font-family="Georgia, serif">Cap. 2 • Estratosfera: Bombardeiros</text>
+            <text x="192" y="121" fill="#cbd5e1" font-size="10.5" font-family="sans-serif">Estética aérea, negação da carnificina no solo e urbanismo pós-guerra • Clique</text>
+          </g>
+
+          <!-- Camada 3: Cap. 3 Drones -->
+          <g class="svg-layer-link" data-svg-goto="cap-3">
+            <rect class="layer-box" x="108" y="146" width="648" height="56" rx="8" fill="#1d3f6e" fill-opacity="0.9" stroke="#cbd5e1" stroke-width="1.5"/>
+            <!-- Ícone Drone -->
+            <line x1="124" y1="174" x2="168" y2="174" stroke="#ffffff" stroke-width="2.5"/>
+            <ellipse cx="146" cy="174" rx="8" ry="4" fill="#cbd5e1"/>
+            <text x="192" y="169" fill="#ffffff" font-size="13" font-weight="700" font-family="Georgia, serif">Cap. 3 • Espaço Aéreo Tático: Drones</text>
+            <text x="192" y="187" fill="#e6ecf3" font-size="10.5" font-family="sans-serif">Guerra remota assimétrica, orientalismo vertical e policiamento doméstico • Clique</text>
+          </g>
+
+          <!-- Camada 4: Cap. 4 Helicópteros -->
+          <g class="svg-layer-link" data-svg-goto="cap-4">
+            <rect class="layer-box" x="108" y="212" width="648" height="56" rx="8" fill="#ffffff" fill-opacity="0.92" stroke="#2d5585" stroke-width="1.5"/>
+            <!-- Ícone Helicóptero -->
+            <line x1="126" y1="232" x2="166" y2="232" stroke="#0b1d36" stroke-width="2.5"/>
+            <rect x="136" y="236" width="20" height="10" rx="4" fill="#1d3f6e"/>
+            <line x1="156" y1="241" x2="170" y2="241" stroke="#1d3f6e" stroke-width="2"/>
+            <text x="192" y="235" fill="#0b1d36" font-size="13" font-weight="700" font-family="Georgia, serif">Cap. 4 • Baixa Altitude: Helicópteros</text>
+            <text x="192" y="253" fill="#334155" font-size="10.5" font-family="sans-serif">Secessão das elites em São Paulo vs. vigilância térmica e raids policiais • Clique</text>
+          </g>
+
+          <!-- Camada 5: Encostas e Torres (Caps 5, 6 e 7 lado a lado) -->
+          <g class="svg-layer-link" data-svg-goto="cap-5">
+            <rect class="layer-box" x="108" y="280" width="206" height="78" rx="8" fill="#f2f5f9" stroke="#1d3f6e" stroke-width="1.5"/>
+            <text x="122" y="303" fill="#0b1d36" font-size="12" font-weight="700" font-family="Georgia, serif">Cap. 5 • Favelas</text>
+            <text x="122" y="321" fill="#334155" font-size="10" font-family="sans-serif">Encostas íngremes, lajes</text>
+            <text x="122" y="336" fill="#334155" font-size="10" font-family="sans-serif">empilhadas e teleféricos</text>
+            <text x="122" y="351" fill="#1d3f6e" font-size="9.5" font-weight="700" font-family="sans-serif">Abrir capítulo →</text>
+          </g>
+
+          <g class="svg-layer-link" data-svg-goto="cap-6">
+            <rect class="layer-box" x="329" y="280" width="206" height="78" rx="8" fill="#e6ecf3" stroke="#1d3f6e" stroke-width="1.5"/>
+            <text x="343" y="303" fill="#0b1d36" font-size="12" font-weight="700" font-family="Georgia, serif">Cap. 6 • Elevadores</text>
+            <text x="343" y="321" fill="#334155" font-size="10" font-family="sans-serif">Inversão social dos prédios,</text>
+            <text x="343" y="336" fill="#334155" font-size="10" font-family="sans-serif">VIPs, cabos e panes</text>
+            <text x="343" y="351" fill="#1d3f6e" font-size="9.5" font-weight="700" font-family="sans-serif">Abrir capítulo →</text>
+          </g>
+
+          <g class="svg-layer-link" data-svg-goto="cap-7">
+            <rect class="layer-box" x="550" y="280" width="206" height="78" rx="8" fill="#d8e1ec" stroke="#0b1d36" stroke-width="1.5"/>
+            <text x="564" y="303" fill="#0b1d36" font-size="12" font-weight="700" font-family="Georgia, serif">Cap. 7 • Arranha-céus</text>
+            <text x="564" y="321" fill="#334155" font-size="10" font-family="sans-serif">Altura de vaidade, 11/9 e</text>
+            <text x="564" y="336" fill="#334155" font-size="10" font-family="sans-serif">skylines especulativas</text>
+            <text x="564" y="351" fill="#0b1d36" font-size="9.5" font-weight="700" font-family="sans-serif">Abrir capítulo →</text>
+          </g>
+
+          <!-- Camada Inferior: Referência à Parte 2 -->
+          <rect x="108" y="388" width="648" height="104" rx="8" fill="#0b1d36" stroke="#4a6f99" stroke-width="1.5" stroke-dasharray="5,4"/>
+          <text x="128" y="414" fill="#ffffff" font-size="12.5" font-weight="700" font-family="Georgia, serif">Continuação na Parte 2 do Infográfico (Capítulos 8 a 15 + Posfácio)</text>
+          <text x="128" y="438" fill="#cbd5e1" font-size="10.5" font-family="sans-serif">• Ainda acima do solo: Cap. 8 (Habitação / Céus Luxificados) • Cap. 9 (Passarelas / Cidades Multinível) • Cap. 10 (Ar / Domos Letais)</text>
+          <text x="128" y="458" fill="#cbd5e1" font-size="10.5" font-family="sans-serif">• Abaixo do solo (Parte Dois do livro): Cap. 11 (Solo/Geologia) • Cap. 12 (Porões) • Cap. 13 (Esgotos) • Cap. 14 (Bunkers/Túneis)</text>
+          <text x="128" y="478" fill="#cbd5e1" font-size="10.5" font-family="sans-serif">• Fronteira Profunda: Cap. 15 (Minas até -4 km, o espelho invertido dos arranha-céus) + Posfácio</text>
+        </svg>
+      `,
+
+      /* 1. PREFÁCIO — DO TURISMO À GUERRA NO MESMO CÉU */
+      prefaceSky: `
+        <svg viewBox="0 0 760 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte vertical do espaço aéreo sobre Bagdá controlado pelo CAOC no Catar">
+          <rect x="0" y="0" width="760" height="330" rx="8" fill="#f2f5f9"/>
+          <!-- Faixa 40.000 pés -->
+          <rect x="20" y="18" width="490" height="78" rx="8" fill="#0b1d36"/>
+          <text x="38" y="44" fill="#ffffff" font-size="12.5" font-weight="700" font-family="Georgia, serif">40.000 pés • Voo Comercial para Dubai</text>
+          <text x="38" y="64" fill="#cbd5e1" font-size="10.5" font-family="sans-serif">200 passageiros tomam gin tônica, assistem séries e jogam videogames.</text>
+          <text x="38" y="80" fill="#9cb4cf" font-size="10" font-family="sans-serif">~60 voos civis/dia cruzam o espaço aéreo iraquiano "liberalizado" em 2008.</text>
+
+          <!-- Faixa Intermediária -->
+          <rect x="20" y="114" width="490" height="84" rx="8" fill="#1d3f6e"/>
+          <text x="38" y="140" fill="#ffffff" font-size="12.5" font-weight="700" font-family="Georgia, serif">Espaço Aéreo Militar • Operações de Combate</text>
+          <text x="38" y="160" fill="#e6ecf3" font-size="10.5" font-family="sans-serif">Caças, drones espiões e aviões de ataque patrulhando abaixo dos jatos civis.</text>
+          <text x="38" y="178" fill="#cbd5e1" font-size="10" font-family="sans-serif">Mais de 800 horas de vídeo de vigilância coletadas por dia na região.</text>
+
+          <!-- Solo -->
+          <rect x="20" y="216" width="490" height="92" rx="8" fill="#d8e1ec" stroke="#102a4c" stroke-width="1.5"/>
+          <text x="38" y="242" fill="#0b1d36" font-size="12.5" font-weight="700" font-family="Georgia, serif">Solo (0 m) • Bagdá em Zona de Guerra</text>
+          <text x="38" y="262" fill="#334155" font-size="10.5" font-family="sans-serif">Conflito de contrainsurgência visível apenas como uma "mancha cinza" pela janela.</text>
+          <text x="38" y="280" fill="#334155" font-size="10" font-family="sans-serif">Mesmo volume vertical organiza turismo global e guerra simultaneamente.</text>
+
+          <!-- Painel Lateral CAOC -->
+          <rect x="546" y="46" width="194" height="236" rx="10" fill="#102a4c" stroke="#4a6f99" stroke-width="2"/>
+          <text x="643" y="80" text-anchor="middle" fill="#ffffff" font-size="12.5" font-weight="700" font-family="Georgia, serif">CAOC — Al Udeid</text>
+          <text x="643" y="98" text-anchor="middle" fill="#cbd5e1" font-size="10.5" font-weight="700" font-family="sans-serif">(Catar • Comando EUA)</text>
+          <line x1="566" y1="112" x2="720" y2="112" stroke="#4a6f99" stroke-width="1"/>
+          <text x="562" y="136" fill="#e6ecf3" font-size="10" font-family="sans-serif">• Coordena ar e espaço de</text>
+          <text x="570" y="152" fill="#e6ecf3" font-size="10" font-family="sans-serif">20 países do Oriente Médio.</text>
+          <text x="562" y="178" fill="#e6ecf3" font-size="10" font-family="sans-serif">• Separa rotas comerciais</text>
+          <text x="570" y="194" fill="#e6ecf3" font-size="10" font-family="sans-serif">de missões de drones.</text>
+          <text x="562" y="220" fill="#e6ecf3" font-size="10" font-family="sans-serif">• Conecta-se a torres</text>
+          <text x="570" y="236" fill="#e6ecf3" font-size="10" font-family="sans-serif">fortificadas em Bagdá.</text>
+          <text x="562" y="262" fill="#9cb4cf" font-size="9.5" font-family="sans-serif">Destino: Burj Khalifa (830 m)</text>
+
+          <!-- Conectores -->
+          <line x1="510" y1="58" x2="546" y2="120" stroke="#102a4c" stroke-width="2" stroke-dasharray="4,3"/>
+          <line x1="510" y1="156" x2="546" y2="164" stroke="#102a4c" stroke-width="2"/>
+          <line x1="510" y1="258" x2="546" y2="215" stroke="#102a4c" stroke-width="2" stroke-dasharray="4,3"/>
+        </svg>
+      `,
+
+      /* 2. INTRODUÇÃO — VISÃO PLANA (2D) VS VOLUMÉTRICA (3D) */
+      introFlatVsVol: `
+        <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparação entre visão geográfica plana 2D e visão volumétrica 3D">
+          <rect x="0" y="0" width="760" height="280" rx="8" fill="#f2f5f9"/>
+
+          <!-- Lado Esquerdo: Mapa Plano 2D -->
+          <rect x="20" y="20" width="330" height="240" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="185" y="48" text-anchor="middle" fill="#0b1d36" font-size="13" font-weight="700" font-family="Georgia, serif">Geografia "Plana" Tradicional (2D)</text>
+          <!-- Plano inclinado simples -->
+          <polygon points="80,150 250,120 300,180 130,210" fill="#e6ecf3" stroke="#2d5585" stroke-width="2"/>
+          <line x1="155" y1="136" x2="215" y2="195" stroke="#0b1d36" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="148" y="176" fill="#334155" font-size="10" font-weight="700" font-family="sans-serif">Fronteira = Linha</text>
+          <text x="185" y="236" text-anchor="middle" fill="#5b6b80" font-size="10" font-family="sans-serif">Ignora altura, profundidade, céu e subsolo</text>
+
+          <!-- Seta Central -->
+          <text x="380" y="148" text-anchor="middle" fill="#0b1d36" font-size="24" font-weight="800" font-family="sans-serif">→</text>
+
+          <!-- Lado Direito: Volume 3D -->
+          <rect x="410" y="20" width="330" height="240" rx="8" fill="#0b1d36"/>
+          <text x="575" y="48" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="700" font-family="Georgia, serif">Virada Volumétrica (3D)</text>
+
+          <!-- Camadas empilhadas em perspectiva -->
+          <polygon points="465,86 645,86 680,104 500,104" fill="#4a6f99" stroke="#e6ecf3" stroke-width="1"/>
+          <text x="575" y="99" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700" font-family="sans-serif">ÓRBITAS &amp; ESPAÇO AÉREO</text>
+
+          <polygon points="465,124 645,124 680,142 500,142" fill="#2d5585" stroke="#e6ecf3" stroke-width="1"/>
+          <text x="575" y="137" text-anchor="middle" fill="#ffffff" font-size="9.5" font-weight="700" font-family="sans-serif">TORRES, VIADUTOS &amp; MÚLTIPLOS SOLOS</text>
+
+          <polygon points="465,162 645,162 680,180 500,180" fill="#e6ecf3" stroke="#ffffff" stroke-width="1.5"/>
+          <text x="575" y="175" text-anchor="middle" fill="#0b1d36" font-size="9.5" font-weight="800" font-family="sans-serif">SUPERFÍCIE / SOLO ARTIFICIAL</text>
+
+          <polygon points="465,200 645,200 680,218 500,218" fill="#1d3f6e" stroke="#9cb4cf" stroke-width="1"/>
+          <text x="575" y="213" text-anchor="middle" fill="#e6ecf3" font-size="9.5" font-weight="700" font-family="sans-serif">TÚNEIS, ESGOTOS, BUNKERS &amp; MINAS</text>
+
+          <!-- Linhas verticais do volume -->
+          <line x1="465" y1="86" x2="465" y2="200" stroke="#9cb4cf" stroke-width="1.2" stroke-dasharray="3,3"/>
+          <line x1="680" y1="104" x2="680" y2="218" stroke="#9cb4cf" stroke-width="1.2" stroke-dasharray="3,3"/>
+
+          <text x="575" y="244" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="sans-serif">Soberania e poder disputados em volumes empilhados</text>
+        </svg>
+      `,
+
+      /* 3. CAPÍTULO 1 — AS TRÊS ÓRBITAS DA TERRA */
+      cap1Orbits: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="As três faixas orbitais ao redor da Terra: LEO, MEO e GEO">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#0b1d36"/>
+
+          <!-- Órbitas concêntricas centradas em (190, 160) -->
+          <circle cx="190" cy="160" r="142" fill="none" stroke="#4a6f99" stroke-width="1.5" stroke-dasharray="6,4"/>
+          <circle cx="190" cy="160" r="102" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <circle cx="190" cy="160" r="64" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+
+          <!-- Terra -->
+          <circle cx="190" cy="160" r="34" fill="#2d5585" stroke="#ffffff" stroke-width="2"/>
+          <text x="190" y="164" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800" font-family="sans-serif">TERRA</text>
+
+          <!-- Pontos de Satélites -->
+          <circle cx="254" cy="160" r="5" fill="#ffffff"/>
+          <circle cx="282" cy="116" r="5.5" fill="#cbd5e1"/>
+          <circle cx="318" cy="96" r="6" fill="#4a6f99" stroke="#ffffff" stroke-width="1.5"/>
+
+          <!-- Legendas à direita -->
+          <rect x="372" y="26" width="364" height="76" rx="8" fill="#102a4c" stroke="#ffffff" stroke-width="1.2"/>
+          <text x="388" y="49" fill="#ffffff" font-size="12" font-weight="700" font-family="Georgia, serif">1. Órbita Baixa — LEO (150 a 2.000 km)</text>
+          <text x="388" y="68" fill="#e6ecf3" font-size="10.2" font-family="sans-serif">Satélites rápidos de reconhecimento e espionagem (ex.: GeoEye-1,</text>
+          <text x="388" y="84" fill="#cbd5e1" font-size="10.2" font-family="sans-serif">capaz de enxergar objetos de 30–40 cm) e estações tripuladas.</text>
+
+          <rect x="372" y="122" width="364" height="76" rx="8" fill="#102a4c" stroke="#cbd5e1" stroke-width="1.2"/>
+          <text x="388" y="145" fill="#ffffff" font-size="12" font-weight="700" font-family="Georgia, serif">2. Órbita Média — MEO (800 a 36.000 km)</text>
+          <text x="388" y="164" fill="#e6ecf3" font-size="10.2" font-family="sans-serif">Domínio dos sistemas de navegação e tempo global.</text>
+          <text x="388" y="180" fill="#cbd5e1" font-size="10.2" font-family="sans-serif">Satélites GPS militares/civis orbitam a ~20.200 km de altitude.</text>
+
+          <rect x="372" y="218" width="364" height="76" rx="8" fill="#102a4c" stroke="#4a6f99" stroke-width="1.2"/>
+          <text x="388" y="241" fill="#ffffff" font-size="12" font-weight="700" font-family="Georgia, serif">3. Órbita Geoestacionária — GEO (35.786 km)</text>
+          <text x="388" y="260" fill="#e6ecf3" font-size="10.2" font-family="sans-serif">Fixos sobre o Equador no mesmo ponto da Terra.</text>
+          <text x="388" y="276" fill="#cbd5e1" font-size="10.2" font-family="sans-serif">Clima, TV, telecomunicações globais e escuta militar permanente.</text>
+
+          <!-- Linhas de chamada -->
+          <line x1="259" y1="160" x2="372" y2="64" stroke="#ffffff" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="288" y1="116" x2="372" y2="160" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="3,3"/>
+          <line x1="324" y1="96" x2="372" y2="256" stroke="#4a6f99" stroke-width="1" stroke-dasharray="3,3"/>
+        </svg>
+      `,
+
+      /* 4. CAPÍTULO 2 — A ASSIMETRIA VERTICAL DO BOMBARDEIO */
+      cap2Asymmetry: `
+        <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Assimetria vertical entre o cockpit do bombardeiro e a destruição no solo">
+          <rect x="0" y="0" width="760" height="145" rx="8" fill="#0b1d36"/>
+          <rect x="0" y="155" width="760" height="145" rx="8" fill="#e6ecf3" stroke="#cbd5e1" stroke-width="1.5"/>
+
+          <!-- Plano Aéreo -->
+          <text x="26" y="34" fill="#ffffff" font-size="13.5" font-weight="700" font-family="Georgia, serif">PLANO AÉREO — O Olhar Sublime e Distante (6.000 a 10.000 m)</text>
+          <rect x="26" y="50" width="215" height="76" rx="6" fill="#1d3f6e"/>
+          <text x="38" y="72" fill="#ffffff" font-size="11" font-weight="700" font-family="sans-serif">Cockpit e Telas</text>
+          <text x="38" y="90" fill="#cbd5e1" font-size="9.8" font-family="sans-serif">Mapas 2D, luzes distantes,</text>
+          <text x="38" y="106" fill="#cbd5e1" font-size="9.8" font-family="sans-serif">nuvens de cogumelo, câmeras IR.</text>
+
+          <rect x="262" y="50" width="225" height="76" rx="6" fill="#1d3f6e"/>
+          <text x="274" y="72" fill="#ffffff" font-size="11" font-weight="700" font-family="sans-serif">Eufemismos e Cultura</text>
+          <text x="274" y="90" fill="#cbd5e1" font-size="9.8" font-family="sans-serif">"Bombas inteligentes", "dano colateral",</text>
+          <text x="274" y="106" fill="#cbd5e1" font-size="9.8" font-family="sans-serif">museus glorificando o Enola Gay.</text>
+
+          <rect x="508" y="50" width="226" height="76" rx="6" fill="#2d5585"/>
+          <text x="520" y="72" fill="#ffffff" font-size="11" font-weight="700" font-family="sans-serif">Sensação de Irrealidade</text>
+          <text x="520" y="90" fill="#e6ecf3" font-size="9.8" font-family="sans-serif">Distância física anula empatia moral;</text>
+          <text x="520" y="106" fill="#e6ecf3" font-size="9.8" font-family="sans-serif">guerra vira operação técnica limpa.</text>
+
+          <!-- Linha divisória de censura -->
+          <rect x="200" y="138" width="360" height="24" rx="12" fill="#102a4c" stroke="#ffffff" stroke-width="1.5"/>
+          <text x="380" y="154" text-anchor="middle" fill="#ffffff" font-size="10.5" font-weight="700" font-family="sans-serif">BARREIRA DE CENSURA E APAGAMENTO VISUAL</text>
+
+          <!-- Plano do Solo -->
+          <text x="26" y="190" fill="#0b1d36" font-size="13.5" font-weight="700" font-family="Georgia, serif">PLANO DO SOLO — A Realidade Ocultada ("Marco Zero")</text>
+          <rect x="26" y="206" width="215" height="76" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="38" y="228" fill="#0b1d36" font-size="11" font-weight="700" font-family="sans-serif">Tempestades de Fogo</text>
+          <text x="38" y="246" fill="#334155" font-size="9.8" font-family="sans-serif">Dresden, Hamburgo, Tóquio:</text>
+          <text x="38" y="262" fill="#334155" font-size="9.8" font-family="sans-serif">1 a 1,2 milhão de civis mortos.</text>
+
+          <rect x="262" y="206" width="225" height="76" rx="6" fill="#ffffff" stroke="#cbd5e1"/>
+          <text x="274" y="228" fill="#0b1d36" font-size="11" font-weight="700" font-family="sans-serif">Colapso dos Refúgios</text>
+          <text x="274" y="246" fill="#334155" font-size="9.8" font-family="sans-serif">Porões e abrigos desabam sobre</text>
+          <text x="274" y="262" fill="#334155" font-size="9.8" font-family="sans-serif">corpos; radiação confiscada (1945–51).</text>
+
+          <rect x="508" y="206" width="226" height="76" rx="6" fill="#d8e1ec" stroke="#2d5585"/>
+          <text x="520" y="228" fill="#0b1d36" font-size="11" font-weight="700" font-family="sans-serif">Tabula Rasa Urbana</text>
+          <text x="520" y="246" fill="#334155" font-size="9.8" font-family="sans-serif">Ruínas servem de "oportunidade"</text>
+          <text x="520" y="262" fill="#334155" font-size="9.8" font-family="sans-serif">para reconstrução modernista vertical.</text>
+        </svg>
+      `,
+
+      /* 5. CAPÍTULO 3 — A CADEIA REMOTA DO DRONE */
+      cap3DroneChain: `
+        <svg viewBox="0 0 760 285" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cadeia remota do drone: base em Las Vegas, satélite, drone armado e comunidade abaixo">
+          <rect x="0" y="0" width="760" height="285" rx="8" fill="#f2f5f9"/>
+
+          <!-- 1. Bunker Las Vegas -->
+          <rect x="20" y="135" width="175" height="126" rx="8" fill="#0b1d36"/>
+          <text x="107" y="160" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700" font-family="Georgia, serif">1. Base em Las Vegas</text>
+          <text x="107" y="178" text-anchor="middle" fill="#9cb4cf" font-size="9.5" font-weight="700" font-family="sans-serif">(Creech AFB • EUA)</text>
+          <text x="34" y="202" fill="#e6ecf3" font-size="9.8" font-family="sans-serif">• Piloto em bunker blindado</text>
+          <text x="34" y="220" fill="#e6ecf3" font-size="9.8" font-family="sans-serif">• Controles estilo PlayStation</text>
+          <text x="34" y="238" fill="#cbd5e1" font-size="9.8" font-weight="700" font-family="sans-serif">• Imunidade total (0 risco)</text>
+
+          <!-- 2. Satélite -->
+          <rect x="278" y="20" width="204" height="72" rx="8" fill="#1d3f6e"/>
+          <text x="380" y="45" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700" font-family="Georgia, serif">2. Enlace via Satélite</text>
+          <text x="380" y="64" text-anchor="middle" fill="#e6ecf3" font-size="9.8" font-family="sans-serif">Transmissão global de comandos</text>
+          <text x="380" y="79" text-anchor="middle" fill="#cbd5e1" font-size="9.5" font-family="sans-serif">e vídeo em tempo real (a milhares de km)</text>
+
+          <!-- 3. Drone a 5.000 pés -->
+          <rect x="530" y="66" width="210" height="84" rx="8" fill="#102a4c" stroke="#4a6f99" stroke-width="1.5"/>
+          <text x="635" y="90" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="700" font-family="Georgia, serif">3. Drone Armado</text>
+          <text x="635" y="108" text-anchor="middle" fill="#cbd5e1" font-size="9.8" font-family="sans-serif">Predator / Reaper a ~5.000 pés</text>
+          <text x="635" y="125" text-anchor="middle" fill="#e6ecf3" font-size="9.5" font-family="sans-serif">Sensores IR + laser ("Luz de Deus")</text>
+          <text x="635" y="140" text-anchor="middle" fill="#9cb4cf" font-size="9.5" font-family="sans-serif">+ Mísseis Hellfire</text>
+
+          <!-- 4. Comunidade no Solo -->
+          <rect x="530" y="182" width="210" height="82" rx="8" fill="#d8e1ec" stroke="#0b1d36" stroke-width="1.5"/>
+          <text x="635" y="204" text-anchor="middle" fill="#0b1d36" font-size="12" font-weight="700" font-family="Georgia, serif">4. Comunidade Abaixo</text>
+          <text x="635" y="222" text-anchor="middle" fill="#334155" font-size="9.8" font-family="sans-serif">Paquistão (FATA), Gaza, Iêmen</text>
+          <text x="635" y="239" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Zumbido 24h, terror psicológico,</text>
+          <text x="635" y="254" text-anchor="middle" fill="#0b1d36" font-size="9.5" font-weight="700" font-family="sans-serif">ataques "double-tap" e civis mortos</text>
+
+          <!-- Setas de conexão -->
+          <path d="M 107 135 Q 155 56 278 56" fill="none" stroke="#1d3f6e" stroke-width="2.5" stroke-dasharray="5,3"/>
+          <path d="M 482 56 Q 515 56 530 92" fill="none" stroke="#1d3f6e" stroke-width="2.5" stroke-dasharray="5,3"/>
+          <line x1="635" y1="150" x2="635" y2="180" stroke="#0b1d36" stroke-width="3"/>
+          <polygon points="635,182 629,172 641,172" fill="#0b1d36"/>
+
+          <!-- Caixa de resumo da assimetria -->
+          <rect x="234" y="182" width="260" height="79" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+          <text x="364" y="205" text-anchor="middle" fill="#0b1d36" font-size="11" font-weight="700" font-family="Georgia, serif">Assimetria Radical (Chamayou)</text>
+          <text x="364" y="224" text-anchor="middle" fill="#334155" font-size="10" font-family="sans-serif">"Torna-se, a priori, impossível</text>
+          <text x="364" y="240" text-anchor="middle" fill="#334155" font-size="10" font-family="sans-serif">morrer enquanto se mata."</text>
+        </svg>
+      `,
+
+      /* 6. CAPÍTULO 4 — A BIFURCAÇÃO DO ESPAÇO AÉREO URBANO */
+      cap4Bifurcation: `
+        <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bifurcação do espaço aéreo urbano: helicóptero VIP vs helicóptero policial">
+          <rect x="0" y="0" width="760" height="300" rx="8" fill="#f2f5f9"/>
+
+          <!-- Coluna Esquerda: Elite Cinética -->
+          <rect x="20" y="18" width="346" height="264" rx="10" fill="#ffffff" stroke="#2d5585" stroke-width="1.5"/>
+          <rect x="20" y="18" width="346" height="40" rx="10" fill="#1d3f6e"/>
+          <text x="193" y="43" text-anchor="middle" fill="#ffffff" font-size="12.5" font-weight="700" font-family="Georgia, serif">1. Helicóptero VIP • Secessão das Elites</text>
+
+          <!-- Desenho esquemático São Paulo -->
+          <line x1="150" y1="82" x2="236" y2="82" stroke="#0b1d36" stroke-width="3"/>
+          <rect x="174" y="88" width="38" height="16" rx="6" fill="#102a4c"/>
+          <line x1="212" y1="96" x2="238" y2="96" stroke="#102a4c" stroke-width="2.5"/>
+
+          <!-- Torres e Helipontos -->
+          <rect x="46" y="170" width="74" height="92" fill="#d8e1ec" stroke="#1d3f6e"/>
+          <text x="83" y="164" text-anchor="middle" fill="#0b1d36" font-size="10" font-weight="800" font-family="sans-serif">[ H ]</text>
+          <text x="83" y="212" text-anchor="middle" fill="#0b1d36" font-size="9.5" font-weight="700" font-family="sans-serif">Condomínio</text>
+          <text x="83" y="226" text-anchor="middle" fill="#334155" font-size="9" font-family="sans-serif">Alphaville</text>
+
+          <rect x="266" y="146" width="74" height="116" fill="#cbd5e1" stroke="#0b1d36"/>
+          <text x="303" y="140" text-anchor="middle" fill="#0b1d36" font-size="10" font-weight="800" font-family="sans-serif">[ H ]</text>
+          <text x="303" y="198" text-anchor="middle" fill="#0b1d36" font-size="9.5" font-weight="700" font-family="sans-serif">Torre</text>
+          <text x="303" y="212" text-anchor="middle" fill="#334155" font-size="9" font-family="sans-serif">Corporativa</text>
+
+          <path d="M 96 154 Q 193 102 290 132" fill="none" stroke="#2d5585" stroke-width="2" stroke-dasharray="4,3"/>
+          <text x="193" y="248" text-anchor="middle" fill="#5b6b80" font-size="9.5" font-family="sans-serif">Trânsito parado no solo (14 km/h)</text>
+          <text x="193" y="264" text-anchor="middle" fill="#0b1d36" font-size="9.5" font-weight="700" font-family="sans-serif">Salto aéreo a 200 km/h (5 min) • São Paulo</text>
+
+          <!-- Coluna Direita: Policiamento Paramilitar -->
+          <rect x="394" y="18" width="346" height="264" rx="10" fill="#0b1d36"/>
+          <rect x="394" y="18" width="346" height="40" rx="10" fill="#102a4c"/>
+          <text x="567" y="43" text-anchor="middle" fill="#ffffff" font-size="12.5" font-weight="700" font-family="Georgia, serif">2. Helicóptero Policial • Vigilância e Força</text>
+
+          <!-- Helicóptero policial + feixe de holofote/IR -->
+          <line x1="524" y1="82" x2="610" y2="82" stroke="#e6ecf3" stroke-width="3"/>
+          <rect x="548" y="88" width="38" height="16" rx="6" fill="#4a6f99"/>
+          <line x1="586" y1="96" x2="612" y2="96" stroke="#cbd5e1" stroke-width="2.5"/>
+
+          <!-- Feixe de luz/sensor -->
+          <polygon points="564,106 460,236 674,236" fill="#4a6f99" fill-opacity="0.28" stroke="#9cb4cf" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="567" y="164" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700" font-family="sans-serif">Holofote "Night-Sun" +</text>
+          <text x="567" y="180" text-anchor="middle" fill="#cbd5e1" font-size="10" font-family="sans-serif">Câmera Térmica (FLIR)</text>
+
+          <!-- Casas periféricas -->
+          <rect x="446" y="218" width="44" height="30" fill="#1d3f6e" stroke="#9cb4cf"/>
+          <rect x="498" y="210" width="48" height="38" fill="#1d3f6e" stroke="#9cb4cf"/>
+          <rect x="554" y="220" width="46" height="28" fill="#1d3f6e" stroke="#9cb4cf"/>
+          <rect x="608" y="212" width="52" height="36" fill="#1d3f6e" stroke="#9cb4cf"/>
+
+          <text x="567" y="268" text-anchor="middle" fill="#e6ecf3" font-size="9.5" font-weight="700" font-family="sans-serif">LAPD (Los Angeles) • Favelas do Rio • Efeito Bumerangue</text>
+        </svg>
+      `,
+
+      /* 7. CAPÍTULO 5 — TOPOGRAFIA DA DESIGUALDADE NAS ENCOSTAS */
+      cap5Slope: `
+        <svg viewBox="0 0 760 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte transversal de um morro urbano com favela verticalizada, teleférico e cidade formal na base">
+          <rect x="0" y="0" width="760" height="310" rx="8" fill="#f2f5f9"/>
+
+          <!-- Perfil do Morro -->
+          <polygon points="20,285 20,76 190,104 395,212 530,260 740,260 740,285" fill="#d8e1ec" stroke="#102a4c" stroke-width="2"/>
+
+          <!-- Cabo do Teleférico passando por cima -->
+          <line x1="72" y1="62" x2="620" y2="152" stroke="#0b1d36" stroke-width="2"/>
+          <!-- Pilares -->
+          <line x1="72" y1="62" x2="72" y2="85" stroke="#0b1d36" stroke-width="4"/>
+          <line x1="320" y1="103" x2="320" y2="174" stroke="#0b1d36" stroke-width="3.5"/>
+          <line x1="620" y1="152" x2="620" y2="260" stroke="#0b1d36" stroke-width="4"/>
+
+          <!-- Cabines do Teleférico -->
+          <rect x="195" y="84" width="32" height="20" rx="4" fill="#1d3f6e" stroke="#ffffff" stroke-width="1.5"/>
+          <rect x="445" y="126" width="32" height="20" rx="4" fill="#1d3f6e" stroke="#ffffff" stroke-width="1.5"/>
+          <text x="348" y="48" text-anchor="middle" fill="#0b1d36" font-size="11.5" font-weight="700" font-family="Georgia, serif">Teleférico / Metrocable (Mobilidade + Olhar Turístico/UPP)</text>
+
+          <!-- Casas empilhadas na encosta (laje sobre laje) -->
+          <rect x="92" y="76" width="44" height="24" fill="#4a6f99" stroke="#ffffff"/>
+          <rect x="98" y="54" width="34" height="22" fill="#2d5585" stroke="#ffffff"/>
+
+          <rect x="148" y="96" width="48" height="26" fill="#4a6f99" stroke="#ffffff"/>
+          <rect x="154" y="74" width="36" height="22" fill="#2d5585" stroke="#ffffff"/>
+
+          <rect x="206" y="128" width="52" height="28" fill="#4a6f99" stroke="#ffffff"/>
+          <rect x="212" y="106" width="40" height="22" fill="#1d3f6e" stroke="#ffffff"/>
+
+          <rect x="272" y="160" width="56" height="30" fill="#4a6f99" stroke="#ffffff"/>
+          <rect x="278" y="138" width="42" height="22" fill="#2d5585" stroke="#ffffff"/>
+
+          <rect x="342" y="194" width="54" height="28" fill="#4a6f99" stroke="#ffffff"/>
+          <rect x="408" y="220" width="50" height="28" fill="#2d5585" stroke="#ffffff"/>
+
+          <!-- Cidade Formal / Asfalto na Base -->
+          <rect x="548" y="170" width="52" height="90" fill="#102a4c" stroke="#ffffff"/>
+          <rect x="652" y="148" width="60" height="112" fill="#0b1d36" stroke="#ffffff"/>
+          <text x="630" y="277" text-anchor="middle" fill="#0b1d36" font-size="10.5" font-weight="700" font-family="sans-serif">Cidade Formal / Asfalto</text>
+
+          <!-- Anotações -->
+          <rect x="34" y="210" width="236" height="62" rx="6" fill="#ffffff" stroke="#1d3f6e" stroke-width="1.2"/>
+          <text x="46" y="230" fill="#0b1d36" font-size="10.5" font-weight="700" font-family="sans-serif">Verticalidade Vernacular (Favela)</text>
+          <text x="46" y="246" fill="#334155" font-size="9.5" font-family="sans-serif">Lajes empilhadas em encostas íngremes,</text>
+          <text x="46" y="260" fill="#334155" font-size="9.5" font-family="sans-serif">risco de deslizamentos e escadarias densas.</text>
+        </svg>
+      `,
+
+      /* 8. CAPÍTULO 6 — A INVERSÃO SOCIAL DO PRÉDIO */
+      cap6Inversion: `
+        <svg viewBox="0 0 760 310" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Inversão social dos edifícios antes e depois do elevador de segurança">
+          <rect x="0" y="0" width="760" height="310" rx="8" fill="#f2f5f9"/>
+
+          <!-- PRÉ-ELEVADOR -->
+          <text x="180" y="34" text-anchor="middle" fill="#0b1d36" font-size="13" font-weight="700" font-family="Georgia, serif">PRÉ-ELEVADOR (Séc. XIX • Escadas)</text>
+          <rect x="70" y="50" width="220" height="44" fill="#d8e1ec" stroke="#2d5585"/>
+          <text x="180" y="70" text-anchor="middle" fill="#0b1d36" font-size="10.5" font-weight="700" font-family="sans-serif">Sótão / Últimos Andares</text>
+          <text x="180" y="85" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Pobres, criados (calor, longe da água)</text>
+
+          <rect x="70" y="94" width="220" height="52" fill="#e6ecf3" stroke="#2d5585"/>
+          <text x="180" y="118" text-anchor="middle" fill="#0b1d36" font-size="10.5" font-weight="700" font-family="sans-serif">Andares Intermediários</text>
+          <text x="180" y="134" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Classe média / artesãos</text>
+
+          <rect x="70" y="146" width="220" height="68" fill="#0b1d36" stroke="#0b1d36"/>
+          <text x="180" y="176" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700" font-family="sans-serif">1º e 2º Andares ("Piano Nobile")</text>
+          <text x="180" y="194" text-anchor="middle" fill="#cbd5e1" font-size="9.5" font-family="sans-serif">Ricos (poucos degraus, pé-direito alto)</text>
+
+          <rect x="70" y="214" width="220" height="44" fill="#4a6f99" stroke="#102a4c"/>
+          <text x="180" y="240" text-anchor="middle" fill="#ffffff" font-size="10" font-weight="700" font-family="sans-serif">Porão Úmido • Miséria Urbana</text>
+
+          <!-- Seta de Virada -->
+          <rect x="316" y="118" width="128" height="68" rx="8" fill="#102a4c"/>
+          <text x="380" y="142" text-anchor="middle" fill="#ffffff" font-size="10.5" font-weight="700" font-family="sans-serif">Elisha Otis</text>
+          <text x="380" y="158" text-anchor="middle" fill="#cbd5e1" font-size="9.5" font-family="sans-serif">Freio de Segurança</text>
+          <text x="380" y="174" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="800" font-family="sans-serif">(1853) →</text>
+
+          <!-- PÓS-ELEVADOR -->
+          <text x="580" y="34" text-anchor="middle" fill="#0b1d36" font-size="13" font-weight="700" font-family="Georgia, serif">PÓS-ELEVADOR (Séc. XX–XXI)</text>
+          <rect x="470" y="50" width="220" height="66" fill="#0b1d36" stroke="#0b1d36"/>
+          <text x="580" y="79" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="700" font-family="sans-serif">Topo / Coberturas (Penthouses)</text>
+          <text x="580" y="97" text-anchor="middle" fill="#cbd5e1" font-size="9.5" font-family="sans-serif">Superelites, CEOs, elevador VIP direto</text>
+
+          <rect x="470" y="116" width="220" height="58" fill="#1d3f6e" stroke="#102a4c"/>
+          <text x="580" y="142" text-anchor="middle" fill="#ffffff" font-size="10.5" font-weight="700" font-family="sans-serif">Andares Altos e Médios</text>
+          <text x="580" y="158" text-anchor="middle" fill="#e6ecf3" font-size="9.5" font-family="sans-serif">Valor do m² sobe a cada andar acima</text>
+
+          <rect x="470" y="174" width="220" height="44" fill="#e6ecf3" stroke="#2d5585"/>
+          <text x="580" y="200" text-anchor="middle" fill="#0b1d36" font-size="10" font-weight="700" font-family="sans-serif">Base / Térreo • Ruído, Tráfego e Portaria</text>
+
+          <rect x="470" y="218" width="220" height="40" fill="#d8e1ec" stroke="#2d5585"/>
+          <text x="580" y="242" text-anchor="middle" fill="#334155" font-size="10" font-weight="700" font-family="sans-serif">Subsolo • Garagens, Carga e Serviços</text>
+
+          <!-- Poço do elevador na torre direita -->
+          <rect x="664" y="50" width="20" height="208" fill="#4a6f99" fill-opacity="0.55" stroke="#ffffff" stroke-width="1"/>
+          <rect x="668" y="64" width="12" height="18" fill="#ffffff"/>
+
+          <text x="380" y="292" text-anchor="middle" fill="#5b6b80" font-size="10" font-family="sans-serif">O elevador libertou os andares altos da gravidade e transformou altitude em prêmio imobiliário.</text>
+        </svg>
+      `,
+
+      /* 9. CAPÍTULO 7 — ANATOMIA DA ALTURA DE VAIDADE (VANITY HEIGHT) */
+      cap7Vanity: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Anatomia da altura de vaidade em supertorres como o Burj Khalifa">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#f2f5f9"/>
+
+          <!-- Silhueta da Supertorre à esquerda -->
+          <!-- Agulha / Vanity Height (29% topo) -->
+          <polygon points="180,22 186,104 174,104" fill="#4a6f99" stroke="#0b1d36" stroke-width="1.5"/>
+          <!-- Zona Residencial / Hotel -->
+          <polygon points="170,104 190,104 204,200 156,200" fill="#1d3f6e" stroke="#0b1d36" stroke-width="1.5"/>
+          <!-- Base / Escritórios / Shopping -->
+          <polygon points="152,200 208,200 232,286 128,286" fill="#0b1d36" stroke="#0b1d36" stroke-width="1.5"/>
+          <!-- Linha do solo -->
+          <line x1="70" y1="286" x2="290" y2="286" stroke="#0b1d36" stroke-width="2.5"/>
+
+          <!-- Chaves / Linhas de cota -->
+          <line x1="200" y1="22" x2="290" y2="22" stroke="#4a6f99" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="200" y1="104" x2="290" y2="104" stroke="#1d3f6e" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <line x1="214" y1="200" x2="290" y2="200" stroke="#0b1d36" stroke-width="1.5" stroke-dasharray="4,3"/>
+
+          <!-- Blocos explicativos à direita -->
+          <rect x="298" y="20" width="440" height="82" rx="8" fill="#ffffff" stroke="#0b1d36" stroke-width="2"/>
+          <text x="314" y="43" fill="#0b1d36" font-size="12.5" font-weight="700" font-family="Georgia, serif">15% a 30% do Topo — "Altura de Vaidade" (Vanity Height)</text>
+          <text x="314" y="63" fill="#334155" font-size="10.2" font-family="sans-serif">Espaço estreito demais para ser habitado ou alugado (só poços técnicos e agulha).</text>
+          <text x="314" y="81" fill="#1d3f6e" font-size="10.2" font-weight="700" font-family="sans-serif">Burj Khalifa: 244 m vazios (29%) • Kingdom Tower: 85 andares inutilizáveis.</text>
+
+          <rect x="298" y="114" width="440" height="78" rx="8" fill="#e6ecf3" stroke="#2d5585" stroke-width="1.5"/>
+          <text x="314" y="138" fill="#0b1d36" font-size="12" font-weight="700" font-family="Georgia, serif">Andares Superiores — Luxo, Hotéis e Mirantes</text>
+          <text x="314" y="157" fill="#334155" font-size="10.2" font-family="sans-serif">Uso misto voltado ao consumo de elite e turismo (não mais só escritórios).</text>
+          <text x="314" y="174" fill="#334155" font-size="10" font-family="sans-serif">Elevadores de fibra de carbono e alto custo energético por m².</text>
+
+          <rect x="298" y="204" width="440" height="82" rx="8" fill="#0b1d36"/>
+          <text x="314" y="228" fill="#ffffff" font-size="12" font-weight="700" font-family="Georgia, serif">Base e Entorno — "Logo Gigante" e Especulação</text>
+          <text x="314" y="247" fill="#e6ecf3" font-size="10.2" font-family="sans-serif">Atua como catalisador de valor para shoppings, hotéis e terrenos no entorno.</text>
+          <text x="314" y="264" fill="#cbd5e1" font-size="10" font-family="sans-serif">Transforma "lugar nenhum" em marca global ("vertical fix" do capital).</text>
+        </svg>
+      `
+    };
+
+    /* ==========================================================================
+       BANCO DE DADOS COMPLETO DA PARTE 1 (VISÃO GERAL, PREFÁCIO, INTRO, CAPS 1–7)
+       ========================================================================== */
+    const SECTIONS = [
+      /* ------------------------------------------------------------------------
+         0. VISÃO GERAL — CORTE VERTICAL
+         ------------------------------------------------------------------------ */
+      {
+        id: "overview",
+        navLabel: "Corte Vertical (Visão Geral)",
+        group: "overview",
+        badge: "Visão Geral",
+        partLabel: "Mapa Volumétrico • Parte 1/2",
+        title: "Vertical: A Cidade dos Satélites aos Bunkers",
+        origTitle: "Vertical: The City from Satellites to Bunkers — Stephen Graham (2016)",
+        lead: "Por séculos, mapas e teorias urbanas retrataram as cidades e os países como superfícies planas. Stephen Graham propõe olhar a cidade em corte vertical — de 35.786 km de órbita até 4 km abaixo da terra — para revelar como poder, vigilância, riqueza e desigualdade são hoje organizados em camadas tridimensionais.",
+        thesis: "A Parte 1 deste infográfico percorre a metade superior do livro ('Acima'): da presença enigmática dos satélites aos bombardeiros, drones, helicópteros, favelas de encosta, elevadores e arranha-céus. Clique em qualquer camada do corte vertical abaixo ou no menu lateral para explorar os argumentos de cada capítulo.",
+        isOverview: true,
+        schemas: [
+          {
+            title: "Corte Transversal Vertical da Cidade (Clique nas Camadas da Parte 1)",
+            type: "svg",
+            svgKey: "overviewCutaway",
+            caption: "Inspirado no corte 'Altitudes of Urbanization' de Pierre Bélanger citado na Introdução: processos que parecem separados em mapas planos revelam-se interligados quando vistos de lado, em seção."
+          }
+        ],
+        subchapters: []
+      },
+
+      /* ------------------------------------------------------------------------
+         1. PREFÁCIO: DUBAI, JANEIRO DE 2010
+         ------------------------------------------------------------------------ */
+      {
+        id: "preface",
+        navLabel: "Prefácio: Dubai, Janeiro de 2010",
+        group: "front",
+        badge: "Prefácio",
+        partLabel: "Abertura",
+        title: "Dubai, Janeiro de 2010",
+        origTitle: "Preface: Dubai, January 2010",
+        lead: "Stephen Graham abre o livro relatando uma viagem aérea a Dubai para a inauguração do Burj Khalifa (830 m). Pela janela do avião comercial, descobre que está sobrevoando Bagdá em plena guerra — uma cena que condensa a sobreposição absurda de camadas verticais no mundo contemporâneo.",
+        thesis: "Turismo de luxo, capital especulativo e guerra aérea ocupam o mesmo volume vertical: enquanto voos comerciais cruzam sobre zonas de combate coordenadas pelo centro militar dos EUA no Catar, Dubai ergue torres de vaidade e ilhas artificiais moldadas para serem vistas do espaço no Google Earth.",
+        schemas: [
+          {
+            title: "Do Turismo à Guerra no Mesmo Céu (Bagdá–Catar–Dubai)",
+            type: "svg",
+            svgKey: "prefaceSky",
+            caption: "A liberalização do espaço aéreo iraquiano (2008) permitiu que os circuitos globais de turismo e negócios simplesmente sobrevoassem a guerra abaixo, gerenciados pelo mesmo centro militar."
+          },
+          {
+            title: "O Paradoxo de Dubai: Espetáculo Acima vs. Custo Oculto Abaixo",
+            type: "compare",
+            headers: ["Dimensão", "Espetáculo Vertical Acima (Visível)", "Custo Oculto Abaixo (Invisibilizado)"],
+            rows: [
+              ["Arquitetura", "Burj Khalifa (830 m), sendo 244 m de 'altura de vaidade' inabitável apenas para bater recordes.", "Construído por trabalhadores migrantes em regime semiescravo, sob calor extremo."],
+              ["Água e Energia", "Fontes dançantes de US$ 225 milhões e maior consumo per capita de água do planeta.", "País desértico sem rios; lençol freático despencou mais de 1 metro em 20 anos."],
+              ["Solo e Mar", "Ilhas artificiais ('The Palm', 'The World') desenhadas para brilhar no Google Earth.", "Dragagem destrutiva do fundo do mar ('reclamação' de terras) destruindo ecossistemas."],
+              ["Geopolítica", "Hub aéreo global (superando Heathrow) e vitrine de marcas de luxo (heliponto do Burj Al Arab).", "Maior concentração militar dos EUA no Golfo (Al Dhafra, Jebel Ali e escudo antimíssil THAAD)."]
+            ],
+            caption: "Para Graham, Dubai funciona como uma vitrine extrema — uma 'sequência de Blade Runner feita pela Disney' — onde o capital e a fantasia parecem levitar acima das contradições reais."
+          }
+        ],
+        subchapters: []
+      },
+
+      /* ------------------------------------------------------------------------
+         2. INTRODUÇÃO: INDO NA VERTICAL
+         ------------------------------------------------------------------------ */
+      {
+        id: "intro",
+        navLabel: "Introdução: Indo na Vertical",
+        group: "front",
+        badge: "Introdução",
+        partLabel: "Quadro Conceitual",
+        title: "Indo na Vertical",
+        origTitle: "Introduction: Going Vertical",
+        lead: "Por que a geografia, o urbanismo e a geopolítica tradicionais têm tanta dificuldade em explicar arranha-céus, drones, fronteiras aéreas ou minas profundas? Porque herdaram uma imaginação 'plana' (2D) dos mapas coloniais. Graham propõe uma virada volumétrica (3D) e uma crítica às metáforas verticais que naturalizam a desigualdade.",
+        thesis: "Territórios, fronteiras e cidades não são superfícies planas, mas volumes tridimensionais empilhados. Adotar uma perspectiva vertical e volumétrica — e desnaturalizar a linguagem que associa 'alto' a superioridade e 'baixo' a inferioridade — é essencial para compreender o poder no século XXI.",
+        schemas: [
+          {
+            title: "Visão Plana (2D) vs. Visão Volumétrica (3D)",
+            type: "svg",
+            svgKey: "introFlatVsVol",
+            caption: "Como apontam Eyal Weizman e Stuart Elden, a geopolítica clássica olha 'através' de mapas planos em vez de 'cortar' a paisagem em seção vertical."
+          },
+          {
+            title: "A Armadilha das Metáforas Verticais na Linguagem",
+            type: "compare",
+            headers: ["Polo Vertical", "Raiz Corporal / Física", "Exemplos na Linguagem e no Mapa", "Efeito Político"],
+            rows: [
+              ["ALTO / SUPER / UP", "Corpo humano ereto, cabeça erguida, esforço contra a gravidade, vitalidade.", "Classe alta, superior, supervisão, 'His Highness', Norte no topo do mapa-múndi.", "Naturaliza privilégio, riqueza e poder como algo 'elevado' e legítimo."],
+              ["BAIXO / SUB / INFRA", "Corpo prostrado, doença, morte, sucumbir à gravidade.", "Classe baixa, subalterno, inferior, infernal, sub-humano, Sul ('down under', 'go South').", "Associa pobreza, vulnerabilidade e o Sul Global a inferioridade moral ou fracasso."]
+            ],
+            caption: "São 'metáforas mortas' (pré-lógicas): moldam nosso pensamento social antes mesmo do raciocínio consciente. Mapas invertidos, como o de Stuart McArthur (1979), escancaram esse viés."
+          },
+          {
+            title: "Da 'Queda Livre' (Hito Steyerl) ao Horizontalismo Político",
+            type: "flow",
+            nodes: [
+              { title: "1. Perda do Horizonte Estável", body: "Múltiplas telas digitais, Google Earth e sensores aéreos destroem a perspectiva linear fixa ('queda livre')." },
+              { title: "2. Secessão Vertical das Elites", body: "Super-ricos criam arquipélagos elevados e protegidos, desconectando-se da cidade comum abaixo.", tone: "mid" },
+              { title: "3. Resistência: Horizontalidad", body: "Movimentos como Zapatistas, Argentina (2001) e Occupy rejeitam hierarquias verticais em favor da democracia direta horizontal.", tone: "dark" }
+            ],
+            caption: "Enquanto o capitalismo neoliberal verticaliza o espaço e o poder, movimentos sociais reivindicam o plano horizontal de igualdade e cooperação."
+          }
+        ],
+        subchapters: []
+      },
+
+      /* ------------------------------------------------------------------------
+         3. CAPÍTULO 1 — SATÉLITE: PRESENÇA ENIGMÁTICA
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-1",
+        navLabel: "1. Satélite: Presença Enigmática",
+        group: "part1",
+        badge: "Capítulo 1",
+        partLabel: "Parte Um: Acima",
+        title: "Satélite: Presença Enigmática",
+        origTitle: "Satellite: Enigmatic Presence",
+        lead: "No limite da atmosfera, a verticalidade extrema torna-se orbital. Cerca de 950 satélites ativos (mais de 400 dos EUA) sustentam nossa navegação, telecomunicações, tempo e mapas — mas operam como uma caixa-preta militar e corporativa fora do escrutínio público.",
+        thesis: "Os satélites tornaram-se infraestrutura vital e banal do cotidiano global, mas sua invisibilidade física esconde sua origem militar, seu papel na vigilância em massa e a crescente ameaça de militarização do espaço.",
+        schemas: [
+          {
+            title: "As Três Órbitas da Terra (LEO, MEO e GEO)",
+            type: "svg",
+            svgKey: "cap1Orbits",
+            caption: "O 'terreno mais elevado' (ultimate high ground) divide-se em três faixas orbitais com funções civis e militares sobrepostas."
+          },
+          {
+            title: "O Paradoxo Orbital: Infraestrutura Vital vs. Caixa-Preta Secreta",
+            type: "tension",
+            left: {
+              title: "Uso Civil Cotidiano e Público",
+              bullets: [
+                "GPS organiza tempo global, transporte, agricultura e entregas.",
+                "Imagens de satélite apoiam planejamento urbano e ONGs de direitos humanos.",
+                "TV, internet e mobilizações sociais dependem de enlaces orbitais."
+              ]
+            },
+            mid: { sym: "⇄", text: "Infraestrutura Dual-Use" },
+            right: {
+              title: "Controle Militar e Corporativo",
+              tone: "dark",
+              bullets: [
+                "GPS mantido por relógios atômicos da Força Aérea dos EUA e usado para guiar bombas.",
+                "Regulação opaca e sigilo de Estados de segurança nacional.",
+                "Público excluído das decisões sobre quem vê e controla o céu."
+              ]
+            },
+            caption: "Por estarem fora da visão cotidiana, os satélites funcionam como um 'aparelho inconsciente' (Geert Lovink) que molda a vida e a morte na superfície."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-1-1",
+            code: "1.1",
+            title: "'O Terreno Mais Elevado'",
+            orig: "'Ultimate High Ground'",
+            body: "Para estrategistas militares dos EUA (como a RAND Corporation), controlar o espaço orbital é garantir o domínio de todo o ar, terra e mar abaixo. Peter Sloterdijk chama essa virada de 'astronomia invertida': em vez de olharmos da Terra para o infinito, máquinas no espaço olham para baixo e reduzem a superfície terrestre a um campo infinito de alvos. Graham alerta, porém, que a imagem de satélite não é onisciente nem neutra — ela é seletiva, interpretada e manipulável (como nas falsas provas de armas no Iraque em 2003).",
+            schemas: [
+              {
+                title: "Astronomia Tradicional vs. Astronomia Invertida (Sloterdijk)",
+                type: "compare",
+                headers: ["Dimensão", "Astronomia Tradicional", "Astronomia Invertida (Era dos Satélites)"],
+                rows: [
+                  ["Direção do Olhar", "De baixo para cima (Terra → Céu).", "De cima para baixo (Espaço → Superfície da Terra)."],
+                  ["Propósito", "Contemplação filosófica do infinito.", "Vigilância imperial, mapeamento e fabricação de alvos."],
+                  ["Mito Associado", "Harmonia cósmica.", "Ilusão de visão objetiva, divina e sem falhas ('olho de Deus')."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-1-2",
+            code: "1.2",
+            title: "Satélites 'Negros': O Outro Céu Noturno",
+            orig: "'Black' Satellites: The Other Night Sky",
+            body: "Mesmo secretos, os cerca de 140 satélites militares 'negros' dos EUA são grandes demais para ficarem invisíveis: ao amanhecer e ao entardecer, seus corpos de aço refletem a luz do sol. O artista e geógrafo Trevor Paglen, junto a redes de observadores amadores, usa telescópios, dados públicos de lançamentos e emblemas militares para fotografar suas trajetórias — praticando 'sous-surveillance' (vigilância de baixo para cima).",
+            schemas: [
+              {
+                title: "Sous-surveillance: Vigiando os Vigias",
+                type: "flow",
+                nodes: [
+                  { title: "Pistas Públicas", body: "Orçamentos, planos de voo, emblemas de lançamento do NRO e fóruns amadores." },
+                  { title: "Telescópios no Solo", body: "Cálculo das órbitas e fotografia dos reflexos solares ('O Outro Céu Noturno').", tone: "mid" },
+                  { title: "Exposição Política", body: "Quebra o manto de segredo; o Pentágono chegou a reorientar satélites (programa Misty) para evitar fotos.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-1-3",
+            code: "1.3",
+            title: "Estações Terrestres: 'Fragmentos da América'",
+            orig: "Ground Stations: 'Fragments of America'",
+            body: "Nenhum satélite funciona flutuando sozinho: ele depende de uma gigantesca rede terrestre. O artista Steve Rowell estima cerca de 6.000 instalações de solo dos EUA espalhadas pelo mundo. O maior exemplo é a base de Menwith Hill (Yorkshire, Reino Unido), repleta de mais de 30 domos brancos (radomes) operados pela NSA, peça-chave do sistema PRISM revelado por Edward Snowden.",
+            schemas: [
+              {
+                title: "A Arquitetura Terrestre da Vigilância Orbital (Menwith Hill)",
+                type: "flow",
+                nodes: [
+                  { title: "Satélites + Fibra Óptica", body: "Chamadas, dados, e-mails e tráfego de grandes plataformas da internet." },
+                  { title: "Radomes de Menwith Hill", body: "Antenas 'Collect-It-All' (Taurus) captam sinais eletromagnéticos em larga escala.", tone: "mid" },
+                  { title: "Fusão de Dados (Utah)", body: "Supercomputadores descriptografam e classificam informações automaticamente." },
+                  { title: "Alvos em Tempo Real", body: "Alimenta ataques de drones, espionagem política e monitoramento de movimentos civis.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-1-4",
+            code: "1.4",
+            title: "Militarização do Espaço",
+            orig: "Weaponising Space",
+            body: "Apesar do Tratado do Espaço Exterior (1967), a 'astro-geopolítica' trata o espaço como o 'alto-mar do futuro'. EUA, Rússia e China desenvolvem mísseis antissatélite (ASAT), lasers, aviões espaciais (Boeing X-37) e até conceitos como 'Rods from God' (hastes de tungstênio soltas da órbita pela gravidade). O perigo imediato é a nuvem de 500.000 fragmentos de lixo espacial — cuja colisão acidental pode ser confundida com um ato de guerra.",
+            schemas: [
+              {
+                title: "Cadeia de Risco da Guerra Antissatélite",
+                type: "flow",
+                nodes: [
+                  { title: "Teste / Ataque ASAT", body: "Ex.: teste chinês de 2007 gerou 20–40 mil novos detritos em órbita baixa." },
+                  { title: "Colisão de Detritos", body: "Fragmentos a ~13 km/s atingem satélites ativos sem identificação clara da causa.", tone: "mid" },
+                  { title: "Paralisia Civil", body: "Queda de bancos, redes elétricas, telefonia, logística e carros autônomos." },
+                  { title: "Escalada Militar", body: "Retaliação mútua entre potências com alto risco de escalada nuclear.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-1-5",
+            code: "1.5",
+            title: "Zoom Mundial: Google Earth",
+            orig: "World-Zoom: Google Earth",
+            body: "O Google Earth democratizou o zoom orbital ao misturar imagens de satélite, GPS e Street View em qualquer celular. Mas sua estética nasceu na cobertura televisiva militar da Guerra do Iraque (2003) e reflete vieses comerciais e censuras estatais. Ainda assim, tornou-se uma arma poderosa de contracartografia e denúncia — enquanto cidades como Dubai moldam fisicamente sua costa para virar 'paisagem de marca' vista do espaço.",
+            schemas: [
+              {
+                title: "A Dupla Face do Google Earth",
+                type: "tension",
+                left: {
+                  title: "Lado Corporativo e Militar",
+                  tone: "dark",
+                  bullets: [
+                    "Estética derivada de voos virtuais da Guerra do Iraque (2003).",
+                    "Censura de áreas sensíveis (ex.: Israel/Palestina em baixa resolução).",
+                    "Camada de anúncios corporativos e 'brandscapes' (ilhas de Dubai).",
+                    "Fosso digital (ex.: pós-Katrina favorecendo bairros ricos)."
+                  ]
+                },
+                mid: { sym: "◎", text: "Mesma Interface Orbital" },
+                right: {
+                  title: "Lado Crítico e Ativista",
+                  tone: "mid",
+                  bullets: [
+                    "Provas de crimes de guerra em Darfur, Síria e Bálcãs no Tribunal de Haia.",
+                    "Contracartografia palestina contra mapas oficiais.",
+                    "Revolta no Bahrein (2011) ao expor 95% das terras nas mãos da elite.",
+                    "Poema de 3 km de Raúl Zurita no Atacama ('ni pena ni miedo')."
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         4. CAPÍTULO 2 — BOMBARDEIRO: MORTE VINDA DE CIMA
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-2",
+        navLabel: "2. Bombardeiro: Morte vinda de Cima",
+        group: "part1",
+        badge: "Capítulo 2",
+        partLabel: "Parte Um: Acima",
+        title: "Bombardeiro: Morte vinda de Cima",
+        origTitle: "Bomber: Death from Above",
+        lead: "Da pintura futurista fascista (Aeropittura) aos bombardeios incendiários e atômicos da Segunda Guerra Mundial e à campanha 'Choque e Pavor' no Iraque, a guerra aérea construiu uma cultura que glorifica a visão limpa e sublime de cima — e apaga o horror carnal das cidades destruídas embaixo.",
+        thesis: "O bombardeio estratégico consolidou a distância visual e moral entre quem mata do céu e quem morre no chão, e serviu de motor oculto para o próprio urbanismo modernista de torres isoladas no pós-guerra.",
+        schemas: [
+          {
+            title: "A Assimetria Vertical do Bombardeio",
+            type: "svg",
+            svgKey: "cap2Asymmetry",
+            caption: "O olhar vertical transforma cidades habitadas em alvos geométricos; quando a realidade do solo volta à tona (como o cheiro de corpos nos B-29 sobre o Japão), ela provoca trauma e censura."
+          },
+          {
+            title: "Evolução Histórica da Aniquilação Aérea Urbana",
+            type: "flow",
+            nodes: [
+              { title: "1911–1939 • Fascismo e Douhet", body: "Aeropittura (Tullio Crali) glorifica o mergulho sobre a cidade; bombardeios na Líbia, Etiópia e Guernica (1937)." },
+              { title: "1940–1945 • Guerra Total", body: "Blitz nazista + bombardeio de área aliado (Hamburgo, Dresden, Tóquio): 1 a 1,2 milhão de civis mortos.", tone: "mid" },
+              { title: "Agosto 1945 • Era Atômica", body: "Hiroshima e Nagasaki: destruição total e confisco oficial de imagens e dados médicos de radiação." },
+              { title: "2003 • 'Choque e Pavor'", body: "Iraque: retomada da estética espetacular do bombardeio transmitida ao vivo como 'precisão cirúrgica'.", tone: "dark" }
+            ],
+            caption: "A engenharia do fogo na 2ª Guerra incluiu até réplicas exatas de casas alemãs e japonesas construídas e queimadas em Nevada para calibrar bombas incendiárias."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-2-1",
+            code: "2.1",
+            title: "Razões para a Negação",
+            orig: "Grounds for Denial",
+            body: "No Ocidente, a cultura do 'bomber glorioso' (filmes, jogos, shows aéreos e museus) celebra a máquina e apaga suas vítimas. Em 1995, grupos de veteranos conseguiram censurar a exposição do avião Enola Gay no Smithsonian, removendo artefatos do chão de Hiroshima (como uma lancheira derretida de criança). Em 2003, os EUA chegaram a bombardear o escritório da Al Jazeera em Bagdá, que mostrava corpos civis no solo.",
+            schemas: [
+              {
+                title: "Os 4 Mecanismos de Apagamento do Solo",
+                type: "grid",
+                cols: 4,
+                items: [
+                  { title: "1. Distância Física", body: "Pilotos a 20.000 pés veem apenas 'luzes brilhando na fumaça', desconectados dos corpos." },
+                  { title: "2. Linguagem Técnica", body: "Jargões como 'dano colateral' e 'alvos estratégicos' anestesiam o horror humano.", tone: "mid" },
+                  { title: "3. Censura Visual", body: "Confisco de fotos de Hiroshima/Nagasaki (1945–51) e ataques à imprensa no solo." },
+                  { title: "4. Fetichização", body: "Museus, documentários e videogames glorificam o bombardeiro como herói tecnológico.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-2-2",
+            code: "2.2",
+            title: "Viver no Ar, Guerra no Ar",
+            orig: "Aerial Living, Aerial War",
+            body: "Pouco se lembra que o urbanismo modernista teve relação direta com o medo dos bombardeiros. Le Corbusier celebrou o avião em 1935 ('o avião acusa a cidade') e desenhou sua Ville Radieuse com torres altas e espaçadas em parques justamente para oferecer menos alvo às bombas e elevar moradores acima de ataques de gás. Após 1945, planejadores comemoraram as ruínas da guerra como a 'tabula rasa' ideal para reconstruir centros urbanos de forma verticalizada.",
+            schemas: [
+              {
+                title: "Como a Guerra Aérea Moldou a Cidade Modernista",
+                type: "flow",
+                nodes: [
+                  { title: "Ameaça dos Bombardeiros", body: "Ruas densas e tradicionais são declaradas 'indefensáveis' contra fogo e gás." },
+                  { title: "Resposta Arquitetônica", body: "Torres verticais isoladas, telhados antibomba e grandes espaços abertos (Le Corbusier / Giedion).", tone: "mid" },
+                  { title: "Destruição na 2ª Guerra", body: "Centros europeus e japoneses arrasados viram 'nova chance' (panfleto de John Mansbridge, 1943)." },
+                  { title: "Reconstrução Vertical", body: "Vias expressas, passarelas elevadas e blocos verticais substituem a cidade tradicional.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         5. CAPÍTULO 3 — DRONE: IMPÉRIO ROBÓTICO
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-3",
+        navLabel: "3. Drone: Império Robótico",
+        group: "part1",
+        badge: "Capítulo 3",
+        partLabel: "Parte Um: Acima",
+        title: "Drone: Império Robótico",
+        origTitle: "Drone: Robot Imperium",
+        lead: "De 167 unidades em 2002 para mais de 7.000 em 2010 (mais de 40% da frota militar dos EUA), os drones armados inauguraram uma forma inédita de poder vertical: operadores invulneráveis em bunkers a milhares de quilômetros patrulham e executam alvos no Paquistão, Iêmen, Afeganistão e Gaza — e agora essa tecnologia retorna para policiar as próprias metrópoles ocidentais.",
+        thesis: "Os drones levam a guerra vertical à assimetria absoluta ('matar sem poder morrer'), fundem ver e matar em uma única ação e transformam a lógica de guerra colonial em policiamento doméstico permanente.",
+        schemas: [
+          {
+            title: "A Cadeia Remota do Drone Armado",
+            type: "svg",
+            svgKey: "cap3DroneChain",
+            caption: "A conexão entre bases confortáveis nos subúrbios de Las Vegas e vilarejos no Paquistão combina alta tecnologia orbital com vulnerabilidade absoluta no solo."
+          },
+          {
+            title: "Compressão da Cadeia de Abate (Kill Chain)",
+            type: "flow",
+            nodes: [
+              { title: "1. Ver (Sensores)", body: "Câmeras HD, infravermelho e sistemas multi-olho (Argus, Gorgon Stare) vigiam 24h." },
+              { title: "2. Julgar (Classificação)", body: "Algoritmos e vieses classificam comportamentos em 'normal' vs. 'suspeito'.", tone: "mid" },
+              { title: "3. Matar (Instantâneo)", body: "Lançamento de mísseis Hellfire; ver e destruir fundem-se no mesmo ato.", tone: "dark" }
+            ],
+            caption: "A linguagem militar desumaniza o alvo na tela: o software de cálculo de impacto é apelidado pelos operadores de 'bug splat' (esmagamento de inseto)."
+          },
+          {
+            title: "Mito Oficial vs. Realidade no Solo",
+            type: "compare",
+            headers: ["Dimensão", "Discurso Oficial ('Precisão Cirúrgica')", "Realidade Documentada (Stanford / BIJ)"],
+            rows: [
+              ["Vítimas Civis", "'Dano colateral mínimo'; homens adultos são contados como 'combatentes'.", "Centenas de civis e ~200 crianças mortos no Paquistão, Iêmen e Somália; dois terços civis em Gaza (2012)."],
+              ["Resgate e Cotidiano", "Ataques focados apenas em terroristas isolados.", "Ataques 'double-tap' atingem socorristas; crianças deixam a escola e evitam sair de casa."],
+              ["Impacto Psicológico", "Ação limpa e indolor à distância.", "Zumbido constante 24h gera trauma coletivo severo ('o som da morte')."]
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-3-1",
+            code: "3.1",
+            title: "Orientalismo Vertical",
+            orig: "Vertical Orientalism",
+            body: "Retomando Edward Said e Eyal Weizman, Graham mostra que a ocupação de Gaza por Israel e as guerras de drones dos EUA deram um giro de 90 graus no orientalismo: o 'Outro' colonizado não está mais além do horizonte geográfico, mas abaixo da tirania aérea de plataformas tecnológicas (batizadas com nomes mitológicos ameaçadores como Predator, Reaper, Argus e Gorgon Stare).",
+            schemas: [
+              {
+                title: "Orientalismo Horizontal vs. Orientalismo Vertical (Eyal Weizman)",
+                type: "compare",
+                headers: ["Característica", "Orientalismo Horizontal (Clássico)", "Orientalismo Vertical (Era dos Drones)"],
+                rows: [
+                  ["Geografia do Outro", "Além do horizonte, em colônias distantes.", "Diretamente abaixo do domínio aéreo permanente."],
+                  ["Modo de Controle", "Ocupação física com tropas e fronteiras terrestres.", "Controle remoto sem tropas no chão; zonas de fogo livre."],
+                  ["Indústria Associada", "Companhias coloniais e ferrovias.", "Gigantes bélicas (General Atomics: faturamento saltou de US$ 110 mi para US$ 1,8 bi)."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-3-2",
+            code: "3.2",
+            title: "Mitos da Visão Total",
+            orig: "Myths of Total Vision",
+            body: "O mito de que sensores garantem 'consciência total' desmorona diante da sobrecarga de dados (o sistema Argus gera o equivalente a 8 anos de vídeo por dia) e da profunda ignorância cultural dos operadores. Como mostrou o massacre de um comboio civil no Afeganistão em 2010 (analisado por Chamayou e Gordillo), operadores desesperados para atirar transformam crianças em 'terroristas tamanho miniatura' e objetos comuns em fuzis.",
+            schemas: [
+              {
+                title: "Ciclo Perverso do Erro Sistêmico",
+                type: "flow",
+                nodes: [
+                  { title: "Excesso de Vídeo + Ignorância Cultural", body: "Telas granuladas sem compreensão da vida local no solo." },
+                  { title: "Clichês Orientalistas", body: "Qualquer adulto vira 'homem em idade militar'; rezar vira sinal de 'Talibã'.", tone: "mid" },
+                  { title: "Morte Civil Inevitável", body: "Não é 'acidente isolado', mas produto estrutural de uma visão binária armada.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-3-3",
+            code: "3.3",
+            title: "Drones na Pátria",
+            orig: "Drones to the Homeland",
+            body: "Com a retração dos orçamentos militares externos, fabricantes fazem lobby pesado (incluindo anúncios de drones nos vagões do metrô de Washington e €500 milhões na UE) para implantar drones no espaço aéreo civil. É o 'efeito bumerangue' de Foucault: a lógica de 'segurança interna' (Homeland Security) transforma fronteiras (EUA–México) e bairros urbanos pobres e racializados em 'espaços de batalha' permanentes, com risco de reconhecimento facial 3D e drones policiais armados.",
+            schemas: [
+              {
+                title: "O Efeito Bumerangue de Foucault na Dronesfera",
+                type: "flow",
+                nodes: [
+                  { title: "Zona de Guerra Externa", body: "Drones testados e normalizados no Iraque, Afeganistão e Gaza." },
+                  { title: "Fronteira Militarizada", body: "Predators e Hermes patrulham a fronteira EUA–México caçando migrantes.", tone: "mid" },
+                  { title: "Policiamento Doméstico", body: "Vigilância biométrica de bairros negros/latinos, protestos (Occupy) e uso de armas 'não letais'.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-3-4",
+            code: "3.4",
+            title: "Contestando a Dronesfera",
+            orig: "Contesting the Dronesphere",
+            body: "Artistas, ativistas e pesquisadores respondem ocupando também a terceira dimensão. No Paquistão, o coletivo #NotABugSplat estendeu um retrato gigante de uma criança órfã de um ataque de drone no campo, forçando o olhar da máquina a encarar um rosto humano. Outras iniciativas incluem o 'Occucopter' (drone de brinquedo usado no Occupy Wall Street contra abusos policiais), arquitetura forense (Eyal Weizman) e o Drone Survival Guide — levando Estados a criminalizar drones civis e criar 'cercas virtuais' (geo-fences).",
+            schemas: [
+              {
+                title: "4 Frentes de Resistência à Dronesfera",
+                type: "grid",
+                cols: 4,
+                items: [
+                  { title: "1. Reverter o Olhar", body: "Arte política (#NotABugSplat) e pôsteres satíricos em Nova York (Essam Attia)." },
+                  { title: "2. Democratizar o Voo", body: "Sous-surveillance com 'Occucopter' para filmar cercos policiais em protestos.", tone: "mid" },
+                  { title: "3. Investigação Forense", body: "Análise de ataques e apps de alerta (Drones+) para responsabilizar governos." },
+                  { title: "4. Contra-Arquitetura", body: "Guias de silhuetas ('observação de aves do séc. XXI') e projetos de proteção aérea.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         6. CAPÍTULO 4 — HELICÓPTERO: CHEGADA DIRETA
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-4",
+        navLabel: "4. Helicóptero: Chegada Direta",
+        group: "part1",
+        badge: "Capítulo 4",
+        partLabel: "Parte Um: Acima",
+        title: "Helicóptero: Chegada Direta",
+        origTitle: "Helicopter: Direct Arrival",
+        lead: "Nos anos 1940 a 1960, planejadores imaginaram uma 'era do helicóptero' democrática, com heliportos municipais no topo de estações e garagens. Após o acidente fatal no topo do edifício da Pan Am em Nova York (1977), o sonho popular morreu — e o helicóptero bifurcou-se em dois símbolos de desigualdade vertical.",
+        thesis: "A mobilidade aérea urbana não se democratizou: converteu-se em privilégio de uma 'elite cinética' que escapa das ruas congestionadas (como em São Paulo) e em instrumento paramilitar de vigilância e ataque sobre populações periféricas.",
+        schemas: [
+          {
+            title: "A Bifurcação do Espaço Aéreo Urbano",
+            type: "svg",
+            svgKey: "cap4Bifurcation",
+            caption: "O mesmo equipamento vertical opera simultaneamente como 'táxi aéreo' privado das superelites e como máquina de contrainsurgência doméstica."
+          },
+          {
+            title: "Do Sonho de Massa à Captura Dupla (1927–Presente)",
+            type: "flow",
+            nodes: [
+              { title: "1927–1965 • Utopia de Massa", body: "Metropolis, Broadacre City, 15 projetos de heliportos em Londres e heliporto da Pan Am (Manhattan)." },
+              { title: "16 Maio 1977 • Acidente Fatal", body: "Rotor quebra no topo do prédio da Pan Am, matando 5 pessoas; somado ao ruído e custo, encerra o sonho popular.", tone: "mid" },
+              { title: "Pós-1980 • Captura Dupla", body: "Uso restrito a superelites em megacidades desiguais + frotas policiais/paramilitares com sensores militares.", tone: "dark" }
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-4-1",
+            code: "4.1",
+            title: "Elites Cinéticas Tomam os Céus",
+            orig: "Kinetic Elites Take to the Skies",
+            body: "São Paulo é o epicentro mundial da secessão vertical por helicóptero: com mais de 420 helipontos (50% a mais que todo o Reino Unido), 470 helicópteros registrados e o primeiro controle aéreo exclusivo para helicópteros do mundo, uma fração minúscula (<0,01% da população) salta de condomínios fechados como Alphaville para torres corporativas em 5 minutos, enquanto a cidade abaixo trava a 14 km/h — desencadeando 'guerras de helicópteros' na Justiça contra o barulho.",
+            schemas: [
+              {
+                title: "Compressão Espaço-Tempo Desigual em São Paulo",
+                type: "tension",
+                left: {
+                  title: "Eixo Z (Céu — Elite Cinética)",
+                  tone: "dark",
+                  bullets: [
+                    "Velocidade de ~200 km/h entre helipontos escultóricos.",
+                    "Alphaville → Centro em 5 minutos (US$ 1.300/hora).",
+                    "Cidade vista como paisagem estética distante ('esqueci o que é trânsito')."
+                  ]
+                },
+                mid: { sym: "↕", text: "Secessão Vertical" },
+                right: {
+                  title: "Solo (Maioria Urbana)",
+                  bullets: [
+                    "7 milhões de veículos; velocidade média de 14 km/h e congestionamentos de 200 km.",
+                    "Transporte público precário e poluição no nível da rua.",
+                    "Sofre com ruído incessante; protestos fecham 30% dos helipontos."
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            id: "sub-4-2",
+            code: "4.2",
+            title: "Revistando as Ruas",
+            orig: "Frisking the Streets",
+            body: "Iniciado pelo LAPD em Los Angeles (1965), o policiamento aéreo substituiu o policial de rua por holofotes 'Night-Sun', equipes SWAT e sensores térmicos militares FLIR — cuja propaganda resume perfeitamente o efeito bumerangue de Foucault: 'De Bagdá a Baton Rouge'. Do Rio de Janeiro (incursões em favelas) ao lockdown de Boston (2013), a cidade viva é reduzida a 'zonas táticas' e manchas de calor.",
+            schemas: [
+              {
+                title: "A Lógica do Sensor Térmico no Policiamento Urbano",
+                type: "flow",
+                nodes: [
+                  { title: "Cidade Viva e Complexa", body: "Bairros pobres com laços comunitários e vida cotidiana." },
+                  { title: "Filtro Térmico / Infravermelho", body: "Corpos viram silhuetas brancas contra fundo escuro; geografia moral ('áreas boas' vs. 'más').", tone: "mid" },
+                  { title: "Contrainsurgência Doméstica", body: "Cidade reduzida a 'policiais e suspeitos'; incursões verticais e prisões em massa.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-4-3",
+            code: "4.3",
+            title: "Guerras de Rotores",
+            orig: "Rotorwars",
+            body: "Em helicópteros de ataque Apache (Iraque/Afeganistão), a mira integrada ao capacete funde olhar e disparar — gerando a 'mentalidade PlayStation' exposta no vídeo 'Collateral Murder' (WikiLeaks, 2010), no qual pilotos matam jornalistas da Reuters e civis em Bagdá. Contudo, Graham destaca o paradoxo do helicóptero: apesar do enorme poder de fogo, é mecanicamente frágil, vulnerável a armas leves (Mogadíscio, favelas do Rio), incapaz de ocupar terreno sozinho e sofre 43 vezes mais acidentes fatais que aviões.",
+            schemas: [
+              {
+                title: "O Paradoxo do Helicóptero de Guerra",
+                type: "tension",
+                left: {
+                  title: "Hiperpoder Visual e de Fogo",
+                  tone: "dark",
+                  bullets: [
+                    "Mira acoplada ao capacete (ver = atirar).",
+                    "Estetização cinematográfica e 'mentalidade PlayStation'.",
+                    "Vídeos de guerra consumidos ao vivo no YouTube."
+                  ]
+                },
+                mid: { sym: "⚡", text: "Paradoxo Técnico" },
+                right: {
+                  title: "Fragilidade Extrema",
+                  tone: "mid",
+                  bullets: [
+                    "'Objeto em guerra consigo mesmo' (Tim Blackmore); casca fina de alumínio.",
+                    "Sem asas: falha de motor = queda imediata (43x mais acidentes que aviões).",
+                    "Presença fugaz: não consegue manter controle territorial sem tropas no chão."
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         7. CAPÍTULO 5 — FAVELA: CIDADE TÊNUE
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-5",
+        navLabel: "5. Favela: Cidade Tênue",
+        group: "part1",
+        badge: "Capítulo 5",
+        partLabel: "Parte Um: Acima",
+        title: "Favela: Cidade Tênue",
+        origTitle: "Favela: Tenuous City",
+        lead: "Mais de 1 bilhão de pessoas vivem em assentamentos informais. Longe de ser um fenômeno apenas de arranha-céus de vidro, a verticalidade urbana marca profundamente as favelas construídas nas encostas íngremes de Rio de Janeiro, Caracas, Bogotá e Quito — e até em torres corporativas abandonadas ocupadas por moradores, como a Torre David em Caracas.",
+        thesis: "A urbanização informal produz uma verticalidade autoconstruída e densa em terrenos precários que desafia o planejamento plano oficial, mas expõe os pobres a riscos climáticos extremos e a intervenções aéreas ambíguas (teleféricos, 'pacificação' e gentrificação).",
+        schemas: [
+          {
+            title: "Topografia da Desigualdade nas Encostas",
+            type: "svg",
+            svgKey: "cap5Slope",
+            caption: "A escassez de solo plano e seguro empurra a autoconstrução morro acima, criando uma cidade tridimensional orgânica frequentemente ignorada pelos cadastros oficiais."
+          },
+          {
+            title: "Verticalidade Corporativa vs. Verticalidade Vernacular (Favela)",
+            type: "compare",
+            headers: ["Dimensão", "Verticalidade Corporativa (Torres)", "Verticalidade Vernacular (Favelas)"],
+            rows: [
+              ["Produção", "Planejamento centralizado, capital global, aço e vidro.", "Autoconstrução incremental, tijolo e laje, economia local."],
+              ["Relação com o Terreno", "Terrenos valorizados e engenharia pesada contra riscos.", "Encostas íngremes, ravinas, aterros — alta vulnerabilidade a chuvas e deslizamentos."],
+              ["Mobilidade Vertical", "Elevadores expressos, garagens e helipontos privados.", "Escadarias estreitas, becos, mototáxis e teleféricos estatais pontuais."],
+              ["Exemplo de Apropriação", "Prédios vazios como reserva de capital.", "Torre David (Caracas): arranha-céu inacabado ocupado por 750 famílias (2007–2014)."]
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-5-1",
+            code: "5.1",
+            title: "Verticalidade de Baixo para Cima (Autoconstrução e Encostas)",
+            orig: "Vertical Favelas, Urbanised Hazards & Vertical Appropriation",
+            body: "Não existem desastres puramente 'naturais': quando 60% de Bogotá ou dois terços de Caracas vivem em encostas desmatadas e instáveis, chuvas intensificadas pelas mudanças climáticas geram tragédias (como os 32.000 mortos em Caracas em 1999 ou o deslizamento no Morro do Bumba em Niterói em 2010). Ao mesmo tempo, o adensamento vertical por lajes ('expansão vulcânica', Janice Perlman) e ocupações como a Torre David mostram a enorme capacidade de improvisação coletiva diante da ausência de habitação social.",
+            schemas: [
+              {
+                title: "Ciclo do Empilhamento Informal nas Encostas",
+                type: "flow",
+                nodes: [
+                  { title: "Exclusão do Solo Plano", body: "Mercado formal reserva áreas seguras; pobres ocupam morros, ravinas e encostas." },
+                  { title: "Empilhamento por Lajes", body: "Novas gerações constroem sobre a laje da casa abaixo, sem código de obras.", tone: "mid" },
+                  { title: "Vulnerabilidade Climática", body: "Solo impermeabilizado + chuvas extremas elevam risco de deslizamentos fatais." },
+                  { title: "Apropriação Criativa", body: "Comunidades constroem redes próprias de moradia, comércio e governança (ex.: Torre David).", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-5-2",
+            code: "5.2",
+            title: "Teleféricos e Urbanismo Aéreo de Pacificação",
+            orig: "'Favela Chic' and Vertical 'Pacification' & Favela Futures",
+            body: "Sistemas como o Metrocable (Medellín) e o Teleférico do Alemão (Rio) traduziram o bonde turístico de montanha em 'acupuntura urbana'. Embora ofereçam visibilidade simbólica e encurtem subidas, críticos e moradores questionam o 'fetichismo do teleférico': consomem verbas gigantescas enquanto falta esgoto no chão, servem ao turismo voyeurístico ('favela chic'), acompanham a militarização policial (UPPs no topo dos morros) e disparam a gentrificação em favelas com vista privilegiada (como Babilônia).",
+            schemas: [
+              {
+                title: "Duplo Efeito dos Teleféricos em Favelas",
+                type: "tension",
+                left: {
+                  title: "Promessa e Benefício Pontual",
+                  tone: "mid",
+                  bullets: [
+                    "Encurta deslocamentos verticais em morros íngremes.",
+                    "Quebra o isolamento simbólico com arquitetura visível.",
+                    "Reconhece a existência da favela no mapa da cidade."
+                  ]
+                },
+                mid: { sym: "⚖", text: "'Teleférico para Quem?'" },
+                right: {
+                  title: "Limites Políticos e Contradições",
+                  tone: "dark",
+                  bullets: [
+                    "Passa por cima sem resolver esgoto, água e becos no solo.",
+                    "Alimenta turismo voyeurístico e especulação ('favela chic').",
+                    "Vinculado à ocupação policial permanente (UPPs) e remoções."
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         8. CAPÍTULO 6 — ELEVADOR: SUBINDO
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-6",
+        navLabel: "6. Elevador: Subindo",
+        group: "part1",
+        badge: "Capítulo 6",
+        partLabel: "Parte Um: Acima",
+        title: "Elevador: Subindo",
+        origTitle: "Elevator/Lift: Going Up",
+        lead: "Apesar de existirem 11 milhões de elevadores e escadas rolantes no mundo, o transporte vertical é quase invisível nas ciências sociais (que celebram trens, carros e aviões). No entanto, a torre de testes G1 da Hitachi (213 m em Tóquio) e os novos cabos de fibra de carbono da KONE mostram que o elevador é o verdadeiro gargalo — e o motor secreto — da cidade vertical.",
+        thesis: "A invenção do freio de segurança por Elisha Otis (1853) possibilitou a colonização do 'alto', inverteu a hierarquia social tradicional dos edifícios e hoje opera como infraestrutura crítica de segregação de classe e vulnerabilidade urbana.",
+        schemas: [
+          {
+            title: "A Inversão Social do Prédio (Antes e Depois do Elevador)",
+            type: "svg",
+            svgKey: "cap6Inversion",
+            caption: "Sem elevador, subir escadas era penoso e o topo pertencia aos pobres; com o elevador, a cobertura tornou-se o símbolo máximo de status."
+          },
+          {
+            title: "A Co-evolução Elevador–Arranha-céu–Comunicação",
+            type: "flow",
+            nodes: [
+              { title: "Freio Otis (1853) + Aço", body: "Garante segurança mecânica para subir além de 5–6 andares; co-evolui com gaiolas de minas." },
+              { title: "Telefone + Telégrafo", body: "Sem telefones, seriam necessários tantos elevadores para mensageiros que não sobraria escritório (Ithiel de Sola Pool).", tone: "mid" },
+              { title: "Sky Lobbies (1973)", body: "Inaugurados no WTC: separam elevadores expressos dos locais, imitando o metrô na vertical." },
+              { title: "Fibra de Carbono e MagLev", body: "Supera o limite de 500 m dos cabos de aço pesados rumo a torres de 1 km e velocidades de 72 km/h.", tone: "dark" }
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-6-1",
+            code: "6.1",
+            title: "A Máquina que Inventou o Céu Urbano",
+            orig: "Elevator Histories / Vertical (Post)Modernities / Sky Shinkansen",
+            body: "O elevador funciona como um 'teletransporte' banal e uma caixa-preta sociotécnica. Dos elevadores fechados com música ambiente (1928, para acalmar a claustrofobia após a saída dos ascensoristas) aos elevadores panorâmicos de vidro de John Portman (1967) e aos 'Shinkansen dos céus' na Ásia, o trajeto vertical virou espetáculo. Hoje, algoritmos de 'destination dispatch' e cartões magnéticos classificam passageiros antes mesmo de entrarem na cabine.",
+            schemas: [
+              {
+                title: "Despacho Algorítmico e Filtragem de Classe",
+                type: "flow",
+                nodes: [
+                  { title: "Cartão / Biometria", body: "Usuário autentica o andar de destino antes de entrar." },
+                  { title: "Algoritmo de Despacho", body: "Agrupa passageiros por perfil, velocidade e permissão de acesso.", tone: "mid" },
+                  { title: "Rotas Segregadas", body: "VIPs e CEOs vão direto à cobertura (ou com 'sky garage' para Ferraris); demais param em todos os andares.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-6-2",
+            code: "6.2",
+            title: "Vulnerabilidade, Segregação e 'Elevadorismo'",
+            orig: "Street People, Air People & Trapped: Vertical Transport Crises",
+            body: "Enquanto torres de luxo em Nova York e Singapura instalam elevadores exclusivos para carros milionários ('sky garages'), a falha na manutenção de elevadores em conjuntos populares (como em Toronto e nos banlieues de Paris, como Clichy-sous-Bois) produz 'pobreza vertical': idosos e famílias ficam literalmente aprisionados no alto, dependendo de roldanas improvisadas para subir compras. Apagões como o do Furacão Sandy (2012) em Nova York provaram que, sem energia, o edifício alto entra em colapso imediato.",
+            schemas: [
+              {
+                title: "A Dupla Face do Transporte Vertical",
+                type: "tension",
+                left: {
+                  title: "Elites ('Povo do Ar')",
+                  tone: "dark",
+                  bullets: [
+                    "Elevadores privativos, expressos e pressurizados.",
+                    "Acesso bloqueado por cartão (até bloqueio por dívida de condomínio no Burj Khalifa).",
+                    "Separação física total do restante da população do prédio."
+                  ]
+                },
+                mid: { sym: "↕", text: "Dependência Total" },
+                right: {
+                  title: "Crise e Aprisionamento Vertical",
+                  tone: "mid",
+                  bullets: [
+                    "Elevadores quebrados por meses isolam famílias pobres (Clichy-sous-Bois, Toronto).",
+                    "Apagões (Furacão Sandy) paralisam 430+ elevadores e bombas de água.",
+                    "Altíssima dependência elétrica e medo do confinamento."
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         9. CAPÍTULO 7 — ARRANHA-CÉU: VAIDADE E VIOLÊNCIA
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-7",
+        navLabel: "7. Arranha-céu: Vaidade e Violência",
+        group: "part1",
+        badge: "Capítulo 7",
+        partLabel: "Parte Um: Acima",
+        title: "Arranha-céu: Vaidade e Violência",
+        origTitle: "Skyscraper: Vanity and Violence",
+        lead: "A Kingdom Tower (1 km de altura), erguida no meio do deserto nos arredores de Jedá (Arábia Saudita), revela uma revolução histórica: os maiores arranha-céus não nascem mais apenas da falta de espaço em centros financeiros ocidentais, mas como 'logos gigantes', veículos de especulação global e monumentos à vaidade — sempre assombrados pela vulnerabilidade e pela violência.",
+        thesis: "O arranha-céu contemporâneo transformou-se em ferramenta geopolítica de prestígio e 'ajuste vertical' do capital excedente ('altura de vaidade'), carregando em sua própria escala extrema a vulnerabilidade a crises econômicas e ataques simbólicos.",
+        schemas: [
+          {
+            title: "Anatomia da 'Altura de Vaidade' (Vanity Height)",
+            type: "svg",
+            svgKey: "cap7Vanity",
+            caption: "Nos 10 maiores arranha-céus do mundo (2013), em média 27% da altura total era espaço completamente inabitável, erguido apenas para vencer a corrida de recordes."
+          },
+          {
+            title: "A 'Maldição do Arranha-céu' (Ciclo Especulativo)",
+            type: "flow",
+            nodes: [
+              { title: "1. Crédito Fácil e Euforia", body: "Excesso de capital financeiro e petróleo busca 'ajuste vertical' (vertical fix) em megaprojetos." },
+              { title: "2. Corrida por Recordes", body: "Oligarcas e governantes lançam 'super-talls' (>400 m) e 'mega-talls' (>600 m) com alto custo.", tone: "mid" },
+              { title: "3. Estouro da Bolha", body: "Inauguração frequentemente coincide com grandes crises financeiras (1929, 1973, 1997, 2008).", tone: "dark" }
+            ],
+            caption: "A Kingdom Tower em Jedá precisou ser reduzida de 1 milha (1,6 km) para 1 km após a crise financeira de 2009 e limites geológicos."
+          },
+          {
+            title: "Deslocamento Geopolítico dos Recordes de Altura",
+            type: "ladder",
+            steps: [
+              { title: "Século XX (1885–1996) • Hegemonia Norte-Americana ('Manhattanismo')", body: "Chicago e Nova York lideram com sedes corporativas (Woolworth, Chrysler, Empire State, WTC) expressando poder industrial e financeiro ocidental.", tone: "tone-mid" },
+              { title: "Virada de 1996 • Torres Petronas (Kuala Lumpur)", body: "Pela primeira vez desde as catedrais góticas europeias, o prédio mais alto do mundo sai do Ocidente." },
+              { title: "Século XXI • Golfo Pérsico e Ásia Oriental", body: "Taipei 101, Burj Khalifa (Dubai), Xangai, Baku e Kingdom Tower (Jedá): torres de uso misto (hotéis/luxo) projetando soberania nacional e atraindo capital global.", tone: "tone-dark" }
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-7-1",
+            code: "7.1",
+            title: "Vaidade, Poder e Competição de Recordes",
+            orig: "Gigantic Logos: Nowhere into Somewhere",
+            body: "Governantes autoritários e elites globais usam supertorres para transformar 'lugar nenhum em algum lugar' (Deyan Sudjic) e projetar status mundial (Aihwa Ong). A justificativa de que precisamos construir altíssimo por 'sustentabilidade' ou 'densidade' é desmentida pelos dados: bairros parisienses de 6–7 andares (13º Arrondissement) abrigam mais pessoas com menor custo energético do que conjuntos de torres de 100 metros.",
+            schemas: [
+              {
+                title: "Mito da Densidade vs. Realidade das Supertorres",
+                type: "compare",
+                headers: ["Argumento", "Mito Promocional ('Verde e Denso')", "Realidade Crítica (Jean-Marie Huriot / Sudjic)"],
+                rows: [
+                  ["Densidade Populacional", "Único jeito de abrigar populações crescentes.", "Bairros densos de média altura (6–7 andares) abrigam mais moradores."],
+                  ["Sustentabilidade", "Compactação vertical economiza energia.", "Custos de construção/operação altíssimos + até 30% de espaço vazio ('vanity height')."],
+                  ["Função Real", "Atender demanda urgente de moradia.", "Marketing nacional, ego masculino/patriarcal e reserva especulativa de capital."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-7-2",
+            code: "7.2",
+            title: "Violência, Alvos e o Trauma do 11 de Setembro",
+            orig: "Fallen Towers: Destructural Works",
+            body: "Criação e destruição de arranha-céus compartilham uma afinidade sombria. O próprio World Trade Center (1973) já fora criticado por Marshall Berman e Paul Virilio como 'urbicídio' ao demolir 16 acres de ruas históricas (incluindo 'Little Syria'). Em 2001, Mohamed Atta (arquiteto e urbanista que detestava o modernismo vertical ocidental) liderou o ataque que transformou aviões civis em armas contra o ícone da modernidade vertical — ironicamente financiado por uma rede cujo líder, Osama bin Laden, era filho do fundador do Grupo Binladin, principal construtor da futura torre mais alta do mundo em Jedá.",
+            schemas: [
+              {
+                title: "Espelho Sombrio: Construção vs. Destruição de Torres (Eric Darton)",
+                type: "tension",
+                left: {
+                  title: "O Construtor (Yamasaki / Capital)",
+                  tone: "mid",
+                  bullets: [
+                    "Cálculo técnico para vencer a gravidade em escala monumental.",
+                    "Abstração extrema que apaga o tecido vivo das ruas abaixo.",
+                    "Projeção de poder visível e dominação do horizonte."
+                  ]
+                },
+                mid: { sym: "❖", text: "Abstração e Hubris Vertical" },
+                right: {
+                  title: "O Destruidor (Atta / Al-Qaeda)",
+                  tone: "dark",
+                  bullets: [
+                    "Cálculo técnico de engenharia para 'desconstruir' o símbolo.",
+                    "Usa a própria mobilidade aérea moderna contra a torre.",
+                    "Gera espetáculo midiático global e fortificação permanente das cidades."
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            id: "sub-7-3",
+            code: "7.3",
+            title: "Londres, Capitais Financeiras e a Skyline Especulativa",
+            orig: "Autistic Icons & Privatised Skylines",
+            body: "Em cidades financeiras como Londres, o horizonte foi rapidamente tomado por torres apelidadas como objetos cotidianos ('Gherkin', 'Shard', 'Cheesegrater', 'Walkie-Talkie'). A geógrafa Maria Kaika chama essas construções de 'ícones autistas': objetos desconectados da cidade real, financiados por uma classe capitalista transnacional sem vínculo local, que privatizam praças na base, projetam sombras nas ruas e atropelam o planejamento democrático.",
+            schemas: [
+              {
+                title: "Impacto Urbano dos 'Ícones Autistas' (Maria Kaika)",
+                type: "flow",
+                nodes: [
+                  { title: "Capital Sem Raízes", body: "Investidores globais buscam ativos 'icônicos' e intercambiáveis em cidades financeiras." },
+                  { title: "Corrida de Arquitetos-Estrela", body: "Formas arbitrárias apelidadas ganham aprovação rápida sob o mantra de 'competição global'.", tone: "mid" },
+                  { title: "Cidade Privatizada", body: "Praças vigiadas proíbem até fotografias; ruas ficam à sombra e o aluguel dispara no entorno.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       MOTOR DE RENDERIZAÇÃO DOS ESQUEMAS E CONTEÚDO
+       ========================================================================== */
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderNode(item) {
+      const toneClass = item.tone ? `tone-${item.tone}` : "";
+      const bodyHtml = item.body ? `<p>${escapeHtml(item.body)}</p>` : "";
+      const listHtml = item.bullets
+        ? `<ul>${item.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join("")}</ul>`
+        : "";
+      return `
+        <div class="diag-node ${toneClass}">
+          <h5>${escapeHtml(item.title)}</h5>
+          ${bodyHtml}
+          ${listHtml}
+        </div>
+      `;
+    }
+
+    function renderSchemaBody(schema) {
+      if (schema.type === "svg") {
+        return `<div class="svg-frame">${SVG_LIBRARY[schema.svgKey] || ""}</div>`;
+      }
+
+      if (schema.type === "flow") {
+        return `
+          <div class="diag-flow">
+            ${schema.nodes.map((n, i) => `
+              ${renderNode(n)}
+              ${i < schema.nodes.length - 1 ? `<div class="diag-arrow">→</div>` : ""}
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "grid") {
+        const cols = schema.cols || 3;
+        return `
+          <div class="diag-grid cols-${cols}">
+            ${schema.items.map(renderNode).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "tension") {
+        return `
+          <div class="diag-tension">
+            ${renderNode(schema.left)}
+            <div class="tension-mid">
+              <span class="sym">${escapeHtml(schema.mid.sym)}</span>
+              <div>${escapeHtml(schema.mid.text)}</div>
+            </div>
+            ${renderNode(schema.right)}
+          </div>
+        `;
+      }
+
+      if (schema.type === "compare") {
+        return `
+          <div class="diag-table-wrap">
+            <table class="diag-table">
+              <thead>
+                <tr>${schema.headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr>
+              </thead>
+              <tbody>
+                ${schema.rows.map(row => `
+                  <tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      if (schema.type === "ladder") {
+        return `
+          <div class="diag-ladder">
+            ${schema.steps.map((s, idx) => `
+              <div class="ladder-step ${s.tone || ""}">
+                <div class="ladder-num">${idx + 1}</div>
+                <div>
+                  <h5>${escapeHtml(s.title)}</h5>
+                  <p>${escapeHtml(s.body)}</p>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
+    function renderSchemaCard(schema, idx, isNested = false) {
+      const isSvg = schema.type === "svg";
+      const tagClass = isNested ? "sub-tag" : (isSvg ? "svg-tag" : "");
+      const tagLabel = isNested
+        ? "Esquema do Subcapítulo"
+        : (isSvg ? `Esquema Visual (SVG)` : `Esquema Explicativo ${idx + 1}`);
+
+      return `
+        <div class="schema-card ${isNested ? "nested" : ""}">
+          <div class="schema-head">
+            <span class="schema-tag ${tagClass}">${tagLabel}</span>
+            <h4 class="schema-title">${escapeHtml(schema.title)}</h4>
+          </div>
+          ${renderSchemaBody(schema)}
+          ${schema.caption ? `<p class="schema-caption">${escapeHtml(schema.caption)}</p>` : ""}
+        </div>
+      `;
+    }
+
+    function renderOverviewCards() {
+      const items = SECTIONS.filter(s => s.id !== "overview");
+      return `
+        <div class="block-head">
+          <h3>Navegação Direta pela Parte 1</h3>
+          <span class="block-pill">Prefácio, Intro &amp; Caps. 1–7</span>
+        </div>
+        <div class="overview-grid">
+          ${items.map(sec => `
+            <button class="overview-card-btn" data-goto-sec="${sec.id}">
+              <div class="ov-num">${escapeHtml(sec.badge)}</div>
+              <div class="ov-title">${escapeHtml(sec.title)}</div>
+              <div class="ov-desc">${escapeHtml(sec.thesis.slice(0, 108))}...</div>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    /* ==========================================================================
+       NAVEGAÇÃO E CONSTRUÇÃO DA SIDEBAR
+       ========================================================================== */
+    const sidebarNavRoot = document.getElementById("sidebarNavRoot");
+    const stageRoot = document.getElementById("stageRoot");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const mobileToggleBtn = document.getElementById("mobileToggleBtn");
+    const toggleExpandBtn = document.getElementById("toggleExpandBtn");
+
+    let allExpanded = false;
+
+    function closeMobileMenu() {
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("open");
+    }
+
+    mobileToggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      sidebarOverlay.classList.toggle("open");
+    });
+
+    sidebarOverlay.addEventListener("click", closeMobileMenu);
+
+    function buildSidebar() {
+      let html = `
+        <button class="nav-overview-btn active" data-open-sec="overview">
+          <span>▥</span>
+          <span>Corte Vertical (Visão Geral)</span>
+        </button>
+      `;
+
+      const groups = [
+        { key: "front", label: "Abertura & Conceitos" },
+        { key: "part1", label: "Parte Um: Acima (Caps. 1–7)" }
+      ];
+
+      groups.forEach(g => {
+        html += `<div class="nav-group-label">${escapeHtml(g.label)}</div>`;
+        SECTIONS.filter(s => s.group === g.key).forEach(sec => {
+          const hasSubs = sec.subchapters && sec.subchapters.length > 0;
+          html += `
+            <div class="nav-item" data-nav-sec="${sec.id}">
+              <div class="nav-item-row">
+                <button class="nav-chap-btn" data-open-sec="${sec.id}">
+                  <span class="nav-badge">${escapeHtml(sec.badge.replace("Capítulo ", "Cap. "))}</span>
+                  <span>${escapeHtml(sec.title)}</span>
+                </button>
+                ${hasSubs ? `<button class="nav-toggle-sub" data-toggle-sec="${sec.id}" aria-label="Expandir subcapítulos">▸</button>` : ""}
+              </div>
+              ${hasSubs ? `
+                <ul class="nav-sub-list">
+                  ${sec.subchapters.map(sub => `
+                    <li>
+                      <button class="nav-sub-btn" data-open-sec="${sec.id}" data-open-sub="${sub.id}">
+                        ${escapeHtml(sub.code)} ${escapeHtml(sub.title)}
+                      </button>
+                    </li>
+                  `).join("")}
+                </ul>
+              ` : ""}
+            </div>
+          `;
+        });
+      });
+
+      sidebarNavRoot.innerHTML = html;
+
+      sidebarNavRoot.querySelectorAll("[data-open-sec]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          renderSection(btn.dataset.openSec, btn.dataset.openSub || null);
+        });
+      });
+
+      sidebarNavRoot.querySelectorAll("[data-toggle-sec]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          btn.closest(".nav-item").classList.toggle("expanded");
+        });
+      });
+    }
+
+    toggleExpandBtn.addEventListener("click", () => {
+      allExpanded = !allExpanded;
+      sidebarNavRoot.querySelectorAll(".nav-item").forEach(item => {
+        if (item.querySelector(".nav-sub-list")) {
+          item.classList.toggle("expanded", allExpanded);
+        }
+      });
+      toggleExpandBtn.textContent = allExpanded ? "Recolher subcapítulos" : "Expandir subcapítulos";
+    });
+
+    function renderSection(secId, subId = null) {
+      const idx = SECTIONS.findIndex(s => s.id === secId);
+      if (idx === -1) return;
+
+      const sec = SECTIONS[idx];
+      const prevSec = idx > 0 ? SECTIONS[idx - 1] : null;
+      const nextSec = idx < SECTIONS.length - 1 ? SECTIONS[idx + 1] : null;
+
+      // Atualiza estado visual da sidebar
+      const overviewBtn = sidebarNavRoot.querySelector(".nav-overview-btn");
+      if (overviewBtn) overviewBtn.classList.toggle("active", secId === "overview");
+
+      sidebarNavRoot.querySelectorAll(".nav-item").forEach(item => {
+        const isCurrent = item.dataset.navSec === secId;
+        item.classList.toggle("active-chapter", isCurrent);
+        if (isCurrent && item.querySelector(".nav-sub-list")) {
+          item.classList.add("expanded");
+        }
+      });
+
+      sidebarNavRoot.querySelectorAll(".nav-sub-btn").forEach(btn => {
+        btn.classList.toggle("active-sub", Boolean(subId && btn.dataset.openSub === subId));
+      });
+
+      const hasSubs = sec.subchapters && sec.subchapters.length > 0;
+
+      stageRoot.innerHTML = `
+        <div class="hero-card">
+          <div class="hero-tags">
+            <span class="tag-solid">${escapeHtml(sec.badge)}</span>
+            <span class="tag-ghost">${escapeHtml(sec.partLabel)}</span>
+          </div>
+          <h2 class="hero-title">${escapeHtml(sec.title)}</h2>
+          <div class="hero-orig">${escapeHtml(sec.origTitle)}</div>
+          <p class="hero-lead">${escapeHtml(sec.lead)}</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-kicker">◆ Argumento / Questão Central</div>
+          <p class="thesis-text">${escapeHtml(sec.thesis)}</p>
+        </div>
+
+        ${hasSubs ? `
+          <div class="sub-pills" aria-label="Atalhos dos subcapítulos">
+            ${sec.subchapters.map(sub => `
+              <button class="sub-pill" data-jump-sub="${sub.id}">
+                ${escapeHtml(sub.code)} ${escapeHtml(sub.title)}
+              </button>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        <div class="block-head">
+          <h3>${sec.isOverview ? "Corte Vertical Interativo" : "Esquemas Explicativos Centrais"}</h3>
+          <span class="block-pill">${sec.schemas.length} ${sec.schemas.length === 1 ? "Diagrama" : "Diagramas"}</span>
+        </div>
+
+        ${sec.schemas.map((sc, i) => renderSchemaCard(sc, i, false)).join("")}
+
+        ${sec.isOverview ? renderOverviewCards() : ""}
+
+        ${hasSubs ? `
+          <div class="block-head">
+            <h3>Subcapítulos e Esquemas Específicos</h3>
+            <span class="block-pill">${sec.subchapters.length} Subcapítulos</span>
+          </div>
+
+          ${sec.subchapters.map(sub => `
+            <article class="sub-card" id="${sub.id}">
+              <div class="sub-head">
+                <span class="sub-code">${escapeHtml(sub.code)}</span>
+                <h4 class="sub-title">${escapeHtml(sub.title)}</h4>
+                <span class="sub-orig">(${escapeHtml(sub.orig)})</span>
+              </div>
+              <p class="sub-body">${escapeHtml(sub.body)}</p>
+              ${sub.schemas.map((sc, i) => renderSchemaCard(sc, i, true)).join("")}
+            </article>
+          `).join("")}
+        ` : ""}
+
+        <div class="pager-nav">
+          ${prevSec ? `<button class="pager-btn" data-goto-sec="${prevSec.id}">← Anterior: ${escapeHtml(prevSec.badge)} — ${escapeHtml(prevSec.title)}</button>` : "<span></span>"}
+          ${nextSec ? `<button class="pager-btn next" data-goto-sec="${nextSec.id}">Próximo: ${escapeHtml(nextSec.badge)} — ${escapeHtml(nextSec.title)} →</button>` : `<button class="pager-btn next" data-goto-sec="overview">Voltar ao Corte Vertical ↺</button>`}
+        </div>
+      `;
+
+      // Liga eventos de botões internos e camadas clicáveis do SVG
+      stageRoot.querySelectorAll("[data-goto-sec]").forEach(btn => {
+        btn.addEventListener("click", () => renderSection(btn.dataset.gotoSec));
+      });
+
+      stageRoot.querySelectorAll("[data-svg-goto]").forEach(el => {
+        el.addEventListener("click", () => renderSection(el.dataset.svgGoto));
+      });
+
+      stageRoot.querySelectorAll("[data-jump-sub]").forEach(btn => {
+        btn.addEventListener("click", () => scrollToSub(btn.dataset.jumpSub));
+      });
+
+      closeMobileMenu();
+
+      if (subId) {
+        setTimeout(() => scrollToSub(subId), 45);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function scrollToSub(subId) {
+      const el = document.getElementById(subId);
+      if (!el) return;
+
+      sidebarNavRoot.querySelectorAll(".nav-sub-btn").forEach(btn => {
+        btn.classList.toggle("active-sub", btn.dataset.openSub === subId);
+      });
+
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.remove("flash-focus");
+      void el.offsetWidth;
+      el.classList.add("flash-focus");
+      setTimeout(() => el.classList.remove("flash-focus"), 1700);
+    }
+
+    // Inicializa a interface
+    buildSidebar();
+    renderSection("overview");
+  </script>
+</body>
+</html>

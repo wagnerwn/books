@@ -1,0 +1,2858 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vertical (Stephen Graham) — Parte 2: Das Torres de Luxo às Minas Profundas</title>
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS — PALETA ESTRITAMENTE AZUL MARINHO E CINZA CLARO
+       ========================================================================== */
+    :root {
+      --navy-950: #0B1F3A;
+      --navy-900: #132E52;
+      --navy-700: #1E3F66;
+      --navy-600: #2C5282;
+      --slate-500: #64748B;
+
+      --gray-50:  #F4F6F9;
+      --gray-100: #E8EDF3;
+      --gray-200: #D1D9E4;
+      --white:    #FFFFFF;
+
+      --text-main:  #0F172A;
+      --text-body:  #334155;
+      --text-muted: #526277;
+      --border:     #CBD5E1;
+
+      --font-serif: Georgia, 'Times New Roman', serif;
+      --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+      --topbar-h: 60px;
+      --sidebar-w: 325px;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 2px 8px rgba(11, 31, 58, 0.06);
+      --shadow-md: 0 8px 24px rgba(11, 31, 58, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--gray-50);
+      color: var(--text-main);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       BARRA SUPERIOR FIXA COM PÍLULAS DE ACESSO RÁPIDO
+       ========================================================================== */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--topbar-h);
+      background: var(--navy-950);
+      color: var(--white);
+      border-bottom: 2px solid var(--navy-600);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 22px;
+      gap: 14px;
+      z-index: 1000;
+      box-shadow: 0 4px 16px rgba(11, 31, 58, 0.22);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mobile-menu-btn {
+      display: none;
+      background: var(--navy-700);
+      border: 1px solid var(--navy-600);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 6px 11px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .topbar-brand {
+      font-family: var(--font-serif);
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--white);
+      white-space: nowrap;
+    }
+
+    .topbar-brand span {
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-200);
+      margin-left: 8px;
+      padding: 2px 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+
+    .topbar-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .topbar-pills::-webkit-scrollbar { display: none; }
+
+    .top-pill {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(209, 217, 228, 0.24);
+      color: var(--gray-100);
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+    }
+
+    .top-pill:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: var(--white);
+    }
+
+    .top-pill.active {
+      background: var(--gray-100);
+      color: var(--navy-950);
+      border-color: var(--white);
+      font-weight: 700;
+    }
+
+    /* ==========================================================================
+       LAYOUT PRINCIPAL: SIDEBAR FIXA + ÁREA EDITORIAL
+       ========================================================================== */
+    .app-shell {
+      display: flex;
+      padding-top: var(--topbar-h);
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 100%);
+      color: var(--gray-100);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--navy-700);
+      z-index: 950;
+      transition: transform 0.25s ease;
+    }
+
+    .sidebar-head {
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(209, 217, 228, 0.16);
+    }
+
+    .sidebar-meta {
+      font-size: 0.69rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #A9BDD4;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-ctrl-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .sidebar-subtitle {
+      font-size: 0.76rem;
+      color: var(--gray-200);
+      line-height: 1.3;
+    }
+
+    .btn-expand-all {
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(209, 217, 228, 0.3);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 5px 9px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-expand-all:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 12px 24px;
+    }
+
+    .sidebar-scroll::-webkit-scrollbar { width: 6px; }
+    .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--navy-700); border-radius: 4px; }
+
+    .nav-overview-btn {
+      width: 100%;
+      text-align: left;
+      background: rgba(44, 82, 130, 0.35);
+      border: 1px solid rgba(209, 217, 228, 0.3);
+      color: var(--white);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 10px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      transition: all 0.15s;
+    }
+
+    .nav-overview-btn:hover {
+      background: rgba(44, 82, 130, 0.55);
+    }
+
+    .nav-overview-btn.active {
+      background: var(--gray-100);
+      color: var(--navy-950);
+      border-color: var(--white);
+    }
+
+    .nav-group-label {
+      font-size: 0.67rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: #9FB4CC;
+      padding: 10px 6px 5px;
+      border-bottom: 1px solid rgba(209, 217, 228, 0.12);
+      margin-bottom: 7px;
+    }
+
+    .nav-item {
+      margin-bottom: 6px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(209, 217, 228, 0.1);
+      overflow: hidden;
+    }
+
+    .nav-item.active-chapter {
+      background: rgba(44, 82, 130, 0.45);
+      border-color: var(--gray-200);
+    }
+
+    .nav-item-row {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .nav-chap-btn {
+      flex: 1;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: var(--gray-50);
+      font-family: var(--font-sans);
+      font-size: 0.79rem;
+      font-weight: 600;
+      padding: 9px 8px 9px 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.35;
+    }
+
+    .nav-chap-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-badge {
+      flex: 0 0 auto;
+      background: var(--navy-700);
+      color: var(--gray-100);
+      font-size: 0.67rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 1px;
+    }
+
+    .nav-item.active-chapter .nav-badge {
+      background: var(--white);
+      color: var(--navy-950);
+    }
+
+    .nav-toggle-sub {
+      width: 30px;
+      background: transparent;
+      border: none;
+      border-left: 1px solid rgba(209, 217, 228, 0.14);
+      color: #9FB4CC;
+      font-size: 0.72rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, color 0.15s;
+    }
+
+    .nav-toggle-sub:hover { color: var(--white); }
+
+    .nav-item.expanded .nav-toggle-sub {
+      transform: rotate(90deg);
+      color: var(--white);
+    }
+
+    .nav-sub-list {
+      display: none;
+      list-style: none;
+      padding: 4px 8px 8px 16px;
+      border-top: 1px solid rgba(209, 217, 228, 0.12);
+      background: rgba(11, 31, 58, 0.45);
+    }
+
+    .nav-item.expanded .nav-sub-list {
+      display: block;
+    }
+
+    .nav-sub-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-left: 2px solid rgba(209, 217, 228, 0.25);
+      color: #CBD6E4;
+      font-family: var(--font-sans);
+      font-size: 0.73rem;
+      padding: 5px 8px 5px 10px;
+      cursor: pointer;
+      line-height: 1.35;
+      transition: all 0.15s;
+    }
+
+    .nav-sub-btn:hover {
+      color: var(--white);
+      border-left-color: var(--white);
+    }
+
+    .nav-sub-btn.active-sub {
+      color: var(--white);
+      font-weight: 700;
+      border-left-color: var(--white);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .sidebar-foot {
+      padding: 11px 15px;
+      border-top: 1px solid rgba(209, 217, 228, 0.16);
+      background: rgba(11, 31, 58, 0.78);
+      font-size: 0.71rem;
+      color: #A9BDD4;
+      line-height: 1.45;
+    }
+
+    .sidebar-foot strong {
+      color: var(--white);
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 31, 58, 0.55);
+      z-index: 900;
+    }
+
+    /* ==========================================================================
+       PALCO EDITORIAL PRINCIPAL
+       ========================================================================== */
+    .main-stage {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      max-width: calc(100% - var(--sidebar-w));
+      padding: 30px 40px 76px;
+    }
+
+    .content-wrap {
+      max-width: 1030px;
+      margin: 0 auto;
+      animation: fadeUp 0.22s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Cabeçalho do Capítulo */
+    .hero-card {
+      background: linear-gradient(135deg, var(--navy-950) 0%, var(--navy-900) 62%, var(--navy-700) 100%);
+      color: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-md);
+      border-left: 6px solid var(--slate-500);
+    }
+
+    .hero-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .tag-solid {
+      background: var(--gray-100);
+      color: var(--navy-950);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .tag-ghost {
+      border: 1px solid rgba(209, 217, 228, 0.42);
+      color: var(--gray-100);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 4px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: 1.85rem;
+      font-weight: 700;
+      line-height: 1.24;
+      color: var(--white);
+      margin-bottom: 5px;
+    }
+
+    .hero-orig {
+      font-size: 0.84rem;
+      color: #B8C9DD;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+
+    .hero-lead {
+      font-size: 0.96rem;
+      color: var(--gray-100);
+      max-width: 880px;
+    }
+
+    /* Caixa de Tese Central */
+    .thesis-box {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--navy-900);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .thesis-kicker {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--navy-700);
+      margin-bottom: 6px;
+    }
+
+    .thesis-text {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    /* Pílulas de Subcapítulos */
+    .sub-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .sub-pill {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--navy-900);
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.15s;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sub-pill:hover {
+      background: var(--navy-900);
+      color: var(--white);
+      border-color: var(--navy-900);
+    }
+
+    /* Divisores de Seção */
+    .block-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 28px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--gray-200);
+    }
+
+    .block-head h3 {
+      font-family: var(--font-serif);
+      font-size: 1.26rem;
+      color: var(--navy-950);
+    }
+
+    .block-pill {
+      background: var(--navy-900);
+      color: var(--gray-50);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* ==========================================================================
+       CARDS DE ESQUEMAS EXPLICATIVOS (SVG + COMPONENTES ESTRUTURAIS)
+       ========================================================================== */
+    .schema-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .schema-card.nested {
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      margin-top: 14px;
+      margin-bottom: 10px;
+      padding: 18px 20px;
+    }
+
+    .schema-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .schema-tag {
+      background: var(--navy-950);
+      color: var(--white);
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 3px 9px;
+      border-radius: 4px;
+    }
+
+    .schema-tag.svg-tag {
+      background: var(--navy-600);
+    }
+
+    .schema-tag.sub-tag {
+      background: var(--gray-200);
+      color: var(--navy-950);
+    }
+
+    .schema-title {
+      font-family: var(--font-serif);
+      font-size: 1.03rem;
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+
+    .schema-caption {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+
+    /* Moldura de SVG */
+    .svg-frame {
+      width: 100%;
+      overflow-x: auto;
+      background: var(--gray-50);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius-md);
+      padding: 10px;
+    }
+
+    .svg-frame svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .svg-layer-link {
+      cursor: pointer;
+      transition: opacity 0.16s ease;
+    }
+
+    .svg-layer-link:hover {
+      opacity: 0.9;
+    }
+
+    .svg-layer-link:hover .layer-box {
+      stroke: #0B1F3A;
+      stroke-width: 2.5;
+    }
+
+    /* Fluxograma Horizontal */
+    .diag-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+    }
+
+    .diag-node {
+      flex: 1;
+      background: var(--gray-50);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--navy-600);
+      border-radius: var(--radius-md);
+      padding: 13px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .diag-node.tone-dark {
+      background: var(--navy-950);
+      border-color: var(--navy-950);
+      border-top: 4px solid var(--slate-500);
+      color: var(--white);
+    }
+
+    .diag-node.tone-dark h5 { color: var(--white); }
+    .diag-node.tone-dark p, .diag-node.tone-dark li { color: var(--gray-100); }
+
+    .diag-node.tone-mid {
+      background: var(--gray-100);
+      border-color: #B7C5D6;
+      border-top: 4px solid var(--navy-900);
+    }
+
+    .diag-node.tone-mid h5 { color: var(--navy-950); }
+
+    .diag-node h5 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      line-height: 1.3;
+    }
+
+    .diag-node p, .diag-node li {
+      font-size: 0.8rem;
+      color: var(--text-body);
+      line-height: 1.46;
+    }
+
+    .diag-node ul {
+      padding-left: 16px;
+      margin-top: 2px;
+    }
+
+    .diag-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--navy-600);
+      font-size: 1.25rem;
+      font-weight: 800;
+      padding: 0 2px;
+      user-select: none;
+    }
+
+    /* Grade de Cartões */
+    .diag-grid {
+      display: grid;
+      gap: 12px;
+    }
+    .diag-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .diag-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .diag-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+    /* Tensão Bipolar */
+    .diag-tension {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: stretch;
+      gap: 12px;
+    }
+
+    .tension-mid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--navy-900);
+      color: var(--white);
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      min-width: 112px;
+      max-width: 158px;
+      text-align: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .tension-mid .sym {
+      font-size: 1.25rem;
+      margin-bottom: 4px;
+      color: var(--gray-200);
+    }
+
+    /* Tabela / Matriz Comparativa */
+    .diag-table-wrap {
+      overflow-x: auto;
+    }
+
+    .diag-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .diag-table th {
+      background: var(--navy-950);
+      color: var(--white);
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 700;
+      border: 1px solid var(--navy-900);
+    }
+
+    .diag-table td {
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-body);
+    }
+
+    .diag-table tr:nth-child(even) td {
+      background: var(--gray-50);
+    }
+
+    .diag-table td:first-child {
+      font-weight: 700;
+      color: var(--navy-950);
+      background: var(--gray-100);
+    }
+
+    /* Escada / Camadas Verticais */
+    .diag-ladder {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ladder-step {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 11px 16px;
+      border-radius: var(--radius-md);
+      background: var(--gray-50);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--navy-600);
+    }
+
+    .ladder-step.tone-dark {
+      background: var(--navy-950);
+      border-color: var(--navy-950);
+      border-left: 5px solid var(--slate-500);
+      color: var(--white);
+    }
+
+    .ladder-step.tone-dark h5 { color: var(--white); }
+    .ladder-step.tone-dark p { color: var(--gray-100); }
+
+    .ladder-step.tone-mid {
+      background: var(--gray-100);
+      border-left: 5px solid var(--navy-900);
+    }
+
+    .ladder-num {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--navy-900);
+      color: var(--white);
+      font-size: 0.76rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ladder-step.tone-dark .ladder-num {
+      background: var(--gray-100);
+      color: var(--navy-950);
+    }
+
+    .ladder-step h5 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      margin-bottom: 2px;
+    }
+
+    .ladder-step p {
+      font-size: 0.79rem;
+      color: var(--text-body);
+      line-height: 1.44;
+    }
+
+    /* ==========================================================================
+       CARDS DE SUBCAPÍTULOS E VISÃO GERAL
+       ========================================================================== */
+    .sub-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: calc(var(--topbar-h) + 18px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .sub-card.flash-focus {
+      border-color: var(--navy-700);
+      box-shadow: 0 0 0 4px rgba(30, 63, 102, 0.22);
+    }
+
+    .sub-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .sub-code {
+      background: var(--navy-900);
+      color: var(--white);
+      font-size: 0.73rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .sub-title {
+      font-family: var(--font-serif);
+      font-size: 1.14rem;
+      font-weight: 700;
+      color: var(--navy-950);
+    }
+
+    .sub-body {
+      font-size: 0.92rem;
+      color: var(--text-body);
+      margin-bottom: 10px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .overview-card-btn {
+      text-align: left;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-top: 4px solid var(--navy-700);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.16s;
+      box-shadow: var(--shadow-sm);
+      font-family: var(--font-sans);
+    }
+
+    .overview-card-btn:hover {
+      border-color: var(--navy-950);
+      background: var(--gray-100);
+      transform: translateY(-2px);
+    }
+
+    .overview-card-btn .ov-num {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: var(--navy-600);
+      margin-bottom: 4px;
+    }
+
+    .overview-card-btn .ov-title {
+      font-family: var(--font-serif);
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--navy-950);
+      margin-bottom: 4px;
+    }
+
+    .overview-card-btn .ov-desc {
+      font-size: 0.77rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Paginação */
+    .pager-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 2px solid var(--gray-200);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .pager-btn {
+      background: var(--white);
+      color: var(--navy-950);
+      border: 1.5px solid var(--navy-700);
+      padding: 10px 16px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+    }
+
+    .pager-btn:hover {
+      background: var(--gray-100);
+    }
+
+    .pager-btn.next {
+      background: var(--navy-950);
+      color: var(--white);
+      border-color: var(--navy-950);
+      margin-left: auto;
+    }
+
+    .pager-btn.next:hover {
+      background: var(--navy-700);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .mobile-menu-btn { display: inline-flex; }
+      .topbar { padding: 0 14px; }
+      .topbar-brand span { display: none; }
+
+      .sidebar {
+        transform: translateX(-100%);
+        width: 300px;
+        box-shadow: 6px 0 24px rgba(11, 31, 58, 0.35);
+      }
+
+      .sidebar.open { transform: translateX(0); }
+      .sidebar-overlay.open { display: block; }
+
+      .main-stage {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 20px 16px 64px;
+      }
+
+      .diag-flow { flex-direction: column; }
+      .diag-arrow { transform: rotate(90deg); padding: 2px 0; }
+      .diag-tension { grid-template-columns: 1fr; }
+      .tension-mid { max-width: 100%; }
+      .diag-grid.cols-2, .diag-grid.cols-3, .diag-grid.cols-4, .overview-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-card { padding: 22px 20px; }
+      .hero-title { font-size: 1.48rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR FIXA -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Abrir sumário">☰ Índice</button>
+      <div class="topbar-brand">VERTICAL <span>Parte 2/2 • Caps. 8–15 + Posfácio</span></div>
+    </div>
+    <nav class="topbar-pills" aria-label="Acesso rápido por bloco">
+      <button class="top-pill active" data-jump-group="overview" data-jump-target="overview">Visão Geral</button>
+      <button class="top-pill" data-jump-group="above" data-jump-target="cap-8">Parte 1: Acima (8–10)</button>
+      <button class="top-pill" data-jump-group="below" data-jump-target="cap-11">Parte 2: Abaixo (11–15)</button>
+      <button class="top-pill" data-jump-group="afterword" data-jump-target="afterword">Posfácio</button>
+    </nav>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-shell">
+    <!-- MENU LATERAL FIXO -->
+    <aside class="sidebar" id="sidebar" aria-label="Sumário interativo da Parte 2">
+      <div class="sidebar-head">
+        <div class="sidebar-meta">Stephen Graham (2016)</div>
+        <div class="sidebar-ctrl-row">
+          <div class="sidebar-subtitle">Das Torres de Luxo às Minas Profundas</div>
+          <button class="btn-expand-all" id="toggleExpandAllBtn">Expandir</button>
+        </div>
+      </div>
+
+      <div class="sidebar-scroll" id="sidebarNavRoot"></div>
+
+      <div class="sidebar-foot">
+        <strong>Parte 2 de 2 (Continuação)</strong>
+        Complementa a Parte 1 (Satélites a Arranha-céus), cruzando o solo urbano até o subsolo profundo (-4 km).
+      </div>
+    </aside>
+
+    <!-- ÁREA EDITORIAL -->
+    <main class="main-stage">
+      <div class="content-wrap" id="stageRoot"></div>
+    </main>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       BIBLIOTECA DE DIAGRAMAS VETORIAIS EM SVG (PALETA AZUL MARINHO + CINZA)
+       ========================================================================== */
+    const SVG_LIB = {
+      /* 0. VISÃO GERAL — CORTE VERTICAL INTERATIVO (PARTE 2) */
+      overviewPart2: `
+        <svg viewBox="0 0 780 610" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte vertical clicável da Parte 2: dos céus luxificados às minas de -4 km">
+          <defs>
+            <linearGradient id="skyP2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1E3F66"/>
+              <stop offset="55%" stop-color="#D1D9E4"/>
+              <stop offset="100%" stop-color="#E8EDF3"/>
+            </linearGradient>
+            <linearGradient id="earthP2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2C5282"/>
+              <stop offset="40%" stop-color="#132E52"/>
+              <stop offset="100%" stop-color="#0B1F3A"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Fundo Acima / Abaixo -->
+          <rect x="0" y="0" width="780" height="252" rx="8" fill="url(#skyP2)"/>
+          <rect x="0" y="252" width="780" height="358" rx="8" fill="url(#earthP2)"/>
+
+          <!-- Referência discreta à Parte 1 no topo -->
+          <rect x="108" y="10" width="648" height="32" rx="6" fill="#0B1F3A" fill-opacity="0.72" stroke="#64748B" stroke-dasharray="4,3"/>
+          <text x="432" y="30" text-anchor="middle" fill="#E8EDF3" font-size="10.5" font-weight="600" font-family="sans-serif">↑ Continuidade da Parte 1: Satélites (+35.786 km) • Bombardeiros • Drones • Helicópteros • Favelas • Elevadores • Arranha-céus</text>
+
+          <!-- Eixo de Cota à esquerda -->
+          <line x1="88" y1="48" x2="88" y2="594" stroke="#CBD5E1" stroke-width="1.5"/>
+          <text x="78" y="76" text-anchor="end" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">+400 m</text>
+          <text x="78" y="136" text-anchor="end" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">+15 a 200 m</text>
+          <text x="78" y="196" text-anchor="end" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">Atmosfera</text>
+          <text x="78" y="256" text-anchor="end" fill="#FFFFFF" font-size="10.5" font-weight="800" font-family="sans-serif">SOLO (0 m)</text>
+          <text x="78" y="328" text-anchor="end" fill="#E8EDF3" font-size="10" font-weight="700" font-family="sans-serif">-3 a -15 m</text>
+          <text x="78" y="390" text-anchor="end" fill="#E8EDF3" font-size="10" font-weight="700" font-family="sans-serif">-10 a -40 m</text>
+          <text x="78" y="452" text-anchor="end" fill="#E8EDF3" font-size="10" font-weight="700" font-family="sans-serif">-50 a -500 m</text>
+          <text x="78" y="514" text-anchor="end" fill="#FFFFFF" font-size="10.5" font-weight="800" font-family="sans-serif">-4.000 m</text>
+
+          <!-- Cap. 8 -->
+          <g class="svg-layer-link" data-svg-goto="cap-8">
+            <rect class="layer-box" x="108" y="52" width="648" height="52" rx="8" fill="#FFFFFF" fill-opacity="0.94" stroke="#1E3F66" stroke-width="1.5"/>
+            <text x="128" y="74" fill="#0B1F3A" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 8 • Habitação: Céus Luxificados</text>
+            <text x="128" y="92" fill="#334155" font-size="10.2" font-family="sans-serif">Torres "lápis" de bilionários, cofres no céu, poor doors e a demolição da habitação social • Clique</text>
+          </g>
+
+          <!-- Cap. 9 -->
+          <g class="svg-layer-link" data-svg-goto="cap-9">
+            <rect class="layer-box" x="108" y="112" width="648" height="52" rx="8" fill="#F4F6F9" stroke="#1E3F66" stroke-width="1.5"/>
+            <text x="128" y="134" fill="#0B1F3A" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 9 • Skywalk / Skytrain / Skydeck: Cidades Multinível</text>
+            <text x="128" y="152" fill="#334155" font-size="10.2" font-family="sans-serif">Passarelas climatizadas, trens elevados, decks suspensos e o esvaziamento da rua pública • Clique</text>
+          </g>
+
+          <!-- Cap. 10 -->
+          <g class="svg-layer-link" data-svg-goto="cap-10">
+            <rect class="layer-box" x="108" y="172" width="648" height="52" rx="8" fill="#E8EDF3" stroke="#132E52" stroke-width="1.5"/>
+            <text x="128" y="194" fill="#0B1F3A" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 10 • Ar: Domos Letais</text>
+            <text x="128" y="212" fill="#334155" font-size="10.2" font-family="sans-serif">Ilhas de calor, smog fatal, bolhas climatizadas de elite e atmoterrorismo com gás lacrimogêneo • Clique</text>
+          </g>
+
+          <!-- Linha do Solo + Cap. 11 -->
+          <line x1="0" y1="252" x2="780" y2="252" stroke="#FFFFFF" stroke-width="2.5" stroke-dasharray="6,4"/>
+          <g class="svg-layer-link" data-svg-goto="cap-11">
+            <rect class="layer-box" x="108" y="236" width="648" height="54" rx="8" fill="#1E3F66" stroke="#FFFFFF" stroke-width="1.8"/>
+            <text x="128" y="259" fill="#FFFFFF" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 11 • Solo: Fabricando Geologia (Linha do Chão / Arqueosfera)</text>
+            <text x="128" y="277" fill="#E8EDF3" font-size="10.2" font-family="sans-serif">Solo artificial, aterros, ilhas para satélites, guerras da areia e cidades que afundam • Clique</text>
+          </g>
+
+          <!-- Cap. 12 -->
+          <g class="svg-layer-link" data-svg-goto="cap-12">
+            <rect class="layer-box" x="108" y="300" width="648" height="52" rx="8" fill="#132E52" stroke="#64748B" stroke-width="1.5"/>
+            <text x="128" y="322" fill="#FFFFFF" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 12 • Porão / Subsolo: Subterrâneos Urbanos</text>
+            <text x="128" y="340" fill="#D1D9E4" font-size="10.2" font-family="sans-serif">"Casas-iceberg" de bilionários em Londres vs. precariado subterrâneo ("tribo dos ratos" / porões ilegais) • Clique</text>
+          </g>
+
+          <!-- Cap. 13 -->
+          <g class="svg-layer-link" data-svg-goto="cap-13">
+            <rect class="layer-box" x="108" y="362" width="648" height="52" rx="8" fill="#132E52" stroke="#64748B" stroke-width="1.5"/>
+            <text x="128" y="384" fill="#FFFFFF" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 13 • Esgoto: Sociologia e Excremento</text>
+            <text x="128" y="402" fill="#D1D9E4" font-size="10.2" font-family="sans-serif">Cidade inodora, fatbergs, manutenção invisível e apartheid sanitário na Índia • Clique</text>
+          </g>
+
+          <!-- Cap. 14 -->
+          <g class="svg-layer-link" data-svg-goto="cap-14">
+            <rect class="layer-box" x="108" y="424" width="648" height="52" rx="8" fill="#0B1F3A" stroke="#64748B" stroke-width="1.5"/>
+            <text x="128" y="446" fill="#FFFFFF" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 14 • Bunker / Túnel: Santuários Subterrâneos</text>
+            <text x="128" y="464" fill="#D1D9E4" font-size="10.2" font-family="sans-serif">Bunkers, bombas bunker-buster, túneis de Gaza/México e exploração urbana (UrbEx) • Clique</text>
+          </g>
+
+          <!-- Cap. 15 -->
+          <g class="svg-layer-link" data-svg-goto="cap-15">
+            <rect class="layer-box" x="108" y="486" width="648" height="52" rx="8" fill="#0B1F3A" stroke="#D1D9E4" stroke-width="1.5"/>
+            <text x="128" y="508" fill="#FFFFFF" font-size="12.5" font-weight="700" font-family="Georgia, serif">Cap. 15 • Mina: Imperialismo Extrativo na Fronteira Profunda (-4 km)</text>
+            <text x="128" y="526" fill="#E8EDF3" font-size="10.2" font-family="sans-serif">"Arranha-céus invertidos", minas de ouro ultraprofundas, zonas de sacrifício e cadeias metabólicas • Clique</text>
+          </g>
+
+          <!-- Posfácio -->
+          <g class="svg-layer-link" data-svg-goto="afterword">
+            <rect class="layer-box" x="108" y="548" width="648" height="46" rx="8" fill="#2C5282" stroke="#FFFFFF" stroke-width="1.5"/>
+            <text x="432" y="576" text-anchor="middle" fill="#FFFFFF" font-size="12.5" font-weight="700" font-family="Georgia, serif">Posfácio • Por uma Política Volumétrica e Democrática (Síntese Final) →</text>
+          </g>
+        </svg>
+      `,
+
+      /* CAP. 8 — INVERSÃO HISTÓRICA DA HABITAÇÃO VERTICAL */
+      cap8Housing: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparação entre habitação social modernista e torres de luxo contemporâneas">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#F4F6F9"/>
+
+          <!-- Bloco Esquerdo: Torre Modernista Social (1930-1970) -->
+          <rect x="18" y="16" width="225" height="288" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+          <text x="130" y="40" text-anchor="middle" fill="#0B1F3A" font-size="12" font-weight="700" font-family="Georgia, serif">1. Torre Social Modernista</text>
+          <text x="130" y="56" text-anchor="middle" fill="#64748B" font-size="9.5" font-family="sans-serif">(Anos 1930–1970 • Bem-Estar)</text>
+          <!-- Desenho Bloco Laje -->
+          <rect x="65" y="76" width="130" height="142" fill="#D1D9E4" stroke="#1E3F66" stroke-width="1.8"/>
+          <line x1="65" y1="104" x2="195" y2="104" stroke="#64748B"/>
+          <line x1="65" y1="132" x2="195" y2="132" stroke="#64748B"/>
+          <line x1="65" y1="160" x2="195" y2="160" stroke="#64748B"/>
+          <line x1="65" y1="188" x2="195" y2="188" stroke="#64748B"/>
+          <text x="130" y="238" text-anchor="middle" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">Democratizar luz, ar e altura</text>
+          <text x="130" y="255" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Alvo de mito neoliberal de "fracasso"</text>
+          <text x="130" y="270" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">inevitável (Pruitt-Igoe, Red Road)</text>
+          <text x="130" y="286" text-anchor="middle" fill="#1E3F66" font-size="9.5" font-weight="700" font-family="sans-serif">Exceção: Singapura (80% público)</text>
+
+          <!-- Bloco Central: Torre Lápis + Poor Door -->
+          <rect x="262" y="16" width="240" height="288" rx="8" fill="#0B1F3A"/>
+          <text x="382" y="40" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700" font-family="Georgia, serif">2. Torre "Lápis" &amp; Poor Door</text>
+          <text x="382" y="56" text-anchor="middle" fill="#B8C9DD" font-size="9.5" font-family="sans-serif">(NY 432 Park Ave • Londres)</text>
+          <!-- Torre esbelta -->
+          <rect x="360" y="68" width="44" height="156" fill="#2C5282" stroke="#FFFFFF" stroke-width="1.5"/>
+          <!-- Janelas apagadas -->
+          <rect x="367" y="78" width="12" height="10" fill="#0B1F3A"/>
+          <rect x="385" y="78" width="12" height="10" fill="#0B1F3A"/>
+          <rect x="367" y="96" width="12" height="10" fill="#E8EDF3"/>
+          <rect x="385" y="96" width="12" height="10" fill="#0B1F3A"/>
+          <rect x="367" y="114" width="12" height="10" fill="#0B1F3A"/>
+          <rect x="385" y="114" width="12" height="10" fill="#0B1F3A"/>
+          <!-- Portas separadas na base -->
+          <rect x="280" y="196" width="76" height="28" rx="4" fill="#E8EDF3"/>
+          <text x="318" y="214" text-anchor="middle" fill="#0B1F3A" font-size="9" font-weight="800" font-family="sans-serif">Lobby VIP</text>
+          <rect x="408" y="196" width="78" height="28" rx="4" fill="#1E3F66" stroke="#94A3B8"/>
+          <text x="447" y="214" text-anchor="middle" fill="#E8EDF3" font-size="9" font-weight="700" font-family="sans-serif">Poor Door</text>
+
+          <text x="382" y="244" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">"Cofres no céu" (US$ 95 mi / apto)</text>
+          <text x="382" y="261" text-anchor="middle" fill="#D1D9E4" font-size="9.4" font-family="sans-serif">Janelas apagadas: abriga capital,</text>
+          <text x="382" y="276" text-anchor="middle" fill="#D1D9E4" font-size="9.4" font-family="sans-serif">não moradores; acessos segregados.</text>
+
+          <!-- Bloco Direito: Antilia (Mumbai) -->
+          <rect x="520" y="16" width="222" height="288" rx="8" fill="#E8EDF3" stroke="#132E52" stroke-width="1.5"/>
+          <text x="631" y="40" text-anchor="middle" fill="#0B1F3A" font-size="12" font-weight="700" font-family="Georgia, serif">3. Antilia (Mumbai)</text>
+          <text x="631" y="56" text-anchor="middle" fill="#526277" font-size="9.5" font-family="sans-serif">(Arranha-céu Unifamiliar)</text>
+          <!-- Silhueta escalonada de Antilia -->
+          <rect x="596" y="72" width="70" height="32" fill="#132E52"/>
+          <rect x="586" y="104" width="90" height="38" fill="#1E3F66"/>
+          <rect x="594" y="142" width="74" height="36" fill="#2C5282"/>
+          <rect x="576" y="178" width="110" height="46" fill="#0B1F3A"/>
+          <text x="631" y="89" text-anchor="middle" fill="#FFFFFF" font-size="8.5" font-weight="700" font-family="sans-serif">3 Helipontos</text>
+          <text x="631" y="126" text-anchor="middle" fill="#E8EDF3" font-size="8.5" font-family="sans-serif">Jardins + Piscinas</text>
+          <text x="631" y="163" text-anchor="middle" fill="#E8EDF3" font-size="8.5" font-family="sans-serif">9 Elevadores</text>
+          <text x="631" y="204" text-anchor="middle" fill="#FFFFFF" font-size="8.5" font-family="sans-serif">6 andares garagem</text>
+
+          <text x="631" y="244" text-anchor="middle" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">27 andares • 1 única família (5 pessoas)</text>
+          <text x="631" y="261" text-anchor="middle" fill="#334155" font-size="9.4" font-family="sans-serif">US$ 2 bilhões; centenas de serviçais</text>
+          <text x="631" y="276" text-anchor="middle" fill="#334155" font-size="9.4" font-family="sans-serif">rodeados por favelas no solo abaixo.</text>
+        </svg>
+      `,
+
+      /* CAP. 9 — CORTE MULTINÍVEL DA CIDADE */
+      cap9Multilevel: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte multinível mostrando skydeck, skytrain, skywalk e rua esvaziada embaixo">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#F4F6F9"/>
+
+          <!-- Duas Torres Laterais -->
+          <rect x="34" y="48" width="136" height="232" fill="#132E52" stroke="#0B1F3A" stroke-width="1.5"/>
+          <rect x="590" y="48" width="136" height="232" fill="#132E52" stroke="#0B1F3A" stroke-width="1.5"/>
+
+          <!-- Nível 1: Skydeck no Topo -->
+          <rect x="18" y="24" width="724" height="30" rx="6" fill="#0B1F3A" stroke="#D1D9E4" stroke-width="1.5"/>
+          <text x="380" y="43" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700" font-family="Georgia, serif">SKYDECK / SKYPARK (Topo: +190 m • ex.: Marina Bay Sands, piscinas infinitas e clubes VIP)</text>
+
+          <!-- Nível 2: Skywalk Climatizado -->
+          <rect x="170" y="100" width="420" height="44" fill="#FFFFFF" stroke="#1E3F66" stroke-width="2"/>
+          <line x1="170" y1="112" x2="590" y2="112" stroke="#D1D9E4"/>
+          <line x1="170" y1="132" x2="590" y2="132" stroke="#D1D9E4"/>
+          <text x="380" y="120" text-anchor="middle" fill="#0B1F3A" font-size="11" font-weight="700" font-family="sans-serif">SKYWALK CLIMATIZADO (+10–15 m • Minneapolis, Hong Kong)</text>
+          <text x="380" y="135" text-anchor="middle" fill="#526277" font-size="9.5" font-family="sans-serif">Consumo protegido, CCTV, segurança privada — "cidade interior" fechada</text>
+
+          <!-- Nível 3: Skytrain / Viaduto -->
+          <rect x="170" y="168" width="420" height="36" fill="#2C5282" stroke="#0B1F3A" stroke-width="1.5"/>
+          <line x1="250" y1="204" x2="250" y2="280" stroke="#1E3F66" stroke-width="10"/>
+          <line x1="510" y1="204" x2="510" y2="280" stroke="#1E3F66" stroke-width="10"/>
+          <text x="380" y="185" text-anchor="middle" fill="#FFFFFF" font-size="10.8" font-weight="700" font-family="sans-serif">SKYTRAIN / VIADUTO (+12 m • Bangkok, Mumbai)</text>
+          <text x="380" y="198" text-anchor="middle" fill="#E8EDF3" font-size="9.2" font-family="sans-serif">Mobilidade rápida com tarifa premium; contorna a pobreza abaixo</text>
+
+          <!-- Nível 4: Rua Residualizada embaixo -->
+          <rect x="170" y="236" width="420" height="44" fill="#D1D9E4" stroke="#64748B" stroke-width="1.5"/>
+          <text x="380" y="255" text-anchor="middle" fill="#0B1F3A" font-size="11" font-weight="700" font-family="sans-serif">RUA RESIDUALIZADA (0 m — "Esgoto de Tráfego")</text>
+          <text x="380" y="271" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Sombra, calor expelido pelo ar-condicionado, tráfego pesado e exclusão</text>
+
+          <!-- Legendas nas Torres -->
+          <text x="102" y="140" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">TORRE A</text>
+          <text x="102" y="156" text-anchor="middle" fill="#D1D9E4" font-size="9" font-family="sans-serif">Escritórios</text>
+          <text x="102" y="170" text-anchor="middle" fill="#D1D9E4" font-size="9" font-family="sans-serif">e Shopping</text>
+
+          <text x="658" y="140" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">TORRE B</text>
+          <text x="658" y="156" text-anchor="middle" fill="#D1D9E4" font-size="9" font-family="sans-serif">Hotel Luxo</text>
+          <text x="658" y="170" text-anchor="middle" fill="#D1D9E4" font-size="9" font-family="sans-serif">e Condomínio</text>
+
+          <line x1="18" y1="280" x2="742" y2="280" stroke="#0B1F3A" stroke-width="2.5"/>
+          <text x="380" y="303" text-anchor="middle" fill="#526277" font-size="10" font-family="sans-serif">Quando as "escadas" para a rua são recolhidas, o espaço público tradicional é esvaziado e estigmatizado.</text>
+        </svg>
+      `,
+
+      /* CAP. 10 — DOMO ATMOSFÉRICO URBANO */
+      cap10AirDome: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Domo atmosférico urbano com smog retido, bolhas climatizadas e gás lacrimogêneo">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#F4F6F9"/>
+
+          <!-- Arco do Domo de Smog e Ilha de Calor -->
+          <path d="M 30 270 Q 380 -20 730 270 Z" fill="#D1D9E4" fill-opacity="0.7" stroke="#1E3F66" stroke-width="2" stroke-dasharray="7,4"/>
+          <text x="380" y="42" text-anchor="middle" fill="#0B1F3A" font-size="12.5" font-weight="700" font-family="Georgia, serif">DOMO DE ILHA DE CALOR (+3°C a +10°C) &amp; SMOG RETIDO</text>
+          <text x="380" y="59" text-anchor="middle" fill="#334155" font-size="10" font-family="sans-serif">Partículas PM2.5, ozônio e gases de efeito estufa — 7 milhões de mortes prematuras/ano (OMS)</text>
+
+          <!-- Bolha 1: Torre Climatizada de Elite (Esquerda) -->
+          <rect x="64" y="114" width="185" height="156" rx="8" fill="#0B1F3A" stroke="#FFFFFF" stroke-width="2"/>
+          <text x="156" y="138" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="sans-serif">Bolha Climatizada (Elite)</text>
+          <text x="156" y="156" text-anchor="middle" fill="#E8EDF3" font-size="9.5" font-family="sans-serif">Ar filtrado, 21°C constantes</text>
+          <text x="156" y="172" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">Penthouses, carros, malls,</text>
+          <text x="156" y="187" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">domo escolar em Pequim</text>
+          <!-- Seta de calor expelido -->
+          <line x1="249" y1="196" x2="292" y2="196" stroke="#132E52" stroke-width="2.5"/>
+          <polygon points="294,196 285,191 285,201" fill="#132E52"/>
+          <text x="156" y="216" text-anchor="middle" fill="#9FB4CC" font-size="9" font-weight="700" font-family="sans-serif">Despeja calor residual fora →</text>
+          <text x="156" y="252" text-anchor="middle" fill="#E8EDF3" font-size="9" font-family="sans-serif">"Sistema imune espacial"</text>
+
+          <!-- Centro: Rua com Poluição e Atmoterrorismo -->
+          <rect x="300" y="154" width="180" height="116" rx="8" fill="#FFFFFF" stroke="#1E3F66" stroke-width="1.5"/>
+          <text x="390" y="176" text-anchor="middle" fill="#0B1F3A" font-size="11" font-weight="700" font-family="sans-serif">Rua / Cânion Urbano</text>
+          <text x="390" y="194" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">• Poluentes presos nos 15 m</text>
+          <text x="390" y="209" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">  inferiores (Hong Kong)</text>
+          <text x="390" y="228" text-anchor="middle" fill="#132E52" font-size="9.5" font-weight="700" font-family="sans-serif">• Atmoterrorismo Policial:</text>
+          <text x="390" y="243" text-anchor="middle" fill="#334155" font-size="9.2" font-family="sans-serif">  Gás lacrimogêneo em protestos</text>
+          <text x="390" y="258" text-anchor="middle" fill="#334155" font-size="9.2" font-family="sans-serif">  (ex.: Gezi Park, Istambul)</text>
+
+          <!-- Direita: Trabalhadores e Áticos Quentes -->
+          <rect x="510" y="114" width="186" height="156" rx="8" fill="#1E3F66"/>
+          <text x="603" y="138" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="sans-serif">Exposição Letal</text>
+          <text x="603" y="158" text-anchor="middle" fill="#E8EDF3" font-size="9.4" font-family="sans-serif">• Sótãos de Paris (2003):</text>
+          <text x="603" y="173" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">  idosos isolados em chambres</text>
+          <text x="603" y="187" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">  de bonne sob telhados quentes.</text>
+          <text x="603" y="210" text-anchor="middle" fill="#E8EDF3" font-size="9.4" font-family="sans-serif">• Obras no Catar/Dubai:</text>
+          <text x="603" y="225" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">  migrantes sob 50°C construindo</text>
+          <text x="603" y="240" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">  estádios com ar-condicionado.</text>
+
+          <line x1="20" y1="270" x2="740" y2="270" stroke="#0B1F3A" stroke-width="2.5"/>
+          <text x="380" y="298" text-anchor="middle" fill="#526277" font-size="10" font-family="sans-serif">O ar deixou de ser "natureza neutra": tornou-se um sistema técnico de suporte à vida desigualmente distribuído (Latour / Sloterdijk).</text>
+        </svg>
+      `,
+
+      /* CAP. 11 — CORTE ESTRATIGRÁFICO DO SOLO FABRICADO */
+      cap11Ground: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte estratigráfico do solo urbano fabricado, ilha artificial e subsidência">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#F4F6F9"/>
+
+          <!-- Mar à direita -->
+          <rect x="460" y="110" width="280" height="108" fill="#D1D9E4"/>
+          <text x="678" y="135" text-anchor="middle" fill="#1E3F66" font-size="10" font-weight="700" font-family="sans-serif">Oceano / Estuário</text>
+
+          <!-- Ilha Artificial / Aterro (Dubai, Singapura, Eko Atlantic) -->
+          <polygon points="480,218 525,104 645,104 685,218" fill="#2C5282" stroke="#0B1F3A" stroke-width="1.5"/>
+          <rect x="550" y="54" width="24" height="50" fill="#0B1F3A"/>
+          <rect x="582" y="42" width="28" height="62" fill="#132E52"/>
+          <text x="585" y="132" text-anchor="middle" fill="#FFFFFF" font-size="10.5" font-weight="700" font-family="sans-serif">Ilha Artificial</text>
+          <text x="585" y="148" text-anchor="middle" fill="#E8EDF3" font-size="9.2" font-family="sans-serif">Areia dragada do mar</text>
+          <text x="585" y="162" text-anchor="middle" fill="#E8EDF3" font-size="9.2" font-family="sans-serif">ou importada (Singapura)</text>
+          <text x="585" y="178" text-anchor="middle" fill="#CBD5E1" font-size="9" font-family="sans-serif">Visível no Google Earth</text>
+
+          <!-- Cidade sobre Arqueosfera à esquerda -->
+          <rect x="20" y="104" width="440" height="56" fill="#E8EDF3" stroke="#1E3F66" stroke-width="1.5"/>
+          <rect x="48" y="44" width="48" height="60" fill="#132E52"/>
+          <rect x="108" y="28" width="58" height="76" fill="#0B1F3A"/>
+          <rect x="180" y="56" width="54" height="48" fill="#2C5282"/>
+          <text x="240" y="126" text-anchor="middle" fill="#0B1F3A" font-size="11" font-weight="700" font-family="sans-serif">ARQUEOSFERA / SOLO ARTIFICIAL (8 a 15 m+)</text>
+          <text x="240" y="144" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Entulho, aterros, navios enterrados (NY/SF), dutos abandonados (urks) e lixo</text>
+
+          <!-- Camada Intermediária: Aquífero drenado -->
+          <rect x="20" y="160" width="440" height="58" fill="#1E3F66" stroke="#0B1F3A"/>
+          <text x="240" y="184" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="sans-serif">AQUÍFERO SUPEREXPLORADO &amp; SOLOS COMPRIMIDOS</text>
+          <text x="240" y="202" text-anchor="middle" fill="#E8EDF3" font-size="9.5" font-family="sans-serif">Peso das torres + bombeamento de água → SUBSIDÊNCIA (Cidade do México: -10 m)</text>
+
+          <!-- Setas de Afundamento -->
+          <line x1="340" y1="74" x2="340" y2="100" stroke="#0B1F3A" stroke-width="3"/>
+          <polygon points="340,102 334,92 346,92" fill="#0B1F3A"/>
+          <text x="394" y="88" text-anchor="middle" fill="#0B1F3A" font-size="9.5" font-weight="800" font-family="sans-serif">Afundamento ↓</text>
+
+          <!-- Rocha-mãe -->
+          <rect x="20" y="218" width="720" height="54" fill="#0B1F3A"/>
+          <text x="380" y="242" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="sans-serif">ESTRATIGRAFIA GEOLÓGICA PROFUNDA (ANTROPOCENO)</text>
+          <text x="380" y="259" text-anchor="middle" fill="#CBD5E1" font-size="9.5" font-family="sans-serif">Humanidade move ~59 bilhões de ton/ano de terra e rocha — quase 3x mais que todos os rios e oceanos</text>
+
+          <text x="380" y="298" text-anchor="middle" fill="#526277" font-size="10" font-family="sans-serif">A cidade não apenas se assenta sobre a geologia: ela fabrica, exporta e comprime sua própria geologia.</text>
+        </svg>
+      `,
+
+      /* CAP. 12 — SUBSOLO DE CLASSE (LONDRES VS. PEQUIM) */
+      cap12SubsurfaceClass: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparação espelhada: Casa-Iceberg de luxo em Londres versus abrigos subterrâneos da tribo dos ratos em Pequim">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#F4F6F9"/>
+
+          <!-- Linha do solo atravessando tudo -->
+          <line x1="20" y1="116" x2="740" y2="116" stroke="#0B1F3A" stroke-width="2.5"/>
+          <rect x="330" y="104" width="100" height="24" rx="12" fill="#0B1F3A"/>
+          <text x="380" y="120" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="800" font-family="sans-serif">SOLO (0 m)</text>
+
+          <!-- LADO ESQUERDO: CASA-ICEBERG (LONDRES) -->
+          <text x="185" y="28" text-anchor="middle" fill="#0B1F3A" font-size="12.5" font-weight="700" font-family="Georgia, serif">Londres • "Casa-Iceberg" de Elite</text>
+          <!-- Fachada histórica preservada acima -->
+          <rect x="115" y="44" width="140" height="72" fill="#FFFFFF" stroke="#1E3F66" stroke-width="1.8"/>
+          <text x="185" y="75" text-anchor="middle" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">Fachada Histórica</text>
+          <text x="185" y="92" text-anchor="middle" fill="#526277" font-size="9" font-family="sans-serif">Kensington &amp; Chelsea (protegida)</text>
+          <!-- 3 andares escavados abaixo -->
+          <rect x="65" y="118" width="240" height="46" fill="#E8EDF3" stroke="#132E52" stroke-width="1.5"/>
+          <text x="185" y="145" text-anchor="middle" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">Subsolo -1 • Cinema, Boliche e Academia</text>
+
+          <rect x="65" y="164" width="240" height="46" fill="#D1D9E4" stroke="#132E52" stroke-width="1.5"/>
+          <text x="185" y="191" text-anchor="middle" fill="#0B1F3A" font-size="10" font-weight="700" font-family="sans-serif">Subsolo -2 • Piscina e Quartos de Criados</text>
+
+          <rect x="65" y="210" width="240" height="46" fill="#1E3F66" stroke="#0B1F3A" stroke-width="1.5"/>
+          <text x="185" y="237" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">Subsolo -3 • Garagem com Elevador de Carros</text>
+
+          <text x="185" y="280" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Volume subterrâneo até 3x maior que a casa</text>
+          <text x="185" y="296" text-anchor="middle" fill="#132E52" font-size="9.5" font-weight="700" font-family="sans-serif">£500/pé² (escavar) vs. £2.500/pé² (superfície)</text>
+
+          <!-- LADO DIREITO: PRECARIADO SUBTERRÂNEO (PEQUIM / PORÕES ILEGAIS) -->
+          <text x="575" y="28" text-anchor="middle" fill="#0B1F3A" font-size="12.5" font-weight="700" font-family="Georgia, serif">Pequim • "Tribo dos Ratos" (Precariado)</text>
+          <!-- Blocos residenciais caros na superfície -->
+          <rect x="490" y="40" width="170" height="76" fill="#2C5282" stroke="#0B1F3A" stroke-width="1.5"/>
+          <text x="575" y="74" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">Cidade Formal de Superfície</text>
+          <text x="575" y="91" text-anchor="middle" fill="#E8EDF3" font-size="9" font-family="sans-serif">Aluguéis inacessíveis a migrantes</text>
+
+          <!-- Antigos bunkers da Guerra Fria subdivididos -->
+          <rect x="455" y="118" width="240" height="138" fill="#0B1F3A" stroke="#0B1F3A"/>
+          <!-- Divisórias apertadas -->
+          <rect x="468" y="130" width="66" height="48" fill="#132E52" stroke="#64748B"/>
+          <rect x="542" y="130" width="66" height="48" fill="#132E52" stroke="#64748B"/>
+          <rect x="616" y="130" width="66" height="48" fill="#132E52" stroke="#64748B"/>
+          <rect x="468" y="186" width="66" height="56" fill="#1E3F66" stroke="#64748B"/>
+          <rect x="542" y="186" width="66" height="56" fill="#1E3F66" stroke="#64748B"/>
+          <rect x="616" y="186" width="66" height="56" fill="#1E3F66" stroke="#64748B"/>
+          <text x="575" y="158" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-weight="700" font-family="sans-serif">Cubículos sem janela (ex-bunkers)</text>
+          <text x="575" y="218" text-anchor="middle" fill="#E8EDF3" font-size="9.5" font-family="sans-serif">Banheiros coletivos • Umidade</text>
+
+          <text x="575" y="280" text-anchor="middle" fill="#334155" font-size="9.5" font-family="sans-serif">Trabalhadores migrantes e jovens excluídos</text>
+          <text x="575" y="296" text-anchor="middle" fill="#132E52" font-size="9.5" font-weight="700" font-family="sans-serif">Paralelo: 30.000 porões ilegais em Toronto</text>
+        </svg>
+      `,
+
+      /* CAP. 13 — METABOLISMO SANITÁRIO E APARTHEID DE ESGOTO */
+      cap13Sewer: `
+        <svg viewBox="0 0 760 315" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte comparativo do metabolismo sanitário: cidade inodora com esgoto e fatbergs versus apartheid sanitário">
+          <rect x="0" y="0" width="760" height="315" rx="8" fill="#F4F6F9"/>
+
+          <!-- LADO ESQUERDO: CIDADE HIGIENIZADA / REDE OCULTA -->
+          <rect x="18" y="16" width="352" height="282" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+          <text x="194" y="40" text-anchor="middle" fill="#0B1F3A" font-size="12" font-weight="700" font-family="Georgia, serif">1. Metrópole "Inodora" (Londres / Paris / NY)</text>
+
+          <!-- Superfície limpa -->
+          <rect x="34" y="54" width="320" height="66" rx="6" fill="#E8EDF3" stroke="#1E3F66"/>
+          <text x="194" y="76" text-anchor="middle" fill="#0B1F3A" font-size="10.5" font-weight="700" font-family="sans-serif">Superfície Higienizada e Desodorizada</text>
+          <text x="194" y="94" text-anchor="middle" fill="#334155" font-size="9.4" font-family="sans-serif">Porcelana branca, descarga automática e mito de</text>
+          <text x="194" y="108" text-anchor="middle" fill="#334155" font-size="9.4" font-family="sans-serif">autonomia do lar (desconexão da natureza).</text>
+
+          <!-- Seta gravidade -->
+          <text x="194" y="140" text-anchor="middle" fill="#132E52" font-size="11" font-weight="800" font-family="sans-serif">↓ Gravidade + Ocultação Subterrânea ↓</text>
+
+          <!-- Subsolo: Rede e Fatbergs -->
+          <rect x="34" y="150" width="320" height="132" rx="6" fill="#0B1F3A"/>
+          <text x="194" y="174" text-anchor="middle" fill="#FFFFFF" font-size="10.8" font-weight="700" font-family="sans-serif">Rede Subterrânea (Chadwick / Belgrand)</text>
+          <!-- Tubo com Fatberg -->
+          <rect x="52" y="190" width="284" height="34" rx="17" fill="#1E3F66" stroke="#9FB4CC" stroke-width="1.5"/>
+          <ellipse cx="194" cy="207" rx="44" ry="13" fill="#D1D9E4"/>
+          <text x="194" y="211" text-anchor="middle" fill="#0B1F3A" font-size="9.2" font-weight="800" font-family="sans-serif">FATBERG (10 ton)</text>
+          <text x="194" y="246" text-anchor="middle" fill="#E8EDF3" font-size="9.4" font-family="sans-serif">Gordura solidificada + lenços entopem a rede;</text>
+          <text x="194" y="262" text-anchor="middle" fill="#CBD5E1" font-size="9.4" font-family="sans-serif">manutenção manual invisível (flushers) evita refluxo.</text>
+
+          <!-- LADO DIREITO: APARTHEID SANITÁRIO (MUMBAI / DELI) -->
+          <rect x="390" y="16" width="352" height="282" rx="8" fill="#132E52"/>
+          <text x="566" y="40" text-anchor="middle" fill="#FFFFFF" font-size="12" font-weight="700" font-family="Georgia, serif">2. Apartheid Sanitário (Sul Global / Índia)</text>
+
+          <rect x="406" y="54" width="320" height="70" rx="6" fill="#1E3F66" stroke="#9FB4CC"/>
+          <text x="566" y="76" text-anchor="middle" fill="#FFFFFF" font-size="10.5" font-weight="700" font-family="sans-serif">Enclaves de Elite Conectados</text>
+          <text x="566" y="94" text-anchor="middle" fill="#E8EDF3" font-size="9.4" font-family="sans-serif">Redes herdadas do período colonial atendem</text>
+          <text x="566" y="109" text-anchor="middle" fill="#E8EDF3" font-size="9.4" font-family="sans-serif">apenas bairros ricos e torres modernas.</text>
+
+          <rect x="406" y="138" width="320" height="144" rx="6" fill="#0B1F3A" stroke="#64748B"/>
+          <text x="566" y="162" text-anchor="middle" fill="#FFFFFF" font-size="10.5" font-weight="700" font-family="sans-serif">Favelas Sem Rede &amp; Trabalho de Casta</text>
+          <text x="422" y="186" fill="#E8EDF3" font-size="9.5" font-family="sans-serif">• 1,7 milhão de mortes/ano por falta de saneamento.</text>
+          <text x="422" y="205" fill="#E8EDF3" font-size="9.5" font-family="sans-serif">• 40% das mortes em favelas de Mumbai (parasitoses).</text>
+          <text x="422" y="224" fill="#D1D9E4" font-size="9.5" font-family="sans-serif">• ~800.000 "manual scavengers" (Dalits) removendo</text>
+          <text x="430" y="239" fill="#D1D9E4" font-size="9.5" font-family="sans-serif">dejetos manualmente e mergulhando em esgotos.</text>
+          <text x="422" y="264" fill="#FFFFFF" font-size="9.5" font-weight="700" font-family="sans-serif">→ Mobilização Dalit: "Nunca mais limpar o lixo alheio!"</text>
+        </svg>
+      `,
+
+      /* CAP. 14 — GUERRA E REFÚGIO SUBTERRÂNEO */
+      cap14BunkerTunnel: `
+        <svg viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte vertical de guerra e refúgio subterrâneo: bunker e bomba bunker-buster versus túneis transfronteiriços">
+          <rect x="0" y="0" width="760" height="320" rx="8" fill="#F4F6F9"/>
+
+          <!-- Linha do solo -->
+          <rect x="0" y="106" width="760" height="214" rx="8" fill="#132E52"/>
+          <line x1="0" y1="106" x2="760" y2="106" stroke="#FFFFFF" stroke-width="2.5"/>
+
+          <!-- ESQUERDA: BUNKER E BOMBA PENETRADORA -->
+          <text x="190" y="28" text-anchor="middle" fill="#0B1F3A" font-size="12" font-weight="700" font-family="Georgia, serif">1. Guerra Vertical: Bunker vs. Bunker-Buster</text>
+          <!-- Bomba MOP / B61-11 caindo -->
+          <polygon points="184,42 196,42 196,74 190,94 184,74" fill="#0B1F3A"/>
+          <text x="275" y="64" text-anchor="middle" fill="#0B1F3A" font-size="9.8" font-weight="700" font-family="sans-serif">MOP (13,6 ton) / B61-11</text>
+          <text x="275" y="79" text-anchor="middle" fill="#526277" font-size="9" font-family="sans-serif">+ DARPA "Transparent Earth"</text>
+          <!-- Linha de impacto -->
+          <line x1="190" y1="96" x2="190" y2="178" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="4,3"/>
+
+          <!-- Bunker profundo -->
+          <rect x="44" y="182" width="292" height="92" rx="8" fill="#0B1F3A" stroke="#E8EDF3" stroke-width="2"/>
+          <text x="190" y="206" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="sans-serif">Santuário Subterrâneo / Bunker</text>
+          <text x="190" y="226" text-anchor="middle" fill="#E8EDF3" font-size="9.5" font-family="sans-serif">• Instalações estatais (EUA, Rússia, Irã, China)</text>
+          <text x="190" y="243" text-anchor="middle" fill="#D1D9E4" font-size="9.5" font-family="sans-serif">• Silos da Guerra Fria → Data Centers e</text>
+          <text x="190" y="258" text-anchor="middle" fill="#D1D9E4" font-size="9.5" font-family="sans-serif">  condomínios apocalípticos para bilionários</text>
+
+          <!-- DIREITA: MURO DE FRONTEIRA E TÚNEIS -->
+          <text x="570" y="28" text-anchor="middle" fill="#0B1F3A" font-size="12" font-weight="700" font-family="Georgia, serif">2. Muro de Superfície vs. Túneis</text>
+          <!-- Muro Militarizado -->
+          <rect x="558" y="46" width="24" height="60" fill="#0B1F3A"/>
+          <text x="488" y="76" text-anchor="middle" fill="#334155" font-size="9.5" font-weight="700" font-family="sans-serif">Bloqueio / Fronteira</text>
+          <text x="652" y="76" text-anchor="middle" fill="#334155" font-size="9.5" font-weight="700" font-family="sans-serif">"Teatro de Segurança"</text>
+
+          <!-- Túnel em U passando por baixo do muro -->
+          <path d="M 442 106 L 442 208 L 698 208 L 698 106" fill="none" stroke="#E8EDF3" stroke-width="24" stroke-linejoin="round"/>
+          <path d="M 442 106 L 442 208 L 698 208 L 698 106" fill="none" stroke="#2C5282" stroke-width="18" stroke-linejoin="round"/>
+          <text x="570" y="212" text-anchor="middle" fill="#FFFFFF" font-size="9.8" font-weight="700" font-family="sans-serif">TÚNEL TRANSFRONTEIRIÇO (Gaza–Egito / EUA–México)</text>
+
+          <rect x="412" y="236" width="318" height="64" rx="6" fill="#0B1F3A" stroke="#64748B"/>
+          <text x="571" y="257" text-anchor="middle" fill="#FFFFFF" font-size="10" font-weight="700" font-family="sans-serif">"Todo muro desenha sua própria negação" (Finoki)</text>
+          <text x="571" y="274" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">~1.000 túneis em Gaza (alimentos, remédios, economia) e ~140</text>
+          <text x="571" y="289" text-anchor="middle" fill="#D1D9E4" font-size="9.2" font-family="sans-serif">na fronteira EUA–México. No subsolo urbano: UrbEx e sem-teto.</text>
+        </svg>
+      `,
+
+      /* CAP. 15 — ESCALA COMPARATIVA: ARRANHA-CÉU INVERTIDO */
+      cap15InvertedSkyscraper: `
+        <svg viewBox="0 0 760 350" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Comparação proporcional entre o Burj Khalifa com 830 metros acima do solo e a Mina Mponeng com 4.000 metros abaixo do solo">
+          <rect x="0" y="0" width="760" height="350" rx="8" fill="#F4F6F9"/>
+
+          <!-- Fundo Acima (y=0 a 95) e Abaixo (y=95 a 350) -->
+          <rect x="0" y="0" width="760" height="96" rx="8" fill="#E8EDF3"/>
+          <rect x="0" y="96" width="760" height="254" rx="8" fill="#0B1F3A"/>
+          <line x1="0" y1="96" x2="760" y2="96" stroke="#FFFFFF" stroke-width="2.5"/>
+          <text x="20" y="90" fill="#0B1F3A" font-size="10" font-weight="800" font-family="sans-serif">SOLO (0 m)</text>
+
+          <!-- Burj Khalifa (+830 m -> 45 px de altura proporcional à escala ~18m/px) -->
+          <polygon points="150,50 155,96 145,96" fill="#0B1F3A"/>
+          <line x1="150" y1="50" x2="220" y2="50" stroke="#132E52" stroke-dasharray="3,3"/>
+          <text x="228" y="48" fill="#0B1F3A" font-size="11.5" font-weight="700" font-family="Georgia, serif">Burj Khalifa (Dubai) • +830 m</text>
+          <text x="228" y="64" fill="#334155" font-size="9.8" font-family="sans-serif">Torre mais alta do mundo: exige 55 mil ton de aço, 250 mil ton</text>
+          <text x="228" y="78" fill="#334155" font-size="9.8" font-family="sans-serif">de concreto, alumínio da Guiné e areia da Austrália.</text>
+
+          <!-- Poço da Mina Mponeng (-4.000 m -> ~215 px abaixo da linha y=96, quase 5x o Burj!) -->
+          <rect x="142" y="96" width="16" height="218" fill="#2C5282" stroke="#FFFFFF" stroke-width="1.2"/>
+          <!-- Galerias horizontais -->
+          <line x1="88" y1="158" x2="212" y2="158" stroke="#64748B" stroke-width="4"/>
+          <line x1="74" y1="218" x2="226" y2="218" stroke="#64748B" stroke-width="4"/>
+          <line x1="62" y1="278" x2="238" y2="278" stroke="#D1D9E4" stroke-width="5"/>
+          <line x1="94" y1="312" x2="210" y2="312" stroke="#FFFFFF" stroke-width="4"/>
+
+          <!-- Cotas de profundidade -->
+          <text x="52" y="162" text-anchor="end" fill="#CBD5E1" font-size="9.5" font-family="sans-serif">-1 km</text>
+          <text x="52" y="222" text-anchor="end" fill="#CBD5E1" font-size="9.5" font-family="sans-serif">-2,5 km</text>
+          <text x="52" y="282" text-anchor="end" fill="#E8EDF3" font-size="9.5" font-weight="700" font-family="sans-serif">-3,5 km</text>
+          <text x="52" y="316" text-anchor="end" fill="#FFFFFF" font-size="10" font-weight="800" font-family="sans-serif">-4,0 km</text>
+
+          <!-- Painel explicativo à direita -->
+          <rect x="274" y="118" width="460" height="206" rx="10" fill="#132E52" stroke="#64748B" stroke-width="1.5"/>
+          <text x="294" y="144" fill="#FFFFFF" font-size="13" font-weight="700" font-family="Georgia, serif">Mina de Ouro Mponeng (África do Sul) • -4.000 m</text>
+          <text x="294" y="164" fill="#D1D9E4" font-size="10.2" font-weight="700" font-family="sans-serif">Quase 5x mais profunda que o Burj Khalifa é alto!</text>
+          <line x1="294" y1="176" x2="714" y2="176" stroke="#2C5282" stroke-width="1.2"/>
+
+          <text x="294" y="198" fill="#E8EDF3" font-size="10" font-family="sans-serif">• "Gaiolas" de 3 andares levam 120 mineiros a 60 km/h em queda vertical.</text>
+          <text x="294" y="218" fill="#E8EDF3" font-size="10" font-family="sans-serif">• Rocha a 60°C: exige 6.000 toneladas de gelo/dia para refrigerar túneis.</text>
+          <text x="294" y="238" fill="#E8EDF3" font-size="10" font-family="sans-serif">• 400 km de túneis (maior que o metrô de NY) atrás de um veio de 30–50 cm.</text>
+          <text x="294" y="258" fill="#D1D9E4" font-size="10" font-family="sans-serif">• Alto custo humano: silicose (50.000 ex-mineiros), tremores e acidentes.</text>
+          <text x="294" y="284" fill="#FFFFFF" font-size="10.2" font-weight="700" font-family="sans-serif">Tese (Gray Brechin): Arranha-céus são "paisagens de mineração invertidas".</text>
+          <text x="294" y="303" fill="#9FB4CC" font-size="9.5" font-family="sans-serif">Cada anel de ouro de 10 g exige mover 20 toneladas de rejeito tóxico.</text>
+        </svg>
+      `,
+
+      /* POSFÁCIO — GEOGRAFIA PLANA (2D) → POLÍTICA VOLUMÉTRICA (3D) */
+      afterwordVolumetric: `
+        <svg viewBox="0 0 760 295" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Transição da geografia plana 2D para uma política volumétrica democrática em 3D">
+          <rect x="0" y="0" width="760" height="295" rx="8" fill="#F4F6F9"/>
+
+          <!-- Esquerda: Limite da Geografia Plana -->
+          <rect x="20" y="22" width="230" height="250" rx="10" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+          <text x="135" y="48" text-anchor="middle" fill="#0B1F3A" font-size="12.5" font-weight="700" font-family="Georgia, serif">Geografia Plana (2D)</text>
+          <polygon points="56,144 186,118 220,164 90,190" fill="#E8EDF3" stroke="#64748B" stroke-width="2"/>
+          <text x="138" y="158" text-anchor="middle" fill="#334155" font-size="10" font-weight="700" font-family="sans-serif">Apenas a Superfície</text>
+          <text x="135" y="222" text-anchor="middle" fill="#526277" font-size="9.6" font-family="sans-serif">Enxerga fronteiras como linhas,</text>
+          <text x="135" y="238" text-anchor="middle" fill="#526277" font-size="9.6" font-family="sans-serif">ignora domos de ar, torres de luxo,</text>
+          <text x="135" y="254" text-anchor="middle" fill="#526277" font-size="9.6" font-family="sans-serif">redes ocultas e extração profunda.</text>
+
+          <!-- Seta -->
+          <rect x="266" y="122" width="76" height="44" rx="8" fill="#1E3F66"/>
+          <text x="304" y="149" text-anchor="middle" fill="#FFFFFF" font-size="18" font-weight="800" font-family="sans-serif">→</text>
+
+          <!-- Direita: Política Volumétrica 3D -->
+          <rect x="358" y="22" width="382" height="250" rx="10" fill="#0B1F3A"/>
+          <text x="549" y="48" text-anchor="middle" fill="#FFFFFF" font-size="13" font-weight="700" font-family="Georgia, serif">Política Volumétrica Democrática (3D)</text>
+
+          <!-- 4 Camadas Integradas -->
+          <rect x="382" y="66" width="334" height="38" rx="6" fill="#2C5282" stroke="#D1D9E4"/>
+          <text x="549" y="89" text-anchor="middle" fill="#FFFFFF" font-size="10.2" font-weight="700" font-family="sans-serif">1. Órbita &amp; Ar: Direito ao ar limpo, sous-surveillance e fim do atmoterror</text>
+
+          <rect x="382" y="112" width="334" height="38" rx="6" fill="#1E3F66" stroke="#9FB4CC"/>
+          <text x="549" y="135" text-anchor="middle" fill="#FFFFFF" font-size="10.2" font-weight="700" font-family="sans-serif">2. Alturas Urbanas: Democratizar moradia vertical e espaços públicos</text>
+
+          <rect x="382" y="158" width="334" height="38" rx="6" fill="#E8EDF3" stroke="#FFFFFF"/>
+          <text x="549" y="181" text-anchor="middle" fill="#0B1F3A" font-size="10.2" font-weight="800" font-family="sans-serif">3. Superfície &amp; Solo: Justiça habitacional e desmercantilização da terra</text>
+
+          <rect x="382" y="204" width="334" height="38" rx="6" fill="#132E52" stroke="#64748B"/>
+          <text x="549" y="227" text-anchor="middle" fill="#E8EDF3" font-size="10.2" font-weight="700" font-family="sans-serif">4. Subsolo &amp; Minas: Saneamento universal e justiça socioambiental</text>
+
+          <text x="549" y="260" text-anchor="middle" fill="#B8C9DD" font-size="9.5" font-family="sans-serif">Imaginação como campo de ação no presente (Appadurai / Haacke)</text>
+        </svg>
+      `
+    };
+
+    /* ==========================================================================
+       BANCO DE DADOS COMPLETO DA PARTE 2 (VISÃO GERAL, CAPS 8–15 + POSFÁCIO)
+       ========================================================================== */
+    const SECTIONS = [
+      /* ------------------------------------------------------------------------
+         0. VISÃO GERAL — CORTE VERTICAL (PARTE 2)
+         ------------------------------------------------------------------------ */
+      {
+        id: "overview",
+        group: "overview",
+        badge: "Visão Geral",
+        partLabel: "Parte 2/2 • Caps. 8 a 15 + Posfácio",
+        title: "Das Torres de Luxo às Minas Profundas",
+        origTitle: "Vertical: The City from Satellites to Bunkers — Parte 2",
+        lead: "Dando continuidade à Parte 1 (que desceu dos satélites aos arranha-céus corporativos), esta segunda metade de Vertical atravessa as camadas habitacionais, elevadas e atmosféricas da cidade, cruza o próprio solo fabricado e mergulha até 4 quilômetros abaixo da terra.",
+        thesis: "A desigualdade vertical não termina no topo dos arranha-céus: ela molda quem respira ar limpo, quem vive em coberturas ou em porões ilegais, quem tem esgoto escondido sob os pés e quais territórios são escavados em zonas de sacrifício para sustentar o brilho das cidades globais.",
+        isOverview: true,
+        schemas: [
+          {
+            title: "Corte Vertical Interativo — Parte 2 (Clique em Qualquer Camada)",
+            type: "svg",
+            svgKey: "overviewPart2",
+            caption: "Clique em qualquer faixa do corte vertical acima ou nos cartões abaixo para abrir o capítulo correspondente, seus diagramas e todos os subcapítulos."
+          }
+        ],
+        subchapters: []
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 8 — HABITAÇÃO: CÉUS LUXIFICADOS
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-8",
+        group: "above",
+        badge: "Capítulo 8",
+        partLabel: "Parte Um: Acima (Continuação)",
+        title: "Habitação: Céus Luxificados",
+        origTitle: "Housing: Luxified Skies",
+        lead: "Economistas urbanos influentes como Edward Glaeser defendem que 'construir para cima' sem restrições resolve a crise habitacional e gera cidades mais sustentáveis. Stephen Graham desmonta essa tese: sem regulação e habitação social, a verticalização contemporânea entregou o céu urbano a especuladores globais e expulsou trabalhadores do centro.",
+        thesis: "A verticalização residencial sem políticas públicas não democratiza a moradia — ela substitui o projeto coletivo da habitação social modernista por 'cofres no céu' vazios, 'poor doors' e condomínios fechados suspensos que transformam a cidade em marca de luxo.",
+        schemas: [
+          {
+            title: "A Inversão Histórica da Habitação Vertical (Social → Luxo → Unifamiliar)",
+            type: "svg",
+            svgKey: "cap8Housing",
+            caption: "Em poucas décadas, a torre residencial passou de projeto de democratização do bem-estar para o símbolo máximo de secessão e desigualdade patrimonial."
+          },
+          {
+            title: "Fluxo da Financeirização Vertical da Moradia",
+            type: "flow",
+            nodes: [
+              { title: "1. Desregulamentação", body: "Fim de limites de altura e controles de aluguel sob o discurso de 'crescimento inteligente'." },
+              { title: "2. Compra Global em Dinheiro", body: "Oligarcas e fundos compram imóveis via empresas de fachada (85% no centro de Londres).", tone: "mid" },
+              { title: "3. 'Cofres no Céu'", body: "Apartamentos milionários ficam vazios ('janelas apagadas'), servindo de reserva de valor." },
+              { title: "4. Expulsão e Crise", body: "Preços disparam, sem-teto aumentam (60 mil em NY) e famílias pobres são deslocadas.", tone: "dark" }
+            ],
+            caption: "Em Londres, os 6% do topo do mercado recebem 50% de todo o investimento habitacional — quase o mesmo que os 50% mais pobres da população."
+          },
+          {
+            title: "Tese de Edward Glaeser vs. Realidade das Cidades Globais",
+            type: "compare",
+            headers: ["Tema", "Promessa Neoliberal (Glaeser)", "Realidade Empírica (Graham)"],
+            rows: [
+              ["Preço da Moradia", "Mais torres = mais oferta = apartamentos mais baratos.", "Construtoras focam apenas no superluxo, elevando o preço da terra em toda a cidade."],
+              ["Densidade Real", "Prédios altíssimos abrigam muita gente em pouco espaço.", "Torres 'lápis' (432 Park Ave) têm 1 família por andar — baixíssima densidade real."],
+              ["Meio Ambiente", "Torres verticais seriam automaticamente 'verdes'.", "Alto consumo de energia/aço, sombras nas ruas e túneis de vento no nível do pedestre."]
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-8-1",
+            code: "8.1",
+            title: "Ascensão e queda da habitação social vertical modernista",
+            body: "Entre 1930 e 1970, o modernismo (Le Corbusier, Gropius) quis tirar os trabalhadores de cortiços úmidos e levá-los à luz e ao ar das torres públicas. Embora muitos projetos tenham sofrido com construção barata, abandono e estigma racial (como Pruitt-Igoe, demolido em 1972, e Red Road em Glasgow), Graham denuncia a fabricação de um mito generalizado de que 'habitação social vertical sempre fracassa'. Esse mito serviu para privatizar estoques públicos (como Trellick e Balfron Tower em Londres), ignorando sucessos duradouros como Singapura (80% em moradia pública bem mantida) e as filas de 270 mil famílias por moradia pública em Nova York.",
+            schemas: [
+              {
+                title: "Como o Mito do 'Fracasso Inevitável' Abriu Caminho para o Luxo",
+                type: "flow",
+                nodes: [
+                  { title: "Desinvestimento + Estigma", body: "Desindustrialização, má gestão e demolir conjuntos ao vivo na TV como espetáculo." },
+                  { title: "Clichê Ideológico", body: "Culpa-se a 'forma vertical' (Alice Coleman) em vez da pobreza e da falta de manutenção.", tone: "mid" },
+                  { title: "Privatização e Gentrificação", body: "Torres sociais são derrubadas (Heygate) ou vendidas como 'chique brutalista' a ricos.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-8-2",
+            code: "8.2",
+            title: "Gentrificação vertical e os 'cofres no céu'",
+            body: "Em Vancouver ('Vancouverismo'), Nova York (432 Park Avenue, US$ 95 milhões por unidade) e Londres (mais de 250 torres planejadas), o céu urbano foi colonizado pelo que Alex Preston chama de 'cofres estofados de luxo'. Muitas unidades funcionam como ativos financeiros ou lavagem de dinheiro para o 1% itinerante do planeta — criando bairros centrais silenciosos, suburbanizados no alto e desconectados do mercado de trabalho local.",
+            schemas: [
+              {
+                title: "O Modelo dos 'Cofres no Céu' em 3 Metrópoles",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Vancouver", body: "Falsa retórica de 'crescimento sustentável': torres clonadas compradas como investimento por elites globais elevam preços ao topo do Canadá." },
+                  { title: "Nova York", body: "Direitos aéreos ('air rights') permitem torres finíssimas sobre o Central Park; trabalhador de salário mínimo precisaria de 139h/semana para pagar aluguel médio.", tone: "mid" },
+                  { title: "Londres", body: "Prêmio de +1,5% no valor do m² por andar acima; 50.000 famílias de baixa renda deslocadas do centro entre 2012 e 2015.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-8-3",
+            code: "8.3",
+            title: "'Poor doors' e segregação empilhada (Londres, NY e Mumbai)",
+            body: "A segregação contemporânea ganhou expressão vertical explícita: em Londres e Nova York, novos empreendimentos criam 'poor doors' (portas separadas e modestas para os poucos inquilinos sociais, proibidos de usar jardins ou piscinas suspensas como a Sky Pool de Nine Elms). No Sul Global, o contraste é extremo: em Mumbai, torres vendem 'o mesmo endereço de Deus' e o arranha-céu Antilia (27 andares) abriga uma única família bilionária; na Cidade da Guatemala e no Brasil (documentário Um Lugar ao Sol), elites olham de cima as favelas como cenário distante.",
+            schemas: [
+              {
+                title: "A Política de 'Olhar para Baixo' (Michel de Certeau / O'Neill)",
+                type: "tension",
+                left: {
+                  title: "Arriba (No Alto • Elites)",
+                  tone: "dark",
+                  bullets: [
+                    "Coberturas, piscinas de vidro suspensas e 'quinta fachada' (terraços privados).",
+                    "Sensação de controle divino e paz sobre o caos urbano.",
+                    "Acesso seletivo por elevadores e portarias blindadas."
+                  ]
+                },
+                mid: { sym: "↕", text: "Segregação Empilhada" },
+                right: {
+                  title: "Abajo (Embaixo • Maioria)",
+                  tone: "mid",
+                  bullets: [
+                    "Poor doors, serviços negados e expulsão de conjuntos populares.",
+                    "Trabalhadores domésticos sobem para servir e descem para favelas.",
+                    "Estigma moral: 'quanto mais baixo, mais perigoso'."
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 9 — PASSARELAS, TRENS ELEVADOS E DECKS
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-9",
+        group: "above",
+        badge: "Capítulo 9",
+        partLabel: "Parte Um: Acima (Continuação)",
+        title: "Passarelas, Trens Elevados e Decks: Cidades Multinível",
+        origTitle: "Skywalk/Skytrain/Skydeck: Multilevel Cities",
+        lead: "De Antonio Sant'Elia (1914) aos projetos pós-guerra britânicos e às metrópoles contemporâneas da América do Norte e da Ásia, o sonho de separar pedestres e carros em camadas gerou 'cidades interiores' suspensas — que frequentemente esvaziam, privatizam e residualizam a rua tradicional.",
+        thesis: "Passarelas elevadas (skywalks), trens aéreos (skytrains) e decks suspensos (skydecks) criam uma segunda camada urbana climatizada e vigiada para consumidores e classes médias/altas, transformando a rua térrea em espaço abandonado e agravando a fragmentação de classe.",
+        schemas: [
+          {
+            title: "Corte Multinível da Cidade Contemporânea",
+            type: "svg",
+            svgKey: "cap9Multilevel",
+            caption: "Enquanto o plano elevado oferece conforto térmico, velocidade e segurança privada, a rua abaixo concentra calor, poluição e populações excluídas."
+          },
+          {
+            title: "Matriz Comparativa dos 3 Dispositivos Elevados",
+            type: "compare",
+            headers: ["Dispositivo", "Exemplos Icônicos", "Promessa Original", "Efeito Político / Urbano"],
+            rows: [
+              ["Skywalks (Passarelas)", "Minneapolis (18 km), Dallas, Calgary, Hong Kong (500+).", "Proteger do clima extremo e separar pedestres de carros.", "Privatização do centro; seguranças barram pobres e sem-teto; comércio de rua morre."],
+              ["Skytrains (Trens Elevados)", "Bangkok Skytrain (23 km), Skywalks de Mumbai (36).", "Transporte moderno, rápido e símbolo de 'cidade global'.", "Tarifa excludente (10% do salário médio em Bangkok); cria arquipélago aéreo de shoppings."],
+              ["Skydecks (Decks / Parques)", "Marina Bay Sands (Singapura), Mirador (Madri), Pinnacle@Duxton.", "Criar novos espaços cívicos e áreas verdes no ar.", "Na maioria das cidades, vira piscina/clube superexclusivo; só em modelos públicos (Singapura) é aberto."]
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-9-1",
+            code: "9.1",
+            title: "Skywalks e secessão climatizada",
+            body: "Enquanto as passarelas abertas do pós-guerra em Londres e Newcastle fracassaram (ventosas, inseguras e demolidas), as redes fechadas da América do Norte (17 cidades com mais de 20 quadras conectadas) prosperaram como 'cidades interiores'. Embora justificadas pelo frio ou calor, seu motor real foi imobiliário: conectar garagens a shoppings e torres corporativas. Como mostra Trevor Boddy em Minneapolis e Steven Flusty em Bunker Hill (LA), a 'escada' para a rua é recolhida e seguranças filtram quem pode entrar.",
+            schemas: [
+              {
+                title: "A Lógica da 'Cidade Interior' (Trevor Boddy)",
+                type: "flow",
+                nodes: [
+                  { title: "Suburbanização do Centro", body: "Centros antigos imitam o shopping fechado para atrair motoristas de classe média." },
+                  { title: "Desconexão da Calçada", body: "Entradas de rua somem; acesso passa por garagens e portarias vigiadas por CCTV.", tone: "mid" },
+                  { title: "Sociedade em Dois Níveis", body: "Trabalhadores de colarinho branco circulam no alto; minorias e pobres ficam confinados à rua esvaziada.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-9-2",
+            code: "9.2",
+            title: "Skytrains, viadutos e o contorno da rua",
+            body: "Na Ásia, o Skytrain de Bangkok (a 12 m de altura) funciona como 'passaporte para o mundo acima': liga hotéis, escritórios e shoppings com ar-condicionado enquanto transforma a cidade popular abaixo em cenário de passagem. Em Mumbai, 36 passarelas e viadutos permitem contornar a pobreza das calçadas. Já Hong Kong levou o modelo ao extremo — uma 'Cidade Sem Chão' (Cities Without Ground) que exige mapas 3D para superar a desorientação espacial (o 'hiperespaço pós-moderno' de Fredric Jameson), embora suas passarelas mais abertas ainda sejam apropriadas por trabalhadores migrantes e protestos.",
+            schemas: [
+              {
+                title: "Contraste Asiático: Bangkok vs. Hong Kong",
+                type: "compare",
+                headers: ["Critério", "Bangkok (Skytrain)", "Hong Kong (Cities Without Ground)"],
+                rows: [
+                  ["Acesso Social", "Altamente excludente pelo preço da passagem.", "Misto: luxo nos pódios, mas intenso uso popular e protestos nas passarelas."],
+                  ["Relação com o Chão", "Separação nítida: ricos vivem 'do 3º andar para cima'.", "Referência ao 'solo' desaparece em labirintos 3D de 500+ passarelas e metrôs."],
+                  ["Desafio Cognitivo", "Voyeurismo aéreo sobre o caos e o trânsito abaixo.", "Moradores se perdem; exige revolução da cartografia 2D para mapas 3D."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-9-3",
+            code: "9.3",
+            title: "Skydecks, parques elevados e gentrificação suspensa",
+            body: "Críticos como Iris Hwang alertam que torres isoladas conectadas apenas por elevadores criam 'subúrbios arranha-céus' — becos sem saída verticais. Arquitetos propõem pontes públicas e 'skycourts' a 100 ou 200 m de altura para devolver vida cívica ao céu. Na prática privada, porém, quase todos os decks elevados viram enclaves de bilionários — como a plataforma de 340 m com piscina infinita do hotel Marina Bay Sands (US$ 600/noite). A rara exceção democrática é a habitação pública de Singapura (Pinnacle@Duxton), que integra jardins elevados acessíveis à comunidade.",
+            schemas: [
+              {
+                title: "Duas Rotas para os Espaços Elevados",
+                type: "tension",
+                left: {
+                  title: "Via Especulativa ('Subúrbio Vertical')",
+                  tone: "dark",
+                  bullets: [
+                    "Silos privados isolados e competitivos.",
+                    "Skydecks e piscinas suspensas exclusivos (Marina Bay Sands).",
+                    "Intensifica a privatização e a gentrificação aérea."
+                  ]
+                },
+                mid: { sym: "⇄", text: "Disputa pelo Espaço Aéreo" },
+                right: {
+                  title: "Via Cívica (Planejamento Público 3D)",
+                  tone: "mid",
+                  bullets: [
+                    "Cálculo tridimensional de áreas públicas e parques no alto.",
+                    "Exemplos: Mirador (Madri) e Pinnacle@Duxton (Singapura).",
+                    "Depende de forte controle público sobre a terra urbana."
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 10 — AR: DOMOS LETAIS
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-10",
+        group: "above",
+        badge: "Capítulo 10",
+        partLabel: "Parte Um: Acima (Continuação)",
+        title: "Ar: Domos Letais",
+        origTitle: "Air: Lethal Domes",
+        lead: "Sem oxigênio, morremos em três minutos — mas o ar quase não aparece na teoria social por ser transparente. Hoje, a queima de carbono enterrado há milhões de anos fabrica 'domos letais' de calor e poluição sobre as cidades, enquanto as elites compram bolhas climatizadas e Estados militarizam a própria atmosfera urbana.",
+        thesis: "O ar urbano não é mais um bem natural gratuito e igualitário: é uma arena política fabricada onde a poluição mata milhões, o ar-condicionado agrava o calor para quem fica fora e o Estado usa gás lacrimogêneo como arma cotidiana de controle.",
+        schemas: [
+          {
+            title: "O Domo Atmosférico Urbano e a Desigualdade Respiratória",
+            type: "svg",
+            svgKey: "cap10AirDome",
+            caption: "A qualidade e a temperatura do ar variam vertical e socialmente: elites compram ar filtrado em torres e bolhas, enquanto os pobres absorvem o calor e os poluentes no solo."
+          },
+          {
+            title: "O Ciclo Vicioso do Ar-Condicionado ('Dispositivo Egoísta')",
+            type: "flow",
+            nodes: [
+              { title: "1. Ilha de Calor Urbana", body: "Asfalto, concreto e poluição elevam a temperatura urbana em +3°C a +10°C." },
+              { title: "2. Explosão do Ar-Condicionado", body: "Mercado global salta para US$ 178 bi; 40% da energia de Mumbai vai para refrigeração.", tone: "mid" },
+              { title: "3. Despejo de Calor + Energia", body: "Aparelhos jogam calor para a rua (+1°C a +2°C extras) e queimam mais combustíveis fósseis." },
+              { title: "4. Mais Calor e Apagões", body: "Picos derrubam redes elétricas (EUA 2003) e matam quem não pode pagar por refrigeração.", tone: "dark" }
+            ],
+            caption: "Como resume Stan Cox: transformar prédios em geladeiras queima combustíveis fósseis, aquece o planeta e cria demanda por ainda mais ar-condicionado."
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-10-1",
+            code: "10.1",
+            title: "Céus tóxicos e desigualdade atmosférica",
+            body: "A OMS estima 7 milhões de mortes prematuras por ano devido à poluição do ar (1 em cada 8 mortes no mundo), com epicentros na China (1,2 milhão/ano; expectativa de vida reduzida em 5 anos no norte; censura ao documentário Under the Dome) e na Índia (620 mil/ano). Mesmo na Europa (500 mil/ano) e EUA (200 mil/ano), o diesel e o calor matam — como nas ondas de calor de Chicago (1995: 739 mortos) e Europa (2003: 70.000 mortos, atingindo idosos nos sótãos quentes de Paris, as chambres de bonne). O Ocidente terceirizou emissões para a Ásia, mas o vento traz até 24% do enxofre de volta à costa oeste dos EUA.",
+            schemas: [
+              {
+                title: "Geografia Desigual da Morte Atmosférica",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Cânions Urbanos", body: "Em Hong Kong, pódios fechados prendem poluentes nos 15 m inferiores; ricos fogem para o alto (The Peak)." },
+                  { title: "Rodovias e Raça", body: "Em Los Angeles, bairros negros, latinos e asiáticos cortados por viadutos respiram níveis altíssimos de cancerígenos.", tone: "mid" },
+                  { title: "Sótãos Mortais", body: "Em Paris (2003), a fachada rica escondia quartos de antigos criados sob telhados escaldantes onde milhares morreram sós.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-10-2",
+            code: "10.2",
+            title: "Bolhas climatizadas e privatização do ar puro",
+            body: "Em vez da visão pública de Buckminster Fuller (um domo democrático sobre Manhattan em 1960), hoje proliferam 'atmosferas de apartheid' privadas: o domo de US$ 5 milhões na Escola Internacional de Pequim com câmara de descompressão, o Ski-Dubai no deserto de 50°C e propostas de cobrir centros empresariais em Houston. O lado mais brutal dessa privatização ocorre nos canteiros de obras do Golfo (Catar 2022 e Burj Khalifa): milhares de trabalhadores sul-asiáticos morrem de exaustão térmica sob 50°C para construir estádios e hotéis refrigerados para turistas.",
+            schemas: [
+              {
+                title: "Atmosfera de Apartheid: Dentro vs. Fora da Bolha",
+                type: "compare",
+                headers: ["Esfera", "Dentro das Bolhas (Elites / Turistas)", "Fora das Bolhas (Maioria / Trabalhadores)"],
+                rows: [
+                  ["Qualidade do Ar", "Filtragem industrial (PM2.5 controlado) e 20–22°C.", "Ar tóxico, poeira de obra, calor extremo (45–50°C)."],
+                  ["Infraestrutura", "Malls fechados, escolas em domo, Ski-Dubai, carros AC.", "Ruas escaldantes, canteiros sem sombra, falta de refrigeração pública."],
+                  ["Custo Humano", "Conforto comprado; risco pontual de 'edifício doente'.", "Estima-se 4.000 mortes de operários no Catar (62 por jogo da Copa)."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-10-3",
+            code: "10.3",
+            title: "Militarização do ar e atmoterrorismo urbano",
+            body: "Apoiando-se em Peter Sloterdijk, Graham mostra que a manipulação do ar também é arma deliberada ('atmoterrorismo'): das câmaras de gás e ataques químicos da 1ª Guerra à semeadura de nuvens pelos EUA no Vietnã (1967–72), aos 50.000 'guerreiros do clima' na China e ao interesse da CIA em geoengenharia. No cotidiano das cidades, o gás lacrimogêneo — proibido em guerras pela Convenção de Armas Químicas — virou arma policial rotineira contra protestos (Gezi Park em Istambul, Occupy), transformando a máscara de gás em símbolo de resistência urbana.",
+            schemas: [
+              {
+                title: "Do Campo de Batalha às Ruas: Genealogia do Atmoterror",
+                type: "flow",
+                nodes: [
+                  { title: "1915 • Guerra Química", body: "Ataques com gás nas trincheiras inauguram a guerra contra o meio respirável (Sloterdijk)." },
+                  { title: "Guerra Fria & Geoengenharia", body: "Modificação climática militar (Vietnã) e planos de controle do tempo até 2025.", tone: "mid" },
+                  { title: "Policiamento Atmosférico", body: "Gás lacrimogêneo sufoca o 'canal de comunicação' das ruas (Feigenbaum): o direito à cidade vira direito de respirar.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 11 — SOLO: FABRICANDO GEOLOGIA
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-11",
+        group: "below",
+        badge: "Capítulo 11",
+        partLabel: "Parte Dois: Abaixo (Below)",
+        title: "Solo: Fabricando Geologia",
+        origTitle: "Ground: Making Geology",
+        lead: "A colina mais alta de Berlim, Teufelsberg (120 m), não é natural: foi erguida com 75 milhões de toneladas de escombros de um terço da cidade bombardeada na 2ª Guerra. Abrindo a Parte Dois ('Abaixo'), Graham prova que o chão sob nossos pés é uma construção humana, histórica e altamente disputada.",
+        thesis: "Na era do Antropoceno, a humanidade move quase três vezes mais terra e rocha que todos os rios e oceanos juntos. As cidades fabricam sua própria geologia ('arqueosfera'), importam areia de países pobres para criar ilhas artificiais e afundam sob seu próprio peso.",
+        schemas: [
+          {
+            title: "Corte Estratigráfico do Solo Urbano Fabricado",
+            type: "svg",
+            svgKey: "cap11Ground",
+            caption: "Da arqueosfera cheia de vestígios e dutos abandonados às ilhas artificiais costeiras e à subsidência dos aquíferos, o solo urbano é um volume dinâmico."
+          },
+          {
+            title: "Cadeia Causal da Fabricação e Exportação de Geologia",
+            type: "flow",
+            nodes: [
+              { title: "1. Destruição e Escavação", body: "Guerras (Teufelsberg), obras (Big Dig em Boston, Crossrail), mineração e lixo (2,2 bi ton/ano até 2025)." },
+              { title: "2. Transporte de Território", body: "Lastro de navios, dragagem marinha, exportação de lixo eletrônico e importação de areia.", tone: "mid" },
+              { title: "3. Nova Geologia Urbana", body: "Cidades elevam-se 8–15 m sobre seu próprio passado (Roma, Manchester) ou avançam sobre o mar." },
+              { title: "4. Risco e Desigualdade", body: "Deslizamentos de lixões (32.000 mortos em 2004–10), destruição de mangues e 'apartheid climático'.", tone: "dark" }
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-11-1",
+            code: "11.1",
+            title: "Solo artificial, aterros e ilhas para satélites",
+            body: "De Roterdã e Tóquio a Hong Kong e China (12.000 km² de novas terras costeiras), 'reclamar' terra do mar tornou-se mais barato que comprar solo antigo. Em Dubai ('The Palm', 'The World'), a costa foi multiplicada por 20 para criar 'brandscapes' visíveis no Google Earth — embora 'The World' esteja afundando de volta no mar. No Bahrein, a privatização de aterros deixou a população com menos de 10% das praias (detonando protestos em 2011). Em Lagos, a ilha privada Eko Atlantic ergue uma muralha contra a subida do mar para proteger elites ('apartheid climático'). Já a China cria ilhas artificiais nas Spratly para fins militares e soberania marítima.",
+            schemas: [
+              {
+                title: "Os 4 Usos Políticos das Ilhas Artificiais (Terraformação)",
+                type: "grid",
+                cols: 4,
+                items: [
+                  { title: "Marketing Orbital", body: "Dubai ('The World'), Catar e Rússia moldam costas como logotipos para o Google Earth." },
+                  { title: "Apartheid Climático", body: "Eko Atlantic (Lagos): ilha elevada com muralha de concreto protege elites da alta do mar.", tone: "mid" },
+                  { title: "Geopolítica Militar", body: "Ilhas artificiais da China no Mar do Sul da China (Spratly) criam pistas aéreas e soberania." },
+                  { title: "Custo Ecológico", body: "Destrói recifes, mangues protetores contra tempestades e áreas de pouso de aves migratórias.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-11-2",
+            code: "11.2",
+            title: "A crise global da areia e a extração predatória",
+            body: "A areia do deserto não serve para concreto (é lisa e salgada demais). A febre de concreto e aterros gerou uma escassez planetária de areia marinha e fluvial — desencadeando 'guerras da areia'. Singapura expandiu seu território em 20% importando montanhas de areia de vizinhos (Indonésia, Camboja, Malásia, Vietnã), fazendo praias e ilhas inteiras desaparecerem e levando esses países a proibir exportações. Na Índia, a Fundação Awaaz combate máfias da areia que devastam praias ao redor de Mumbai.",
+            schemas: [
+              {
+                title: "O Fluxo Global de Território ('Guerras da Areia')",
+                type: "tension",
+                left: {
+                  title: "Regiões Exportadoras / Pilhadas",
+                  tone: "mid",
+                  bullets: [
+                    "Praias, rios e ilhas do Camboja, Indonésia e Maharashtra (Índia).",
+                    "Colapso da pesca, erosão costeira e vulnerabilidade a tempestades.",
+                    "Perda literal de território físico e soberania."
+                  ]
+                },
+                mid: { sym: "→", text: "Fluxo de Areia e Concreto" },
+                right: {
+                  title: "Cidades-Estado e Megacidades",
+                  tone: "dark",
+                  bullets: [
+                    "Singapura (+120 km² em uma década), Dubai e Hong Kong.",
+                    "Concreto para arranha-céus e novos terrenos costeiros valorizados.",
+                    "Blindagem contra elevação do nível do mar."
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            id: "sub-11-3",
+            code: "11.3",
+            title: "Cidades que afundam e estratigrafia urbana",
+            body: "O arqueólogo Matt Edgeworth chama o tapete híbrido de resíduos e ruínas sob as cidades de 'arqueosfera'. Nova York e São Francisco escondem centenas de navios antigos usados como aterro; os escombros do 11/9 foram levados ao aterro de Fresh Kills (que por sua vez virou o parque Lifescape); na Suécia, já se planeja 'mineração urbana' para recuperar milhares de toneladas de cobre e ferro abandonados em dutos sob as ruas (urks). Mas essa estratigrafia também é instável (Cidade do México afundou 10 m) e geopolítica — como em Hebron e Jerusalém, onde escavações arqueológicas são usadas para legitimar ocupações na superfície.",
+            schemas: [
+              {
+                title: "Dupla Dimensão da Estratigrafia Urbana",
+                type: "compare",
+                headers: ["Dimensão", "Fenômeno Material", "Impacto Político / Urbano"],
+                rows: [
+                  ["Física / Ambiental", "Peso de edifícios + drenagem de aquíferos + colapso de lixões (Payatas, Shenzhen).", "Subsidência (Cidade do México), afundamento e deslizamentos fatais de lixo sobre favelas."],
+                  ["Econômica / Circular", "Metais enterrados em infraestruturas obsoletas (urks na Suécia) = 50% do metal já minerado.", "Subsolo urbano transforma-se em futura 'mina' reciclável de cobre e ferro."],
+                  ["Histórica / Simbólica", "Escavações em camadas sobrepostas (Palestina/Israel; Fresh Kills em NY).", "Controle de qual camada histórica é preservada ou apagada legitima o poder na superfície."]
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 12 — PORÃO/SUBSOLO: SUBTERRÂNEOS URBANOS
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-12",
+        group: "below",
+        badge: "Capítulo 12",
+        partLabel: "Parte Dois: Abaixo (Below)",
+        title: "Porão/Subsolo: Subterrâneos Urbanos",
+        origTitle: "Basement/Cellar: Urban Undergrounds",
+        lead: "Historicamente associado à miséria, à doença, à boemia e ao 'submundo' (de Friedrich Engels em Manchester a Jacob Riis em Nova York e ao termo 'underclass' de Gunnar Myrdal), o subsolo residencial hoje vive uma polarização radical: enquanto bilionários escavam mansões de vários andares sob Londres, migrantes e trabalhadores pobres são empurrados para porões ilegais e antigos abrigos subterrâneos.",
+        thesis: "O subsolo habitado espelha a fratura de classe da superfície: tornou-se simultaneamente um refúgio de luxo invisível para o capital global ('casas-iceberg') e o último abrigo precário e perigoso para trabalhadores excluídos da cidade formal.",
+        schemas: [
+          {
+            title: "Subsolo de Classe: 'Casa-Iceberg' (Londres) vs. Precariado Subterrâneo (Pequim)",
+            type: "svg",
+            svgKey: "cap12SubsurfaceClass",
+            caption: "A mesma direção vertical — para baixo — produz opostos absolutos conforme a classe social: lazer blindado para bilionários ou sobrevivência sem janelas para migrantes."
+          },
+          {
+            title: "Quadro Comparativo dos Subterrâneos Residenciais",
+            type: "compare",
+            headers: ["Critério", "Casas-Iceberg (Londres)", "Precariado Subterrâneo (Pequim / Toronto / Londres)"],
+            rows: [
+              ["Quem Habita", "Oligarcas, magnatas globais e celebridades (Kensington & Chelsea).", "Trabalhadores migrantes, jovens precários ('tribo dos ratos' em Pequim; 30 mil porões em Toronto)."],
+              ["Motivação", "Burlar restrições de patrimônio histórico na superfície + baixo custo relativo de escavação.", "Impossibilidade absoluta de pagar aluguéis inflacionados na superfície."],
+              ["Condições", "Piscinas retráteis, cinemas, adegas, boliche, elevadores de carros.", "Umidade, ausência de luz natural, superlotação, risco grave de incêndio e asfixia."],
+              ["Reação Estatal", "Brecha legal explorada por anos; depois regulação pontual por conflito entre vizinhos ricos.", "Criminalização, despejos periódicos e estigmatização ('submundo' / 'ratos')."]
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-12-1",
+            code: "12.1",
+            title: "'Casas-iceberg': a expansão subterrânea das elites em Londres",
+            body: "Entre 2008 e 2012, mais de 800 escavações subterrâneas de luxo foram aprovadas em Kensington e Chelsea (Londres). Impedidos por leis de preservação de alterar fachadas históricas acima do solo, arquitetos descobriram uma brecha jurídica: a lei regulava tudo acima da terra, mas quase nada abaixo dela. Escavar custava £500/pé² contra £2.500/pé² na superfície — gerando mansões enterradas com volume 3x maior que a casa visível, causando danos a árvores, risco de inundações e batalhas judiciais entre celebridades vizinhas.",
+            schemas: [
+              {
+                title: "A Economia Política da 'Casa-Iceberg'",
+                type: "flow",
+                nodes: [
+                  { title: "Preservação na Superfície", body: "Leis rígidas impedem ampliar fachadas históricas no West End londrino." },
+                  { title: "Brecha Legal Subterrânea", body: "Falta de regulação do subsolo permite escavar 2 a 3 andares para baixo.", tone: "mid" },
+                  { title: "Arbitragem Imobiliária", body: "Escavação a £500/pé² cria ativos milionários (10.000 ton/dia de terra removida)." },
+                  { title: "Conflito Urbano", body: "Abalos estruturais, enchentes em jardins e novas restrições municipais.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-12-2",
+            code: "12.2",
+            title: "O precariado subterrâneo: a 'tribo dos ratos' de Pequim",
+            body: "No polo oposto do luxo subterrâneo, a crise habitacional ressuscita os porões operários denunciados por Engels no século XIX. Em metrópoles como Pequim (onde centenas de milhares de jovens migrantes ocuparam antigos abrigos antiaéreos da Guerra Fria, apelidados pejorativamente de 'tribo dos ratos'), Toronto (30.000 apartamentos ilegais em porões em Brampton) e leste de Londres (26 migrantes em uma única casa em Newham), o subsolo vira o refúgio invisível da força de trabalho mal paga — mostrando que, longe da celebração poética do porão por Gaston Bachelard, morar embaixo sem escolha é marca de exclusão estrutural.",
+            schemas: [
+              {
+                title: "Continuidade Histórica do Submundo Habitacional",
+                type: "ladder",
+                steps: [
+                  { title: "Século XIX • Porões de Manchester e Nova York", body: "Engels e Jacob Riis ('moradores de cavernas') denunciam imigrantes e operários em porões úmidos propensos à cólera." },
+                  { title: "Século XX • Modernismo e Boemia", body: "Le Corbusier tenta banir o porão em nome da luz; porões de NY (Greenwich Village) abrigam subculturas perseguidas; Myrdal cunha 'underclass' via metáfora do porão.", tone: "tone-mid" },
+                  { title: "Século XXI • Precariado Global Enterrado", body: "Aluguéis proibitivos empurram trabalhadores de serviços para antigos bunkers em Pequim e porões clandestinos sem saída de incêndio no Ocidente.", tone: "tone-dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 13 — ESGOTO: SOCIOLOGIA E EXCREMENTO
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-13",
+        group: "below",
+        badge: "Capítulo 13",
+        partLabel: "Parte Dois: Abaixo (Below)",
+        title: "Esgoto: Sociologia e Excremento",
+        origTitle: "Sewer: Sociology and Shit",
+        lead: "Os esgotos modernos (engenharia de Edwin Chadwick em Londres e Eugène Belgrand em Paris no século XIX) salvaram milhões de vidas, mas também criaram uma fronteira vertical moral e cultural: em cima, a cidade burguesa 'inodora' e limpa; embaixo, o domínio invisível, reprimido e monstruoso dos dejetos.",
+        thesis: "A rede de esgotos é uma infraestrutura profundamente política: no Norte Global, ela oculta o metabolismo corporal até colapsar em 'fatbergs'; no Sul Global, sua ausência seletiva produz um 'apartheid sanitário' mortal sustentado por hierarquias de casta.",
+        schemas: [
+          {
+            title: "Corte do Metabolismo Sanitário: Rede Oculta vs. Apartheid Sanitário",
+            type: "svg",
+            svgKey: "cap13Sewer",
+            caption: "O sucesso da engenharia sanitária moderna mede-se pelo desaparecimento do assunto da conversa pública — mas essa invisibilidade é privilégio de uma minoria global."
+          },
+          {
+            title: "Processo de Invisibilização Sanitária na Modernidade",
+            type: "flow",
+            nodes: [
+              { title: "1. Epidemias do Séc. XIX", body: "Cólera em Londres e Paris força obras gigantescas (1.400 milhas em Londres; 350 em Paris)." },
+              { title: "2. Racionalização (Haussmann)", body: "Esgotos deixam de ser refúgio rebelde (Victor Hugo) e viram rede controlada e policial.", tone: "mid" },
+              { title: "3. Cidade 'Inodora'", body: "Porcelana, descarga e tubulações desconectam o lar moderno do ciclo da água e do excremento." },
+              { title: "4. Retorno do Reprimido", body: "Entupimentos (fatbergs), ratos e mitos de horror expõem a fragilidade do sistema oculto.", tone: "dark" }
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-13-1",
+            code: "13.1",
+            title: "O subsolo sanitário moderno e a invisibilização dos dejetos",
+            body: "No século XIX, reformadores como Edwin Chadwick (1842) associaram diretamente altitude física a pureza moral ('os distritos mais baixos' como foco de vício e doença). Em Paris, Haussmann e Belgrand abriram bulevares militares acima e esgotos racionalizados abaixo, apagando o espaço de refúgio retratado por Victor Hugo em Os Miseráveis. Com o tempo, o excremento perdeu sua ligação agrícola com fertilidade e virou tabu absoluto — gerando o 'estranho/uncanny' freudiano e um cinema de terror cheio de monstros nos esgotos, além de metáforas misóginas sobre fluidez e sujeira.",
+            schemas: [
+              {
+                title: "A Fronteira Vertical Moral da Cidade Higienizada",
+                type: "tension",
+                left: {
+                  title: "Acima (Superfície Burguesa)",
+                  tone: "mid",
+                  bullets: [
+                    "Ordem, racionalidade, transparência e ausência de odor.",
+                    "Cultura, civilização e corpo 'ereto' limpo.",
+                    "Ilusão de casa autônoma desconectada da natureza."
+                  ]
+                },
+                mid: { sym: "—", text: "Fronteira do Asfalto" },
+                right: {
+                  title: "Abaixo (Subsolo Repressivo)",
+                  tone: "dark",
+                  bullets: [
+                    "Irracionalidade, dejetos, ratos e 'sinceridade da sujeira'.",
+                    "Espaço estigmatizado em filmes de terror e mitos urbanos.",
+                    "Risco permanente de refluxo quando a rede falha."
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            id: "sub-13-2",
+            code: "13.2",
+            title: "Apartheid sanitário e trabalho manual de esgoto na Índia",
+            body: "Globalmente, 1,7 milhão de pessoas morrem por ano por doenças ligadas à falta de água e saneamento. Em cidades como Mumbai, favelas surgidas após 2006 são proibidas de receber rede oficial de esgoto; 40% das mortes nessas comunidades decorrem de infecções sanitárias. Sem infraestrutura, cerca de 800.000 trabalhadores — quase todos Dalits ('intocáveis', situados abaixo até dos pés na hierarquia vertical mítica do sistema de castas) — realizam o 'manual scavenging' (limpeza manual de latrinas) e mergulham sem equipamento em esgotos entupidos, sofrendo mortes frequentes e impunes.",
+            schemas: [
+              {
+                title: "Interseção entre Hierarquia de Casta e Apartheid Sanitário",
+                type: "flow",
+                nodes: [
+                  { title: "Exclusão Estatal", body: "Saneamento negado a favelas para 'desencorajar' ocupações informais." },
+                  { title: "Teologia Vertical de Casta", body: "Dalits são empurrados historicamente para o contato direto com o excremento.", tone: "mid" },
+                  { title: "Risco Mortal Diário", body: "Limpeza manual sem proteção e asfixia de 'mergulhadores de esgoto' em Deli e Chennai." },
+                  { title: "Luta Política", body: "Movimento Dalit ('Nunca mais!') conquista proibição legal nacional (2013), ainda em disputa prática.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-13-3",
+            code: "13.3",
+            title: "'Fatbergs', manutenção invisível e fragilidade da rede oculta",
+            body: "Mesmo nas metrópoles mais ricas, a rede de esgotos do século XIX é frágil e depende de trabalho humano pesado e invisível: equipes de 'flushers' (300 em NY, 284 em Paris, 40 em Londres) desobstruem galerias com técnicas quase artesanais. A proliferação de restaurantes fast-food e lenços umedecidos cria 'fatbergs' (blocos gigantes de gordura solidificada de até 10 toneladas em Londres) — traduzindo literalmente a 'esclerose corporal' em 'esclerose da infraestrutura urbana'.",
+            schemas: [
+              {
+                title: "Da 'Esclerose Corporal' à 'Esclerose Urbana' (Marvin & Medd)",
+                type: "flow",
+                nodes: [
+                  { title: "Consumo Fast-Food + Descartáveis", body: "Óleos, gorduras e lenços jogados na rede em bairros densos." },
+                  { title: "Formação de Fatbergs", body: "Gordura solidifica nas paredes antigas dos túneis (blocos de 10+ toneladas).", tone: "mid" },
+                  { title: "Trabalho Invisível de Reparo", body: "Flushers descem manualmente para evitar transbordamento nas ruas e casas.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 14 — BUNKER/TÚNEL: SANTUÁRIOS SUBTERRÂNEOS
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-14",
+        group: "below",
+        badge: "Capítulo 14",
+        partLabel: "Parte Dois: Abaixo (Below)",
+        title: "Bunker/Túnel: Santuários Subterrâneos",
+        origTitle: "Bunker/Tunnel: Subsurface Sanctuaries",
+        lead: "Quanto mais poderosos se tornam os satélites, drones e bombas guiadas por GPS nos céus, mais fundo Estados, insurgentes, migrantes e bilionários cavam na terra. O subsolo tornou-se a última fronteira opaca diante do 'olhar que tudo vê' — gerando uma corrida tecnológica entre escavação e destruição.",
+        thesis: "A opacidade física do solo ('triunfo da superfície') transforma bunkers e túneis em santuários contra a supremacia aérea, provocando novas armas penetradoras, militarização de fronteiras e a criminalização de moradores e exploradores do subsolo urbano.",
+        schemas: [
+          {
+            title: "Guerra e Refúgio no Subsolo: Bunkers vs. Túneis de Fronteira",
+            type: "svg",
+            svgKey: "cap14BunkerTunnel",
+            caption: "A mesma lógica vertical opera em duas escalas: bunkers estratégicos contra bombas gigantes e túneis artesanais que subvertem muros fronteiriços."
+          },
+          {
+            title: "Matriz de Usos Políticos e Sociais do Subsolo",
+            type: "compare",
+            headers: ["Tipo de Uso", "Atores Principais", "Exemplos Reais", "Dinâmica de Poder"],
+            rows: [
+              ["Bunker Estatal / Militar", "EUA, Rússia, China, Irã, Coreia do Norte.", "Montanhas dos Urais, Fordo (Irã), redes sob a DMZ.", "Proteger comandos e armas contra ataques aéreos/nucleares."],
+              ["Bunker Corporativo / Elite", "Empresas de TI e bilionários apocalípticos.", "Silos Atlas (Novo México) e bunkers nos Alpes suíços.", "Proteger dados financeiros e elites de colapsos e catástrofes."],
+              ["Túneis de Sobrevivência", "Populações sitiadas, migrantes e cartéis.", "~1.000 túneis Gaza–Egito; ~140 EUA–México.", "Contornar cercos militares e muros; criminalizados como 'terror'."],
+              ["Subsolo Civil / UrbEx", "Sem-teto, exploradores urbanos (UrbEx), turistas.", "Túneis de NY (Mole People), catacumbas de Paris, Berlim.", "Apropriação cultural e abrigo vs. securitização policial pós-11/9."]
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-14-1",
+            code: "14.1",
+            title: "Bunkers: da Guerra Fria aos refúgios de bilionários",
+            body: "Como previu Paul Virilio (Bunker Archaeology), a guerra aérea empurrou infraestruturas inteiras para baixo da rocha (o Pentágono estima 10.000 'instalações profundamente enterradas' no mundo). Em resposta, os EUA investem no programa 'Transparent Earth' (sensores sísmicos para mapear até 5 km de profundidade) e em bombas 'bunker-busters' (a MOP de 13,6 toneladas e a nuclear B61-11 — que na prática mal penetra rocha dura e gera nuvens radioativas mortais). Após a Guerra Fria, antigos silos e bunkers viraram data centers ultraseguros, condomínios de US$ 2 milhões para bilionários e destinos de 'turismo sombrio' (Berliner Unterwelten).",
+            schemas: [
+              {
+                title: "A Corrida Vertical: Escavar Mais Fundo vs. Penetrar Mais Fundo",
+                type: "flow",
+                nodes: [
+                  { title: "Supremacia Aérea / GPS", body: "Satélites e drones tornam alvos de superfície imediatamente destruíveis." },
+                  { title: "Escavação Profunda", body: "Adversários (Tora Bora, Fordo, Moscou) enterram comandos sob concreto e rocha.", tone: "mid" },
+                  { title: "Delírio Bunker-Buster", body: "DARPA Transparent Earth + bombas MOP e mini-nukes B61-11 tentam violar o subsolo." },
+                  { title: "Reuso Pós-Guerra Fria", body: "Bunkers antigos são convertidos em cofres de dados, condomínios de luxo e museus.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-14-2",
+            code: "14.2",
+            title: "Túneis de resistência, contrabando e guerra assimétrica",
+            body: "Como escreve Bryan Finoki, 'todo muro projeta sua própria negação' na forma de túneis. Quanto mais militarizadas são as fronteiras na superfície, mais redes subterrâneas florescem — desmascarando o 'teatro de segurança'. Em Gaza, sob bloqueio aéreo e terrestre israelense, cerca de 1.000 túneis sob a fronteira com o Egito sustentaram toda a economia local (remédios, gado, combustível), mas são enquadrados pela mídia militar exclusivamente como 'túneis do terror'. Na fronteira EUA–México (~140 túneis), o comando militar NORTHCOM e leis especiais tentam conter a 'tunelização da migração' e do tráfico.",
+            schemas: [
+              {
+                title: "O Paradoxo dos Muros Militarizados",
+                type: "tension",
+                left: {
+                  title: "Muro na Superfície ('Teatro de Segurança')",
+                  tone: "dark",
+                  bullets: [
+                    "Promete vedação total e controle administrativo perfeito.",
+                    "Criminaliza migração e bloqueia fluxos civis essenciais.",
+                    "Animaliza e desumaniza quem é empurrado para baixo."
+                  ]
+                },
+                mid: { sym: "⇅", text: "Subversão Subterrânea" },
+                right: {
+                  title: "Redes de Túneis Abaixo",
+                  tone: "mid",
+                  bullets: [
+                    "Gaza–Egito: linha vital de sobrevivência sob cerco.",
+                    "EUA–México: resposta direta ao fechamento de fronteiras.",
+                    "Força exércitos a treinar guerra de túneis sob cidades (ex.: Chicago, 2004)."
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            id: "sub-14-3",
+            code: "14.3",
+            title: "Exploração Urbana (UrbEx) e contramapeamento do subsolo",
+            body: "Sob cidades como Nova York (até 5.000 sem-teto nos túneis nos anos 1980–90, retratados no documentário Dark Days) e Paris (177 milhas de pedreiras e catacumbas frequentadas por 80.000 'catophiles'/ano), existe uma rica vida subterrânea. Grupos de Exploração Urbana (UrbEx), como o geógrafo Bradley Garrett ('place hacking'), infiltram túneis, esgotos e arranha-céus para desafiar a cidade higienizada e expor os bastidores ocultos da infraestrutura. Desde o 11/9, porém, o Estado securitizou o subsolo: soldou acessos, expulsou moradores à força e criminalizou exploradores urbanos (confiscando até a tese de doutorado de Garrett em Londres).",
+            schemas: [
+              {
+                title: "A Disputa pelo Subsolo Urbano Civil",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Abrigo de Crise", body: "Sem-teto nos túneis de Manhattan ('urban caves') buscam calor e proteção contra a gentrificação na superfície." },
+                  { title: "Place Hacking (UrbEx)", body: "Inspirado nos Situacionistas ('sob a rua, a praia!'), revela a cidade volumétrica além do patrimônio oficial.", tone: "mid" },
+                  { title: "Securitização Pós-11/9", body: "Polícia subterrânea em Paris, mapas de dutos sigilosos em Londres e despejos armados nos túneis de NY.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         CAPÍTULO 15 — MINA: IMPERIALISMO EXTRATIVO NA FRONTEIRA PROFUNDA
+         ------------------------------------------------------------------------ */
+      {
+        id: "cap-15",
+        group: "below",
+        badge: "Capítulo 15",
+        partLabel: "Parte Dois: Abaixo (Below)",
+        title: "Mina: Imperialismo Extrativo na Fronteira Profunda",
+        origTitle: "Mine: Extractive Imperialism on the Deep Frontier",
+        lead: "Para fechar a jornada vertical do livro, Graham desce até a fronteira mais profunda da urbanização planetária: as minas ultraprofundas de ouro, ferro, bauxita e minerais raros. Ele revela que o brilho dos arranha-céus em Dubai, Toronto ou Londres depende diretamente da devastação subterrânea em periferias do Sul Global.",
+        thesis: "Arranha-céus e minas profundas são espelhos invertidos de um mesmo sistema metabólico global ('imperialismo extrativo'): quanto mais alto construímos nos centros financeiros, mais fundo e violentamente escavamos a crosta terrestre em zonas de sacrifício distantes.",
+        schemas: [
+          {
+            title: "Escala Comparativa: O 'Arranha-céu Invertido' (+830 m vs. -4.000 m)",
+            type: "svg",
+            svgKey: "cap15InvertedSkyscraper",
+            caption: "Inspirado no diagrama de Rem Koolhaas (Bienal de Veneza 2014) e na tese de Gray Brechin: as escavações humanas para baixo já superam em quase 5 vezes a altura de qualquer torre."
+          },
+          {
+            title: "Cadeia Metabólica Global: Da Mina Profunda ao Skyline de Luxo",
+            type: "flow",
+            nodes: [
+              { title: "1. Zonas de Sacrifício", body: "Minas na África do Sul, Guiné, Brasil, Austrália, Congo (3TG) e Alberta sofrem despejos e contaminação." },
+              { title: "2. Financiamento Global", body: "Toronto (75% das mineradoras do mundo; 70% do capital global), Londres e Dubai lucram e financiam.", tone: "mid" },
+              { title: "3. Construção Vertical", body: "Aço, concreto, alumínio, ouro e cobre viram torres (Burj Khalifa) e infraestrutura urbana." },
+              { title: "4. Reciclagem do Lucro", body: "Oligarcas da mineração e petróleo compram coberturas de luxo em Londres e NY via empresas de fachada.", tone: "dark" }
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-15-1",
+            code: "15.1",
+            title: "Arranha-céus invertidos: a mineração ultraprofunda",
+            body: "Como mostrou o geógrafo Gray Brechin a partir da Corrida do Ouro na Califórnia, tecnologias essenciais dos arranha-céus — elevadores de alta velocidade, ventilação, telefones, estruturas em grade e hoje os cabos de fibra de carbono da KONE — nasceram ou co-evoluíram nas minas profundas. Na África do Sul (Mponeng e TauTona, a -4 km de profundidade, 10% da crosta continental), 4.000 mineiros descem diariamente em 'gaiolas' até rochas a 60°C refrigeradas com 6.000 toneladas de gelo/dia. O custo humano é brutal: cerca de 12.000 mortes/ano na mineração mundial, 50.000 ex-mineiros sul-africanos com silicose e o massacre de 44 grevistas em Marikana (2012).",
+            schemas: [
+              {
+                title: "Co-evolução Técnica: Mina Profunda ↔ Arranha-céu",
+                type: "compare",
+                headers: ["Tecnologia / Dimensão", "No Arranha-céu (Acima)", "Na Mina Profunda (Abaixo)"],
+                rows: [
+                  ["Transporte Vertical", "Elevador expresso e cabos de fibra de carbono (1 km).", "'Gaiola' de 3 andares a 60 km/h (até 4 km de profundidade)."],
+                  ["Climatização", "Ar-condicionado para conforto de executivos e turistas.", "6.000 ton de gelo/dia para impedir que mineiros morram cozidos a 60°C."],
+                  ["Visibilidade Pública", "Celebrado como ícone de modernidade, turismo e progresso.", "Ocultado, silenciado; doenças (silicose) e mortes tratadas como estatística."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-15-2",
+            code: "15.2",
+            title: "Fracking, areias betuminosas e mineração submarina",
+            body: "Com o esgotamento das jazidas rasas e a explosão da demanda urbana global (o valor do setor mineral saltou de US$ 80 bi em 1995 para US$ 463 bi em 2008), o 'imperialismo extrativo' (Henry Veltmeyer) e a 'reprimarização' avançam sobre fronteiras cada vez mais radicais: concessões minerárias cobrem 72% do Peru e cresceram 450% na Colômbia; florestas boreais do tamanho da Inglaterra são arrasadas pelas areias betuminosas de Alberta; topos inteiros de montanhas são explodidos nos Apalaches; e novas tecnologias de fraturamento profundo (fracking) e prospecção submarina estendem a extração a ecossistemas antes intocados.",
+            schemas: [
+              {
+                title: "Expansão das Fronteiras Extrativas (Acúmulo por Despossessão)",
+                type: "grid",
+                cols: 3,
+                items: [
+                  { title: "Remoção em Massa", body: "Areias betuminosas (Alberta) e remoção de topos de montanhas nos Apalaches criam paisagens tóxicas permanentes." },
+                  { title: "Concessões Pós-Coloniais", body: "Subsolo de países inteiros (Peru, Colômbia, África) loteado a multinacionais com proteção armada.", tone: "mid" },
+                  { title: "Fronteiras Extremas", body: "Perfuração profunda (fracking), minas a -4,5 km e dragagem/mineração de fundos oceânicos.", tone: "dark" }
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-15-3",
+            code: "15.3",
+            title: "Cadeias metabólicas: do subsolo profundo aos skylines globais",
+            body: "Retornando ao Burj Khalifa que abriu o livro, Graham mostra sua pegada subterrânea oculta: 55.000 ton de aço (ferro do Brasil/Austrália + carvão), 250.000 ton de concreto (areia importada da Austrália), 700 ton de alumínio (bauxita da Guiné/Índia), mármore do Egito e 'minerais de conflito' (3TG: tântalo, estanho, tungstênio e ouro) do Congo e Ruanda. Em Toronto — capital mundial da mineração — conferências luxuosas do setor (PDAC) acontecem a poucos quarteirões de ativistas que denunciam o assassinato de indígenas e sindicalistas nos locais de extração. Para cada anel de ouro de 10 gramas, 20 toneladas de rejeito tóxico são arrancadas da terra.",
+            schemas: [
+              {
+                title: "A Raio-X Extrativo do Burj Khalifa (Dubai)",
+                type: "grid",
+                cols: 4,
+                items: [
+                  { title: "55.000 t de Aço", body: "Minério de ferro (Brasil/Austrália) + carvão metalúrgico." },
+                  { title: "250.000 t de Concreto", body: "~1,15 milhão de ton de areia e brita (areia importada da Austrália).", tone: "mid" },
+                  { title: "700 t de Alumínio", body: "Bauxita da Guiné e Índia; Emaar (construtora do Burj) agora compra minas na África." },
+                  { title: "TI & Ouro (3TG)", body: "Minerais de conflito (Congo/Ruanda) nos sistemas digitais e no souk de ouro da base.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+
+      /* ------------------------------------------------------------------------
+         POSFÁCIO (AFTERWORD)
+         ------------------------------------------------------------------------ */
+      {
+        id: "afterword",
+        group: "afterword",
+        badge: "Posfácio",
+        partLabel: "Síntese Final",
+        title: "Por uma Política Volumétrica e Democrática",
+        origTitle: "Afterword",
+        lead: "Encerrando a jornada de 35.786 km de órbita até 4 km de profundidade, Stephen Graham dialoga com Paul Haacke e Arjun Appadurai: a imaginação não é apenas fuga, mas um 'campo de ação'. Contestar as desigualdades extremas do século XXI exige abandonar a leitura plana da realidade e construir uma política democrática em três dimensões.",
+        thesis: "Ver o mundo em corte vertical não é um exercício estético, mas uma ferramenta política indispensável: permite conectar lutas que parecem isoladas no mapa plano e disputar democraticamente o céu, o ar, a moradia, o solo e o subsolo.",
+        schemas: [
+          {
+            title: "Da Geografia Plana (2D) à Política Volumétrica Democrática (3D)",
+            type: "svg",
+            svgKey: "afterwordVolumetric",
+            caption: "Somente integrando as quatro camadas verticais conseguimos enxergar como o poder opera de forma conectada — e onde estão as brechas para resistir."
+          },
+          {
+            title: "Síntese dos 4 Eixos de Disputa Política no Livro Vertical",
+            type: "grid",
+            cols: 4,
+            items: [
+              { title: "1. Órbita & Vigilância", body: "Quebrar o monopólio militar/corporativo do olhar de cima via sous-surveillance, contracartografia e controle democrático." },
+              { title: "2. Habitação & Mobilidade", body: "Desmercantilizar a terra urbana, retomar a habitação social vertical de qualidade e reintegrar a rua pública.", tone: "mid" },
+              { title: "3. Ar & Clima", body: "Tratar o ar limpo e a refrigeração urbana como bens públicos universais contra bolhas privadas e atmoterrorismo." },
+              { title: "4. Solo & Subsolo", body: "Universalizar o saneamento, proteger comunidades de zonas de sacrifício extrativo e desmilitarizar o subterrâneo.", tone: "dark" }
+            ]
+          }
+        ],
+        subchapters: [
+          {
+            id: "sub-p-1",
+            code: "P.1",
+            title: "Superando a geografia plana",
+            body: "A maior lição metodológica de Vertical é que mapas bidimensionais e metáforas naturalizadas de 'alto' e 'baixo' escondem relações vitais de poder. Quando cortamos a cidade na vertical, enxergamos de imediato que o brilho de um arranha-céu em Londres ou Dubai está conectado à extração de bauxita na Guiné, à areia roubada de praias asiáticas, ao ar sufocante nas ruas abaixo e aos porões superlotados onde dormem os trabalhadores que mantêm a cidade funcionando.",
+            schemas: [
+              {
+                title: "O Ganho Analítico do Olhar em Seção Vertical",
+                type: "compare",
+                headers: ["O que o Mapa Plano Esconde", "O que o Corte Vertical Revela"],
+                rows: [
+                  ["Separa cidade rica do centro da mina distante no interior.", "Mostra a cadeia metabólica direta entre a torre (+830 m) e a mina (-4 km)."],
+                  ["Trata a atmosfera e o solo como 'cenários naturais neutros'.", "Expõe domos de poluição, solo artificial e aquíferos comprimidos como política."],
+                  ["Vê desigualdade apenas como distância horizontal (centro vs. periferia).", "Revela segregação empilhada no mesmo endereço (penthouses, poor doors, porões)."]
+                ]
+              }
+            ]
+          },
+          {
+            id: "sub-p-2",
+            code: "P.2",
+            title: "Horizontes de resistência no espaço tridimensional",
+            body: "Graham reconhece que o livro apenas começou a mapear a enorme variedade de movimentos sociais que já contestam essas geografias verticais — dos observadores de satélites secretos (#NotABugSplat, Trevor Paglen) aos movimentos contra despejos e pela moradia, campanhas contra a máfia da areia (Awaaz), lutas Dalit pelo fim do trabalho manual em esgotos e redes contra a mineração predatória. Citando Paul Haacke e Arjun Appadurai, propõe uma imaginação progressista que conquiste um 'ponto de vista elevado' não para dominar de cima, mas para enxergar múltiplos futuros possíveis e agir democraticamente no presente.",
+            schemas: [
+              {
+                title: "Ecossistema das Resistências Volumétricas (Exemplos do Livro)",
+                type: "flow",
+                nodes: [
+                  { title: "No Céu e no Ar", body: "Contracartografia (Google Earth), Occucopter, #NotABugSplat e defesa do direito de respirar." },
+                  { title: "Nas Torres e Ruas", body: "Luta por habitação social, crítica às poor doors, preservação da rua e movimentos horizontais.", tone: "mid" },
+                  { title: "No Solo e Subsolo", body: "Combate à extração ilegal de areia, movimento Dalit por saneamento, UrbEx e resistência indígena contra minas.", tone: "dark" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       MOTOR DE RENDERIZAÇÃO DOS ESQUEMAS E CONTEÚDO
+       ========================================================================== */
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderNode(item) {
+      const toneClass = item.tone ? `tone-${item.tone}` : "";
+      const bodyHtml = item.body ? `<p>${escapeHtml(item.body)}</p>` : "";
+      const listHtml = item.bullets
+        ? `<ul>${item.bullets.map(b => `<li>${escapeHtml(b)}</li>`).join("")}</ul>`
+        : "";
+      return `
+        <div class="diag-node ${toneClass}">
+          <h5>${escapeHtml(item.title)}</h5>
+          ${bodyHtml}
+          ${listHtml}
+        </div>
+      `;
+    }
+
+    function renderSchemaBody(schema) {
+      if (schema.type === "svg") {
+        return `<div class="svg-frame">${SVG_LIB[schema.svgKey] || ""}</div>`;
+      }
+
+      if (schema.type === "flow") {
+        return `
+          <div class="diag-flow">
+            ${schema.nodes.map((n, i) => `
+              ${renderNode(n)}
+              ${i < schema.nodes.length - 1 ? `<div class="diag-arrow">→</div>` : ""}
+            `).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "grid") {
+        const cols = schema.cols || 3;
+        return `
+          <div class="diag-grid cols-${cols}">
+            ${schema.items.map(renderNode).join("")}
+          </div>
+        `;
+      }
+
+      if (schema.type === "tension") {
+        return `
+          <div class="diag-tension">
+            ${renderNode(schema.left)}
+            <div class="tension-mid">
+              <span class="sym">${escapeHtml(schema.mid.sym)}</span>
+              <div>${escapeHtml(schema.mid.text)}</div>
+            </div>
+            ${renderNode(schema.right)}
+          </div>
+        `;
+      }
+
+      if (schema.type === "compare") {
+        return `
+          <div class="diag-table-wrap">
+            <table class="diag-table">
+              <thead>
+                <tr>${schema.headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr>
+              </thead>
+              <tbody>
+                ${schema.rows.map(row => `
+                  <tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+
+      if (schema.type === "ladder") {
+        return `
+          <div class="diag-ladder">
+            ${schema.steps.map((s, idx) => `
+              <div class="ladder-step ${s.tone || ""}">
+                <div class="ladder-num">${idx + 1}</div>
+                <div>
+                  <h5>${escapeHtml(s.title)}</h5>
+                  <p>${escapeHtml(s.body)}</p>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
+    function renderSchemaCard(schema, idx, isNested = false) {
+      const isSvg = schema.type === "svg";
+      const tagClass = isNested ? "sub-tag" : (isSvg ? "svg-tag" : "");
+      const tagLabel = isNested
+        ? "Esquema do Subcapítulo"
+        : (isSvg ? "Esquema Visual (SVG)" : `Esquema Explicativo ${idx + 1}`);
+
+      return `
+        <div class="schema-card ${isNested ? "nested" : ""}">
+          <div class="schema-head">
+            <span class="schema-tag ${tagClass}">${tagLabel}</span>
+            <h4 class="schema-title">${escapeHtml(schema.title)}</h4>
+          </div>
+          ${renderSchemaBody(schema)}
+          ${schema.caption ? `<p class="schema-caption">${escapeHtml(schema.caption)}</p>` : ""}
+        </div>
+      `;
+    }
+
+    function renderOverviewCards() {
+      const items = SECTIONS.filter(s => s.id !== "overview");
+      return `
+        <div class="block-head">
+          <h3>Acesso Direto aos Capítulos da Parte 2</h3>
+          <span class="block-pill">Capítulos 8–15 &amp; Posfácio</span>
+        </div>
+        <div class="overview-grid">
+          ${items.map(sec => `
+            <button class="overview-card-btn" data-goto-sec="${sec.id}">
+              <div class="ov-num">${escapeHtml(sec.badge)}</div>
+              <div class="ov-title">${escapeHtml(sec.title)}</div>
+              <div class="ov-desc">${escapeHtml(sec.thesis.slice(0, 106))}...</div>
+            </button>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    /* ==========================================================================
+       CONTROLE DE NAVEGAÇÃO, SIDEBAR E TOPBAR
+       ========================================================================== */
+    const sidebarNavRoot = document.getElementById("sidebarNavRoot");
+    const stageRoot = document.getElementById("stageRoot");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebarOverlay");
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const toggleExpandAllBtn = document.getElementById("toggleExpandAllBtn");
+    const topPills = document.querySelectorAll(".top-pill");
+
+    let allExpanded = false;
+
+    function closeMobileSidebar() {
+      sidebar.classList.remove("open");
+      sidebarOverlay.classList.remove("open");
+    }
+
+    mobileMenuBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("open");
+      sidebarOverlay.classList.toggle("open");
+    });
+
+    sidebarOverlay.addEventListener("click", closeMobileSidebar);
+
+    function buildSidebar() {
+      let html = `
+        <button class="nav-overview-btn active" data-open-sec="overview">
+          <span>▥</span>
+          <span>Visão Geral (Corte Vertical)</span>
+        </button>
+      `;
+
+      const groups = [
+        { key: "above", label: "Parte Um: Acima (Continuação)" },
+        { key: "below", label: "Parte Dois: Abaixo (Below)" },
+        { key: "afterword", label: "Fechamento" }
+      ];
+
+      groups.forEach(g => {
+        html += `<div class="nav-group-label">${escapeHtml(g.label)}</div>`;
+        SECTIONS.filter(s => s.group === g.key).forEach(sec => {
+          const hasSubs = sec.subchapters && sec.subchapters.length > 0;
+          html += `
+            <div class="nav-item" data-nav-sec="${sec.id}">
+              <div class="nav-item-row">
+                <button class="nav-chap-btn" data-open-sec="${sec.id}">
+                  <span class="nav-badge">${escapeHtml(sec.badge.replace("Capítulo ", "Cap. "))}</span>
+                  <span>${escapeHtml(sec.title)}</span>
+                </button>
+                ${hasSubs ? `<button class="nav-toggle-sub" data-toggle-sec="${sec.id}" aria-label="Expandir subcapítulos">▸</button>` : ""}
+              </div>
+              ${hasSubs ? `
+                <ul class="nav-sub-list">
+                  ${sec.subchapters.map(sub => `
+                    <li>
+                      <button class="nav-sub-btn" data-open-sec="${sec.id}" data-open-sub="${sub.id}">
+                        ${escapeHtml(sub.code)} ${escapeHtml(sub.title)}
+                      </button>
+                    </li>
+                  `).join("")}
+                </ul>
+              ` : ""}
+            </div>
+          `;
+        });
+      });
+
+      sidebarNavRoot.innerHTML = html;
+
+      sidebarNavRoot.querySelectorAll("[data-open-sec]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          renderSection(btn.dataset.openSec, btn.dataset.openSub || null);
+        });
+      });
+
+      sidebarNavRoot.querySelectorAll("[data-toggle-sec]").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          btn.closest(".nav-item").classList.toggle("expanded");
+        });
+      });
+    }
+
+    toggleExpandAllBtn.addEventListener("click", () => {
+      allExpanded = !allExpanded;
+      sidebarNavRoot.querySelectorAll(".nav-item").forEach(item => {
+        if (item.querySelector(".nav-sub-list")) {
+          item.classList.toggle("expanded", allExpanded);
+        }
+      });
+      toggleExpandAllBtn.textContent = allExpanded ? "Recolher" : "Expandir";
+    });
+
+    topPills.forEach(pill => {
+      pill.addEventListener("click", () => {
+        renderSection(pill.dataset.jumpTarget);
+      });
+    });
+
+    function renderSection(secId, subId = null) {
+      const idx = SECTIONS.findIndex(s => s.id === secId);
+      if (idx === -1) return;
+
+      const sec = SECTIONS[idx];
+      const prevSec = idx > 0 ? SECTIONS[idx - 1] : null;
+      const nextSec = idx < SECTIONS.length - 1 ? SECTIONS[idx + 1] : null;
+
+      // Atualiza pílulas da barra superior
+      topPills.forEach(pill => {
+        pill.classList.toggle("active", pill.dataset.jumpGroup === sec.group);
+      });
+
+      // Atualiza sidebar
+      const overviewBtn = sidebarNavRoot.querySelector(".nav-overview-btn");
+      if (overviewBtn) overviewBtn.classList.toggle("active", secId === "overview");
+
+      sidebarNavRoot.querySelectorAll(".nav-item").forEach(item => {
+        const isCurrent = item.dataset.navSec === secId;
+        item.classList.toggle("active-chapter", isCurrent);
+        if (isCurrent && item.querySelector(".nav-sub-list")) {
+          item.classList.add("expanded");
+        }
+      });
+
+      sidebarNavRoot.querySelectorAll(".nav-sub-btn").forEach(btn => {
+        btn.classList.toggle("active-sub", Boolean(subId && btn.dataset.openSub === subId));
+      });
+
+      const hasSubs = sec.subchapters && sec.subchapters.length > 0;
+
+      stageRoot.innerHTML = `
+        <div class="hero-card">
+          <div class="hero-tags">
+            <span class="tag-solid">${escapeHtml(sec.badge)}</span>
+            <span class="tag-ghost">${escapeHtml(sec.partLabel)}</span>
+          </div>
+          <h2 class="hero-title">${escapeHtml(sec.title)}</h2>
+          <div class="hero-orig">${escapeHtml(sec.origTitle)}</div>
+          <p class="hero-lead">${escapeHtml(sec.lead)}</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-kicker">◆ Argumento / Questão Central</div>
+          <p class="thesis-text">${escapeHtml(sec.thesis)}</p>
+        </div>
+
+        ${hasSubs ? `
+          <div class="sub-pills" aria-label="Atalhos dos subcapítulos">
+            ${sec.subchapters.map(sub => `
+              <button class="sub-pill" data-jump-sub="${sub.id}">
+                ${escapeHtml(sub.code)} ${escapeHtml(sub.title)}
+              </button>
+            `).join("")}
+          </div>
+        ` : ""}
+
+        <div class="block-head">
+          <h3>${sec.isOverview ? "Corte Vertical Interativo — Parte 2" : "Esquemas Explicativos do Capítulo"}</h3>
+          <span class="block-pill">${sec.schemas.length} ${sec.schemas.length === 1 ? "Diagrama" : "Diagramas"}</span>
+        </div>
+
+        ${sec.schemas.map((sc, i) => renderSchemaCard(sc, i, false)).join("")}
+
+        ${sec.isOverview ? renderOverviewCards() : ""}
+
+        ${hasSubs ? `
+          <div class="block-head">
+            <h3>Subcapítulos e Esquemas Específicos</h3>
+            <span class="block-pill">${sec.subchapters.length} Subcapítulos</span>
+          </div>
+
+          ${sec.subchapters.map(sub => `
+            <article class="sub-card" id="${sub.id}">
+              <div class="sub-head">
+                <span class="sub-code">${escapeHtml(sub.code)}</span>
+                <h4 class="sub-title">${escapeHtml(sub.title)}</h4>
+              </div>
+              <p class="sub-body">${escapeHtml(sub.body)}</p>
+              ${sub.schemas.map((sc, i) => renderSchemaCard(sc, i, true)).join("")}
+            </article>
+          `).join("")}
+        ` : ""}
+
+        <div class="pager-nav">
+          ${prevSec ? `<button class="pager-btn" data-goto-sec="${prevSec.id}">← Anterior: ${escapeHtml(prevSec.badge)} — ${escapeHtml(prevSec.title)}</button>` : "<span></span>"}
+          ${nextSec ? `<button class="pager-btn next" data-goto-sec="${nextSec.id}">Próximo: ${escapeHtml(nextSec.badge)} — ${escapeHtml(nextSec.title)} →</button>` : `<button class="pager-btn next" data-goto-sec="overview">Voltar ao Corte Vertical ↺</button>`}
+        </div>
+      `;
+
+      // Liga eventos dinâmicos
+      stageRoot.querySelectorAll("[data-goto-sec]").forEach(btn => {
+        btn.addEventListener("click", () => renderSection(btn.dataset.gotoSec));
+      });
+
+      stageRoot.querySelectorAll("[data-svg-goto]").forEach(el => {
+        el.addEventListener("click", () => renderSection(el.dataset.svgGoto));
+      });
+
+      stageRoot.querySelectorAll("[data-jump-sub]").forEach(btn => {
+        btn.addEventListener("click", () => scrollToSub(btn.dataset.jumpSub));
+      });
+
+      closeMobileSidebar();
+
+      if (subId) {
+        setTimeout(() => scrollToSub(subId), 45);
+      } else {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function scrollToSub(subId) {
+      const el = document.getElementById(subId);
+      if (!el) return;
+
+      sidebarNavRoot.querySelectorAll(".nav-sub-btn").forEach(btn => {
+        btn.classList.toggle("active-sub", btn.dataset.openSub === subId);
+      });
+
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+      el.classList.remove("flash-focus");
+      void el.offsetWidth;
+      el.classList.add("flash-focus");
+      setTimeout(() => el.classList.remove("flash-focus"), 1700);
+    }
+
+    // Inicializa a Parte 2
+    buildSidebar();
+    renderSection("overview");
+  </script>
+</body>
+</html>
