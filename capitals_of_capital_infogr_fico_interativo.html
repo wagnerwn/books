@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Capitals of Capital (1780–2005) — Infográfico Explicativo</title>
+  <!-- Fontes editoriais opcionais com fallback elegante para fontes do sistema -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       DESIGN TOKENS E PALETA (AZUL MARINHO + AMARELO EDITORIAL)
+       ========================================================================== */
+    :root {
+      --navy-900: #0B1D3A;
+      --navy-800: #122B52;
+      --navy-700: #1D3E73;
+      --navy-100: #E8EEF7;
+      --navy-50:  #F2F5FA;
+
+      --gold-500: #F5C518;
+      --gold-400: #FFD54F;
+      --gold-600: #D9A404;
+      --gold-100: #FEF7DC;
+      --gold-50:  #FFFDF4;
+
+      --bg-page:  #F7F9FC;
+      --bg-card:  #FFFFFF;
+      --text-main: #1A2536;
+      --text-muted: #4A5568;
+      --border-light: #DCE3EE;
+
+      --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --shadow-sm: 0 2px 6px rgba(11, 29, 58, 0.06);
+      --shadow-md: 0 6px 20px rgba(11, 29, 58, 0.09);
+      --sidebar-w: 310px;
+      --topbar-h: 112px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ==========================================================================
+       TOPBAR E LINHA DO TEMPO CLICÁVEL (1780–2005)
+       ========================================================================== */
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 100%);
+      color: #FFFFFF;
+      border-bottom: 3px solid var(--gold-500);
+      box-shadow: 0 4px 16px rgba(11, 29, 58, 0.2);
+    }
+
+    .topbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px 10px;
+      gap: 16px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(245, 197, 24, 0.5);
+      color: var(--gold-500);
+      border-radius: var(--radius-sm);
+      padding: 8px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(245, 197, 24, 0.2);
+    }
+
+    .brand-title {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #FFFFFF;
+      line-height: 1.15;
+    }
+
+    .brand-title span {
+      color: var(--gold-500);
+    }
+
+    .brand-subtitle {
+      font-size: 0.78rem;
+      color: #C5D2E6;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* Linha do tempo horizontal no topo */
+    .timeline-nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 24px 12px;
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--gold-500) var(--navy-900);
+    }
+
+    .timeline-btn {
+      flex: 0 0 auto;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #D9E2F2;
+      font-family: var(--font-sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .timeline-btn:hover {
+      background: rgba(245, 197, 24, 0.18);
+      border-color: var(--gold-400);
+      color: #FFFFFF;
+    }
+
+    .timeline-btn.active {
+      background: var(--gold-500);
+      border-color: var(--gold-500);
+      color: var(--navy-900);
+      box-shadow: 0 2px 8px rgba(245, 197, 24, 0.35);
+    }
+
+    /* ==========================================================================
+       LAYOUT PRINCIPAL: SIDEBAR + ÁREA DE CONTEÚDO
+       ========================================================================== */
+    .app-shell {
+      display: flex;
+      padding-top: var(--topbar-h);
+      min-height: 100vh;
+    }
+
+    /* Sidebar fixa */
+    .sidebar {
+      position: fixed;
+      top: var(--topbar-h);
+      left: 0;
+      bottom: 0;
+      width: var(--sidebar-w);
+      background-color: var(--navy-900);
+      color: #E2E8F0;
+      overflow-y: auto;
+      padding: 18px 14px 40px;
+      border-right: 1px solid var(--navy-700);
+      z-index: 900;
+      transition: transform 0.28s ease;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+      background: var(--navy-700);
+      border-radius: 4px;
+    }
+
+    .sidebar-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--gold-400);
+      font-weight: 700;
+      padding: 0 10px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      margin-bottom: 12px;
+    }
+
+    .nav-chapter-group {
+      margin-bottom: 10px;
+      border-radius: var(--radius-sm);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .nav-chapter-group.active-group {
+      background: rgba(29, 62, 115, 0.45);
+      border-color: rgba(245, 197, 24, 0.45);
+    }
+
+    .nav-chapter-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      color: #FFFFFF;
+      padding: 10px 12px;
+      font-family: var(--font-sans);
+      font-size: 0.83rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      transition: background 0.15s;
+    }
+
+    .nav-chapter-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-chapter-num {
+      flex: 0 0 auto;
+      background: var(--navy-700);
+      color: var(--gold-500);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-top: 1px;
+    }
+
+    .nav-chapter-group.active-group .nav-chapter-num {
+      background: var(--gold-500);
+      color: var(--navy-900);
+    }
+
+    .nav-sublist {
+      list-style: none;
+      padding: 2px 8px 8px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .nav-sub-btn {
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: none;
+      border-left: 2px solid rgba(255, 255, 255, 0.15);
+      color: #CBD5E1;
+      font-family: var(--font-sans);
+      font-size: 0.76rem;
+      font-weight: 400;
+      padding: 5px 8px 5px 10px;
+      cursor: pointer;
+      display: block;
+      transition: all 0.15s;
+      line-height: 1.35;
+    }
+
+    .nav-sub-btn:hover {
+      color: var(--gold-400);
+      border-left-color: var(--gold-400);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .nav-sub-btn.active-sub {
+      color: var(--gold-500);
+      border-left-color: var(--gold-500);
+      font-weight: 600;
+      background: rgba(245, 197, 24, 0.09);
+    }
+
+    /* Overlay mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 29, 58, 0.55);
+      z-index: 850;
+    }
+
+    /* Área principal */
+    .main-content {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      padding: 32px 36px 64px;
+      max-width: calc(100% - var(--sidebar-w));
+    }
+
+    .chapter-view {
+      display: none;
+      max-width: 1060px;
+      margin: 0 auto;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .chapter-view.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       CABEÇALHO DE CAPÍTULO E TESE CENTRAL
+       ========================================================================== */
+    .chapter-header {
+      background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 75%, var(--navy-700) 100%);
+      color: #FFFFFF;
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      border-left: 6px solid var(--gold-500);
+      box-shadow: var(--shadow-md);
+    }
+
+    .chapter-badge {
+      display: inline-block;
+      background: var(--gold-500);
+      color: var(--navy-900);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    .chapter-title {
+      font-family: var(--font-serif);
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      color: #FFFFFF;
+    }
+
+    .chapter-lead {
+      font-size: 0.96rem;
+      color: #DCE6F5;
+      max-width: 860px;
+    }
+
+    .thesis-box {
+      background: var(--gold-50);
+      border: 1px solid #F0D982;
+      border-left: 5px solid var(--gold-600);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .thesis-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--navy-800);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .thesis-label::before {
+      content: "◆";
+      color: var(--gold-600);
+      font-size: 0.8rem;
+    }
+
+    .thesis-text {
+      font-size: 0.96rem;
+      font-weight: 500;
+      color: var(--navy-900);
+    }
+
+    /* ==========================================================================
+       SEÇÃO DE ESQUEMAS EXPLICATIVOS VISUAIS
+       ========================================================================== */
+    .section-heading {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      color: var(--navy-900);
+      margin: 28px 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--navy-100);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-heading span.tag {
+      font-family: var(--font-sans);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: var(--navy-100);
+      color: var(--navy-800);
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    .schema-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 22px 24px;
+      margin-bottom: 22px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .schema-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .schema-num {
+      background: var(--navy-900);
+      color: var(--gold-500);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .schema-title {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--navy-900);
+    }
+
+    .schema-caption {
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-light);
+    }
+
+    /* Componentes de diagramas reutilizáveis */
+    .flow-row {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .flow-box {
+      flex: 1;
+      background: var(--navy-50);
+      border: 1px solid #C8D5E8;
+      border-top: 4px solid var(--navy-800);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .flow-box.highlight-navy {
+      background: var(--navy-900);
+      color: #FFFFFF;
+      border-color: var(--navy-900);
+      border-top: 4px solid var(--gold-500);
+    }
+
+    .flow-box.highlight-navy h4 {
+      color: var(--gold-500);
+    }
+
+    .flow-box.highlight-navy p,
+    .flow-box.highlight-navy li {
+      color: #E2E8F0;
+    }
+
+    .flow-box.highlight-gold {
+      background: var(--gold-100);
+      border-color: #EBD071;
+      border-top: 4px solid var(--gold-600);
+    }
+
+    .flow-box h4 {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin-bottom: 6px;
+    }
+
+    .flow-box p,
+    .flow-box li {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .flow-box ul {
+      padding-left: 16px;
+      margin-top: 4px;
+    }
+
+    .flow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold-600);
+      font-size: 1.4rem;
+      font-weight: 800;
+      padding: 0 2px;
+      user-select: none;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    /* Gráficos de barras estáticas (dados históricos) */
+    .bar-chart {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .bar-item {
+      display: grid;
+      grid-template-columns: 185px 1fr 75px;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.82rem;
+    }
+
+    .bar-label {
+      font-weight: 600;
+      color: var(--navy-900);
+    }
+
+    .bar-track {
+      background: var(--navy-100);
+      height: 20px;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--navy-800), var(--navy-700));
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      color: #FFFFFF;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .bar-fill.gold-fill {
+      background: linear-gradient(90deg, var(--gold-600), var(--gold-500));
+      color: var(--navy-900);
+    }
+
+    .bar-val {
+      font-weight: 700;
+      color: var(--navy-800);
+      text-align: right;
+    }
+
+    /* Pirâmide Hierárquica */
+    .pyramid {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .pyramid-level {
+      border-radius: var(--radius-md);
+      padding: 14px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .pyramid-1 {
+      width: 58%;
+      background: var(--navy-900);
+      color: #FFFFFF;
+      border: 2px solid var(--gold-500);
+    }
+
+    .pyramid-2 {
+      width: 80%;
+      background: var(--navy-800);
+      color: #FFFFFF;
+      border: 1px solid var(--navy-700);
+    }
+
+    .pyramid-3 {
+      width: 100%;
+      background: var(--navy-50);
+      color: var(--navy-900);
+      border: 1px solid #C8D5E8;
+    }
+
+    .pyramid-level strong {
+      display: block;
+      font-size: 0.88rem;
+      margin-bottom: 4px;
+    }
+
+    .pyramid-1 strong { color: var(--gold-500); }
+    .pyramid-2 strong { color: var(--gold-400); }
+
+    .pyramid-level span {
+      font-size: 0.8rem;
+      opacity: 0.92;
+    }
+
+    /* Matriz e Tabelas Comparativas */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .compare-table th {
+      background: var(--navy-900);
+      color: var(--gold-500);
+      text-align: left;
+      padding: 10px 12px;
+      font-weight: 700;
+      border: 1px solid var(--navy-800);
+    }
+
+    .compare-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--border-light);
+      vertical-align: top;
+      color: var(--text-main);
+    }
+
+    .compare-table tr:nth-child(even) td {
+      background: var(--navy-50);
+    }
+
+    /* SVG containers */
+    .svg-wrap {
+      width: 100%;
+      overflow-x: auto;
+      text-align: center;
+      padding: 6px 0;
+    }
+
+    .svg-wrap svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       BLOCOS DE SUBCAPÍTULOS
+       ========================================================================== */
+    .subchapter-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 22px 26px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
+      scroll-margin-top: calc(var(--topbar-h) + 20px);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .subchapter-card.flash-highlight {
+      border-color: var(--gold-500);
+      box-shadow: 0 0 0 4px rgba(245, 197, 24, 0.32);
+    }
+
+    .subchapter-title {
+      font-family: var(--font-serif);
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--navy-900);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .subchapter-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold-500);
+      border: 2px solid var(--navy-900);
+      flex-shrink: 0;
+    }
+
+    .subchapter-body p {
+      font-size: 0.92rem;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .subchapter-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .key-points {
+      list-style: none;
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .key-points li {
+      background: var(--navy-50);
+      border-left: 3px solid var(--navy-700);
+      padding: 9px 12px;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.84rem;
+      color: var(--text-main);
+    }
+
+    .key-points li strong {
+      color: var(--navy-900);
+    }
+
+    /* ==========================================================================
+       NAVEGAÇÃO DE RODAPÉ ENTRE CAPÍTULOS
+       ========================================================================== */
+    .chapter-footer-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 34px;
+      padding-top: 20px;
+      border-top: 2px solid var(--border-light);
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .nav-pager-btn {
+      background: var(--navy-900);
+      color: #FFFFFF;
+      border: 2px solid var(--navy-900);
+      padding: 11px 18px;
+      border-radius: var(--radius-md);
+      font-family: var(--font-sans);
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-pager-btn:hover {
+      background: var(--navy-700);
+      border-color: var(--gold-500);
+      color: var(--gold-400);
+    }
+
+    .nav-pager-btn.next-btn {
+      background: var(--gold-500);
+      border-color: var(--gold-500);
+      color: var(--navy-900);
+      margin-left: auto;
+    }
+
+    .nav-pager-btn.next-btn:hover {
+      background: var(--gold-400);
+      border-color: var(--navy-900);
+    }
+
+    /* ==========================================================================
+       RESPONSIVIDADE (TABLET E MOBILE)
+       ========================================================================== */
+    @media (max-width: 980px) {
+      :root {
+        --topbar-h: 116px;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+        width: 290px;
+        box-shadow: 4px 0 24px rgba(11, 29, 58, 0.35);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay.open {
+        display: block;
+      }
+
+      .main-content {
+        margin-left: 0;
+        max-width: 100%;
+        padding: 20px 16px 56px;
+      }
+
+      .flow-row {
+        flex-direction: column;
+      }
+
+      .flow-arrow {
+        transform: rotate(90deg);
+        padding: 4px 0;
+      }
+
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+
+      .pyramid-1, .pyramid-2, .pyramid-3 {
+        width: 100%;
+      }
+
+      .bar-item {
+        grid-template-columns: 120px 1fr 60px;
+      }
+
+      .chapter-header {
+        padding: 22px 20px;
+      }
+
+      .chapter-title {
+        font-size: 1.55rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BARRA SUPERIOR + LINHA DO TEMPO CLICÁVEL -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand-group">
+        <button class="menu-toggle" id="menuToggleBtn" aria-label="Abrir índice do livro">☰ Índice</button>
+        <div>
+          <h1 class="brand-title">Capitals of <span>Capital</span></h1>
+          <div class="brand-subtitle">Youssef Cassis • História dos Centros Financeiros Internacionais (1780–2005)</div>
+        </div>
+      </div>
+    </div>
+    <nav class="timeline-nav" aria-label="Linha do tempo dos capítulos">
+      <button class="timeline-btn active" data-target="cap-0">0. Introdução</button>
+      <button class="timeline-btn" data-target="cap-1">1. 1780–1840</button>
+      <button class="timeline-btn" data-target="cap-2">2. 1840–1875</button>
+      <button class="timeline-btn" data-target="cap-3">3. 1875–1914</button>
+      <button class="timeline-btn" data-target="cap-4">4. 1914–1945</button>
+      <button class="timeline-btn" data-target="cap-5">5. 1945–1980</button>
+      <button class="timeline-btn" data-target="cap-6">6. 1980–2005</button>
+      <button class="timeline-btn" data-target="cap-7">Conclusão</button>
+    </nav>
+  </header>
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <div class="app-shell">
+    <!-- MENU LATERAL FIXO COM TODOS OS CAPÍTULOS E SUBCAPÍTULOS -->
+    <aside class="sidebar" id="sidebar" aria-label="Sumário interativo do livro">
+      <div class="sidebar-label">Sumário Completo do Livro</div>
+
+      <!-- 0. Introdução -->
+      <div class="nav-chapter-group active-group" data-group="cap-0">
+        <button class="nav-chapter-btn" data-chapter="cap-0">
+          <span class="nav-chapter-num">0</span>
+          <span>Introdução: As Capitais do Capital</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-0" data-sub="sub-0-1">Definição e Economias Externas</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-0" data-sub="sub-0-2">Hierarquias e Classificações</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-0" data-sub="sub-0-3">A Grade Analítica do Livro</button></li>
+        </ul>
+      </div>
+
+      <!-- 1. Capítulo 1 -->
+      <div class="nav-chapter-group" data-group="cap-1">
+        <button class="nav-chapter-btn" data-chapter="cap-1">
+          <span class="nav-chapter-num">1</span>
+          <span>A Era dos Banqueiros Privados (1780–1840)</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-1" data-sub="sub-1-1">A Grandeza e o Declínio de Amsterdã</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-1" data-sub="sub-1-2">A Ascensão da City de Londres</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-1" data-sub="sub-1-3">A Retomada de Paris</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-1" data-sub="sub-1-4">Os Centros Menores</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-1" data-sub="sub-1-5">Interações e Redes de Relacionamento</button></li>
+        </ul>
+      </div>
+
+      <!-- 2. Capítulo 2 -->
+      <div class="nav-chapter-group" data-group="cap-2">
+        <button class="nav-chapter-btn" data-chapter="cap-2">
+          <span class="nav-chapter-num">2</span>
+          <span>A Concentração de Capital (1840–1875)</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-2" data-sub="sub-2-1">A Revolução Bancária</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-2" data-sub="sub-2-2">A Aventura Ferroviária</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-2" data-sub="sub-2-3">Rivalidade entre Londres e Paris</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-2" data-sub="sub-2-4">Ascensão e Queda dos Centros Menores</button></li>
+        </ul>
+      </div>
+
+      <!-- 3. Capítulo 3 -->
+      <div class="nav-chapter-group" data-group="cap-3">
+        <button class="nav-chapter-btn" data-chapter="cap-3">
+          <span class="nav-chapter-num">3</span>
+          <span>Um Mundo Globalizado (1875–1914)</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-1">A Globalização da Economia Mundial</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-2">Capital Financeira Mundial: a City</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-3">Um Segundo Brilhante: Paris</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-4">A Ascensão de Berlim</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-5">A Estrela em Ascensão: Nova York</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-6">Nichos e Especializações</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-7">Competição e Cooperação</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-3" data-sub="sub-3-8">A Belle Époque dos Banqueiros</button></li>
+        </ul>
+      </div>
+
+      <!-- 4. Capítulo 4 -->
+      <div class="nav-chapter-group" data-group="cap-4">
+        <button class="nav-chapter-btn" data-chapter="cap-4">
+          <span class="nav-chapter-num">4</span>
+          <span>Guerras e Depressão (1914–1945)</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-4" data-sub="sub-4-1">A Grande Guerra</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-4" data-sub="sub-4-2">Os Loucos Anos Vinte</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-4" data-sub="sub-4-3">Os Anos de Crise</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-4" data-sub="sub-4-4">A Segunda Guerra Mundial</button></li>
+        </ul>
+      </div>
+
+      <!-- 5. Capítulo 5 -->
+      <div class="nav-chapter-group" data-group="cap-5">
+        <button class="nav-chapter-btn" data-chapter="cap-5">
+          <span class="nav-chapter-num">5</span>
+          <span>Crescimento e Regulação (1945–1980)</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-5" data-sub="sub-5-1">O Difícil Retorno à Conversibilidade</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-5" data-sub="sub-5-2">Nascimento dos Euromercados</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-5" data-sub="sub-5-3">A Alvorada da Globalização</button></li>
+        </ul>
+      </div>
+
+      <!-- 6. Capítulo 6 -->
+      <div class="nav-chapter-group" data-group="cap-6">
+        <button class="nav-chapter-btn" data-chapter="cap-6">
+          <span class="nav-chapter-num">6</span>
+          <span>Globalização e Inovações (1980–2005)</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-6" data-sub="sub-6-1">A Nova Economia Mundial</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-6" data-sub="sub-6-2">Centros no Alvorecer do Séc. XXI</button></li>
+        </ul>
+      </div>
+
+      <!-- 7. Conclusão -->
+      <div class="nav-chapter-group" data-group="cap-7">
+        <button class="nav-chapter-btn" data-chapter="cap-7">
+          <span class="nav-chapter-num">★</span>
+          <span>Conclusão: Ascensão, Declínio e Futuro</span>
+        </button>
+        <ul class="nav-sublist">
+          <li><button class="nav-sub-btn" data-chapter="cap-7" data-sub="sub-7-1">Fatores de Ascensão e Declínio</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-7" data-sub="sub-7-2">Inércia Histórica e Economias Externas</button></li>
+          <li><button class="nav-sub-btn" data-chapter="cap-7" data-sub="sub-7-3">Tecnologia e o Futuro dos Centros</button></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DE CONTEÚDO -->
+    <main class="main-content" id="mainContent">
+
+      <!-- ====================================================================
+           0. INTRODUÇÃO
+           ==================================================================== -->
+      <section class="chapter-view active" id="cap-0">
+        <div class="chapter-header">
+          <span class="chapter-badge">Introdução • Quadro Conceitual</span>
+          <h2 class="chapter-title">O que são as Capitais do Capital?</h2>
+          <p class="chapter-lead">Por que atividades financeiras de alcance planetário se concentram em pouquíssimas cidades ao longo de mais de dois séculos? Cassis define o objeto do livro e apresenta as ferramentas para entender a ascensão e o declínio dos grandes centros financeiros.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central da Introdução</div>
+          <p class="thesis-text">Um centro financeiro internacional não é apenas um conjunto de bancos, mas um ecossistema urbano que gera <strong>economias externas</strong> (liquidez, informação e confiança). Sua trajetória histórica resulta da interação entre capacidade econômica nacional, arquitetura financeira, moeda, regulação estatal e cultura de negócios.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">2 Diagramas</span></h3>
+
+        <!-- Esquema 0.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">A Anatomia de um Centro Financeiro Internacional</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>1. Superávit de Capital</h4>
+              <p>Poupadores, governos, empresas e investidores com recursos excedentes em busca de rentabilidade e segurança.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-navy">
+              <h4>2. Intermediação Concentrada</h4>
+              <p>O <strong>Centro Financeiro</strong> coordena transações e liquida pagamentos graças às <strong>Economias Externas</strong>:</p>
+              <ul>
+                <li>Mercados líquidos e eficientes</li>
+                <li>Complementaridade (bancos, bolsas, seguros)</li>
+                <li>Serviços jurídicos e contábeis</li>
+                <li>Mão de obra e informação de alta qualidade</li>
+              </ul>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-gold">
+              <h4>3. Déficit de Capital</h4>
+              <p>Estados, ferrovias, indústrias e comerciantes que precisam de crédito e financiamento para crescer.</p>
+            </div>
+          </div>
+          <p class="schema-caption">Baseado na definição de David Scholey (S. G. Warburg) citada por Cassis: mercados financeiros ligam superávits a déficits, mas é a aglomeração urbana que reduz custos e cria eficiência sistêmica.</p>
+        </div>
+
+        <!-- Esquema 0.2 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">Os 4 Pilares da Grade Analítica do Livro</h4>
+          </div>
+          <div class="grid-4">
+            <div class="flow-box">
+              <h4>I. Capacidade Financeira</h4>
+              <p>Volume de capital exportado, profundidade do mercado de capitais, porte das instituições locais e presença de bancos estrangeiros.</p>
+            </div>
+            <div class="flow-box">
+              <h4>II. Arquitetura Bancária</h4>
+              <p>Contraste entre sistemas <strong>especializados</strong> (modelo britânico com mercado de capitais forte) e <strong>bancos universais</strong> (modelo alemão).</p>
+            </div>
+            <div class="flow-box">
+              <h4>III. Banco Central e Regulação</h4>
+              <p>Papel de emprestador de última instância, grau de independência política e nível de controle estatal (do <em>laissez-faire</em> ao dirigismo).</p>
+            </div>
+            <div class="flow-box highlight-gold">
+              <h4>IV. Moeda e Cultura</h4>
+              <p>Status da moeda nacional (forte, conversível, reserva mundial), regime cambial e a "atmosfera" local (regras não escritas e redes humanas).</p>
+            </div>
+          </div>
+          <p class="schema-caption">Nenhum centro sobe ou cai por uma única causa: é o equilíbrio dinâmico entre esses quatro pilares diante de guerras, crises e inovações tecnológicas que redefine a hierarquia mundial.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">3 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-0-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Definição e Economias Externas</h4>
+          <div class="subchapter-body">
+            <p>Cassis define um centro financeiro como o agrupamento, em um espaço urbano delimitado, de serviços financeiros voltados a coordenar transações e liquidar pagamentos. O motivo dessa concentração espacial são as <strong>economias externas</strong>: ganhos de eficiência obtidos não pelo tamanho interno de uma firma isolada, mas pela proximidade física com concorrentes, parceiros, clientes e fornecedores.</p>
+            <ul class="key-points">
+              <li><strong>Liquidez e eficiência:</strong> Quanto mais agentes operam no mesmo local, mais rápido e barato é comprar, vender e precificar ativos.</li>
+              <li><strong>Ecossistema complementar:</strong> Bancos, seguradoras, bolsas, mercados de commodities, escritórios de advocacia e auditorias se retroalimentam.</li>
+              <li><strong>Informação de ponta:</strong> A proximidade reduz assimetrias de informação e acelera decisões de alto risco.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-0-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Hierarquias e Classificações</h4>
+          <div class="subchapter-body">
+            <p>A literatura econômica (como Howard Reed, Geoffrey Jones e Richard Roberts) classifica os centros em níveis: <strong>nacionais</strong> (relações bilaterais), <strong>regionais</strong> (atendem uma área geográfica), <strong>globais</strong> (escala planetária) e <strong>offshore</strong> (foco fiscal/regulatório em não residentes).</p>
+            <p>Em vez de tentar listar dezenas de praças secundárias, Cassis foca no grupo restrito e notavelmente estável das verdadeiras <em>capitais do capital</em>: na Europa, <strong>Londres, Paris, Berlim/Frankfurt, Zurique/Genebra, Bruxelas, Amsterdã</strong> (e Luxemburgo como offshore); no resto do mundo, <strong>Nova York</strong> a partir do fim do século XIX e, mais recentemente, <strong>Tóquio, Hong Kong e Singapura</strong>.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-0-3">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Grade Analítica do Livro</h4>
+          <div class="subchapter-body">
+            <p>Para explicar como e por que esses centros ascendem e declinam entre 1780 e 2005, o autor combina narrativa histórica com conceitos de economia financeira. Além dos números de exportação de capital e tamanho dos bancos, o livro examina a organização institucional (arquitetura financeira), o papel estabilizador dos bancos centrais, o regime monetário (padrão-ouro, Bretton Woods, câmbio flutuante) e o ambiente sociopolítico — incluindo o peso político das elites financeiras frente à indústria.</p>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <span></span>
+          <button class="nav-pager-btn next-btn" data-goto="cap-1">Próximo: Cap. 1 (1780–1840) →</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           1. CAPÍTULO 1 — A ERA DOS BANQUEIROS PRIVADOS (1780–1840)
+           ==================================================================== -->
+      <section class="chapter-view" id="cap-1">
+        <div class="chapter-header">
+          <span class="chapter-badge">Capítulo 1 • 1780–1840</span>
+          <h2 class="chapter-title">A Era dos Banqueiros Privados</h2>
+          <p class="chapter-lead">Entre a Revolução Industrial britânica e as Guerras Napoleônicas, a liderança financeira mundial desloca-se de Amsterdã para Londres, enquanto grandes dinastias familiares operam a intermediação internacional.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central do Capítulo 1</div>
+          <p class="thesis-text">Foi a época de ouro dos <strong>banqueiros privados</strong> (firmas familiares com responsabilidade ilimitada). As Guerras Francesas encerraram a hegemonia de Amsterdã, consagraram a <strong>City de Londres</strong> como centro mundial de aceites comerciais e empréstimos soberanos, e recolocaram Paris em segundo lugar por meio de uma nova <em>Haute Banque</em> cosmopolita.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">3 Diagramas</span></h3>
+
+        <!-- Esquema 1.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">A Virada Hierárquica (1780–1815): De Amsterdã para Londres</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>Antes de 1780</h4>
+              <p><strong>Amsterdã no topo:</strong> Entreposto comercial mundial, juros baixos, grande exportador de capital (Hope & Co.) financiando governos europeus.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-gold">
+              <h4>O Choque (1780–1815)</h4>
+              <ul>
+                <li>Guerra Anglo-Holandesa (1780–84)</li>
+                <li>Revolução Francesa e ocupação de Amsterdã (1795)</li>
+                <li>Revolução Industrial e supremacia naval britânica</li>
+              </ul>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-navy">
+              <h4>Nova Ordem Pós-Waterloo</h4>
+              <p><strong>1º Londres:</strong> Centro de crédito comercial e empréstimos soberanos.<br>
+              <strong>2º Paris:</strong> Retomada rápida com o Banque de France e a <em>Haute Banque</em>.<br>
+              <strong>3º Centros Menores:</strong> Amsterdã (rebaixada), Frankfurt, Bruxelas, Genebra.</p>
+            </div>
+          </div>
+          <p class="schema-caption">O declínio de Amsterdã já vinha se desenhando no comércio no século XVIII, mas a ocupação francesa acelerou de forma irreversível a migração de capitais e negócios para Londres.</p>
+        </div>
+
+        <!-- Esquema 1.2 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">Os Dois Motores Financeiros da Era Privada</h4>
+          </div>
+          <div class="grid-2">
+            <div class="flow-box">
+              <h4>Motor A: Financiamento do Comércio (Aceites)</h4>
+              <p>Grandes casas comerciais evoluem para <strong>Merchant Banks</strong> (casas de aceite):</p>
+              <ul>
+                <li>Garantem o pagamento de <em>letras de câmbio</em> (geralmente de 3 meses) emitidas no comércio global.</li>
+                <li>Recebem comissões (chegaram a 75% do lucro da Barings em 1850).</li>
+                <li>Em Londres, <em>bill brokers</em> (futuras casas de desconto) dão liquidez a esses papéis.</li>
+              </ul>
+            </div>
+            <div class="flow-box highlight-navy">
+              <h4>Motor B: Empréstimos Soberanos (Modelo Rothschild, 1818)</h4>
+              <p>O empréstimo prussiano de 1818 em Londres inaugurou a "anglicização" da dívida externa:</p>
+              <ul>
+                <li>Emitido diretamente em <strong>libras esterlinas</strong> (não em moeda local).</li>
+                <li>Juros pagos em Londres, com fundo de amortização confiável.</li>
+                <li>Lançamento simultâneo em Londres, Frankfurt, Berlim, Hamburgo, Amsterdã e Viena.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="schema-caption">Enquanto o financiamento do comércio era o alicerce diário da City, a emissão de títulos públicos estrangeiros conferia prestígio global e consolidou o domínio de Barings e Rothschilds.</p>
+        </div>
+
+        <!-- Esquema 1.3 (SVG Rede) -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 3</span>
+            <h4 class="schema-title">A Teia Cosmopolita das Dinastias Privadas</h4>
+          </div>
+          <div class="svg-wrap">
+            <svg viewBox="0 0 760 250" width="760" height="250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa de redes das dinastias bancárias europeias">
+              <rect x="0" y="0" width="760" height="250" rx="10" fill="#F2F5FA"/>
+              <!-- Conexões -->
+              <line x1="150" y1="125" x2="350" y2="70" stroke="#1D3E73" stroke-width="3"/>
+              <line x1="150" y1="125" x2="350" y2="180" stroke="#1D3E73" stroke-width="3"/>
+              <line x1="150" y1="125" x2="550" y2="65" stroke="#D9A404" stroke-width="2.5" stroke-dasharray="6,4"/>
+              <line x1="350" y1="70" x2="550" y2="65" stroke="#1D3E73" stroke-width="2"/>
+              <line x1="350" y1="180" x2="550" y2="185" stroke="#1D3E73" stroke-width="2"/>
+              <line x1="350" y1="180" x2="550" y2="65" stroke="#D9A404" stroke-width="2"/>
+              <line x1="550" y1="65" x2="665" y2="125" stroke="#1D3E73" stroke-width="2" stroke-dasharray="4,3"/>
+              <line x1="350" y1="70" x2="350" y2="180" stroke="#1D3E73" stroke-width="2"/>
+
+              <!-- Nós das Cidades -->
+              <!-- Londres -->
+              <circle cx="150" cy="125" r="46" fill="#0B1D3A" stroke="#F5C518" stroke-width="4"/>
+              <text x="150" y="121" text-anchor="middle" fill="#F5C518" font-size="13" font-weight="700" font-family="Inter, sans-serif">LONDRES</text>
+              <text x="150" y="138" text-anchor="middle" fill="#FFFFFF" font-size="9.5" font-family="Inter, sans-serif">Barings • N.M. Rothschild</text>
+
+              <!-- Amsterdã / Bruxelas -->
+              <circle cx="350" cy="70" r="38" fill="#122B52" stroke="#FFD54F" stroke-width="2.5"/>
+              <text x="350" y="66" text-anchor="middle" fill="#FFFFFF" font-size="11.5" font-weight="700" font-family="Inter, sans-serif">AMSTERDÃ</text>
+              <text x="350" y="81" text-anchor="middle" fill="#FFD54F" font-size="9" font-family="Inter, sans-serif">Hope • Bischoffsheim</text>
+
+              <!-- Paris -->
+              <circle cx="350" cy="180" r="42" fill="#122B52" stroke="#F5C518" stroke-width="3"/>
+              <text x="350" y="176" text-anchor="middle" fill="#F5C518" font-size="12.5" font-weight="700" font-family="Inter, sans-serif">PARIS</text>
+              <text x="350" y="191" text-anchor="middle" fill="#FFFFFF" font-size="9" font-family="Inter, sans-serif">J. Rothschild • Mallet</text>
+
+              <!-- Frankfurt -->
+              <circle cx="550" cy="65" r="38" fill="#1D3E73" stroke="#FFD54F" stroke-width="2.5"/>
+              <text x="550" y="61" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="Inter, sans-serif">FRANKFURT</text>
+              <text x="550" y="76" text-anchor="middle" fill="#FFD54F" font-size="9" font-family="Inter, sans-serif">Berço Rothschild • Bethmann</text>
+
+              <!-- Genebra -->
+              <circle cx="550" cy="185" r="36" fill="#1D3E73" stroke="#FFD54F" stroke-width="2"/>
+              <text x="550" y="181" text-anchor="middle" fill="#FFFFFF" font-size="11" font-weight="700" font-family="Inter, sans-serif">GENEBRA</text>
+              <text x="550" y="195" text-anchor="middle" fill="#FFD54F" font-size="9" font-family="Inter, sans-serif">Pictet • Lombard • Hentsch</text>
+
+              <!-- Viena / Nápoles / Correspondentes -->
+              <rect x="615" y="98" width="128" height="54" rx="8" fill="#FEF7DC" stroke="#D9A404" stroke-width="2"/>
+              <text x="679" y="119" text-anchor="middle" fill="#0B1D3A" font-size="10.5" font-weight="700" font-family="Inter, sans-serif">VIENA • NÁPOLES</text>
+              <text x="679" y="135" text-anchor="middle" fill="#4A5568" font-size="9" font-family="Inter, sans-serif">+ Agentes (Belmont NY)</text>
+            </svg>
+          </div>
+          <p class="schema-caption">Sem bancos multinacionais por ações, o sistema financeiro internacional funcionava por meio de laços de parentesco, casamentos endogâmicos (como os 5 irmãos Rothschild), redes religiosas (protestantes e judaicas) e correspondentes de confiança.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">5 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-1-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Grandeza e o Declínio de Amsterdã</h4>
+          <div class="subchapter-body">
+            <p>No século XVII e boa parte do XVIII, Amsterdã foi o maior porto de entreposto e o primeiro centro financeiro do mundo. Mesmo quando sua supremacia comercial começou a ceder espaço para Londres após 1730, seus mercadores migraram para o financiamento puro: aceites de letras de câmbio e grandes empréstimos a governos estrangeiros (Suécia, Rússia, Áustria, Grã-Bretanha), liderados pela poderosa <strong>Hope &amp; Co.</strong></p>
+            <p>A guerra contra a Grã-Bretanha (1780–1784) e a ocupação francesa (1795–1813) destruíram essa posição. Após 1814, Amsterdã perdeu o mercado primário de emissões soberanas para Londres e Paris, mantendo relevância apenas em nichos como a arbitragem de títulos estrangeiros na Bolsa e o sistema de <em>prolongatie</em> (empréstimos mensais garantidos por títulos). A tentativa defensiva do rei Guilherme I de recriar o entreposto colonial com a <em>Nederlandsche Handel-Maatschappij</em> (1824) amenizou o recuo, mas não devolveu a liderança global.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-1-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Ascensão da City de Londres</h4>
+          <div class="subchapter-body">
+            <p>A liderança londrina apoiou-se na Revolução Industrial, mas sua arquitetura institucional já estava pronta antes dela graças à <strong>Revolução Financeira do século XVIII</strong>: dívida pública moderna, criação do <strong>Banco da Inglaterra</strong> (1694), surgimento do <strong>Lloyd's</strong> (seguros marítimos), da <strong>Bolsa de Valores</strong> (1773) e de bancos privados domésticos.</p>
+            <p>Durante as Guerras Francesas, Londres tornou-se o "banqueiro da Europa". Estrangeiros talentosos imigraram para a City (como os Schröder e Nathan Mayer Rothschild). Após 1815, <strong>Baring Brothers</strong> (financiando a indenização de guerra francesa) e <strong>N. M. Rothschild &amp; Sons</strong> (dominando os empréstimos europeus a partir do empréstimo prussiano de 1818) consolidaram os <em>merchant banks</em> no topo das finanças internacionais, enquanto o Banco da Inglaterra começava a atuar como emprestador de última instância após o pânico de 1825.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-1-3">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Retomada de Paris</h4>
+          <div class="subchapter-body">
+            <p>No Antigo Regime, Paris já possuía uma praça vibrante ligada à dívida real, notários e à Bolsa (1724). A Revolução Francesa (1789–1794) fechou a Bolsa, liquidou a <em>Caisse d'Escompte</em> e gerou hiperinflação com os <em>assignats</em>. A reconstrução veio com Napoleão e a criação do <strong>Banque de France</strong> em 1800 (sob controle estatal a partir de 1806).</p>
+            <p>No início do século XIX, formou-se a <strong>Haute Banque</strong> parisiense, combinando famílias provincianas francesas, banqueiros protestantes suíços (Mallet, Hottinguer, Delessert, Perrégaux) e banqueiros alemães (liderados por James de Rothschild a partir de 1817). A força de Paris residia na posição favorável da França nos pagamentos multilaterais (superávit com países anglo-saxões), no acúmulo de depósitos e na dinamização da Bolsa (mercado oficial) apoiada pelo mercado paralelo da <em>coulisse</em>.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-1-4">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Os Centros Menores</h4>
+          <div class="subchapter-body">
+            <ul class="key-points">
+              <li><strong>Frankfurt (e Hamburgo):</strong> Antes da unificação alemã, Hamburgo liderava o comércio portuário, enquanto Frankfurt era a grande praça bancária alemã, especializada em títulos de governos (Áustria, estados alemães) com casas como Bethmann, Metzler e os Rothschilds originais.</li>
+              <li><strong>Bruxelas:</strong> Superou a tradicional Antuérpia após a fundação da <em>Société Générale</em> (1822) e a independência belga (1830), atraindo banqueiros alemães (Bischoffsheim, Lambert) e financiando a nascente indústria local.</li>
+              <li><strong>Genebra:</strong> Fortemente ligada a Paris (rede huguenote), especulou pesadamente nas rendas vitalícias francesas (<em>tontines</em>) sob Necker e sofreu duro golpe na Revolução. Reergueu-se com novas casas privadas (Pictet, Lombard, Hentsch) migrando do comércio para a gestão de fortunas.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-1-5">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Interações e Redes de Relacionamento</h4>
+          <div class="subchapter-body">
+            <p>Embora governantes britânicos já percebessem as vantagens estratégicas da City — como no retorno da libra ao padrão-ouro em 1821 defendido por William Huskisson —, o período não foi marcado por rivalidade feroz entre centros, mas por <strong>redes pessoais transnacionais</strong>.</p>
+            <p>As minorias protestantes (no séc. XVIII) e judaicas (no início do séc. XIX) criaram verdadeiras pontes financeiras entre capitais. Os cinco irmãos Rothschild (Frankfurt, Viena, Londres, Nápoles e Paris) representam o auge dessa coesão, mas o mesmo padrão se via na aliança Barings–Hope–Hottinguer–Pictet, nos Schröder e no uso de agentes correspondentes onde a família não estava fisicamente presente (como August Belmont em Nova York).</p>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <button class="nav-pager-btn" data-goto="cap-0">← Anterior: Introdução</button>
+          <button class="nav-pager-btn next-btn" data-goto="cap-2">Próximo: Cap. 2 (1840–1875) →</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           2. CAPÍTULO 2 — A CONCENTRAÇÃO DE CAPITAL (1840–1875)
+           ==================================================================== -->
+      <section class="chapter-view" id="cap-2">
+        <div class="chapter-header">
+          <span class="chapter-badge">Capítulo 2 • 1840–1875</span>
+          <h2 class="chapter-title">A Concentração de Capital</h2>
+          <p class="chapter-lead">O surgimento dos grandes bancos por ações e a gigantesca demanda de financiamento das ferrovias transformam a escala dos mercados de capitais, acirram a disputa entre Londres e Paris e redesenham o mapa europeu.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central do Capítulo 2</div>
+          <p class="thesis-text">Embora os grandes banqueiros privados (como os Rothschilds) ainda mantivessem o controle das emissões soberanas até 1870, duas forças estruturais mudaram o jogo: a <strong>Revolução Bancária</strong> (bancos por ações captando depósitos em massa) e a <strong>Aventura Ferroviária</strong> (expandindo enormemente as bolsas de valores). Em 1871, a derrota francesa encerrou o desafio de Paris a Londres e abriu caminho para Berlim.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">3 Diagramas</span></h3>
+
+        <!-- Esquema 2.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">A Revolução Bancária: 3 Arquiteturas em Contraste</h4>
+          </div>
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Dimensão</th>
+                <th>Modelo Britânico (Especializado)</th>
+                <th>Modelo Alemão / Belga (Universal / Misto)</th>
+                <th>Modelo Francês (Dual)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Estrutura</strong></td>
+                <td>Separação clara entre bancos de depósito (<em>clearing banks</em>), <em>merchant banks</em> (internacional) e <em>overseas banks</em> (Império/exterior).</td>
+                <td>Um mesmo banco combina captação de depósitos, crédito de curto prazo e investimentos industriais de longo prazo.</td>
+                <td>Convivência de grandes bancos de depósito (<em>Crédit Lyonnais, Société Générale</em>) com bancos de investimento (<em>banques d'affaires</em> como <em>Paribas</em>).</td>
+              </tr>
+              <tr>
+                <td><strong>Pioneiros</strong></td>
+                <td>London &amp; Westminster (1834), HSBC (1865).</td>
+                <td>Société Générale de Belgique (1830s), Darmstädter Bank (1853), Deutsche Bank (1870).</td>
+                <td>Comptoir d'Escompte (1848), Crédit Mobilier dos irmãos Pereire (1852–1870).</td>
+              </tr>
+              <tr>
+                <td><strong>Relação com a Indústria</strong></td>
+                <td>Indireta: bancos fornecem liquidez de curto prazo; indústria recorre a autofinanciamento e bolsas.</td>
+                <td>Direta: bancos detêm participações acionárias, lançam ações e têm assentos nos conselhos industriais.</td>
+                <td>Crédit Mobilier tentou ser banco "empreendedor", mas quebrou por iliquidez; bancos de depósito ficaram cautelosos.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="schema-caption">Nos EUA, o sistema seguiu rota própria: modernizou-se cedo com bancos por ações (1790s), mas perdeu o banco central em 1836 e permaneceu geograficamente fragmentado entre <em>state banks</em> e <em>national banks</em> (1863–64).</p>
+        </div>
+
+        <!-- Esquema 2.2 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">O Ciclo Ferroviário e a Expansão dos Mercados de Capitais</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>1. Demanda Inédita de Capital</h4>
+              <p>Construção de redes na Grã-Bretanha (£630 mi), França (Fr. 7 bi), Alemanha e EUA (US$ 1,2 bi) exige somas jamais pedidas por firmas privadas.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-gold">
+              <h4>2. Mercado Primário (Emissões)</h4>
+              <p>Em Paris, a <em>Haute Banque</em> lidera diretamente com apoio estatal; nos EUA, nascem os <em>investment banks</em> (Winslow Lanier, Jay Cooke) atraindo capital europeu.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-navy">
+              <h4>3. Mercado Secundário (Bolsas)</h4>
+              <p>Títulos ferroviários tornam-se tão seguros quanto títulos públicos. Em 1873, ferrovias britânicas e estrangeiras dominam a Bolsa de Londres e concentram preços nas capitais.</p>
+            </div>
+          </div>
+          <p class="schema-caption">A aventura ferroviária integrou definitivamente a função nacional e a função internacional dos grandes centros financeiros.</p>
+        </div>
+
+        <!-- Esquema 2.3 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 3</span>
+            <h4 class="schema-title">Londres vs. Paris (1850–1871): Uma Rivalidade Assimétrica</h4>
+          </div>
+          <div class="grid-2">
+            <div class="flow-box highlight-navy">
+              <h4>City de Londres (Hegemonia Estrutural)</h4>
+              <ul>
+                <li><strong>Comércio:</strong> ~25% do comércio mundial; maior porto físico e mercados de commodities do planeta.</li>
+                <li><strong>Financiamento comercial:</strong> Monopólio de fato nos aceites de letras de câmbio.</li>
+                <li><strong>Destino do capital:</strong> Ultramar (Américas, Império, Ásia, Austrália).</li>
+                <li><strong>Moeda:</strong> Libra-ouro intocada; rejeitou a moeda universal baseada no franco em 1867.</li>
+              </ul>
+            </div>
+            <div class="flow-box">
+              <h4>Paris sob o Segundo Império (A Desafiante)</h4>
+              <ul>
+                <li><strong>Ambição:</strong> Modernização de Haussmann, Crédit Mobilier e tentativa frustrada de armazéns comerciais.</li>
+                <li><strong>Emissões:</strong> Chegou a empatar com Londres em exportação de capital nos anos 1860.</li>
+                <li><strong>Destino do capital:</strong> Europa continental (67%) e Mediterrâneo.</li>
+                <li><strong>O Fim do Desafio (1870–71):</strong> Derrota contra a Prússia, inconversibilidade do franco e indenização de Fr. 5 bilhões encerram a disputa pela liderança.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="schema-caption">A Guerra Franco-Prussiana produziu dupla consequência: consolidou Londres sem rivais no topo e transferiu o centro financeiro alemão de Frankfurt para Berlim.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">4 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-2-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Revolução Bancária</h4>
+          <div class="subchapter-body">
+            <p>A grande inovação institucional do período foi o <strong>banco por ações</strong> com ampla captação de depósitos e gestão profissional assalariada. Na Inglaterra, após as leis de 1826 e 1833, surgiram os grandes bancos de depósito (<em>London &amp; Westminster, National Provincial</em>) e os <em>overseas banks</em> (atuando no Império e na América Latina), mantendo a especialização sem destruir de imediato os <em>merchant banks</em>.</p>
+            <p>Na Bélgica, a <em>Société Générale</em> tornou-se o primeiro banco misto (depósito + investimento industrial) nos anos 1830. Na França, o lendário <strong>Crédit Mobilier</strong> dos irmãos Pereire (1852) desafiou os Rothschilds financiando indústrias e ferrovias, mas colapsou em 1867–70 por excesso de imobilização; sobreviveram os grandes bancos de depósito (<em>Crédit Lyonnais</em>, 1863; <em>Société Générale</em>, 1864) e o <em>Paribas</em> (1872). O modelo universal floresceu mesmo na Alemanha (<em>Darmstädter, Disconto-Gesellschaft, Deutsche Bank</em> em 1870) e na Suíça (<em>Crédit Suisse</em> em 1856). Nos EUA, o veto ao <em>Second Bank</em> (1836) deixou o país sem banco central, mas os <em>Bank Acts</em> de 1863–64 concentraram as reservas bancárias em Nova York.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-2-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Aventura Ferroviária</h4>
+          <div class="subchapter-body">
+            <p>O boom ferroviário a partir da década de 1840 multiplicou o tamanho das bolsas. Na Grã-Bretanha, a primeira onda foi financiada por capital provincial, com reserva inicial da City (exceção para George Carr Glyn); porém, na década de 1850, a Bolsa de Londres absorveu a negociação secundária e liderou o financiamento de ferrovias estrangeiras, sobretudo norte-americanas (70% das emissões ferroviárias em Londres nos anos 1870).</p>
+            <p>Em Paris, ao contrário, a <em>Haute Banque</em> (Rothschild, Laffitte-Blount, Bartholony) e o Estado engajaram-se desde o início, financiando tanto a rede francesa quanto linhas na Espanha, Itália, Áustria e Rússia. Na Alemanha e nos EUA, o financiamento começou descentralizado (Colônia, Frankfurt, Filadélfia), mas gradualmente convergiu para Berlim e para Wall Street — onde o financiamento de ferrovias forjou os <em>investment banks</em> americanos (como Winslow Lanier e Jay Cooke, cuja falência em 1873 gerou forte pânico).</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-2-3">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Rivalidade entre Londres e Paris</h4>
+          <div class="subchapter-body">
+            <p>Nas décadas de 1850 e 1860, o Segundo Império francês tentou desafiar a hegemonia financeira londrina. Embora Paris exportasse tanto capital quanto Londres (e até mais nos anos 1860), havia uma divisão geográfica clara: Paris financiava a Europa continental e o Oriente Médio, enquanto Londres dominava o ultramar e o comércio global.</p>
+            <p>O auge simbólico dessa ambição foi a <strong>União Monetária Latina</strong> (1865) e a proposta francesa de 1867 de criar uma moeda universal baseada no franco (moeda de ouro de 25 francos equivalente à libra). A recusa britânica e alemã enterrou o projeto, e a derrota na Guerra Franco-Prussiana (1870–71) — com a suspensão da conversibilidade do franco e a indenização de 5 bilhões de francos — pôs fim ao sonho parisiense de suplantar a City.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-2-4">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Ascensão e Queda dos Centros Menores</h4>
+          <div class="subchapter-body">
+            <ul class="key-points">
+              <li><strong>Amsterdã:</strong> Manteve papel secundário sólido, com bolsa aberta a títulos estrangeiros (ferrovias dos EUA chegaram a 33% dos papéis listados em 1875).</li>
+              <li><strong>Bruxelas e Genebra:</strong> Bruxelas internacionalizou-se exportando material ferroviário pago em títulos e serviu de refúgio em 1870. Genebra criou sua Bolsa (1850) e sindicatos de banqueiros privados (<em>Quatuor, Omnium</em>) para investir em grandes projetos internacionais.</li>
+              <li><strong>De Frankfurt a Berlim:</strong> Anexada pela Prússia em 1866 e presa ao modelo antigo de banqueiros privados e títulos públicos, Frankfurt perdeu espaço para Berlim — capital política do novo Reich (1871), sede do <em>Reichsbank</em> (1876) e dos grandes bancos universais voltados à indústria.</li>
+              <li><strong>Nova York:</strong> Graças ao porto, ao Canal Erie (1825), ao telégrafo e à concentração das reservas bancárias nacionais, consolidou-se como a capital financeira inconteste dos EUA.</li>
+            </ul>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <button class="nav-pager-btn" data-goto="cap-1">← Anterior: Cap. 1</button>
+          <button class="nav-pager-btn next-btn" data-goto="cap-3">Próximo: Cap. 3 (1875–1914) →</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           3. CAPÍTULO 3 — UM MUNDO GLOBALIZADO (1875–1914)
+           ==================================================================== -->
+      <section class="chapter-view" id="cap-3">
+        <div class="chapter-header">
+          <span class="chapter-badge">Capítulo 3 • 1875–1914</span>
+          <h2 class="chapter-title">Um Mundo Globalizado</h2>
+          <p class="chapter-lead">A primeira grande era da globalização financeira: mobilidade irrestrita de capitais sob o Padrão-Ouro, comunicação instantânea por cabos submarinos e o apogeu clássico da City de Londres no centro do planeta.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central do Capítulo 3</div>
+          <p class="thesis-text">Entre 1875 e 1914, os centros financeiros integraram-se em um verdadeiro mercado global de capitais (US$ 44 bilhões investidos no exterior em 1913). <strong>Londres</strong> era a única capital verdadeiramente global, seguida por <strong>Paris</strong> ("um segundo brilhante"), <strong>Berlim</strong> (potência industrial) e <strong>Nova York</strong> (estrela em ascensão ainda importadora de capital), com nichos vitais em Bruxelas e na Suíça.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">3 Diagramas</span></h3>
+
+        <!-- Esquema 3.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">A Máquina Financeira da City de Londres no Padrão-Ouro</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>Bancos de Depósito (Clearing)</h4>
+              <p>Captam poupança em todo o Reino Unido (Midland, Lloyds, Barclays) e emprestam dinheiro à vista (<em>call money</em>) no mercado.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-gold">
+              <h4>Casas de Desconto &amp; Merchant Banks</h4>
+              <p><strong>Merchant Banks</strong> (Rothschild, Barings, Schröder, Kleinwort) aceitam letras de câmbio globais; <strong>Casas de Desconto</strong> dão liquidez imediata em libras.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <h4>London Stock Exchange</h4>
+              <p>Maior bolsa do mundo (£11,3 bi em 1913; mais de 50% de títulos estrangeiros). Separada entre <em>brokers</em> e <em>jobbers</em>.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-navy">
+              <h4>Banco da Inglaterra</h4>
+              <p>"Maestro" do Padrão-Ouro: protege reservas via taxa de desconto e resgata crises sistêmicas (ex.: Crise Barings de 1890, com ouro do Banque de France).</p>
+            </div>
+          </div>
+          <p class="schema-caption">A força da Square Mile vinha da extrema especialização aliada à complementaridade perfeita: depósitos domésticos giravam a engrenagem do crédito comercial mundial.</p>
+        </div>
+
+        <!-- Esquema 3.2 (Gráfico de Barras com Dados Reais da Tabela 3.1 do livro) -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">A Geografia do Capital Global em 1913 (Estoque: US$ 44 Bilhões)</h4>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-item">
+              <span class="bar-label">Reino Unido (Londres)</span>
+              <div class="bar-track"><div class="bar-fill gold-fill" style="width: 84%;">42%</div></div>
+              <span class="bar-val">US$ 18,3 bi</span>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">França (Paris)</span>
+              <div class="bar-track"><div class="bar-fill" style="width: 40%;">20%</div></div>
+              <span class="bar-val">US$ 8,7 bi</span>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Alemanha (Berlim)</span>
+              <div class="bar-track"><div class="bar-fill" style="width: 26%;">13%</div></div>
+              <span class="bar-val">US$ 5,6 bi</span>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Bélgica, Holanda e Suíça</span>
+              <div class="bar-track"><div class="bar-fill" style="width: 24%;">12%</div></div>
+              <span class="bar-val">US$ 5,5 bi</span>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Estados Unidos (Nova York)</span>
+              <div class="bar-track"><div class="bar-fill" style="width: 16%;">8%</div></div>
+              <span class="bar-val">US$ 3,5 bi</span>
+            </div>
+            <div class="bar-item">
+              <span class="bar-label">Outros países</span>
+              <div class="bar-track"><div class="bar-fill" style="width: 10%;">5%</div></div>
+              <span class="bar-val">US$ 2,4 bi</span>
+            </div>
+          </div>
+          <p class="schema-caption">Fonte: Tabela 3.1 do livro (ONU, 1949). O ranking de exportação de capital refletia quase exatamente a hierarquia dos centros financeiros — com os EUA sendo simultaneamente o maior destino de capitais (US$ 7 bi em passivos externos).</p>
+        </div>
+
+        <!-- Esquema 3.3 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 3</span>
+            <h4 class="schema-title">Matriz de Tensões: Cooperação vs. Competição (1875–1914)</h4>
+          </div>
+          <div class="grid-3">
+            <div class="flow-box">
+              <h4>1. Nível das Firmas (Cooperação)</h4>
+              <p>Predominava a <strong>parceria transnacional</strong>: sindicatos de emissão conjunta (ex.: empréstimos argentinos por Barings, Paribas e Disconto-Gesellschaft) e intensa arbitragem de ações listadas simultaneamente em Londres e Nova York.</p>
+            </div>
+            <div class="flow-box highlight-gold">
+              <h4>2. Nível dos Centros (Rivalidade Latente)</h4>
+              <p>Berlim e Nova York tentaram reduzir a dependência da libra nos aceites comerciais. Porém, os próprios bancos alemães e franceses abriram filiais em Londres para lucrar na liquidez da City.</p>
+            </div>
+            <div class="flow-box highlight-navy">
+              <h4>3. Nível Geopolítico (Imperialismo)</h4>
+              <p>Em regiões semi-coloniais (Império Otomano e China), finanças e diplomacia se fundiam: grupos nacionais (Banco Otomano, Deutsche Bank, HSBC) disputavam concessões ferroviárias e empréstimos estatais.</p>
+            </div>
+          </div>
+          <p class="schema-caption">A primeira globalização combinou mercados abertos e cooperação bancária com o auge dos impérios coloniais — uma contradição interrompida abruptamente em agosto de 1914.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">8 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-3-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Globalização da Economia Mundial</h4>
+          <div class="subchapter-body">
+            <p>Cinco vetores definiram essa era: migração em massa (36 milhões de europeus), revolução dos transportes (ferrovias e navios a vapor), telecomunicações instantâneas (cabos submarinos transatlânticos em 1866, telefone, rádio), comércio crescente (mesmo sob retorno do protecionismo tarifário) e fluxos gigantescos de capital (US$ 44 bi em 1913).</p>
+            <p>Embora já superada em PIB pelos EUA e em produção industrial pela Alemanha, a <strong>Grã-Bretanha</strong> continuava como eixo da economia mundial: tinha a maior marinha mercante, equilibrava o sistema multilateral de pagamentos via superávit com a Índia e ancorava o <strong>Padrão-Ouro</strong> com a libra esterlina.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-3-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Capital Financeira Mundial: a City de Londres</h4>
+          <div class="subchapter-body">
+            <p>A população ativa da City mais que dobrou (de 170 mil em 1871 para 364 mil em 1911). Era um ecossistema completo: os <em>Big Five</em> dos <strong>merchant banks</strong> (Rothschild, Baring — salvo pelo Banco da Inglaterra na crise argentina de 1890 —, J. S. Morgan, Schröder e Kleinwort), grandes casas comerciais e grupos de investimento, bancos de depósito gigantes nascidos de fusões (Midland, Lloyds, Barclays, Westminster), bancos ultramarinos (HSBC), seguradoras, <em>investment trusts</em> e serviços profissionais globais (Price Waterhouse, Deloitte, escritórios de advocacia).</p>
+            <p>Na Bolsa de Londres circulava um terço de todos os títulos negociáveis do planeta. Trinta bancos estrangeiros (inclusive Crédit Lyonnais e Deutsche Bank) mantinham filiais na City para participar desse centro único de liquidez.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-3-3">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Um Segundo Brilhante: Paris</h4>
+          <div class="subchapter-body">
+            <p>Sem disputar o topo com Londres, Paris viveu seu apogeu como principal centro da Europa continental. Sua força vinha do mercado de capitais de longo prazo (especialmente títulos soberanos, com destaque para a Rússia, que absorvia 25% dos ativos externos franceses) e da capacidade de colocação dos três gigantes de depósito (<em>Crédit Lyonnais</em> — maior banco do mundo em 1913 —, <em>Société Générale</em> e <em>CNEP</em>), além das <em>banques d'affaires</em> (Paribas e BUP) e da prestigiada <em>Haute Banque</em>.</p>
+            <p>Na Bolsa de Paris, a lei de 1898 pacificou a convivência entre o mercado oficial (<em>parquet</em>) e o livre (<em>coulisse</em>). Já o <strong>Banque de France</strong>, dono de imensas reservas de ouro, atuava como estabilizador prático do Padrão-Ouro, cedendo ouro a Londres em crises (como em 1890 e 1907) para proteger sua própria estabilidade monetária.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-3-4">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Ascensão de Berlim</h4>
+          <div class="subchapter-body">
+            <p>Com a unificação alemã, a adoção do marco-ouro e a criação do <strong>Reichsbank</strong> (1876), Berlim tornou-se o terceiro centro europeu. Era dominada pelos grandes bancos universais — os quatro "Ds" (<em>Deutsche Bank, Dresdner, Disconto-Gesellschaft e Darmstädter</em>) —, apoiados por bancos privados como Mendelssohn e Bleichröder (o banqueiro de Bismarck).</p>
+            <p>Apesar do vigor industrial alemão, Berlim tinha limites internacionais: a lei bursátil de 1896 (<em>Börsengesetz</em>) reprimiu operações a termo, afastando negócios para Londres e Amsterdã, e o financiamento do comércio exterior alemão continuou fortemente dependente de letras em libras na City.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-3-5">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Estrela em Ascensão: Nova York</h4>
+          <div class="subchapter-body">
+            <p>Diferente dos centros europeus, Nova York ascendeu como porta de entrada de capitais para a maior economia do planeta. Seus pilares eram os <strong>bancos de investimento</strong> — divididos entre casas protestantes anglo-americanas (<strong>J. P. Morgan &amp; Co.</strong>, líder mundial das fusões como a US Steel de 1901) e casas judaico-alemãs (<strong>Kuhn, Loeb &amp; Co.</strong>, Speyer, Seligman) —, os grandes bancos nacionais (National City Bank), as <em>trust companies</em> e a <strong>NYSE</strong> (que concentrava ações de grandes corporações e liquidação diária).</p>
+            <p>A vulnerabilidade americana à falta de um banco central ficou exposta no <strong>Pânico de 1907</strong>, contido pessoalmente por J. P. Morgan e com reflexos globais sobre o ouro de Londres. A resposta veio em 1913 com a criação do <strong>Federal Reserve System</strong>, que autorizou bancos americanos a atuar no exterior e aceitar letras comerciais — preparando Wall Street para o salto global.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-3-6">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Nichos e Especializações</h4>
+          <div class="subchapter-body">
+            <p>Países pequenos e ricos em poupança construíram nichos altamente lucrativos:</p>
+            <ul class="key-points">
+              <li><strong>Bruxelas (4º centro europeu):</strong> Destacou-se pela expansão internacional da <em>Société Générale de Belgique</em> e por sediar grandes <em>holdings</em> de bondes e energia elétrica (como a <em>Sofina</em>), atraindo capitais franceses e alemães graças à neutralidade e à legislação flexível.</li>
+              <li><strong>Suíça (Zurique e Genebra):</strong> Descentralizada, combinava a ascensão industrial e bancária de <strong>Zurique</strong> (sede operacional do Banco Nacional Suíço em 1907 e de financeiras elétricas como a <em>Elektrobank</em> da AEG) com o perfil cosmopolita de <strong>Genebra</strong> (bancos privados, gestão de fortunas, <em>Union Financière</em> e filiais do Paribas e Crédit Lyonnais).</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-3-7">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Competição e Cooperação</h4>
+          <div class="subchapter-body">
+            <p>A integração dos mercados de capitais manifestava-se nas emissões simultâneas em várias praças e na arbitragem instantânea de títulos. No plano das empresas, predominava a cooperação em sindicatos internacionais. Já em áreas geopoliticamente sensíveis (como a ferrovia de Bagdá no Império Otomano ou empréstimos à China após 1895), bancos atuavam em estreita ligação com seus governos, mesclando interesses comerciais e estratégias imperiais.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-3-8">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Belle Époque dos Banqueiros</h4>
+          <div class="subchapter-body">
+            <p>Entre 1900 e 1914, os banqueiros atingiram o ápice de riqueza e prestígio social, adotando estilos de vida aristocráticos (Mayfair em Londres, 8º/16º <em>arrondissements</em> em Paris, 5ª Avenida em Nova York). Na Grã-Bretanha, a elite financeira da City era o grupo empresarial dominante e profundamente integrado à aristocracia ("capitalismo cavalheiresco"). Em Berlim, ao contrário, os banqueiros (muitos de origem judaica) permaneciam socialmente separados da aristocracia fundiária e dos industriais do Ruhr. Apesar dos debates sobre o custo das exportações de capital (como a polêmica <em>Lysis vs. Testis</em> na França), os banqueiros preferiam a paz ao conflito — mas não puderam impedir a catástrofe de 1914.</p>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <button class="nav-pager-btn" data-goto="cap-2">← Anterior: Cap. 2</button>
+          <button class="nav-pager-btn next-btn" data-goto="cap-4">Próximo: Cap. 4 (1914–1945) →</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           4. CAPÍTULO 4 — GUERRAS E DEPRESSÃO (1914–1945)
+           ==================================================================== -->
+      <section class="chapter-view" id="cap-4">
+        <div class="chapter-header">
+          <span class="chapter-badge">Capítulo 4 • 1914–1945</span>
+          <h2 class="chapter-title">Guerras e Depressão</h2>
+          <p class="chapter-lead">Duas guerras mundiais e a Grande Depressão encerram a primeira globalização, destroem o Padrão-Ouro, impõem forte regulação estatal e transferem gradualmente a liderança financeira de Londres para Nova York.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central do Capítulo 4</div>
+          <p class="thesis-text">A transferência da hegemonia financeira da Grã-Bretanha para os EUA <strong>não aconteceu da noite para o dia</strong>: levou 30 anos (1914–1945). Nos anos 1920, Nova York assumiu a dianteira nas emissões externas, mas Londres preservou sua rede e liquidez. Foi a dupla ruptura da <strong>Grande Depressão (1929–33)</strong> e da <strong>Segunda Guerra Mundial</strong> que sepultou a velha ordem centrada na libra e consagrou o dólar em Bretton Woods.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">3 Diagramas</span></h3>
+
+        <!-- Esquema 4.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">A Grande Virada Atlântica (1914–1929)</h4>
+          </div>
+          <div class="grid-2">
+            <div class="flow-box highlight-gold">
+              <h4>Estados Unidos / Nova York</h4>
+              <ul>
+                <li><strong>1913:</strong> Devedor líquido (-US$ 3 bilhões).</li>
+                <li><strong>1914–1918:</strong> J. P. Morgan financia e compra suprimentos para os Aliados; EUA emprestam US$ 9,2 bi.</li>
+                <li><strong>1919:</strong> Grande credor líquido (+US$ 4,5 bilhões).</li>
+                <li><strong>Anos 1920:</strong> Emissões externas em NY superam Londres em 50%; Plano Dawes (1924) envia capitais à Alemanha.</li>
+              </ul>
+            </div>
+            <div class="flow-box highlight-navy">
+              <h4>Europa (Londres, Paris e Berlim)</h4>
+              <ul>
+                <li><strong>Londres:</strong> Vende US$ 3 bi em ativos nos EUA; volta ao ouro em 1925 na paridade antiga ($4,86) e sofre com libra sobrevalorizada, mas ainda lidera aceites e bancos multinacionais (<em>Big Five</em>).</li>
+                <li><strong>Paris:</strong> Perde 80% dos ativos externos (calote russo); estabiliza o franco (subvalorizado) sob Poincaré em 1926 e acumula ouro.</li>
+                <li><strong>Berlim:</strong> Hiperinflação (1923) destrói capital bancário; passa a depender de empréstimos externos de curto prazo.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="schema-caption">Enquanto os beligerantes europeus se enfraqueciam, praças neutras como <strong>Amsterdã</strong> (financiando a Alemanha nos anos 1920) e <strong>Zurique/Genebra</strong> (refúgio de capitais) ganharam protagonismo.</p>
+        </div>
+
+        <!-- Esquema 4.2 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">Efeito Dominó: A Desintegração Financeira (1929–1933)</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>1. Crash de 1929</h4>
+              <p>Estouro da bolha acionária em Wall Street paralisa empréstimos externos dos EUA para a Europa.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <h4>2. Crise Bancária (1931)</h4>
+              <p>Quebra do Creditanstalt (Viena) e do Danat Bank (Berlim); Alemanha impõe controle de capitais.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-gold">
+              <h4>3. Fim do Padrão-Ouro</h4>
+              <p>Fuga de ouro força Londres a abandonar o padrão-ouro em set/1931; dólar desvaloriza em 1933 e franco em 1936.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-navy">
+              <h4>4. Retração e Regulação</h4>
+              <p>Blocos fechados (Área da Libra); EUA aprovam <strong>Glass-Steagall Act (1933)</strong>; Suíça codifica o sigilo bancário (1934).</p>
+            </div>
+          </div>
+          <p class="schema-caption">A crise dos anos 1930 substituiu a confiança nos mercados abertos pelo nacionalismo econômico e pela intervenção regulatória estatal.</p>
+        </div>
+
+        <!-- Esquema 4.3 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 3</span>
+            <h4 class="schema-title">O Saldo de 1945: A Nova Ordem de Bretton Woods</h4>
+          </div>
+          <div class="grid-3">
+            <div class="flow-box highlight-navy">
+              <h4>Hegemonia de Nova York</h4>
+              <p>EUA concentram ~50% da produção industrial mundial; dólar conversível em ouro ($35/onça) torna-se o eixo do sistema internacional (FMI e Banco Mundial, 1944).</p>
+            </div>
+            <div class="flow-box">
+              <h4>Recuo Europeu</h4>
+              <p><strong>Londres</strong> sobrevive apoiada na Área da Libra e dívidas de guerra (<em>sterling balances</em>); <strong>Paris</strong> sai enfraquecida pela ocupação; <strong>Berlim</strong> é apagada do mapa financeiro em 1945.</p>
+            </div>
+            <div class="flow-box highlight-gold">
+              <h4>Refúgio Neutro: Suíça</h4>
+              <p>Única moeda europeia livremente conversível em ouro durante a guerra; sai em 1945 intacta e pronta para atuar como grande plataforma de capitais.</p>
+            </div>
+          </div>
+          <p class="schema-caption">Em 1945, o controle estatal das finanças e os controles cambiais dominavam o cenário: crescimento e pleno emprego passaram a prevalecer sobre a livre mobilidade de capitais.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">4 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-4-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Grande Guerra</h4>
+          <div class="subchapter-body">
+            <p>Em agosto de 1914, o pânico fechou temporariamente todas as grandes bolsas (Londres, Paris, Berlim, Nova York) e suspendeu o padrão-ouro. Na City, o Banco da Inglaterra e o Tesouro evitaram o colapso dos <em>merchant banks</em> garantindo letras de países inimigos. Ao longo do conflito, as finanças subordinaram-se aos governos, que absorveram os balanços bancários em títulos de guerra.</p>
+            <p>O grande vencedor financeiro foi Wall Street: a casa <strong>J. P. Morgan &amp; Co.</strong> coordenou empréstimos e US$ 3 bilhões em compras aliadas nos EUA. Em 1918, a Europa perdera mais de um terço de seus ativos externos, enquanto Nova York emergia como credora líquida global e centros neutros (Suíça e Holanda) lucravam com câmbio e fuga de capitais.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-4-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Os Loucos Anos Vinte</h4>
+          <div class="subchapter-body">
+            <p>A década tentou restaurar o mundo pré-1914, mas sobre bases frágeis (reparações alemãs, dívidas interaliadas e inflação). <strong>Nova York</strong> liderou as emissões estrangeiras (inclusive o Plano Dawes de 1924 para a Alemanha) e viveu um boom doméstico de ações e <em>investment trusts</em>. <strong>Londres</strong>, sob a liderança do governador Montagu Norman, voltou ao padrão-ouro em 1925 na paridade antiga ($4,86) para defender o prestígio da City, mas a libra sobrevalorizada travou a economia britânica — ainda que os <em>Big Five</em> e a rede de aceites mantivessem Londres muito competitiva.</p>
+            <p>Em <strong>Paris</strong>, após anos de crise fiscal, Raymond Poincaré estabilizou o franco em 1926 em nível subvalorizado, atraindo enormes reservas de ouro e reacendendo a ambição de rivalizar com Londres. <strong>Berlim</strong> sofreu hiperinflação até 1923 e passou a depender de empréstimos estrangeiros de curto prazo, enquanto <strong>Amsterdã</strong> e <strong>Zurique/Genebra</strong> prosperaram como intermediários e refúgios estáveis.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-4-3">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Os Anos de Crise</h4>
+          <div class="subchapter-body">
+            <p>O <strong>Crash de outubro de 1929</strong> em Wall Street refletiu a reversão da economia real e o estouro de uma bolha especulativa alavancada. A interrupção dos empréstimos americanos derrubou os bancos da Europa Central em 1931 (Creditanstalt em Viena, Danat e Dresdner em Berlim), levando a Alemanha ao controle cambial e à estatização bancária de fato.</p>
+            <p>A crise atingiu a libra em setembro de 1931, forçando a Grã-Bretanha a abandonar o padrão-ouro. A confiança na libra jamais se recuperou plenamente, e a City recuou para o espaço protegido da <strong>Área da Libra</strong>. Em todo o Ocidente avançou a regulação estatal: nos EUA, o <strong>Glass-Steagall Act (1933)</strong> separou bancos comerciais de bancos de investimento e a <strong>SEC (1934)</strong> regulou o mercado; na Bélgica, acabou-se com o banco misto; na Alemanha nazista, os bancos foram subordinados ao regime e casas judaicas foram "arianizadas"; e na Suíça, a Lei Bancária de 1934 criminalizou a quebra do <strong>sigilo bancário</strong> (Artigo 47).</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-4-4">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Segunda Guerra Mundial</h4>
+          <div class="subchapter-body">
+            <p>Diferente de 1914, a guerra de 1939 era esperada e não causou pânico bursátil inicial, mas submeteu completamente os sistemas financeiros ao Estado. Os fluxos de capital ocorreram diretamente entre governos: o programa americano <em>Lend-Lease</em> (US$ 50 bi aos Aliados), os saldos em libras congelados em Londres (<em>sterling balances</em>) e os pesados custos de ocupação extorquidos pela Alemanha nazista da França e de outros países ocupados.</p>
+            <p>Fisicamente, Londres e Berlim foram bombardeadas, e Paris, Bruxelas e Amsterdã foram ocupadas. A Suíça manteve o franco conversível em ouro (operando transações controversas com o ouro do Reichsbank e dos Aliados). Em 1945, a velha ordem financeira britânica chegava definitivamente ao fim.</p>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <button class="nav-pager-btn" data-goto="cap-3">← Anterior: Cap. 3</button>
+          <button class="nav-pager-btn next-btn" data-goto="cap-5">Próximo: Cap. 5 (1945–1980) →</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           5. CAPÍTULO 5 — CRESCIMENTO E REGULAÇÃO (1945–1980)
+           ==================================================================== -->
+      <section class="chapter-view" id="cap-5">
+        <div class="chapter-header">
+          <span class="chapter-badge">Capítulo 5 • 1945–1980</span>
+          <h2 class="chapter-title">Crescimento e Regulação</h2>
+          <p class="chapter-lead">Os "Trinta Anos Gloriosos" de crescimento econômico convivem inicialmente com finanças rigidamente reguladas — até que o nascimento dos Euromercados em Londres e o fim de Bretton Woods reabrem a porta para a globalização.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central do Capítulo 5</div>
+          <p class="thesis-text">Após 1945, controles cambiais e políticas keynesianas restringiram os centros financeiros ao espaço nacional, deixando <strong>Nova York</strong> no topo. A grande virada veio no fim dos anos 1950 com os <strong>Euromercados</strong> (eurodólares e eurobônus): paradoxalmente, as próprias restrições regulatórias dos EUA empurraram o mercado internacional em dólares para <strong>Londres</strong>, permitindo o renascimento da City independentemente da fraqueza da libra.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">3 Diagramas</span></h3>
+
+        <!-- Esquema 5.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">A Mecânica dos Euromercados: Como Londres Renasceu Sem a Força da Libra</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>Fator 1: Oferta de Dólares</h4>
+              <p>Déficits dos EUA, multinacionais americanas na Europa e depósitos soviéticos (temendo congelamento em NY) criam estoque de dólares fora dos EUA.</p>
+            </div>
+            <div class="flow-arrow">+</div>
+            <div class="flow-box highlight-gold">
+              <h4>Fator 2: Travas nos EUA</h4>
+              <ul>
+                <li><strong>Regulação Q:</strong> Teto de juros sobre depósitos nos EUA.</li>
+                <li><strong>Interest Equalization Tax (1963):</strong> Encarece empréstimos estrangeiros em NY.</li>
+              </ul>
+            </div>
+            <div class="flow-arrow">+</div>
+            <div class="flow-box">
+              <h4>Fator 3: Pragmatismo Britânico</h4>
+              <p>Banco da Inglaterra separa o mercado doméstico (regulado em libras) das operações <em>offshore</em> em moedas estrangeiras (livres de amarras).</p>
+            </div>
+            <div class="flow-arrow">=</div>
+            <div class="flow-box highlight-navy">
+              <h4>Resultado: Renascimento da City</h4>
+              <p>Londres vira o lar dos <strong>Eurodólares</strong> (US$ 132 bi em 1973), <strong>Eurobônus</strong> (Warburg, 1963) e <strong>Eurocréditos</strong>, atraindo 243 bancos estrangeiros até 1975.</p>
+            </div>
+          </div>
+          <p class="schema-caption">Pela primeira vez na história, o principal centro de transações internacionais (Londres) descolou-se da moeda dominante (o dólar americano) e do desempenho da economia doméstica.</p>
+        </div>
+
+        <!-- Esquema 5.2 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">Linha de Transformação: Do Mundo Regulado à Alvorada Global</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>1945–1958</h4>
+              <p><strong>Inconversibilidade:</strong> Controles cambiais, Plano Marshall, hegemonia de NY e retração de Paris.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <h4>Dezembro 1958</h4>
+              <p><strong>Conversibilidade Europeia:</strong> Moedas voltam a ser conversíveis em conta corrente; Bretton Woods entra de fato em vigor.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-gold">
+              <h4>Anos 1960</h4>
+              <p><strong>Euromercados:</strong> Expansão multinacional dos bancos dos EUA em Londres e reação via "clubes bancários" europeus (EBIC, ABECOR).</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-navy">
+              <h4>1971–1980</h4>
+              <p><strong>Câmbio Flutuante e Petrodólares:</strong> Fim do padrão dólar-ouro (1971–73), reciclagem de petrodólares para o 3º Mundo e <em>May Day</em> na NYSE (1975).</p>
+            </div>
+          </div>
+          <p class="schema-caption">Segundo a "Trindade Impossível" de Mundell, o fim das taxas de câmbio fixas em 1973 liberou a circulação de capitais sem retirar a autonomia monetária dos países.</p>
+        </div>
+
+        <!-- Esquema 5.3 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 3</span>
+            <h4 class="schema-title">Novos Polos e Especializações no Pós-Guerra (1945–1980)</h4>
+          </div>
+          <div class="grid-4">
+            <div class="flow-box">
+              <h4>Frankfurt</h4>
+              <p>Substitui Berlim por decisão aliada (sede do banco central em 1948 / Bundesbank em 1958) e reunificação dos grandes bancos alemães (1957–58).</p>
+            </div>
+            <div class="flow-box highlight-gold">
+              <h4>Zurique &amp; Genebra</h4>
+              <p>Era de ouro suíça (3º lugar mundial nos anos 1960): franco forte, neutralidade, gestão de fortunas, mercado de ouro e colocação de eurobônus.</p>
+            </div>
+            <div class="flow-box">
+              <h4>Luxemburgo</h4>
+              <p>Grande vencedor <em>offshore</em> na Europa: isenções fiscais e ausência de reservas compulsórias atraem bancos alemães e listagens de eurobônus.</p>
+            </div>
+            <div class="flow-box highlight-navy">
+              <h4>Despertar Asiático</h4>
+              <p><strong>Tóquio</strong> chega ao top 3 mundial com o milagre econômico japonês e a abertura de 1979; <strong>Singapura</strong> e <strong>Hong Kong</strong> iniciam sua ascensão.</p>
+            </div>
+          </div>
+          <p class="schema-caption">Enquanto a Europa continental mantinha receio de fluxos especulativos, Londres, Suíça, Luxemburgo e os novos centros asiáticos capturaram o crescimento financeiro internacional.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">3 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-5-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>O Difícil Retorno à Conversibilidade (1945–1958)</h4>
+          <div class="subchapter-body">
+            <p>No pós-guerra imediato, <strong>Nova York</strong> era o centro inconteste: os EUA financiavam a reconstrução via Plano Marshall, o dólar era a única grande moeda plenamente conversível e grandes fusões bancárias (Chase Manhattan, First National City) criaram os maiores bancos do planeta. Para contornar a Regulação Q, os bancos americanos inovaram com o Certificado de Depósito negociável (1961).</p>
+            <p>Na Europa, a <strong>City de Londres</strong> manteve relevância no comércio, seguros (Lloyd's) e metais apoiada na Área da Libra, mas perdeu força nas emissões estrangeiras. <strong>Paris</strong> sofreu o recuo mais acentuado devido às nacionalizações (quatro grandes bancos, seguradoras e Banque de France) e ao dirigismo estatal do Tesouro. Na Alemanha Ocidental, <strong>Frankfurt</strong> superou Hamburgo ao ser escolhida pelos EUA para sediar o banco central (futuro <em>Bundesbank</em>). Já a <strong>Suíça</strong> (Zurique e Genebra) aproveitou o franco conversível para se tornar o segundo mercado de emissões estrangeiras.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-5-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>O Nascimento e o Desenvolvimento dos Euromercados (1958–1973)</h4>
+          <div class="subchapter-body">
+            <p>O mercado de <strong>eurodólares</strong> (dólares depositados fora dos EUA, livres da regulação americana) começou com operações de arbitragem do Midland Bank em 1955 e restrições britânicas ao uso da libra em 1957, explodindo após a conversibilidade de 1958. Em 1963, Siegmund Warburg popularizou os <strong>eurobônus</strong> (empréstimo da Autostrade Italiane), impulsionados pela criação da <em>Interest Equalization Tax</em> nos EUA; logo depois surgiram os <strong>eurocréditos</strong> sindicados de médio prazo a taxas flutuantes (LIBOR).</p>
+            <p>Enquanto Frankfurt, Paris e Zurique restringiam depósitos externos para proteger suas políticas monetárias, o Banco da Inglaterra acolheu os Euromercados. Os bancos americanos invadiram Londres (chegando a controlar 54% do mercado em 1969) para driblar suas próprias leis domésticas. Como resposta, bancos europeus formaram consórcios e "clubes bancários" (como o EBIC), que acabariam dissolvidos nos anos 1980 quando cada banco preferiu atuar por conta própria.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-5-3">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Alvorada da Globalização (1973–1980)</h4>
+          <div class="subchapter-body">
+            <p>A suspensão da conversibilidade do dólar em ouro (1971) e a adoção do câmbio flutuante (1973) impulsionaram os mercados de câmbio e o volume dos Euromercados (US$ 575 bi em 1980). Após os choques do petróleo de 1973, grandes bancos comerciais em Londres e Nova York "reciclaram" os <strong>petrodólares</strong> da OPEP emprestando maciçamente a países em desenvolvimento via eurocréditos sindicados — processo que desembocaria na crise da dívida de 1982 (moratória do México).</p>
+            <p>Ao mesmo tempo, os EUA iniciaram a desregulamentação (fim da IET em 1974 e abolição das comissões fixas na NYSE no <em>May Day</em> de 1975). Mas a grande novidade geopolítica da década foi a ascensão de <strong>Tóquio</strong>: sustentada pelo salto industrial japonês e pela abertura gradual de seu mercado de títulos e capitais em 1979, a capital japonesa entrou no grupo restrito das três praças globais ao lado de Nova York e Londres.</p>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <button class="nav-pager-btn" data-goto="cap-4">← Anterior: Cap. 4</button>
+          <button class="nav-pager-btn next-btn" data-goto="cap-6">Próximo: Cap. 6 (1980–2005) →</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           6. CAPÍTULO 6 — GLOBALIZAÇÃO E INOVAÇÕES FINANCEIRAS (1980–2005)
+           ==================================================================== -->
+      <section class="chapter-view" id="cap-6">
+        <div class="chapter-header">
+          <span class="chapter-badge">Capítulo 6 • 1980–2005</span>
+          <h2 class="chapter-title">Globalização e Inovações Financeiras</h2>
+          <p class="chapter-lead">Desregulamentação neoliberal, revolução digital e engenharia financeira multiplicam em dez vezes os fluxos globais de capital, consolidando o duopólio global de Nova York e Londres e a ascensão dos centros da Ásia-Pacífico.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central do Capítulo 6</div>
+          <p class="thesis-text">A partir de 1980, a combinação de <strong>desregulamentação</strong>, <strong>informática</strong> e <strong>inovações financeiras</strong> (derivativos, securitização, hedge funds) elevou os ativos externos a 92% do PIB mundial (US$ 29 trilhões em 2000). A hierarquia tornou-se ainda mais concentrada no topo com o duopólio <strong>Nova York–Londres</strong>, seguido por fortes polos regionais e especializados na Europa e na Ásia.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">3 Diagramas</span></h3>
+
+        <!-- Esquema 6.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">Os 4 Motores da 2ª Globalização Financeira (1980–2005)</h4>
+          </div>
+          <div class="grid-4">
+            <div class="flow-box">
+              <h4>1. Desregulamentação</h4>
+              <p>Fim dos controles cambiais (Reino Unido 1979, França 1990), <em>Big Bang</em> de Londres (1986), fim da Glass-Steagall nos EUA (1999) e abertura no Japão.</p>
+            </div>
+            <div class="flow-box">
+              <h4>2. Tecnologia (TICs)</h4>
+              <p>Computadores, fibra óptica e pregões eletrônicos (Eurex, NASDAQ) permitem processar e negociar volumes gigantescos em tempo real.</p>
+            </div>
+            <div class="flow-box highlight-gold">
+              <h4>3. Inovação Financeira</h4>
+              <p>Desintermediação bancária, <strong>derivativos</strong> (de US$ 3,5 tri em 1991 para US$ 184 tri em 2004), <em>junk bonds</em>, fusões hostis e <em>hedge funds</em>.</p>
+            </div>
+            <div class="flow-box highlight-navy">
+              <h4>4. Investidores Institucionais</h4>
+              <p>Fundos de pensão, seguradoras e fundos mútuos concentram a poupança e exigem liquidez, transparência e alto retorno acionário.</p>
+            </div>
+          </div>
+          <p class="schema-caption">Diferente de 1913 (quando capitais iam da Europa para colônias e países novos), em 2000 mais de 80% dos investimentos estrangeiros circulavam entre os próprios países ricos (Europa, EUA e Japão).</p>
+        </div>
+
+        <!-- Esquema 6.2 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">O Duopólio Global no Século XXI: Nova York vs. Londres</h4>
+          </div>
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>Critério</th>
+                <th>Nova York (Wall Street)</th>
+                <th>Londres (City / Canary Wharf)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Base de Força</strong></td>
+                <td>Profundidade da economia dos EUA; dá o tom global das finanças.</td>
+                <td>Plataforma internacional aberta; descolada do porte médio da economia britânica.</td>
+              </tr>
+              <tr>
+                <td><strong>Onde Lidera</strong></td>
+                <td>Capitalização bolsista (NYSE + NASDAQ = 5x Londres ou Tóquio), fusões &amp; aquisições (Goldman Sachs, Morgan Stanley, Merrill Lynch).</td>
+                <td>Câmbio (32% do mundo), eurobônus (60%), empréstimos bancários transfronteiriços (19,5%), negociação de ações estrangeiras (45%) e derivativos OTC (36%).</td>
+              </tr>
+              <tr>
+                <td><strong>Propriedade dos Players</strong></td>
+                <td>Dominada por gigantes americanos (Citigroup, J.P. Morgan Chase e bancos de investimento dos EUA).</td>
+                <td><strong>"Efeito Wimbledon":</strong> O torneio (a City) é britânico e o melhor do mundo, mas os jogadores vencedores são bancos estrangeiros (EUA, Suíça, Alemanha) que compraram os antigos <em>merchant banks</em>.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="schema-caption">Em 2004, os dois centros empregavam volumes quase idênticos em finanças de atacado (314 mil em Nova York e 311 mil em Londres), muito à frente de qualquer outro rival.</p>
+        </div>
+
+        <!-- Esquema 6.3 (Pirâmide 2005) -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 3</span>
+            <h4 class="schema-title">Hierarquia dos Centros Financeiros no Alvorecer do Século XXI (2005)</h4>
+          </div>
+          <div class="pyramid">
+            <div class="pyramid-level pyramid-1">
+              <strong>Nível 1 — Centros Verdadeiramente Globais</strong>
+              <span>Nova York &amp; Londres (Duopólio de alcance mundial) • Tóquio (3º fuso, mas enfraquecida pela estagnação dos anos 1990)</span>
+            </div>
+            <div class="pyramid-level pyramid-2">
+              <strong>Nível 2 — Grandes Polos Internacionais Regionais e Especializados</strong>
+              <span>Europa: Frankfurt (BCE, Eurex) • Paris (Euronext, gestão de ativos) • Zurique &amp; Genebra (35% da riqueza privada offshore)<br>Ásia-Pacífico: Hong Kong (porta de entrada da China, empréstimos sindicados) • Singapura (mercado asiático de dólares e câmbio)</span>
+            </div>
+            <div class="pyramid-level pyramid-3">
+              <strong>Nível 3 — Centros Secundários, Especializados e Offshore</strong>
+              <span>Chicago (derivativos), Amsterdã, Luxemburgo, Toronto, Sydney, Ilhas Cayman, Jersey • + Xangai como futuro desafiante asiático</span>
+            </div>
+          </div>
+          <p class="schema-caption">A criação do Euro (1999) e a sede do BCE em Frankfurt não destronaram Londres na Europa; enquanto isso, a Ásia-Pacífico consolidou-se pela primeira vez como grande polo financeiro global.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">2 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-6-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>A Nova Economia Mundial</h4>
+          <div class="subchapter-body">
+            <p>A guinada neoliberal (Thatcher em 1979, Reagan em 1981) desmontou barreiras regulatórias em cadeia. O símbolo máximo foi o <strong>Big Bang de Londres</strong> (27 de outubro de 1986): fim das comissões fixas, fim da separação entre <em>brokers</em> e <em>jobbers</em> e permissão para bancos comprarem corretoras. Paris fez seu próprio "Big Bang" em 1984–85; os EUA extinguiram o Glass-Steagall Act em 1999; e novos marcos prudenciais internacionais surgiram (Acordos de Basileia).</p>
+            <p>As finanças passaram a depender de modelos matemáticos (Black-Scholes, Markowitz) e da explosão dos <strong>derivativos</strong> (iniciados em Chicago nos anos 1970 e expandidos por LIFFE, MATIF e Eurex), além de <em>hedge funds</em> (como o caso LTCM de 1998) e ondas de fusões e privatizações. A criação do <strong>Euro (1999)</strong> representou um marco político inédito, enquanto crises pontuais (1987, Ásia 1997, Rússia 1998, bolha pontocom em 2000 e escândalos como Enron/WorldCom) não reverteram a globalização. As novas elites financeiras tornaram-se executivos assalariados hiper-remunerados e altamente móveis dentro de megacorporações globais.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-6-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Os Principais Centros Financeiros no Alvorecer do Século XXI</h4>
+          <div class="subchapter-body">
+            <ul class="key-points">
+              <li><strong>Nova York e Londres:</strong> Lideram o planeta em regime de complementaridade e disputa. Após a quebra do Barings (1995), quase todos os <em>merchant banks</em> britânicos foram comprados por grupos estrangeiros (o "efeito Wimbledon"), mas a City ampliou sua liderança internacional.</li>
+              <li><strong>Tóquio:</strong> Parecia prestes a ultrapassar Nova York no fim dos anos 1980, mas o estouro da bolha imobiliária e acionária (Nikkei caindo 70%) e os requisitos de capital de Basileia forçaram bancos japoneses a recuar para o mercado doméstico.</li>
+              <li><strong>Frankfurt e Paris:</strong> Frankfurt ganhou o Banco Central Europeu e lidera em derivativos (Eurex), mas tem porte urbano limitado; Paris modernizou-se, lidera a gestão de ativos na Europa continental e impulsionou a Euronext (2000), mas ainda sofre com menor internacionalização.</li>
+              <li><strong>Zurique e Genebra:</strong> Mantêm posição invejável no nicho de <em>private banking</em> (~35% da riqueza privada offshore mundial), ancorados em estabilidade, expertise, sigilo bancário e nos gigantes globais UBS e Crédit Suisse.</li>
+              <li><strong>Hong Kong e Singapura:</strong> O primeiro cresceu via não-intervenção, câmbio atrelado ao dólar (<em>peg</em> de 1983) e conexão com a abertura chinesa; o segundo via estratégia deliberada do Estado (mercado de dólares asiáticos desde 1968 e câmbio). No horizonte longo, Xangai desponta como grande rival de Hong Kong.</li>
+            </ul>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <button class="nav-pager-btn" data-goto="cap-5">← Anterior: Cap. 5</button>
+          <button class="nav-pager-btn next-btn" data-goto="cap-7">Próximo: Conclusão →</button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           7. CONCLUSÃO — DINÂMICAS DE ASCENSÃO, DECLÍNIO E O FUTURO
+           ==================================================================== -->
+      <section class="chapter-view" id="cap-7">
+        <div class="chapter-header">
+          <span class="chapter-badge">Conclusão • Síntese de 225 Anos</span>
+          <h2 class="chapter-title">Dinâmicas de Ascensão, Declínio e o Futuro</h2>
+          <p class="chapter-lead">O que explica, em última análise, mais de dois séculos de permanência e mudança nas capitais do capital? Cassis sintetiza os padrões históricos e avalia se a era digital ameaça a existência física dos centros financeiros.</p>
+        </div>
+
+        <div class="thesis-box">
+          <div class="thesis-label">Tese Central da Conclusão</div>
+          <p class="thesis-text">A ascensão de um grande centro financeiro depende fundamentalmente do <strong>poder econômico de seu país</strong> (com defasagem temporal), enquanto seu declínio costuma ser disparado por <strong>cataclismos militares</strong>. Contudo, graças às economias externas, à inércia histórica e à atração de talentos estrangeiros, as grandes praças demonstram notável longevidade — e a revolução digital tende a transformá-las, não a eliminá-las.</p>
+        </div>
+
+        <h3 class="section-heading">Esquemas Explicativos <span class="tag">2 Diagramas</span></h3>
+
+        <!-- Esquema 7.1 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 1</span>
+            <h4 class="schema-title">A Trajetória das Lideranças Financeiras Mundiais (1780–2005)</h4>
+          </div>
+          <div class="flow-row">
+            <div class="flow-box">
+              <h4>Até 1795</h4>
+              <p><strong>Amsterdã</strong><br>Hegemonia comercial e de empréstimos soberanos.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-gold">
+              <h4>1815–1914</h4>
+              <p><strong>Londres</strong><br>Única capital global (Padrão-Ouro); Paris em 2º.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <h4>1914–1945</h4>
+              <p><strong>Disputa Londres / NY</strong><br>Guerras e Depressão transferem o eixo para os EUA.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box">
+              <h4>1945–1970s</h4>
+              <p><strong>Hegemonia de NY</strong><br>Bretton Woods; renascimento de Londres via Euromercados.</p>
+            </div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-box highlight-navy">
+              <h4>1980–2005</h4>
+              <p><strong>Duopólio NY &amp; Londres</strong><br>+ Polos regionais (Tóquio, Frankfurt, Paris, Suíça, HK, Singapura).</p>
+            </div>
+          </div>
+          <p class="schema-caption">Exceções à regra do tamanho econômico nacional — Suíça (pós-1945), Singapura (pós-1968) e Londres (pós-1960) — confirmam o papel decisivo da abertura internacional, da neutralidade e da especialização.</p>
+        </div>
+
+        <!-- Esquema 7.2 -->
+        <div class="schema-card">
+          <div class="schema-header">
+            <span class="schema-num">Esquema 2</span>
+            <h4 class="schema-title">O Paradoxo Digital: Por que a Tecnologia Não Dissolve os Centros Financeiros?</h4>
+          </div>
+          <div class="grid-2">
+            <div class="flow-box">
+              <h4>O que a Tecnologia Descentraliza</h4>
+              <ul>
+                <li>Pregões físicos presenciais (substituídos por telas e plataformas eletrônicas).</li>
+                <li>Operações padronizadas e rotineiras.</li>
+                <li>Serviços de <em>back-office</em> e processamento de dados (migrados para cidades mais baratas ou subúrbios).</li>
+                <li>Acesso remoto a cotações e informações básicas.</li>
+              </ul>
+            </div>
+            <div class="flow-box highlight-navy">
+              <h4>O que Ela Concentra Ainda Mais nos Grandes Centros</h4>
+              <ul>
+                <li><strong>Inovação financeira complexa:</strong> Criação de novos produtos e grandes fusões exigem contato face a face.</li>
+                <li><strong>Liquidez profunda:</strong> Grandes volumes ainda convergem para os maiores pools de capital.</li>
+                <li><strong>Redes de confiança e talentos:</strong> A emulação entre especialistas, advogados, auditores e reguladores continua espacialmente concentrada.</li>
+              </ul>
+            </div>
+          </div>
+          <p class="schema-caption">A tecnologia já revolucionou as finanças antes (telégrafo, telefone, cabos submarinos) sem nunca destruir os centros: ela altera sua geografia interna e suas funções, mas reforça seu papel como centros nervosos.</p>
+        </div>
+
+        <h3 class="section-heading">Desenvolvimento dos Subcapítulos <span class="tag">3 Tópicos</span></h3>
+
+        <article class="subchapter-card" id="sub-7-1">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Os Fatores de Ascensão e Declínio</h4>
+          <div class="subchapter-body">
+            <p>No longo prazo, duas leis históricas se destacam. Primeira: a ascensão de um centro acompanha o <strong>poder econômico do país anfitrião</strong> (Amsterdã, Londres, Nova York, Berlim, Tóquio, Frankfurt e Hong Kong/China), sempre com uma defasagem de décadas entre o salto industrial e a liderança financeira. Segunda: o declínio abrupto quase sempre resulta de um <strong>cataclismo militar</strong> (vencedor ou perdedor): guerras napoleônicas para Amsterdã, 1870 e 1940 para Paris, 1914–1945 para a City e para Berlim.</p>
+            <p>Fatores de curto e médio prazo — como moeda forte e regulação estatal — raramente criam um centro do zero ou o destroem sozinhos, mas <strong>amplificam</strong> vantagens ou fragilidades pré-existentes (como o sigilo bancário suíço de 1934 ou o apoio do Banco da Inglaterra aos eurodólares nos anos 1960).</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-7-2">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Inércia Histórica e Economias Externas</h4>
+          <div class="subchapter-body">
+            <p>Uma marca impressionante da história financeira é a <strong>longevidade</strong> do clube de elite: quase todos os grandes centros do século XIX continuam no topo no século XXI (a única queda definitiva foi Berlim, compensada pelo retorno de Frankfurt após 80 anos). Isso ocorre pela força da inércia institucional, pelas economias externas acumuladas e pela capacidade contínua de <strong>atrair talentos estrangeiros</strong> — dos Rothschilds, Morgans e Schiffs no século XIX a Siegmund Warburg e aos executivos multinacionais de hoje.</p>
+          </div>
+        </article>
+
+        <article class="subchapter-card" id="sub-7-3">
+          <h4 class="subchapter-title"><span class="subchapter-dot"></span>Tecnologia e o Futuro dos Centros Financeiros</h4>
+          <div class="subchapter-body">
+            <p>Para Cassis, o maior risco de médio prazo para os centros financeiros não é a obsolescência tecnológica, mas uma eventual <strong>reversão da abertura econômica global</strong> (como ocorreu entre 1914 e 1945), que reduziria lucros, empregos e atrasaria a ascensão de novos gigantes (como um centro global na China).</p>
+            <p>Quanto ao impacto da era digital, a história sugere adaptação, não desaparecimento. Mesmo com transações instantâneas à distância, a necessidade de liquidez concentrada, serviços complementares e redes humanas de confiança garante que as <em>capitais do capital</em> continuem insubstituíveis como o sistema nervoso das finanças internacionais.</p>
+          </div>
+        </article>
+
+        <div class="chapter-footer-nav">
+          <button class="nav-pager-btn" data-goto="cap-6">← Anterior: Cap. 6</button>
+          <button class="nav-pager-btn next-btn" data-goto="cap-0">Voltar à Introdução ↺</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- SCRIPT DE NAVEGAÇÃO LIMPO E SEM DEPENDÊNCIAS -->
+  <script>
+    (function () {
+      const chapters = document.querySelectorAll('.chapter-view');
+      const timelineBtns = document.querySelectorAll('.timeline-btn');
+      const chapterGroups = document.querySelectorAll('.nav-chapter-group');
+      const chapterBtns = document.querySelectorAll('.nav-chapter-btn');
+      const subBtns = document.querySelectorAll('.nav-sub-btn');
+      const pagerBtns = document.querySelectorAll('.nav-pager-btn');
+
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      const menuToggleBtn = document.getElementById('menuToggleBtn');
+
+      function closeMobileMenu() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      }
+
+      function toggleMobileMenu() {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+      }
+
+      if (menuToggleBtn) {
+        menuToggleBtn.addEventListener('click', toggleMobileMenu);
+      }
+      if (overlay) {
+        overlay.addEventListener('click', closeMobileMenu);
+      }
+
+      /**
+       * Exibe o capítulo desejado e, opcionalmente, rola até um subcapítulo específico
+       * aplicando um destaque visual temporário.
+       */
+      function navigateTo(chapterId, subId = null) {
+        // 1. Alterna a visibilidade das seções de capítulo
+        chapters.forEach(sec => {
+          sec.classList.toggle('active', sec.id === chapterId);
+        });
+
+        // 2. Atualiza a linha do tempo no topo
+        timelineBtns.forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.target === chapterId);
+        });
+
+        // 3. Atualiza o grupo ativo no menu lateral
+        chapterGroups.forEach(group => {
+          group.classList.toggle('active-group', group.dataset.group === chapterId);
+        });
+
+        // 4. Atualiza destaque de subcapítulo na sidebar
+        subBtns.forEach(btn => {
+          btn.classList.toggle('active-sub', Boolean(subId && btn.dataset.sub === subId));
+        });
+
+        // Fecha o menu lateral em telas pequenas
+        closeMobileMenu();
+
+        // 5. Rolagem suave para o topo ou para o subcapítulo clicado
+        if (subId) {
+          const targetEl = document.getElementById(subId);
+          if (targetEl) {
+            setTimeout(() => {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              targetEl.classList.remove('flash-highlight');
+              // Força reflow para reiniciar a animação de destaque
+              void targetEl.offsetWidth;
+              targetEl.classList.add('flash-highlight');
+              setTimeout(() => targetEl.classList.remove('flash-highlight'), 1800);
+            }, 40);
+          }
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+
+      // Eventos da linha do tempo superior
+      timelineBtns.forEach(btn => {
+        btn.addEventListener('click', () => navigateTo(btn.dataset.target));
+      });
+
+      // Eventos dos botões de capítulo na sidebar
+      chapterBtns.forEach(btn => {
+        btn.addEventListener('click', () => navigateTo(btn.dataset.chapter));
+      });
+
+      // Eventos dos botões de subcapítulo na sidebar
+      subBtns.forEach(btn => {
+        btn.addEventListener('click', () => navigateTo(btn.dataset.chapter, btn.dataset.sub));
+      });
+
+      // Eventos dos botões Anterior / Próximo no rodapé
+      pagerBtns.forEach(btn => {
+        btn.addEventListener('click', () => navigateTo(btn.dataset.goto));
+      });
+    })();
+  </script>
+</body>
+</html>
