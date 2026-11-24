@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mapa das Instituições Financeiras — Brasil & São Paulo (BCB Out/2026)</title>
+  <title>Mapa das Instituições Financeiras — Brasil, São Paulo & Porto Alegre (BCB Out/2026)</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -34,8 +34,8 @@
 
     /* Barra Lateral */
     aside {
-      width: 348px;
-      min-width: 328px;
+      width: 352px;
+      min-width: 332px;
       background: var(--panel);
       border-right: 1px solid var(--border);
       display: flex;
@@ -46,13 +46,13 @@
     }
 
     .sidebar-header {
-      padding: 15px 18px 12px;
+      padding: 15px 16px 12px;
       border-bottom: 1px solid var(--border);
       background: #f8fafc;
     }
 
     .sidebar-header h1 {
-      font-size: 1.04rem;
+      font-size: 1.03rem;
       font-weight: 700;
       color: #0f172a;
       line-height: 1.3;
@@ -60,15 +60,15 @@
     }
 
     .sidebar-header p {
-      font-size: 0.74rem;
+      font-size: 0.73rem;
       color: var(--muted);
     }
 
-    /* Seletor Brasil / São Paulo */
+    /* Seletor de Escala Geográfica (Brasil / SP / POA) */
     .mode-switch {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 3px;
       margin-top: 10px;
       background: #e2e8f0;
       padding: 3px;
@@ -78,13 +78,14 @@
     .mode-btn {
       border: none;
       background: transparent;
-      padding: 7px 6px;
+      padding: 7px 4px;
       border-radius: 7px;
-      font-size: 0.75rem;
+      font-size: 0.73rem;
       font-weight: 600;
       color: #475569;
       cursor: pointer;
       transition: all 0.15s ease;
+      white-space: nowrap;
     }
 
     .mode-btn:hover { color: #0f172a; }
@@ -120,7 +121,7 @@
     }
 
     .sum-val {
-      font-size: 0.84rem;
+      font-size: 0.83rem;
       font-weight: 700;
       color: #0f172a;
       font-variant-numeric: tabular-nums;
@@ -146,7 +147,7 @@
     }
 
     .size-control-title {
-      font-size: 0.65rem;
+      font-size: 0.64rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: 700;
@@ -382,6 +383,12 @@
       z-index: 2;
     }
 
+    .map-canvas {
+      width: 100%;
+      height: 100%;
+      background: #f4f7fa;
+    }
+
     /* Controles Superior Esquerdo */
     .left-controls {
       position: absolute;
@@ -465,7 +472,82 @@
     .dot-ok { width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0; }
     .dot-warn { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; }
 
-    /* Escala + Fonte */
+    /* Painel de Mapa Base (reutilizado em BR, SP e POA) */
+    .layer-panel {
+      position: absolute;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+      z-index: 600;
+      font-size: 0.74rem;
+      min-width: 242px;
+    }
+
+    .layer-title {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .layer-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 5px;
+      cursor: pointer;
+      color: #1e293b;
+    }
+
+    .layer-row:last-child { margin-bottom: 0; }
+    .layer-divider { border-top: 1px solid var(--border); margin: 7px 0; }
+
+    /* Barra de Atalhos Intraurbanos */
+    .city-toolbar {
+      position: absolute;
+      top: 16px;
+      left: 84px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      z-index: 600;
+      max-width: calc(100% - 395px);
+    }
+
+    .city-chip {
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: #334155;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      transition: all 0.12s;
+    }
+
+    .city-chip:hover {
+      background: #f1f5f9;
+      border-color: #94a3b8;
+    }
+
+    .city-chip.primary {
+      background: #0f766e;
+      color: #ffffff;
+      border-color: #0f766e;
+    }
+
+    .city-chip.primary:hover { background: #115e59; }
+    .city-chip:disabled { opacity: 0.65; cursor: wait; }
+
+    /* Fonte no Rodapé */
     .bottom-left-meta {
       position: absolute;
       bottom: 14px;
@@ -475,16 +557,7 @@
       gap: 6px;
       z-index: 600;
       pointer-events: none;
-      max-width: 580px;
-    }
-
-    .scale-box {
-      background: rgba(255, 255, 255, 0.94);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 5px 11px 4px;
-      width: fit-content;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+      max-width: 590px;
     }
 
     .source-note {
@@ -526,118 +599,8 @@
       margin-bottom: 6px;
     }
 
-    /* Brasil SVG */
-    #map-container { width: 100%; height: 100%; }
-    #map-container svg { width: 100%; height: 100%; display: block; cursor: grab; }
-    #map-container svg:active { cursor: grabbing; }
-
-    .uf-path {
-      fill: #ffffff;
-      stroke: #cbd5e1;
-      stroke-width: 1px;
-      vector-effect: non-scaling-stroke;
-      transition: fill 0.15s;
-    }
-
-    .uf-path:hover { fill: #f8fafc; }
-
-    .sede-circle {
-      fill-opacity: 0.50;
-      stroke-width: 1.05px;
-      vector-effect: non-scaling-stroke;
-      cursor: pointer;
-      transition: fill-opacity 0.12s, stroke-width 0.12s;
-    }
-
-    .sede-circle:hover {
-      fill-opacity: 0.88;
-      stroke: #0f172a !important;
-      stroke-width: 1.6px;
-    }
-
-    /* Controles do Modo São Paulo */
-    #sp-map-container {
-      width: 100%;
-      height: 100%;
-      background: #e9eef3;
-    }
-
-    .sp-toolbar {
-      position: absolute;
-      top: 16px;
-      left: 84px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 6px;
-      z-index: 600;
-      max-width: calc(100% - 400px);
-    }
-
-    .sp-chip {
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 6px 11px;
-      font-size: 0.73rem;
-      font-weight: 600;
-      color: #334155;
-      cursor: pointer;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-      transition: all 0.12s;
-    }
-
-    .sp-chip:hover {
-      background: #f1f5f9;
-      border-color: #94a3b8;
-    }
-
-    .sp-chip.primary {
-      background: #0f766e;
-      color: #ffffff;
-      border-color: #0f766e;
-    }
-
-    .sp-chip.primary:hover { background: #115e59; }
-    .sp-chip:disabled { opacity: 0.65; cursor: wait; }
-
-    .sp-layer-panel {
-      position: absolute;
-      top: 56px;
-      right: 16px;
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
-      z-index: 600;
-      font-size: 0.74rem;
-      min-width: 245px;
-    }
-
-    .sp-layer-title {
-      font-size: 0.66rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .sp-layer-row {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      margin-bottom: 5px;
-      cursor: pointer;
-      color: #1e293b;
-    }
-
-    .sp-layer-row:last-child { margin-bottom: 0; }
-    .sp-layer-divider { border-top: 1px solid var(--border); margin: 7px 0; }
-
     /* Popup Leaflet */
-    .sp-popup {
+    .city-popup {
       max-height: 260px;
       overflow-y: auto;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -646,7 +609,7 @@
       min-width: 240px;
     }
 
-    .sp-popup-header {
+    .city-popup-header {
       font-weight: 700;
       color: #0f172a;
       font-size: 0.83rem;
@@ -655,14 +618,14 @@
       border-bottom: 1px solid #e2e8f0;
     }
 
-    .sp-inst-item {
+    .inst-item {
       padding: 5px 0;
       border-bottom: 1px dashed #e2e8f0;
     }
 
-    .sp-inst-item:last-child { border-bottom: none; }
+    .inst-item:last-child { border-bottom: none; }
 
-    .sp-inst-name {
+    .inst-name {
       font-weight: 700;
       color: #1e293b;
       display: flex;
@@ -670,35 +633,10 @@
       gap: 6px;
     }
 
-    .sp-inst-meta {
+    .inst-meta {
       color: #64748b;
       font-size: 0.71rem;
       margin-top: 2px;
-    }
-
-    /* Tooltip Brasil */
-    #tooltip {
-      position: fixed;
-      pointer-events: none;
-      opacity: 0;
-      background: rgba(15, 23, 42, 0.95);
-      color: #fff;
-      padding: 10px 12px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      line-height: 1.45;
-      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
-      z-index: 999;
-      max-width: 270px;
-      transition: opacity 0.1s;
-    }
-
-    #tooltip .tt-city {
-      font-weight: 700;
-      font-size: 0.86rem;
-      margin-bottom: 3px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-      padding-bottom: 3px;
     }
 
     .loading-overlay {
@@ -716,8 +654,9 @@
       text-align: center;
     }
 
+    /* Ajustes Leaflet */
     .leaflet-bottom.leaflet-left {
-      bottom: 62px !important;
+      bottom: 60px !important;
       left: 6px !important;
     }
 
@@ -730,6 +669,21 @@
       font-size: 10px !important;
       padding: 1px 6px !important;
     }
+
+    .leaflet-tooltip.custom-tt {
+      background: rgba(15, 23, 42, 0.95);
+      border: none;
+      color: #ffffff;
+      border-radius: 7px;
+      padding: 8px 10px;
+      font-size: 0.76rem;
+      line-height: 1.4;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.28);
+    }
+
+    .leaflet-tooltip-top.custom-tt::before {
+      border-top-color: rgba(15, 23, 42, 0.95);
+    }
   </style>
 </head>
 <body>
@@ -737,11 +691,12 @@
 <aside>
   <div class="sidebar-header">
     <h1>Sedes de Instituições Financeiras</h1>
-    <p>Ref.: Out/2026 (BCB Olinda) • Base: IBGE & GeoSampa</p>
+    <p>Ref.: Out/2026 (BCB Olinda) • IBGE, Esri & GeoSampa</p>
 
     <div class="mode-switch">
-      <button class="mode-btn active" id="mode-br">Brasil (Municípios)</button>
-      <button class="mode-btn" id="mode-sp">São Paulo (Intramunicipal)</button>
+      <button class="mode-btn active" id="mode-br">Brasil</button>
+      <button class="mode-btn" id="mode-sp">São Paulo</button>
+      <button class="mode-btn" id="mode-poa">Porto Alegre</button>
     </div>
 
     <div class="summary-strip">
@@ -792,14 +747,14 @@
   <div class="loading-overlay" id="loading">Carregando malha territorial do IBGE e dados do BCB...</div>
 
   <!-- ========================================================= -->
-  <!-- PAINEL 1: MAPA DO BRASIL (MUNICÍPIOS)                     -->
+  <!-- PAINEL 1: MAPA NACIONAL (BRASIL)                          -->
   <!-- ========================================================= -->
   <div id="pane-br" class="view-pane visible">
     <div class="left-controls">
       <div class="zoom-group">
-        <button class="zoom-btn" id="btn-zoom-in" title="Aproximar">+</button>
-        <button class="zoom-btn" id="btn-zoom-out" title="Afastar">−</button>
-        <button class="zoom-btn" id="btn-reset" title="Centralizar Brasil">Resetar</button>
+        <button class="zoom-btn" id="br-zoom-in" title="Aproximar">+</button>
+        <button class="zoom-btn" id="br-zoom-out" title="Afastar">−</button>
+        <button class="zoom-btn" id="br-reset" title="Centralizar Brasil">Resetar</button>
       </div>
       <div class="north-card" title="Norte Geográfico">
         <svg width="24" height="34" viewBox="0 0 24 34">
@@ -821,21 +776,45 @@
       </div>
     </div>
 
-    <div id="map-container"></div>
+    <!-- Seletor de Mapa Base no Nível Nacional -->
+    <div class="layer-panel" style="top: 90px;">
+      <div class="layer-title">Mapa Base (Brasil)</div>
+      <label class="layer-row">
+        <input type="radio" name="br-base" value="clean" checked onchange="setBRBaseLayer('clean')" />
+        <span><strong>Fundo Limpo</strong> (Apenas Malha IBGE)</span>
+      </label>
+      <label class="layer-row">
+        <input type="radio" name="br-base" value="esri_gray" onchange="setBRBaseLayer('esri_gray')" />
+        <span>Esri Cinza Claro (Rótulos e Vias)</span>
+      </label>
+      <label class="layer-row">
+        <input type="radio" name="br-base" value="esri_streets" onchange="setBRBaseLayer('esri_streets')" />
+        <span>Esri Mapa Viário Detalhado</span>
+      </label>
+      <label class="layer-row">
+        <input type="radio" name="br-base" value="esri_sat" onchange="setBRBaseLayer('esri_sat')" />
+        <span>Esri Satélite (Imagens)</span>
+      </label>
+      <div class="layer-divider"></div>
+      <div class="layer-title">Camadas Vetoriais</div>
+      <label class="layer-row">
+        <input type="checkbox" id="chk-br-ufs" checked onchange="toggleBRUFs(this.checked)" />
+        <span>Divisas das UFs (IBGE)</span>
+      </label>
+    </div>
+
+    <div id="br-map-container" class="map-canvas"></div>
 
     <div class="bottom-left-meta">
-      <div class="scale-box">
-        <svg id="scale-svg" width="160" height="24"></svg>
-      </div>
       <div class="source-note">
-        <strong>Fonte:</strong> Banco Central do Brasil (BCB — Relação de Instituições em Funcionamento, Out/2026) e Instituto Brasileiro de Geografia e Estatística (IBGE — Malha Territorial de UFs e Sedes Municipais).
+        <strong>Fonte:</strong> Banco Central do Brasil (BCB — Relação de Instituições em Funcionamento, Out/2026), IBGE (Malha Territorial de UFs e Sedes Municipais) e Esri ArcGIS.
       </div>
     </div>
 
     <div class="legend-card">
       <div class="legend-title">Sedes / Município</div>
       <div class="legend-sub">Escala padronizada fixa</div>
-      <svg id="legend-svg" width="175" height="78"></svg>
+      <svg id="legend-br-svg" width="175" height="78"></svg>
     </div>
   </div>
 
@@ -858,70 +837,140 @@
       </div>
     </div>
 
-    <!-- Atalhos dos Polos Financeiros + Refinamento via BrasilAPI -->
-    <div class="sp-toolbar">
-      <button class="sp-chip" onclick="focusSPHub('MUNICIPIO')">Município Inteiro</button>
-      <button class="sp-chip" onclick="focusSPHub('FARIA_LIMA')">Faria Lima / Itaim</button>
-      <button class="sp-chip" onclick="focusSPHub('PAULISTA')">Av. Paulista</button>
-      <button class="sp-chip" onclick="focusSPHub('BERRINI')">Berrini / Chucri Zaidan</button>
-      <button class="sp-chip" onclick="focusSPHub('CENTRO')">Centro Histórico</button>
-      <button class="sp-chip primary" id="btn-refine-cep" onclick="refineSPWithBrasilAPI()">
-        Refinar coordenadas via CEP (BrasilAPI)
+    <div class="city-toolbar">
+      <button class="city-chip" onclick="focusSPHub('MUNICIPIO')">Município Inteiro</button>
+      <button class="city-chip" onclick="focusSPHub('FARIA_LIMA')">Faria Lima / Itaim</button>
+      <button class="city-chip" onclick="focusSPHub('PAULISTA')">Av. Paulista</button>
+      <button class="city-chip" onclick="focusSPHub('BERRINI')">Berrini / Chucri Zaidan</button>
+      <button class="city-chip" onclick="focusSPHub('CENTRO')">Centro Histórico</button>
+      <button class="city-chip primary" id="btn-refine-sp" onclick="refineCityWithBrasilAPI('SP')">
+        Refinar CEPs (BrasilAPI)
       </button>
     </div>
 
-    <!-- Status SP -->
     <div class="right-pills">
       <div class="status-pill">
-        <span class="dot-ok" id="sp-status-dot"></span>
-        <span id="sp-status-text">GeoSampa (PMSP) + Recorte SP (IBGE)</span>
+        <span class="dot-ok"></span>
+        <span id="sp-status-text">Esri Cinza Claro + Recorte SP (IBGE)</span>
       </div>
     </div>
 
-    <!-- Seletor de Bases (GeoSampa WMS Oficial + Esri Sem Chave de API) -->
-    <div class="sp-layer-panel">
-      <div class="sp-layer-title">Mapa Base (Ruas e Logradouros)</div>
-      <label class="sp-layer-row">
-        <input type="radio" name="sp-base" value="geosampa" checked onchange="setSPBaseLayer('geosampa')" />
-        <span><strong>GeoSampa</strong> — Mapa Político e Ruas</span>
+    <div class="layer-panel" style="top: 56px;">
+      <div class="layer-title">Mapa Base — São Paulo</div>
+      <label class="layer-row">
+        <input type="radio" name="sp-base" value="esri_gray" checked onchange="setSPBaseLayer('esri_gray')" />
+        <span><strong>Esri Cinza Claro</strong> (Ruas e Bairros)</span>
       </label>
-      <label class="sp-layer-row">
-        <input type="radio" name="sp-base" value="esri_gray" onchange="setSPBaseLayer('esri_gray')" />
-        <span>Esri Cinza Claro (Ruas e Bairros)</span>
+      <label class="layer-row">
+        <input type="radio" name="sp-base" value="geosampa" onchange="setSPBaseLayer('geosampa')" />
+        <span>GeoSampa — Mapa Político e Ruas</span>
       </label>
-      <label class="sp-layer-row">
+      <label class="layer-row">
         <input type="radio" name="sp-base" value="esri_streets" onchange="setSPBaseLayer('esri_streets')" />
         <span>Esri Mapa Viário Detalhado</span>
       </label>
-      <label class="sp-layer-row">
+      <label class="layer-row">
         <input type="radio" name="sp-base" value="geosampa_orto" onchange="setSPBaseLayer('geosampa_orto')" />
         <span>GeoSampa — Ortofoto 2020 (Satélite)</span>
       </label>
-      <div class="sp-layer-divider"></div>
-      <div class="sp-layer-title">Recorte Territorial</div>
-      <label class="sp-layer-row">
-        <input type="checkbox" id="chk-sp-boundary" checked onchange="toggleSPBoundary(this.checked)" />
+      <div class="layer-divider"></div>
+      <div class="layer-title">Recorte Territorial</div>
+      <label class="layer-row">
+        <input type="checkbox" checked onchange="toggleCityBoundary('SP', this.checked)" />
         <span>Limite Municipal de São Paulo (IBGE)</span>
       </label>
     </div>
 
-    <div id="sp-map-container"></div>
+    <div id="sp-map-container" class="map-canvas"></div>
 
-    <div class="bottom-left-meta" style="bottom: 14px;">
+    <div class="bottom-left-meta">
       <div class="source-note">
-        <strong>Fonte:</strong> BCB (Relação de Instituições em Funcionamento, Out/2026 — endereços das sedes), GeoSampa/PMSP (WMS MapaBase Político / Ortofoto), IBGE (Malha Municipal 3550308), Esri ArcGIS e BrasilAPI (CEPs).
+        <strong>Fonte:</strong> BCB (Relação de Instituições em Funcionamento, Out/2026 — endereços das sedes), IBGE (Malha Municipal 3550308), Esri ArcGIS, GeoSampa/PMSP e BrasilAPI (CEPs).
       </div>
     </div>
 
     <div class="legend-card">
       <div class="legend-title">Sedes / Endereço (SP)</div>
       <div class="legend-sub">Clique no ponto para ver a lista</div>
-      <svg id="sp-legend-svg" width="175" height="66"></svg>
+      <svg id="legend-sp-svg" width="175" height="66"></svg>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- PAINEL 3: MAPA INTRAMUNICIPAL DE PORTO ALEGRE             -->
+  <!-- ========================================================= -->
+  <div id="pane-poa" class="view-pane hidden">
+    <div class="left-controls">
+      <div class="zoom-group">
+        <button class="zoom-btn" id="poa-zoom-in" title="Aproximar">+</button>
+        <button class="zoom-btn" id="poa-zoom-out" title="Afastar">−</button>
+        <button class="zoom-btn" id="poa-reset" title="Município Inteiro">POA</button>
+      </div>
+      <div class="north-card" title="Norte Geográfico">
+        <svg width="24" height="34" viewBox="0 0 24 34">
+          <text x="12" y="9" text-anchor="middle" font-size="9" font-weight="700" fill="#1e293b">N</text>
+          <polygon points="12,12 17,30 12,26" fill="#1e293b" />
+          <polygon points="12,12 7,30 12,26" fill="#94a3b8" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="city-toolbar">
+      <button class="city-chip" onclick="focusPOAHub('MUNICIPIO')">Município Inteiro</button>
+      <button class="city-chip" onclick="focusPOAHub('CENTRO')">Centro Histórico</button>
+      <button class="city-chip" onclick="focusPOAHub('CARLOS_GOMES')">Carlos Gomes / Bela Vista</button>
+      <button class="city-chip" onclick="focusPOAHub('MOINHOS')">Moinhos de Vento</button>
+      <button class="city-chip" onclick="focusPOAHub('QUARTO_DISTRITO')">4º Distrito / Assis Brasil</button>
+      <button class="city-chip" onclick="focusPOAHub('PRAIA_BELAS')">Praia de Belas</button>
+      <button class="city-chip primary" id="btn-refine-poa" onclick="refineCityWithBrasilAPI('POA')">
+        Refinar CEPs (BrasilAPI)
+      </button>
+    </div>
+
+    <div class="right-pills">
+      <div class="status-pill">
+        <span class="dot-ok"></span>
+        <span id="poa-status-text">Esri Cinza Claro + Recorte POA (IBGE)</span>
+      </div>
+    </div>
+
+    <div class="layer-panel" style="top: 56px;">
+      <div class="layer-title">Mapa Base — Porto Alegre</div>
+      <label class="layer-row">
+        <input type="radio" name="poa-base" value="esri_gray" checked onchange="setPOABaseLayer('esri_gray')" />
+        <span><strong>Esri Cinza Claro</strong> (Ruas e Bairros)</span>
+      </label>
+      <label class="layer-row">
+        <input type="radio" name="poa-base" value="esri_streets" onchange="setPOABaseLayer('esri_streets')" />
+        <span>Esri Mapa Viário Detalhado</span>
+      </label>
+      <label class="layer-row">
+        <input type="radio" name="poa-base" value="esri_sat" onchange="setPOABaseLayer('esri_sat')" />
+        <span>Esri Satélite (Imagens)</span>
+      </label>
+      <div class="layer-divider"></div>
+      <div class="layer-title">Recorte Territorial</div>
+      <label class="layer-row">
+        <input type="checkbox" checked onchange="toggleCityBoundary('POA', this.checked)" />
+        <span>Limite Municipal de Porto Alegre (IBGE)</span>
+      </label>
+    </div>
+
+    <div id="poa-map-container" class="map-canvas"></div>
+
+    <div class="bottom-left-meta">
+      <div class="source-note">
+        <strong>Fonte:</strong> BCB (Relação de Instituições em Funcionamento, Out/2026 — endereços das sedes), IBGE (Malha Municipal 4314902), Esri ArcGIS e BrasilAPI (CEPs).
+      </div>
+    </div>
+
+    <div class="legend-card">
+      <div class="legend-title">Sedes / Endereço (POA)</div>
+      <div class="legend-sub">Clique no ponto para ver a lista</div>
+      <svg id="legend-poa-svg" width="175" height="66"></svg>
     </div>
   </div>
 </main>
-
-<div id="tooltip"></div>
 
 <script>
 // ============================================================================
@@ -966,43 +1015,33 @@ function classifyBCBSegment(rawSegment) {
 }
 
 // ============================================================================
-// 2. ESCALA PROPORCIONAL PADRONIZADA CONFIGURÁVEL (MÍN. E MÁX. VIA SLIDERS)
+// 2. ESCALA PROPORCIONAL PADRONIZADA CONFIGURÁVEL (BR, SP E POA)
 // ============================================================================
 const DEFAULT_RADIUS = {
-  BR: { min: 2.5, max: 23, minBound: [1, 14], maxBound: [8, 55] },
-  SP: { min: 5.5, max: 20, minBound: [2, 16], maxBound: [10, 48] }
+  BR:  { min: 2.5, max: 23, minBound: [1, 14], maxBound: [8, 55] },
+  SP:  { min: 5.5, max: 20, minBound: [2, 16], maxBound: [10, 48] },
+  POA: { min: 6.0, max: 18, minBound: [2, 16], maxBound: [10, 44] }
 };
 
 const radiusConfig = {
-  BR: { min: DEFAULT_RADIUS.BR.min, max: DEFAULT_RADIUS.BR.max },
-  SP: { min: DEFAULT_RADIUS.SP.min, max: DEFAULT_RADIUS.SP.max }
+  BR:  { min: DEFAULT_RADIUS.BR.min,  max: DEFAULT_RADIUS.BR.max },
+  SP:  { min: DEFAULT_RADIUS.SP.min,  max: DEFAULT_RADIUS.SP.max },
+  POA: { min: DEFAULT_RADIUS.POA.min, max: DEFAULT_RADIUS.POA.max }
 };
 
-let globalMaxBR = 500;
-let globalMaxSP = 20;
+const globalMaxByMode = { BR: 500, SP: 20, POA: 6 };
 
-// Mantém SEMPRE r(1) = min e r(globalMax) = max em todas as categorias (escala fixa)
-function radiusForCountBR(count) {
+function radiusForMode(mode, count) {
   if (!count || count <= 0) return 0;
-  const { min, max } = radiusConfig.BR;
-  const refMax = Math.max(2, globalMaxBR);
+  const { min, max } = radiusConfig[mode];
+  const refMax = Math.max(2, globalMaxByMode[mode]);
   const t = (Math.sqrt(count) - 1) / (Math.sqrt(refMax) - 1);
-  return Math.max(0.8, min + (max - min) * t);
-}
-
-function radiusForCountSP(count) {
-  if (!count || count <= 0) return 0;
-  const { min, max } = radiusConfig.SP;
-  const refMax = Math.max(2, globalMaxSP);
-  const t = (Math.sqrt(count) - 1) / (Math.sqrt(refMax) - 1);
-  return Math.max(1.5, min + (max - min) * t);
+  return Math.max(1, min + (max - min) * t);
 }
 
 function syncSlidersToActiveMode() {
-  const mode = activeMode;
-  const def = DEFAULT_RADIUS[mode];
-  const cfg = radiusConfig[mode];
-
+  const def = DEFAULT_RADIUS[activeMode];
+  const cfg = radiusConfig[activeMode];
   const sMin = document.getElementById("slider-min-r");
   const sMax = document.getElementById("slider-max-r");
 
@@ -1019,49 +1058,31 @@ function syncSlidersToActiveMode() {
 }
 
 // ============================================================================
-// 3. CORREÇÃO DE ORIENTAÇÃO GEOJSON DO IBGE (D3)
+// 3. ESTADO GLOBAL
 // ============================================================================
-function rewindRing(ring, isHole) {
-  const area = d3.geoArea({ type: "Polygon", coordinates: [ring] });
-  if ((!isHole && area > 2 * Math.PI) || (isHole && area < 2 * Math.PI)) ring.reverse();
-}
-function rewindGeometry(geom) {
-  if (!geom) return;
-  if (geom.type === "Polygon") geom.coordinates.forEach((r, i) => rewindRing(r, i > 0));
-  else if (geom.type === "MultiPolygon") geom.coordinates.forEach(p => p.forEach((r, i) => rewindRing(r, i > 0)));
-  else if (geom.type === "GeometryCollection") geom.geometries.forEach(rewindGeometry);
-}
-function rewindGeoJSON(geo) {
-  if (!geo) return geo;
-  if (geo.type === "FeatureCollection") geo.features.forEach(f => rewindGeometry(f.geometry));
-  else if (geo.type === "Feature") rewindGeometry(geo.geometry);
-  else rewindGeometry(geo);
-  return geo;
-}
-
-// ============================================================================
-// 4. ESTADO GLOBAL
-// ============================================================================
-let activeMode = "BR"; // "BR" | "SP"
+let activeMode = "BR"; // "BR" | "SP" | "POA"
 let activeCategory = "ALL";
 let datasetBR = [];
-let spRecords = [];
+const cityRecords = { SP: [], POA: [] };
 let muniByCode = new Map();
 let muniByNameUF = new Map();
 
-// D3 Brasil
-let svg, gMap, gUFs, gCircles, projection, path, zoom;
-let mapWidth = 960, mapHeight = 680, currentZoomK = 1;
+// Mapa Brasil (Leaflet)
+let brMap = null;
+let brUFsLayer = null;
+let brBounds = null;
+let brMarkersLayer = null;
+let brBaseLayers = {};
+let brActiveBase = "clean";
+let brCurrentMarkers = [];
 
-// Leaflet São Paulo
-let spMap = null;
-let spInitialized = false;
-let spMarkersLayer = null;
-let spBoundaryLayer = null;
-let spBaseLayers = {};
-let spBounds = null;
-let spCurrentMarkers = []; // Guarda { marker, count } para redimensionamento instantâneo via slider
-const CEP_CACHE_KEY = "sp_bcb_cep_coords_v1";
+// Mapas Intraurbanos (Leaflet)
+const cityState = {
+  SP:  { initialized: false, map: null, markersLayer: null, boundaryLayer: null, baseLayers: {}, bounds: null, currentMarkers: [] },
+  POA: { initialized: false, map: null, markersLayer: null, boundaryLayer: null, baseLayers: {}, bounds: null, currentMarkers: [] }
+};
+
+const CEP_CACHE_KEY = "bcb_cities_cep_coords_v2";
 let cepCoordsCache = {};
 try { cepCoordsCache = JSON.parse(localStorage.getItem(CEP_CACHE_KEY) || "{}"); } catch (e) {}
 
@@ -1094,7 +1115,24 @@ async function fetchJsonWithTimeout(url, timeoutMs = 11000) {
 }
 
 // ============================================================================
-// 5. GEOCODIFICADOR INTRAMUNICIPAL DE SÃO PAULO (EIXOS FINANCEIROS + BAIRROS + CEP)
+// 4. BASES ESRI (REUTILIZÁVEIS EM BRASIL, SÃO PAULO E PORTO ALEGRE)
+// ============================================================================
+function createEsriLayers() {
+  return {
+    esri_gray: L.layerGroup([
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16 }),
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", { maxZoom: 16 })
+    ]),
+    esri_streets: L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19 }),
+    esri_sat: L.layerGroup([
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19 }),
+      L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", { maxZoom: 19 })
+    ])
+  };
+}
+
+// ============================================================================
+// 5. GEOCODIFICADORES INTRAMUNICIPAIS (SÃO PAULO & PORTO ALEGRE)
 // ============================================================================
 const SP_CORRIDORS = [
   { match: ["FARIA LIMA"], minNum: 1200, maxNum: 4500, start: [-23.5675, -46.6938], end: [-23.5938, -46.6808] },
@@ -1132,13 +1170,9 @@ const SP_CORRIDORS = [
   { match: ["BELA CINTRA"], minNum: 500, maxNum: 2300, start: [-23.5560, -46.6615], end: [-23.5670, -46.6708] },
   { match: ["AMAURI"], minNum: 100, maxNum: 500, start: [-23.5818, -46.6820], end: [-23.5835, -46.6845] },
   { match: ["HELENA"], minNum: 100, maxNum: 350, start: [-23.5944, -46.6868], end: [-23.5938, -46.6838] },
-  { match: ["ELVIRA FERRAZ"], minNum: 50, maxNum: 300, start: [-23.5948, -46.6860], end: [-23.5955, -46.6840] },
   { match: ["CIDADE JARDIM"], minNum: 100, maxNum: 900, start: [-23.5855, -46.6825], end: [-23.5880, -46.6915] },
   { match: ["BRIGADEIRO LUIS ANTONIO", "BRIGADEIRO LUIZ ANTONIO"], minNum: 1500, maxNum: 4500, start: [-23.5665, -46.6485], end: [-23.5825, -46.6645] },
-  { match: ["MARQUES DE SAO VICENTE"], minNum: 100, maxNum: 2500, start: [-23.5240, -46.6650], end: [-23.5165, -46.6870] },
-  { match: ["FRANCISCO MATARAZZO"], minNum: 500, maxNum: 1800, start: [-23.5285, -46.6685], end: [-23.5270, -46.6815] },
-  { match: ["PAES DE BARROS"], minNum: 500, maxNum: 2500, start: [-23.5625, -46.5975], end: [-23.5750, -46.5900] },
-  { match: ["CELSO GARCIA"], minNum: 1000, maxNum: 4500, start: [-23.5415, -46.6020], end: [-23.5325, -46.5680] }
+  { match: ["MARQUES DE SAO VICENTE"], minNum: 100, maxNum: 2500, start: [-23.5240, -46.6650], end: [-23.5165, -46.6870] }
 ];
 
 const SP_BAIRROS = {
@@ -1150,31 +1184,76 @@ const SP_BAIRROS = {
   "VILA MADALENA": [-23.5535, -46.6915], "CENTRO": [-23.5475, -46.6365],
   "SE": [-23.5495, -46.6340], "REPUBLICA": [-23.5445, -46.6435],
   "CONSOLACAO": [-23.5535, -46.6565], "HIGIENOPOLIS": [-23.5450, -46.6575],
-  "SANTA CECILIA": [-23.5385, -46.6515], "CAMPOS ELISEOS": [-23.5345, -46.6455],
-  "BOM RETIRO": [-23.5285, -46.6375], "BRAS": [-23.5425, -46.6175],
-  "LIBERDADE": [-23.5595, -46.6355], "CAMBUCI": [-23.5645, -46.6215],
-  "ACLIMACAO": [-23.5725, -46.6315], "PARAISO": [-23.5735, -46.6445],
-  "VILA MARIANA": [-23.5880, -46.6380], "MOEMA": [-23.6015, -46.6635],
-  "INDIANOPOLIS": [-23.6080, -46.6615], "VILA NOVA CONCEICAO": [-23.5915, -46.6710],
-  "BROOKLIN": [-23.6115, -46.6895], "BROOKLIN PAULISTA": [-23.6130, -46.6880],
-  "BROOKLIN NOVO": [-23.6085, -46.6945], "CIDADE MONCOES": [-23.6065, -46.6935],
-  "VILA CORDEIRO": [-23.6215, -46.6915], "CHACARA SANTO ANTONIO": [-23.6315, -46.7025],
-  "SANTO AMARO": [-23.6505, -46.7085], "CAMPO BELO": [-23.6225, -46.6745],
-  "SAUDE": [-23.6155, -46.6395], "PLANALTO PAULISTA": [-23.6145, -46.6525],
-  "JABAQUARA": [-23.6465, -46.6415], "PARQUE JABAQUARA": [-23.6375, -46.6415],
-  "MORUMBI": [-23.6020, -46.7165], "VILA ANDRADE": [-23.6285, -46.7325],
-  "CIDADE JARDIM": [-23.5945, -46.6995], "BUTANTA": [-23.5705, -46.7190],
-  "PERDIZES": [-23.5375, -46.6785], "POMPEIA": [-23.5295, -46.6855],
-  "BARRA FUNDA": [-23.5255, -46.6675], "AGUA BRANCA": [-23.5265, -46.6815],
-  "LAPA": [-23.5225, -46.7025], "VILA LEOPOLDINA": [-23.5295, -46.7315],
-  "JAGUARE": [-23.5445, -46.7455], "MOOCA": [-23.5595, -46.5975],
-  "TATUAPE": [-23.5405, -46.5755], "ANALIA FRANCO": [-23.5585, -46.5615],
-  "IPIRANGA": [-23.5915, -46.6055], "SANTANA": [-23.5025, -46.6255],
-  "CASA VERDE": [-23.5085, -46.6555], "TUCURUVI": [-23.4805, -46.6035],
-  "PENHA": [-23.5245, -46.5445], "VILA PRUDENTE": [-23.5845, -46.5815],
-  "VILA GUILHERME": [-23.5145, -46.6075], "SOCORRO": [-23.6745, -46.7105],
-  "INTERLAGOS": [-23.6945, -46.6955], "ITAQUERA": [-23.5415, -46.4565],
-  "SAO MIGUEL": [-23.4945, -46.4435]
+  "SANTA CECILIA": [-23.5385, -46.6515], "BOM RETIRO": [-23.5285, -46.6375],
+  "BRAS": [-23.5425, -46.6175], "LIBERDADE": [-23.5595, -46.6355],
+  "PARAISO": [-23.5735, -46.6445], "VILA MARIANA": [-23.5880, -46.6380],
+  "MOEMA": [-23.6015, -46.6635], "INDIANOPOLIS": [-23.6080, -46.6615],
+  "VILA NOVA CONCEICAO": [-23.5915, -46.6710], "BROOKLIN": [-23.6115, -46.6895],
+  "CIDADE MONCOES": [-23.6065, -46.6935], "VILA CORDEIRO": [-23.6215, -46.6915],
+  "CHACARA SANTO ANTONIO": [-23.6315, -46.7025], "SANTO AMARO": [-23.6505, -46.7085],
+  "CAMPO BELO": [-23.6225, -46.6745], "SAUDE": [-23.6155, -46.6395],
+  "JABAQUARA": [-23.6465, -46.6415], "MORUMBI": [-23.6020, -46.7165],
+  "BUTANTA": [-23.5705, -46.7190], "PERDIZES": [-23.5375, -46.6785],
+  "BARRA FUNDA": [-23.5255, -46.6675], "LAPA": [-23.5225, -46.7025],
+  "MOOCA": [-23.5595, -46.5975], "TATUAPE": [-23.5405, -46.5755],
+  "SANTANA": [-23.5025, -46.6255], "IPIRANGA": [-23.5915, -46.6055]
+};
+
+const POA_CORRIDORS = [
+  { match: ["SETE DE SETEMBRO", "7 DE SETEMBRO"], minNum: 500, maxNum: 1200, start: [-30.0298, -51.2330], end: [-30.0273, -51.2248] },
+  { match: ["ANDRADAS"], minNum: 800, maxNum: 1800, start: [-30.0322, -51.2355], end: [-30.0285, -51.2242] },
+  { match: ["URUGUAI"], minNum: 50, maxNum: 400, start: [-30.0278, -51.2292], end: [-30.0315, -51.2286] },
+  { match: ["SIQUEIRA CAMPOS"], minNum: 700, maxNum: 1300, start: [-30.0282, -51.2335], end: [-30.0265, -51.2255] },
+  { match: ["CALDAS JUNIOR"], minNum: 20, maxNum: 200, start: [-30.0298, -51.2312], end: [-30.0280, -51.2308] },
+  { match: ["CAPITAO MONTANHA"], minNum: 50, maxNum: 200, start: [-30.0285, -51.2325], end: [-30.0296, -51.2322] },
+  { match: ["BORGES DE MEDEIROS"], minNum: 200, maxNum: 2650, start: [-30.0280, -51.2285], end: [-30.0565, -51.2282] },
+  { match: ["MAUA"], minNum: 800, maxNum: 2200, start: [-30.0265, -51.2320], end: [-30.0250, -51.2210] },
+  { match: ["CARLOS GOMES"], minNum: 50, maxNum: 2250, start: [-30.0175, -51.1865], end: [-30.0378, -51.1795] },
+  { match: ["NILO PECANHA"], minNum: 500, maxNum: 3200, start: [-30.0308, -51.1900], end: [-30.0268, -51.1620] },
+  { match: ["SOLEDADE"], minNum: 100, maxNum: 700, start: [-30.0318, -51.1825], end: [-30.0342, -51.1775] },
+  { match: ["MOSTARDEIRO"], minNum: 100, maxNum: 1100, start: [-30.0295, -51.2065], end: [-30.0258, -51.1975] },
+  { match: ["24 DE OUTUBRO", "VINTE E QUATRO DE OUTUBRO"], minNum: 100, maxNum: 1850, start: [-30.0265, -51.2045], end: [-30.0218, -51.1890] },
+  { match: ["PADRE CHAGAS"], minNum: 50, maxNum: 450, start: [-30.0262, -51.2035], end: [-30.0235, -51.2008] },
+  { match: ["CRISTOVAO COLOMBO"], minNum: 500, maxNum: 3500, start: [-30.0255, -51.2130], end: [-30.0145, -51.1865] },
+  { match: ["FARRAPOS"], minNum: 100, maxNum: 4800, start: [-30.0245, -51.2185], end: [-29.9970, -51.2020] },
+  { match: ["ASSIS BRASIL"], minNum: 500, maxNum: 6500, start: [-30.0082, -51.1835], end: [-29.9990, -51.1240] },
+  { match: ["IPIRANGA"], minNum: 500, maxNum: 7500, start: [-30.0495, -51.2280], end: [-30.0595, -51.1710] },
+  { match: ["PRAIA DE BELAS"], minNum: 500, maxNum: 2300, start: [-30.0465, -51.2295], end: [-30.0568, -51.2295] },
+  { match: ["INDEPENDENCIA"], minNum: 100, maxNum: 1300, start: [-30.0315, -51.2210], end: [-30.0295, -51.2070] },
+  { match: ["OSVALDO ARANHA", "OSWALDO ARANHA"], minNum: 200, maxNum: 1450, start: [-30.0345, -51.2175], end: [-30.0320, -51.2085] },
+  { match: ["PROTASIO ALVES"], minNum: 1000, maxNum: 6500, start: [-30.0325, -51.2075], end: [-30.0425, -51.1550] },
+  { match: ["JOAO PESSOA"], minNum: 300, maxNum: 2500, start: [-30.0345, -51.2215], end: [-30.0455, -51.2170] },
+  { match: ["BENTO GONCALVES"], minNum: 500, maxNum: 6000, start: [-30.0535, -51.2065], end: [-30.0685, -51.1450] },
+  { match: ["SERTORIO"], minNum: 500, maxNum: 6500, start: [-30.0055, -51.2015], end: [-29.9965, -51.1350] },
+  { match: ["BENJAMIN CONSTANT"], minNum: 200, maxNum: 1800, start: [-30.0075, -51.2005], end: [-30.0175, -51.1920] },
+  { match: ["RAMIRO BARCELOS"], minNum: 500, maxNum: 2400, start: [-30.0270, -51.2125], end: [-30.0405, -51.2080] },
+  { match: ["WENCESLAU ESCOBAR"], minNum: 1000, maxNum: 3500, start: [-30.0955, -51.2515], end: [-30.1155, -51.2555] },
+  { match: ["DIARIO DE NOTICIAS"], minNum: 100, maxNum: 600, start: [-30.0845, -51.2465], end: [-30.0865, -51.2495] },
+  { match: ["PLINIO BRASIL MILANO"], minNum: 500, maxNum: 2400, start: [-30.0205, -51.1905], end: [-30.0165, -51.1745] },
+  { match: ["GETULIO VARGAS"], minNum: 500, maxNum: 1900, start: [-30.0455, -51.2235], end: [-30.0585, -51.2230] }
+];
+
+const POA_BAIRROS = {
+  "CENTRO HISTORICO": [-30.0292, -51.2290], "CENTRO": [-30.0292, -51.2290],
+  "MOINHOS DE VENTO": [-30.0252, -51.2015], "AUXILIADORA": [-30.0218, -51.1905],
+  "BELA VISTA": [-30.0315, -51.1875], "BOA VISTA": [-30.0245, -51.1795],
+  "TRES FIGUEIRAS": [-30.0325, -51.1745], "MONT SERRAT": [-30.0275, -51.1935],
+  "MONTSERRAT": [-30.0275, -51.1935], "PETROPOLIS": [-30.0395, -51.1865],
+  "INDEPENDENCIA": [-30.0305, -51.2135], "RIO BRANCO": [-30.0325, -51.2025],
+  "BOM FIM": [-30.0335, -51.2125], "FARROUPILHA": [-30.0375, -51.2165],
+  "SANTANA": [-30.0445, -51.2085], "FLORESTA": [-30.0225, -51.2135],
+  "SAO GERALDO": [-30.0125, -51.2055], "NAVEGANTES": [-30.0025, -51.2015],
+  "HIGIENOPOLIS": [-30.0165, -51.1875], "SAO JOAO": [-30.0105, -51.1915],
+  "PASSO D AREIA": [-30.0145, -51.1665], "PASSO DAREIA": [-30.0145, -51.1665],
+  "CRISTO REDENTOR": [-30.0125, -51.1575], "SAO SEBASTIAO": [-30.0095, -51.1475],
+  "PRAIA DE BELAS": [-30.0505, -51.2295], "MENINO DEUS": [-30.0545, -51.2225],
+  "CIDADE BAIXA": [-30.0395, -51.2245], "AZENHA": [-30.0485, -51.2145],
+  "PARTENON": [-30.0595, -51.1855], "JARDIM BOTANICO": [-30.0495, -51.1785],
+  "CHACARA DAS PEDRAS": [-30.0295, -51.1645], "CRISTAL": [-30.0855, -51.2465],
+  "TRISTEZA": [-30.1055, -51.2535], "IPANEMA": [-30.1325, -51.2355],
+  "CAVALHADA": [-30.0985, -51.2325], "SARANDI": [-29.9945, -51.1325],
+  "SANTA CECILIA": [-30.0385, -51.2025], "MEDIANEIRA": [-30.0625, -51.2125],
+  "GLORIA": [-30.0725, -51.2015], "RESTINGA": [-30.1555, -51.1465]
 };
 
 function hashJitter(seedStr, scale = 0.0028) {
@@ -1193,16 +1272,18 @@ function extractStreetNumber(end) {
   return m ? parseInt(m[1], 10) : null;
 }
 
-function geocodeSPRecord(rec) {
+function geocodeCityRecord(cityKey, rec) {
   if (rec.cep && cepCoordsCache[rec.cep]) {
     const c = cepCoordsCache[rec.cep];
     return { lat: c.lat, lon: c.lon, precision: "CEP exato (BrasilAPI)" };
   }
 
+  const corridors = cityKey === "SP" ? SP_CORRIDORS : POA_CORRIDORS;
+  const bairros = cityKey === "SP" ? SP_BAIRROS : POA_BAIRROS;
   const endNorm = normalizeName(rec.endereco);
   const bairroNorm = normalizeName(rec.bairro);
 
-  for (const cor of SP_CORRIDORS) {
+  for (const cor of corridors) {
     if (cor.match.some(k => endNorm.includes(k))) {
       const num = extractStreetNumber(endNorm);
       let t = 0.5;
@@ -1213,7 +1294,7 @@ function geocodeSPRecord(rec) {
         const [j] = hashJitter(rec.cep || endNorm, 0.5);
         t = 0.5 + j;
       }
-      const [jLat, jLon] = hashJitter(rec.cep || endNorm, 0.00055);
+      const [jLat, jLon] = hashJitter(rec.cep || endNorm, 0.00045);
       return {
         lat: cor.start[0] + (cor.end[0] - cor.start[0]) * t + jLat,
         lon: cor.start[1] + (cor.end[1] - cor.start[1]) * t + jLon,
@@ -1222,31 +1303,44 @@ function geocodeSPRecord(rec) {
     }
   }
 
-  for (const [bName, coords] of Object.entries(SP_BAIRROS)) {
+  for (const [bName, coords] of Object.entries(bairros)) {
     if (bairroNorm === bName || bairroNorm.includes(bName)) {
-      const [jLat, jLon] = hashJitter(rec.cep || rec.endereco || rec.nome, 0.0055);
+      const [jLat, jLon] = hashJitter(rec.cep || rec.endereco || rec.nome, 0.0045);
       return { lat: coords[0] + jLat, lon: coords[1] + jLon, precision: "Bairro (estimado)" };
     }
   }
 
   const p3 = (rec.cep || "").slice(0, 3);
-  let base = [-23.565, -46.655];
-  if (p3 === "010" || p3 === "011" || p3 === "012") base = [-23.546, -46.638];
-  else if (p3 === "013" || p3 === "014" || p3 === "015") base = [-23.566, -46.660];
-  else if (p3 === "040" || p3 === "041" || p3 === "042" || p3 === "043") base = [-23.605, -46.645];
-  else if (p3 === "045" || p3 === "046" || p3 === "047") base = [-23.600, -46.688];
-  else if (p3 === "050" || p3 === "053" || p3 === "054" || p3 === "055") base = [-23.558, -46.705];
-  else if (p3 === "020" || p3 === "021" || p3 === "022" || p3 === "023") base = [-23.502, -46.625];
-  else if (p3 === "030" || p3 === "031" || p3 === "032" || p3 === "033") base = [-23.552, -46.580];
+  let base;
+  if (cityKey === "SP") {
+    base = [-23.565, -46.655];
+    if (["010", "011", "012"].includes(p3)) base = [-23.546, -46.638];
+    else if (["013", "014", "015"].includes(p3)) base = [-23.566, -46.660];
+    else if (["040", "041", "042", "043"].includes(p3)) base = [-23.605, -46.645];
+    else if (["045", "046", "047"].includes(p3)) base = [-23.600, -46.688];
+    else if (["050", "053", "054", "055"].includes(p3)) base = [-23.558, -46.705];
+    else if (["020", "021", "022", "023"].includes(p3)) base = [-23.502, -46.625];
+    else if (["030", "031", "032", "033"].includes(p3)) base = [-23.552, -46.580];
+  } else {
+    base = [-30.032, -51.215];
+    if (p3 === "900") base = [-30.029, -51.229];
+    else if (p3 === "901") base = [-30.052, -51.224];
+    else if (p3 === "902") base = [-30.014, -51.206];
+    else if (p3 === "904" || p3 === "905") base = [-30.026, -51.192];
+    else if (p3 === "906") base = [-30.044, -51.202];
+    else if (p3 === "910" || p3 === "911") base = [-30.011, -51.158];
+    else if (p3 === "913" || p3 === "914") base = [-30.030, -51.168];
+    else if (p3 === "917" || p3 === "919") base = [-30.098, -51.246];
+  }
 
-  const [jLat, jLon] = hashJitter(rec.cep || rec.endereco || rec.nome, 0.009);
+  const [jLat, jLon] = hashJitter(rec.cep || rec.endereco || rec.nome, 0.008);
   return { lat: base[0] + jLat, lon: base[1] + jLon, precision: "Região/CEP (estimado)" };
 }
 
-function buildSPClusters(records) {
+function buildCityClusters(cityKey, records) {
   const clusters = new Map();
   records.forEach(rec => {
-    const geo = geocodeSPRecord(rec);
+    const geo = geocodeCityRecord(cityKey, rec);
     const key = (rec.cep && rec.cep !== "00000000" && cepCoordsCache[rec.cep])
       ? `CEP:${rec.cep}`
       : `${geo.lat.toFixed(4)}|${geo.lon.toFixed(4)}`;
@@ -1261,38 +1355,40 @@ function buildSPClusters(records) {
 
 function recomputeGlobalMaxes() {
   if (datasetBR.length > 0) {
-    globalMaxBR = Math.max(2, ...datasetBR.map(d => getCountForCategory(d, "ALL")));
+    globalMaxByMode.BR = Math.max(2, ...datasetBR.map(d => getCountForCategory(d, "ALL")));
   }
-  if (spRecords.length > 0) {
-    const allClusters = buildSPClusters(spRecords);
-    globalMaxSP = Math.max(2, ...allClusters.map(c => c.items.length));
-  }
+  ["SP", "POA"].forEach(cityKey => {
+    if (cityRecords[cityKey].length > 0) {
+      const allCl = buildCityClusters(cityKey, cityRecords[cityKey]);
+      globalMaxByMode[cityKey] = Math.max(2, ...allCl.map(c => c.items.length));
+    }
+  });
 }
 
 // ============================================================================
-// 6. INICIALIZAÇÃO PRINCIPAL (BRASIL + BCB OLINDA)
+// 6. INICIALIZAÇÃO DO MAPA NACIONAL (LEAFLET + IBGE UFs + BASES ESRI)
 // ============================================================================
 async function init() {
   const loadingEl = document.getElementById("loading");
   try {
-    const container = document.getElementById("map-container");
-    mapWidth = container.clientWidth || window.innerWidth - 348 || 960;
-    mapHeight = container.clientHeight || window.innerHeight || 680;
+    brMap = L.map("br-map-container", {
+      center: [-14.235, -51.925],
+      zoom: 4,
+      zoomSnap: 0.25,
+      zoomControl: false,
+      attributionControl: false
+    });
 
-    svg = d3.select("#map-container").append("svg").attr("viewBox", [0, 0, mapWidth, mapHeight]);
-    gMap = svg.append("g");
-    gUFs = gMap.append("g").attr("class", "ufs-layer");
-    gCircles = gMap.append("g").attr("class", "circles-layer");
+    // Pane dedicado para círculos ficarem SEMPRE acima das divisas de UFs
+    brMap.createPane("circlesPane");
+    brMap.getPane("circlesPane").style.zIndex = 460;
 
-    zoom = d3.zoom()
-      .scaleExtent([0.85, 22])
-      .on("zoom", (event) => {
-        gMap.attr("transform", event.transform);
-        currentZoomK = event.transform.k;
-        updateGraphicScale();
-      });
-    svg.call(zoom);
+    L.control.scale({ position: "bottomleft", imperial: false, maxWidth: 160 }).addTo(brMap);
 
+    brBaseLayers = createEsriLayers();
+    brMarkersLayer = L.layerGroup().addTo(brMap);
+
+    // 1) Carrega Malha Territorial de UFs do IBGE (GeoJSON v3)
     const ufUrls = [
       "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF&qualidade=intermediaria&formato=application/vnd.geo%2Bjson",
       "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF&qualidade=minima&formato=application/vnd.geo%2Bjson"
@@ -1303,7 +1399,7 @@ async function init() {
       try {
         const data = await fetchJsonWithTimeout(url, 10000);
         if (data && data.features && data.features.length > 0) {
-          ufGeo = rewindGeoJSON(data);
+          ufGeo = data;
           break;
         }
       } catch (e) { console.warn("Malha IBGE:", e); }
@@ -1317,20 +1413,17 @@ async function init() {
     document.getElementById("ibge-dot").className = "dot-ok";
     document.getElementById("ibge-status").textContent = "Malha UFs: IBGE carregada";
 
-    projection = d3.geoMercator().fitExtent([[55, 32], [mapWidth - 55, mapHeight - 64]], ufGeo);
-    path = d3.geoPath().projection(projection);
+    brUFsLayer = L.geoJSON(ufGeo, {
+      style: getBRUFStyle(),
+      interactive: false
+    }).addTo(brMap);
 
-    gUFs.selectAll("path")
-      .data(ufGeo.features)
-      .join("path")
-      .attr("class", "uf-path")
-      .attr("d", path);
+    brBounds = brUFsLayer.getBounds();
+    brMap.fitBounds(brBounds, { padding: [26, 26] });
 
     syncSlidersToActiveMode();
     renderSidebar();
-    renderLegendBR();
-    renderLegendSP();
-    updateGraphicScale();
+    renderLegend("BR");
     bindControls();
 
     loadingEl.style.display = "none";
@@ -1343,6 +1436,40 @@ async function init() {
   }
 }
 
+function getBRUFStyle() {
+  if (brActiveBase === "clean") {
+    return { fillColor: "#ffffff", fillOpacity: 1, color: "#cbd5e1", weight: 1.1 };
+  }
+  if (brActiveBase === "esri_sat") {
+    return { fillOpacity: 0, color: "#e2e8f0", weight: 1.1, opacity: 0.75 };
+  }
+  return { fillOpacity: 0, color: "#64748b", weight: 1.0, opacity: 0.65 };
+}
+
+function setBRBaseLayer(key) {
+  brActiveBase = key;
+  Object.values(brBaseLayers).forEach(l => { if (brMap.hasLayer(l)) brMap.removeLayer(l); });
+
+  const container = document.getElementById("br-map-container");
+  if (key === "clean") {
+    container.style.background = "#f4f7fa";
+  } else if (brBaseLayers[key]) {
+    container.style.background = "#e2e8f0";
+    brBaseLayers[key].addTo(brMap);
+  }
+
+  if (brUFsLayer) brUFsLayer.setStyle(getBRUFStyle());
+}
+
+function toggleBRUFs(checked) {
+  if (!brMap || !brUFsLayer) return;
+  if (checked) brUFsLayer.addTo(brMap);
+  else brMap.removeLayer(brUFsLayer);
+}
+
+// ============================================================================
+// 7. CARREGAMENTO DAS COORDENADAS IBGE + BCB OLINDA AO VIVO
+// ============================================================================
 async function loadMunicipalCoords() {
   const munisUrl = "https://raw.githubusercontent.com/kelvins/municipios-brasileiros/main/json/municipios.json";
   const ufsUrl = "https://raw.githubusercontent.com/kelvins/municipios-brasileiros/main/json/estados.json";
@@ -1391,6 +1518,7 @@ async function fetchBCBOlindaLive() {
 
     const aggBR = new Map();
     const spList = [];
+    const poaList = [];
     let totalMatched = 0;
 
     results.forEach((rows, idx) => {
@@ -1415,17 +1543,21 @@ async function fetchBCBOlindaLive() {
         const entry = aggBR.get(key);
         entry.counts[cat] = (entry.counts[cat] || 0) + 1;
 
+        const recordObj = {
+          nome: (r.NOME_INSTITUICAO || "Instituição sem nome").trim(),
+          cnpj: (r.CNPJ || "").trim(),
+          segmento: rawSeg,
+          cat,
+          endereco: (r.ENDERECO || "").trim(),
+          complemento: (r.COMPLEMENTO || "").trim(),
+          bairro: (r.BAIRRO || "").trim(),
+          cep: String(r.CEP || "").replace(/\D/g, "").padStart(8, "0").slice(0, 8)
+        };
+
         if (ibge7 === "3550308" || (muniNorm === "SAO PAULO" && ufUpper === "SP")) {
-          spList.push({
-            nome: (r.NOME_INSTITUICAO || "Instituição sem nome").trim(),
-            cnpj: (r.CNPJ || "").trim(),
-            segmento: rawSeg,
-            cat,
-            endereco: (r.ENDERECO || "").trim(),
-            complemento: (r.COMPLEMENTO || "").trim(),
-            bairro: (r.BAIRRO || "").trim(),
-            cep: String(r.CEP || "").replace(/\D/g, "").padStart(8, "0").slice(0, 8)
-          });
+          spList.push(recordObj);
+        } else if (ibge7 === "4314902" || (muniNorm === "PORTO ALEGRE" && ufUpper === "RS")) {
+          poaList.push(recordObj);
         }
       });
     });
@@ -1433,17 +1565,17 @@ async function fetchBCBOlindaLive() {
     const liveData = Array.from(aggBR.values());
     if (liveData.length > 0) {
       datasetBR = liveData;
-      spRecords = spList;
+      cityRecords.SP = spList;
+      cityRecords.POA = poaList;
       recomputeGlobalMaxes();
+
       bcbDot.className = "dot-ok";
       bcbStatus.textContent = `BCB Olinda: ${totalMatched.toLocaleString("pt-BR")} sedes (${liveData.length.toLocaleString("pt-BR")} municípios)`;
       renderSidebar();
-      renderLegendBR();
+      renderLegend("BR");
       renderMapBR();
-      if (spInitialized) {
-        renderLegendSP();
-        renderMapSP();
-      }
+      if (cityState.SP.initialized) { renderLegend("SP"); renderCityMap("SP"); }
+      if (cityState.POA.initialized) { renderLegend("POA"); renderCityMap("POA"); }
     }
   } catch (err) {
     console.warn("Falha ao consultar API Olinda BCB:", err);
@@ -1453,104 +1585,110 @@ async function fetchBCBOlindaLive() {
 }
 
 // ============================================================================
-// 7. ALTERNÂNCIA DE MODO: BRASIL <-> SÃO PAULO (INTRAMUNICIPAL)
+// 8. ALTERNÂNCIA DE MODO: BRASIL <-> SÃO PAULO <-> PORTO ALEGRE
 // ============================================================================
 function switchMode(mode) {
   if (activeMode === mode) return;
   activeMode = mode;
 
-  document.getElementById("mode-br").classList.toggle("active", mode === "BR");
-  document.getElementById("mode-sp").classList.toggle("active", mode === "SP");
-
-  document.getElementById("pane-br").className = "view-pane " + (mode === "BR" ? "visible" : "hidden");
-  document.getElementById("pane-sp").className = "view-pane " + (mode === "SP" ? "visible" : "hidden");
+  ["BR", "SP", "POA"].forEach(m => {
+    document.getElementById(`mode-${m.toLowerCase()}`).classList.toggle("active", m === mode);
+    document.getElementById(`pane-${m.toLowerCase()}`).className = "view-pane " + (m === mode ? "visible" : "hidden");
+  });
 
   syncSlidersToActiveMode();
 
-  if (mode === "SP") {
-    document.getElementById("stat-second-label").textContent = "Endereços";
-    document.getElementById("stat-third-label").textContent = "Bairro Líder";
-    initSPMap().then(() => {
-      spMap.invalidateSize();
-      renderSidebar();
-      renderLegendSP();
-      renderMapSP();
-    });
-  } else {
+  if (mode === "BR") {
     document.getElementById("stat-second-label").textContent = "Municípios";
     document.getElementById("stat-third-label").textContent = "Líder";
+    brMap.invalidateSize();
     renderSidebar();
-    renderLegendBR();
+    renderLegend("BR");
     renderMapBR();
+  } else {
+    document.getElementById("stat-second-label").textContent = "Endereços";
+    document.getElementById("stat-third-label").textContent = "Bairro Líder";
+    initCityMap(mode).then(() => {
+      cityState[mode].map.invalidateSize();
+      renderSidebar();
+      renderLegend(mode);
+      renderCityMap(mode);
+    });
   }
 }
 
 // ============================================================================
-// 8. MAPA INTRAMUNICIPAL DE SÃO PAULO (GEOSAMPA WMS OFICIAL + ESRI SEM API)
+// 9. INICIALIZAÇÃO DOS MAPAS INTRAURBANOS (SÃO PAULO & PORTO ALEGRE)
 // ============================================================================
-async function initSPMap() {
-  if (spInitialized) return;
-  spInitialized = true;
+const CITY_META = {
+  SP: {
+    containerId: "sp-map-container",
+    ibgeCode: "3550308",
+    initialCenter: [-23.582, -46.665],
+    initialZoom: 12,
+    zoomInId: "sp-zoom-in",
+    zoomOutId: "sp-zoom-out",
+    resetId: "sp-reset",
+    bbox: { minLat: -24.05, maxLat: -23.30, minLon: -46.90, maxLon: -46.30 }
+  },
+  POA: {
+    containerId: "poa-map-container",
+    ibgeCode: "4314902",
+    initialCenter: [-30.033, -51.202],
+    initialZoom: 12.5,
+    zoomInId: "poa-zoom-in",
+    zoomOutId: "poa-zoom-out",
+    resetId: "poa-reset",
+    bbox: { minLat: -30.30, maxLat: -29.90, minLon: -51.35, maxLon: -50.95 }
+  }
+};
 
-  spMap = L.map("sp-map-container", {
-    center: [-23.582, -46.665],
-    zoom: 12,
+async function initCityMap(cityKey) {
+  const st = cityState[cityKey];
+  if (st.initialized) return;
+  st.initialized = true;
+
+  const meta = CITY_META[cityKey];
+  st.map = L.map(meta.containerId, {
+    center: meta.initialCenter,
+    zoom: meta.initialZoom,
+    zoomSnap: 0.25,
     zoomControl: false,
     attributionControl: false
   });
 
-  L.control.scale({ position: "bottomleft", imperial: false, maxWidth: 160 }).addTo(spMap);
+  st.map.createPane("circlesPane");
+  st.map.getPane("circlesPane").style.zIndex = 460;
 
-  // 1) Base PADRÃO: GeoSampa WMS Oficial (MapaBase_Politico: ruas, quadras, distritos, hidrografia)
-  spBaseLayers.geosampa = L.tileLayer.wms(
-    "https://wms.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wms",
-    {
-      layers: "MapaBase_Politico",
-      format: "image/png",
-      transparent: false,
-      version: "1.1.1",
-      maxZoom: 20
-    }
-  ).addTo(spMap);
+  L.control.scale({ position: "bottomleft", imperial: false, maxWidth: 160 }).addTo(st.map);
 
-  // 2) Alternativa: Esri Cinza Claro (Ruas e Rótulos — sem chave de API)
-  spBaseLayers.esri_gray = L.layerGroup([
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
-      maxZoom: 16
-    }),
-    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
-      maxZoom: 16
-    })
-  ]);
+  st.baseLayers = createEsriLayers();
 
-  // 3) Alternativa: Esri Mapa Viário Detalhado (sem chave de API)
-  spBaseLayers.esri_streets = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
-    { maxZoom: 19 }
-  );
+  if (cityKey === "SP") {
+    st.baseLayers.geosampa = L.tileLayer.wms("https://wms.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wms", {
+      layers: "MapaBase_Politico", format: "image/png", transparent: false, version: "1.1.1", maxZoom: 20
+    });
+    st.baseLayers.geosampa_orto = L.tileLayer.wms("https://raster.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wms", {
+      layers: "ORTO_RGB_2020", format: "image/jpeg", transparent: false, version: "1.1.1", maxZoom: 20
+    });
+  }
 
-  // 4) Alternativa: GeoSampa Ortofoto 2020 (Satélite oficial PMSP)
-  spBaseLayers.geosampa_orto = L.tileLayer.wms(
-    "https://raster.geosampa.prefeitura.sp.gov.br/geoserver/geoportal/wms",
-    {
-      layers: "ORTO_RGB_2020",
-      format: "image/jpeg",
-      transparent: false,
-      version: "1.1.1",
-      maxZoom: 20
-    }
-  );
+  // Esri Cinza Claro como base inicial nítida em SP e Porto Alegre
+  st.baseLayers.esri_gray.addTo(st.map);
 
-  spMarkersLayer = L.layerGroup().addTo(spMap);
+  st.markersLayer = L.layerGroup().addTo(st.map);
 
-  document.getElementById("sp-zoom-in").onclick = () => spMap.zoomIn();
-  document.getElementById("sp-zoom-out").onclick = () => spMap.zoomOut();
-  document.getElementById("sp-reset").onclick = () => focusSPHub("MUNICIPIO");
+  document.getElementById(meta.zoomInId).onclick = () => st.map.zoomIn();
+  document.getElementById(meta.zoomOutId).onclick = () => st.map.zoomOut();
+  document.getElementById(meta.resetId).onclick = () => {
+    if (cityKey === "SP") focusSPHub("MUNICIPIO");
+    else focusPOAHub("MUNICIPIO");
+  };
 
-  // Carrega Recorte Municipal oficial de São Paulo (IBGE 3550308)
+  // Carrega Recorte Municipal oficial do IBGE
   try {
-    const spGeo = await fetchJsonWithTimeout(
-      "https://servicodados.ibge.gov.br/api/v3/malhas/municipios/3550308?qualidade=intermediaria&formato=application/vnd.geo%2Bjson",
+    const geo = await fetchJsonWithTimeout(
+      `https://servicodados.ibge.gov.br/api/v3/malhas/municipios/${meta.ibgeCode}?qualidade=intermediaria&formato=application/vnd.geo%2Bjson`,
       10000
     );
 
@@ -1560,73 +1698,155 @@ async function initSPMap() {
       if (g.type === "Polygon") holes.push(g.coordinates[0].map(c => [c[1], c[0]]));
       else if (g.type === "MultiPolygon") g.coordinates.forEach(p => holes.push(p[0].map(c => [c[1], c[0]])));
     };
-    if (spGeo.type === "FeatureCollection") spGeo.features.forEach(f => extractRings(f.geometry));
-    else if (spGeo.type === "Feature") extractRings(spGeo.geometry);
-    else extractRings(spGeo);
+    if (geo.type === "FeatureCollection") geo.features.forEach(f => extractRings(f.geometry));
+    else if (geo.type === "Feature") extractRings(geo.geometry);
+    else extractRings(geo);
 
     const maskPoly = L.polygon([outerWorld, ...holes], {
-      stroke: false,
-      fillColor: "#cbd5e1",
-      fillOpacity: 0.36,
-      interactive: false
+      stroke: false, fillColor: "#cbd5e1", fillOpacity: 0.36, interactive: false
     });
 
-    const borderLayer = L.geoJSON(spGeo, {
+    const borderLayer = L.geoJSON(geo, {
       style: { color: "#0f766e", weight: 2.2, fillOpacity: 0, dashArray: "5,3" },
       interactive: false
     });
 
-    spBoundaryLayer = L.layerGroup([maskPoly, borderLayer]).addTo(spMap);
-    spBounds = borderLayer.getBounds();
-    spMap.setView([-23.582, -46.665], 12);
+    st.boundaryLayer = L.layerGroup([maskPoly, borderLayer]).addTo(st.map);
+    st.bounds = borderLayer.getBounds();
   } catch (e) {
-    console.warn("Não foi possível carregar contorno IBGE 3550308:", e);
+    console.warn(`Contorno IBGE ${meta.ibgeCode}:`, e);
   }
 }
 
 function setSPBaseLayer(key) {
-  if (!spMap) return;
-  Object.values(spBaseLayers).forEach(l => { if (spMap.hasLayer(l)) spMap.removeLayer(l); });
-  if (spBaseLayers[key]) spBaseLayers[key].addTo(spMap);
-
+  const st = cityState.SP;
+  if (!st.map) return;
+  Object.values(st.baseLayers).forEach(l => { if (st.map.hasLayer(l)) st.map.removeLayer(l); });
+  if (st.baseLayers[key]) st.baseLayers[key].addTo(st.map);
   const labels = {
-    geosampa: "GeoSampa (Mapa Político e Ruas) + IBGE",
     esri_gray: "Esri Cinza Claro + Recorte SP (IBGE)",
+    geosampa: "GeoSampa (Mapa Político e Ruas) + IBGE",
     esri_streets: "Esri Mapa Viário + Recorte SP (IBGE)",
     geosampa_orto: "GeoSampa (Ortofoto 2020) + IBGE"
   };
-  document.getElementById("sp-status-text").textContent = labels[key] || "Mapa SP";
+  document.getElementById("sp-status-text").textContent = labels[key] || "São Paulo";
 }
 
-function toggleSPBoundary(checked) {
-  if (!spMap || !spBoundaryLayer) return;
-  if (checked) spBoundaryLayer.addTo(spMap);
-  else spMap.removeLayer(spBoundaryLayer);
+function setPOABaseLayer(key) {
+  const st = cityState.POA;
+  if (!st.map) return;
+  Object.values(st.baseLayers).forEach(l => { if (st.map.hasLayer(l)) st.map.removeLayer(l); });
+  if (st.baseLayers[key]) st.baseLayers[key].addTo(st.map);
+  const labels = {
+    esri_gray: "Esri Cinza Claro + Recorte POA (IBGE)",
+    esri_streets: "Esri Mapa Viário + Recorte POA (IBGE)",
+    esri_sat: "Esri Satélite + Recorte POA (IBGE)"
+  };
+  document.getElementById("poa-status-text").textContent = labels[key] || "Porto Alegre";
+}
+
+function toggleCityBoundary(cityKey, checked) {
+  const st = cityState[cityKey];
+  if (!st.map || !st.boundaryLayer) return;
+  if (checked) st.boundaryLayer.addTo(st.map);
+  else st.map.removeLayer(st.boundaryLayer);
 }
 
 function focusSPHub(hub) {
-  if (!spMap) return;
+  const st = cityState.SP;
+  if (!st.map) return;
   if (hub === "MUNICIPIO") {
-    if (spBounds) spMap.fitBounds(spBounds, { padding: [24, 24] });
-    else spMap.setView([-23.62, -46.64], 11);
-  } else if (hub === "FARIA_LIMA") {
-    spMap.flyTo([-23.5865, -46.6835], 14, { duration: 0.7 });
-  } else if (hub === "PAULISTA") {
-    spMap.flyTo([-23.5635, -46.6545], 15, { duration: 0.7 });
-  } else if (hub === "BERRINI") {
-    spMap.flyTo([-23.6115, -46.6955], 14, { duration: 0.7 });
-  } else if (hub === "CENTRO") {
-    spMap.flyTo([-23.5475, -46.6365], 15, { duration: 0.7 });
-  }
+    if (st.bounds) st.map.fitBounds(st.bounds, { padding: [24, 24] });
+    else st.map.setView([-23.62, -46.64], 11);
+  } else if (hub === "FARIA_LIMA") st.map.flyTo([-23.5865, -46.6835], 14, { duration: 0.7 });
+  else if (hub === "PAULISTA") st.map.flyTo([-23.5635, -46.6545], 15, { duration: 0.7 });
+  else if (hub === "BERRINI") st.map.flyTo([-23.6115, -46.6955], 14, { duration: 0.7 });
+  else if (hub === "CENTRO") st.map.flyTo([-23.5475, -46.6365], 15, { duration: 0.7 });
 }
 
-function renderMapSP() {
-  if (!spMap || !spMarkersLayer) return;
-  spMarkersLayer.clearLayers();
-  spCurrentMarkers = [];
+function focusPOAHub(hub) {
+  const st = cityState.POA;
+  if (!st.map) return;
+  if (hub === "MUNICIPIO") {
+    if (st.bounds) st.map.fitBounds(st.bounds, { padding: [24, 24] });
+    else st.map.setView([-30.08, -51.18], 11);
+  } else if (hub === "CENTRO") st.map.flyTo([-30.0295, -51.2290], 15.5, { duration: 0.7 });
+  else if (hub === "CARLOS_GOMES") st.map.flyTo([-30.0285, -51.1835], 14.5, { duration: 0.7 });
+  else if (hub === "MOINHOS") st.map.flyTo([-30.0252, -51.2005], 15, { duration: 0.7 });
+  else if (hub === "QUARTO_DISTRITO") st.map.flyTo([-30.0110, -51.1840], 13.5, { duration: 0.7 });
+  else if (hub === "PRAIA_BELAS") st.map.flyTo([-30.0510, -51.2270], 14.5, { duration: 0.7 });
+}
+
+// ============================================================================
+// 10. RENDERIZAÇÃO DOS CÍRCULOS (BRASIL & INTRAURBANO)
+// ============================================================================
+function renderMapBR() {
+  if (!brMap || !brMarkersLayer) return;
+  brMarkersLayer.clearLayers();
+  brCurrentMarkers = [];
 
   const cat = CATEGORIES[activeCategory];
-  const filtered = spRecords.filter(r => matchesCategory(r.cat, activeCategory));
+  const points = datasetBR
+    .map(d => ({ ...d, value: getCountForCategory(d, activeCategory) }))
+    .filter(d => d.value > 0)
+    .sort((a, b) => b.value - a.value);
+
+  const totalSedes = points.reduce((s, p) => s + p.value, 0);
+  if (activeMode === "BR") {
+    document.getElementById("stat-total").textContent = totalSedes.toLocaleString("pt-BR");
+    document.getElementById("stat-munis").textContent = points.length.toLocaleString("pt-BR");
+    document.getElementById("stat-leader").textContent = points.length ? `${points[0].muni}/${points[0].uf}` : "—";
+  }
+
+  points.forEach(d => {
+    const share = totalSedes > 0 ? ((d.value / totalSedes) * 100).toFixed(1) : "0.0";
+    const normMuni = normalizeName(d.muni);
+    const isSP = normMuni === "SAO PAULO" && d.uf === "SP";
+    const isPOA = normMuni === "PORTO ALEGRE" && d.uf === "RS";
+
+    const circle = L.circleMarker([d.lat, d.lon], {
+      pane: "circlesPane",
+      radius: radiusForMode("BR", d.value),
+      fillColor: cat.color,
+      color: cat.color,
+      weight: 1.15,
+      fillOpacity: 0.50
+    });
+
+    const hintHtml = (isSP || isPOA)
+      ? `<div style="margin-top:4px; color:#5eead4; font-size:0.70rem; font-weight:600;">Clique para abrir o mapa intramunicipal</div>`
+      : "";
+
+    circle.bindTooltip(`
+      <div style="font-weight:700; font-size:0.84rem; margin-bottom:2px; border-bottom:1px solid rgba(255,255,255,0.18); padding-bottom:2px;">
+        ${d.muni} — ${d.uf}
+      </div>
+      <div><strong>${cat.label}:</strong> ${d.value.toLocaleString("pt-BR")} ${d.value === 1 ? "sede" : "sedes"} (${share}%)</div>
+      <div style="opacity:0.78; font-size:0.71rem; margin-top:2px;">
+        Total geral no município: ${getCountForCategory(d, "ALL").toLocaleString("pt-BR")}
+      </div>
+      ${hintHtml}
+    `, { direction: "top", offset: [0, -4], className: "custom-tt" });
+
+    circle.on("mouseover", () => circle.setStyle({ fillOpacity: 0.86, color: "#0f172a", weight: 1.6 }));
+    circle.on("mouseout", () => circle.setStyle({ fillOpacity: 0.50, color: cat.color, weight: 1.15 }));
+
+    if (isSP) circle.on("click", () => switchMode("SP"));
+    if (isPOA) circle.on("click", () => switchMode("POA"));
+
+    circle.addTo(brMarkersLayer);
+    brCurrentMarkers.push({ marker: circle, count: d.value });
+  });
+}
+
+function renderCityMap(cityKey) {
+  const st = cityState[cityKey];
+  if (!st.map || !st.markersLayer) return;
+  st.markersLayer.clearLayers();
+  st.currentMarkers = [];
+
+  const cat = CATEGORIES[activeCategory];
+  const filtered = cityRecords[cityKey].filter(r => matchesCategory(r.cat, activeCategory));
 
   const bairroCount = new Map();
   filtered.forEach(rec => {
@@ -1634,9 +1854,9 @@ function renderMapSP() {
     bairroCount.set(bKey, (bairroCount.get(bKey) || 0) + 1);
   });
 
-  const sortedClusters = buildSPClusters(filtered).sort((a, b) => b.items.length - a.items.length);
+  const sortedClusters = buildCityClusters(cityKey, filtered).sort((a, b) => b.items.length - a.items.length);
 
-  if (activeMode === "SP") {
+  if (activeMode === cityKey) {
     document.getElementById("stat-total").textContent = filtered.length.toLocaleString("pt-BR");
     document.getElementById("stat-munis").textContent = sortedClusters.length.toLocaleString("pt-BR");
     let topBairro = "—", topN = 0;
@@ -1647,33 +1867,35 @@ function renderMapSP() {
   sortedClusters.forEach(cl => {
     const n = cl.items.length;
     const circle = L.circleMarker([cl.lat, cl.lon], {
-      radius: radiusForCountSP(n),
+      pane: "circlesPane",
+      radius: radiusForMode(cityKey, n),
       fillColor: cat.color,
       color: "#ffffff",
       weight: 1.3,
-      fillOpacity: 0.74
+      fillOpacity: 0.76
     });
 
     const first = cl.items[0];
+    const cityLabel = cityKey === "SP" ? "São Paulo" : "Porto Alegre";
     const title = n === 1
       ? first.nome
-      : `${n} sedes neste local (${first.bairro || "São Paulo"})`;
+      : `${n} sedes neste local (${first.bairro || cityLabel})`;
 
     circle.bindTooltip(
       `<strong>${title}</strong><br/><span style="opacity:0.85">${first.endereco || first.bairro}</span>`,
-      { direction: "top", offset: [0, -4] }
+      { direction: "top", offset: [0, -4], className: "custom-tt" }
     );
 
     const listHtml = cl.items.map(it => {
       const itCat = CATEGORIES[it.cat] || cat;
       const cepFmt = it.cep && it.cep.length === 8 ? `${it.cep.slice(0, 5)}-${it.cep.slice(5)}` : "";
       return `
-        <div class="sp-inst-item">
-          <div class="sp-inst-name">
+        <div class="inst-item">
+          <div class="inst-name">
             <span class="swatch" style="background:${itCat.color}; width:8px; height:8px;"></span>
             <span>${it.nome}</span>
           </div>
-          <div class="sp-inst-meta">
+          <div class="inst-meta">
             <strong>${it.segmento}</strong><br/>
             ${it.endereco}${it.complemento ? " — " + it.complemento : ""}<br/>
             ${it.bairro ? it.bairro + " • " : ""}${cepFmt ? "CEP " + cepFmt : ""}${it.cnpj ? " • CNPJ " + it.cnpj : ""}
@@ -1683,43 +1905,48 @@ function renderMapSP() {
     }).join("");
 
     circle.bindPopup(`
-      <div class="sp-popup">
-        <div class="sp-popup-header">
+      <div class="city-popup">
+        <div class="city-popup-header">
           ${n} ${n === 1 ? "sede financeira" : "sedes financeiras"} • ${cl.precision}
         </div>
         ${listHtml}
       </div>
     `, { maxWidth: 320 });
 
-    circle.addTo(spMarkersLayer);
-    spCurrentMarkers.push({ marker: circle, count: n });
+    circle.addTo(st.markersLayer);
+    st.currentMarkers.push({ marker: circle, count: n });
   });
 }
 
-// Atualização instantânea sem redesenhar tudo ao arrastar os sliders
 function applyRadiusLive() {
   if (activeMode === "BR") {
-    gCircles.selectAll("circle").attr("r", d => radiusForCountBR(d.value));
-    renderLegendBR();
+    brCurrentMarkers.forEach(({ marker, count }) => marker.setRadius(radiusForMode("BR", count)));
+    renderLegend("BR");
   } else {
-    spCurrentMarkers.forEach(({ marker, count }) => marker.setRadius(radiusForCountSP(count)));
-    renderLegendSP();
+    cityState[activeMode].currentMarkers.forEach(({ marker, count }) => marker.setRadius(radiusForMode(activeMode, count)));
+    renderLegend(activeMode);
   }
 }
 
-let refiningInProgress = false;
-async function refineSPWithBrasilAPI() {
-  if (refiningInProgress || spRecords.length === 0) return;
-  refiningInProgress = true;
+// ============================================================================
+// 11. REFINAMENTO DE COORDENADAS POR CEP (BRASILAPI v2 — SP & PORTO ALEGRE)
+// ============================================================================
+const refiningCity = { SP: false, POA: false };
 
-  const btn = document.getElementById("btn-refine-cep");
+async function refineCityWithBrasilAPI(cityKey) {
+  const recs = cityRecords[cityKey];
+  if (refiningCity[cityKey] || recs.length === 0) return;
+  refiningCity[cityKey] = true;
+
+  const btn = document.getElementById(`btn-refine-${cityKey.toLowerCase()}`);
+  const bbox = CITY_META[cityKey].bbox;
   const uniqueCeps = Array.from(new Set(
-    spRecords.map(r => r.cep).filter(c => c && c.length === 8 && c !== "00000000" && !cepCoordsCache[c])
+    recs.map(r => r.cep).filter(c => c && c.length === 8 && c !== "00000000" && !cepCoordsCache[c])
   ));
 
   if (uniqueCeps.length === 0) {
-    btn.textContent = "Todos os CEPs já refinados ✓";
-    refiningInProgress = false;
+    btn.textContent = "CEPs já refinados ✓";
+    refiningCity[cityKey] = false;
     return;
   }
 
@@ -1736,7 +1963,7 @@ async function refineSPWithBrasilAPI() {
         if (coords && coords.latitude && coords.longitude) {
           const lat = parseFloat(coords.latitude);
           const lon = parseFloat(coords.longitude);
-          if (lat < -23.3 && lat > -24.05 && lon < -46.3 && lon > -46.9) {
+          if (lat > bbox.minLat && lat < bbox.maxLat && lon > bbox.minLon && lon < bbox.maxLon) {
             cepCoordsCache[cep] = { lat, lon };
             found++;
           }
@@ -1746,68 +1973,33 @@ async function refineSPWithBrasilAPI() {
     }));
 
     btn.textContent = `Refinando CEPs: ${done}/${uniqueCeps.length} (${found} exatos)...`;
-    if (done % 15 === 0 || done === uniqueCeps.length) {
+    if (done % 10 === 0 || done === uniqueCeps.length) {
       try { localStorage.setItem(CEP_CACHE_KEY, JSON.stringify(cepCoordsCache)); } catch (e) {}
       recomputeGlobalMaxes();
-      renderLegendSP();
-      renderMapSP();
+      renderLegend(cityKey);
+      renderCityMap(cityKey);
     }
     await new Promise(r => setTimeout(r, 120));
   }
 
   btn.disabled = false;
-  btn.textContent = `CEPs refinados (${Object.keys(cepCoordsCache).length} exatos) ✓`;
-  refiningInProgress = false;
+  btn.textContent = `CEPs refinados (${found} novos exatos) ✓`;
+  refiningCity[cityKey] = false;
   recomputeGlobalMaxes();
-  renderLegendSP();
-  renderMapSP();
+  renderLegend(cityKey);
+  renderCityMap(cityKey);
 }
 
 // ============================================================================
-// 9. ESCALA GRÁFICA (BRASIL), MENU LATERAL E LEGENDAS ADAPTATIVAS
+// 12. MENU LATERAL E LEGENDAS ADAPTATIVAS
 // ============================================================================
-function updateGraphicScale() {
-  if (!projection) return;
-  const p1 = projection.invert([mapWidth / 2, mapHeight / 2]);
-  const p2 = projection.invert([mapWidth / 2 + 100, mapHeight / 2]);
-  if (!p1 || !p2) return;
-
-  const kmPer100Px = (d3.geoDistance(p1, p2) * 6371) / currentZoomK;
-  const kmPerPx = kmPer100Px / 100;
-
-  const candidates = [2000, 1000, 500, 250, 200, 100, 50, 25, 20, 10, 5, 2, 1];
-  let niceKm = 500;
-  for (const c of candidates) {
-    const px = c / kmPerPx;
-    if (px >= 68 && px <= 145) { niceKm = c; break; }
-  }
-
-  const barPx = Math.round(niceKm / kmPerPx);
-  const halfPx = Math.round(barPx / 2);
-
-  const sSvg = d3.select("#scale-svg");
-  sSvg.attr("width", barPx + 42);
-  sSvg.selectAll("*").remove();
-
-  sSvg.append("rect").attr("x", 6).attr("y", 13).attr("width", halfPx).attr("height", 5)
-    .attr("fill", "#1e293b").attr("stroke", "#1e293b").attr("stroke-width", 1);
-  sSvg.append("rect").attr("x", 6 + halfPx).attr("y", 13).attr("width", barPx - halfPx).attr("height", 5)
-    .attr("fill", "#ffffff").attr("stroke", "#1e293b").attr("stroke-width", 1);
-
-  const drawLabel = (x, text) => sSvg.append("text").attr("x", x).attr("y", 9)
-    .attr("text-anchor", "middle").attr("font-size", "9.5px").attr("font-weight", "600").attr("fill", "#334155").text(text);
-  drawLabel(6, "0");
-  drawLabel(6 + halfPx, `${niceKm / 2}`);
-  drawLabel(6 + barPx, `${niceKm} km`);
-}
-
 function renderSidebar() {
   const menu = document.getElementById("sidebar-menu");
   menu.innerHTML = "";
 
   const totalFor = (catId) => {
-    if (activeMode === "SP") return spRecords.filter(r => matchesCategory(r.cat, catId)).length;
-    return datasetBR.reduce((s, r) => s + getCountForCategory(r, catId), 0);
+    if (activeMode === "BR") return datasetBR.reduce((s, r) => s + getCountForCategory(r, catId), 0);
+    return cityRecords[activeMode].filter(r => matchesCategory(r.cat, catId)).length;
   };
 
   const createBtn = (cat) => {
@@ -1824,11 +2016,11 @@ function renderSidebar() {
       activeCategory = cat.id;
       renderSidebar();
       if (activeMode === "BR") {
-        renderLegendBR();
+        renderLegend("BR");
         renderMapBR();
       } else {
-        renderLegendSP();
-        renderMapSP();
+        renderLegend(activeMode);
+        renderCityMap(activeMode);
       }
     };
     return btn;
@@ -1868,67 +2060,19 @@ function renderSidebar() {
   });
 }
 
-function renderMapBR() {
+function renderLegend(mode) {
   const cat = CATEGORIES[activeCategory];
-  const tooltip = document.getElementById("tooltip");
+  const svgSelector = `#legend-${mode.toLowerCase()}-svg`;
+  const topVal = Math.max(mode === "BR" ? 50 : 4, globalMaxByMode[mode]);
+  const values = mode === "BR"
+    ? Array.from(new Set([1, 20, Math.round(topVal / 4), topVal])).sort((a, b) => a - b)
+    : Array.from(new Set([1, Math.max(2, Math.round(topVal / 2)), topVal])).sort((a, b) => a - b);
 
-  const points = datasetBR
-    .map(d => ({ ...d, value: getCountForCategory(d, activeCategory), coords: projection([d.lon, d.lat]) }))
-    .filter(d => d.value > 0 && d.coords)
-    .sort((a, b) => b.value - a.value);
-
-  const totalSedes = points.reduce((s, p) => s + p.value, 0);
-  if (activeMode === "BR") {
-    document.getElementById("stat-total").textContent = totalSedes.toLocaleString("pt-BR");
-    document.getElementById("stat-munis").textContent = points.length.toLocaleString("pt-BR");
-    document.getElementById("stat-leader").textContent = points.length ? `${points[0].muni}/${points[0].uf}` : "—";
-  }
-
-  gCircles.selectAll("circle")
-    .data(points, d => `${d.muni}-${d.uf}`)
-    .join(
-      enter => enter.append("circle")
-        .attr("class", "sede-circle")
-        .attr("cx", d => d.coords[0])
-        .attr("cy", d => d.coords[1])
-        .attr("r", 0)
-        .attr("fill", cat.color)
-        .attr("stroke", cat.color)
-        .call(sel => sel.transition().duration(300).attr("r", d => radiusForCountBR(d.value))),
-      update => update
-        .attr("fill", cat.color)
-        .attr("stroke", cat.color)
-        .call(sel => sel.transition().duration(300).attr("r", d => radiusForCountBR(d.value))),
-      exit => exit.transition().duration(180).attr("r", 0).remove()
-    )
-    .on("mousemove", (event, d) => {
-      const share = totalSedes > 0 ? ((d.value / totalSedes) * 100).toFixed(1) : "0.0";
-      tooltip.style.opacity = 1;
-      tooltip.style.left = (event.clientX + 14) + "px";
-      tooltip.style.top = (event.clientY - 12) + "px";
-      tooltip.innerHTML = `
-        <div class="tt-city">${d.muni} — ${d.uf}</div>
-        <div><strong>${cat.label}:</strong> ${d.value.toLocaleString("pt-BR")} ${d.value === 1 ? "sede" : "sedes"} (${share}%)</div>
-        <div style="opacity:0.78; font-size:0.72rem; margin-top:3px;">
-          Total geral no município: ${getCountForCategory(d, "ALL").toLocaleString("pt-BR")}
-        </div>
-      `;
-    })
-    .on("mouseleave", () => { tooltip.style.opacity = 0; })
-    .on("click", (event, d) => {
-      if (normalizeName(d.muni) === "SAO PAULO" && d.uf === "SP") {
-        tooltip.style.opacity = 0;
-        switchMode("SP");
-      }
-    });
-}
-
-function drawProportionalLegend(svgSelector, values, radiusFn, color) {
   const lsvg = d3.select(svgSelector);
   lsvg.selectAll("*").remove();
 
-  const maxR = Math.max(...values.map(v => radiusFn(v)));
-  const svgH = Math.max(66, Math.ceil(2 * maxR + 22));
+  const maxR = Math.max(...values.map(v => radiusForMode(mode, v)));
+  const svgH = Math.max(64, Math.ceil(2 * maxR + 22));
   const cx = Math.max(30, Math.ceil(maxR + 10));
   const lineEndX = cx + Math.max(46, Math.ceil(maxR + 14));
   const svgW = Math.max(175, lineEndX + 68);
@@ -1936,18 +2080,17 @@ function drawProportionalLegend(svgSelector, values, radiusFn, color) {
 
   lsvg.attr("width", svgW).attr("height", svgH);
 
-  // Desenha círculos do maior para o menor e ajusta posição vertical dos textos para evitar sobreposição
   const sortedDesc = [...values].sort((a, b) => b - a);
   let lastLabelY = -999;
 
   sortedDesc.forEach(v => {
-    const r = radiusFn(v);
+    const r = radiusForMode(mode, v);
     const topY = baseY - 2 * r;
 
     lsvg.append("circle")
       .attr("cx", cx).attr("cy", baseY - r).attr("r", r)
-      .attr("fill", color).attr("fill-opacity", 0.25)
-      .attr("stroke", color).attr("stroke-width", 1.1);
+      .attr("fill", cat.color).attr("fill-opacity", 0.25)
+      .attr("stroke", cat.color).attr("stroke-width", 1.1);
 
     let labelY = topY + 3;
     if (labelY - lastLabelY < 11) labelY = lastLabelY + 11;
@@ -1965,28 +2108,12 @@ function drawProportionalLegend(svgSelector, values, radiusFn, color) {
   });
 }
 
-function renderLegendBR() {
-  const cat = CATEGORIES[activeCategory];
-  const topVal = Math.max(50, globalMaxBR);
-  const midVal = Math.round(topVal / 4);
-  const values = Array.from(new Set([1, 20, midVal, topVal])).sort((a, b) => a - b);
-  drawProportionalLegend("#legend-svg", values, radiusForCountBR, cat.color);
-}
-
-function renderLegendSP() {
-  const cat = CATEGORIES[activeCategory];
-  const topVal = Math.max(5, globalMaxSP);
-  const midVal = Math.max(2, Math.round(topVal / 3));
-  const values = Array.from(new Set([1, midVal, topVal])).sort((a, b) => a - b);
-  drawProportionalLegend("#sp-legend-svg", values, radiusForCountSP, cat.color);
-}
-
 // ============================================================================
-// 10. IMPORTAÇÃO OPCIONAL DE CSV DO BCB + EVENTOS DE CONTROLE
+// 13. IMPORTAÇÃO OPCIONAL DE CSV DO BCB + CONTROLES
 // ============================================================================
 function parseBCBCsv(csvText) {
   const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
-  if (lines.length < 2) return { br: [], sp: [] };
+  if (lines.length < 2) return { br: [], sp: [], poa: [] };
 
   const sep = lines[0].includes(";") ? ";" : ",";
   let headerIdx = lines.findIndex(l => {
@@ -2006,10 +2133,12 @@ function parseBCBCsv(csvText) {
   const idxCep = headers.findIndex(h => h.includes("CEP"));
   const idxIbge = headers.findIndex(h => h.includes("IBGE"));
 
-  if (idxMuni === -1 || idxUF === -1) return { br: [], sp: [] };
+  if (idxMuni === -1 || idxUF === -1) return { br: [], sp: [], poa: [] };
 
   const agg = new Map();
   const spList = [];
+  const poaList = [];
+
   for (let i = headerIdx + 1; i < lines.length; i++) {
     const cols = lines[i].split(sep).map(c => c.replace(/^"|"$/g, "").trim());
     if (cols.length <= Math.max(idxMuni, idxUF)) continue;
@@ -2027,20 +2156,21 @@ function parseBCBCsv(csvText) {
     if (!agg.has(key)) agg.set(key, { muni: coord.muni, uf: coord.uf, lat: coord.lat, lon: coord.lon, counts: {} });
     agg.get(key).counts[cat] = (agg.get(key).counts[cat] || 0) + 1;
 
-    if (ibgeRaw === "3550308" || (normalizeName(muniRaw) === "SAO PAULO" && ufRaw === "SP")) {
-      spList.push({
-        nome: idxNome !== -1 ? cols[idxNome] : "Instituição",
-        cnpj: idxCnpj !== -1 ? cols[idxCnpj] : "",
-        segmento: segRaw,
-        cat,
-        endereco: idxEnd !== -1 ? cols[idxEnd] : "",
-        complemento: "",
-        bairro: idxBairro !== -1 ? cols[idxBairro] : "",
-        cep: idxCep !== -1 ? cols[idxCep].replace(/\D/g, "").padStart(8, "0").slice(0, 8) : ""
-      });
-    }
+    const recordObj = {
+      nome: idxNome !== -1 ? cols[idxNome] : "Instituição",
+      cnpj: idxCnpj !== -1 ? cols[idxCnpj] : "",
+      segmento: segRaw,
+      cat,
+      endereco: idxEnd !== -1 ? cols[idxEnd] : "",
+      complemento: "",
+      bairro: idxBairro !== -1 ? cols[idxBairro] : "",
+      cep: idxCep !== -1 ? cols[idxCep].replace(/\D/g, "").padStart(8, "0").slice(0, 8) : ""
+    };
+
+    if (ibgeRaw === "3550308" || (normalizeName(muniRaw) === "SAO PAULO" && ufRaw === "SP")) spList.push(recordObj);
+    else if (ibgeRaw === "4314902" || (normalizeName(muniRaw) === "PORTO ALEGRE" && ufRaw === "RS")) poaList.push(recordObj);
   }
-  return { br: Array.from(agg.values()), sp: spList };
+  return { br: Array.from(agg.values()), sp: spList, poa: poaList };
 }
 
 document.getElementById("csv-upload").addEventListener("change", (e) => {
@@ -2048,16 +2178,17 @@ document.getElementById("csv-upload").addEventListener("change", (e) => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = (ev) => {
-    const { br, sp } = parseBCBCsv(ev.target.result);
+    const { br, sp, poa } = parseBCBCsv(ev.target.result);
     if (br.length > 0) {
       datasetBR = br;
-      spRecords = sp;
+      cityRecords.SP = sp;
+      cityRecords.POA = poa;
       recomputeGlobalMaxes();
       document.getElementById("bcb-dot").className = "dot-ok";
       document.getElementById("bcb-status").textContent = `CSV carregado: ${br.length} municípios`;
       renderSidebar();
-      if (activeMode === "BR") { renderLegendBR(); renderMapBR(); }
-      else { renderLegendSP(); renderMapSP(); }
+      if (activeMode === "BR") { renderLegend("BR"); renderMapBR(); }
+      else { renderLegend(activeMode); renderCityMap(activeMode); }
     } else {
       alert("Não foi possível identificar as colunas de Município, UF e Segmento no CSV.");
     }
@@ -2068,11 +2199,15 @@ document.getElementById("csv-upload").addEventListener("change", (e) => {
 function bindControls() {
   document.getElementById("mode-br").onclick = () => switchMode("BR");
   document.getElementById("mode-sp").onclick = () => switchMode("SP");
-  document.getElementById("btn-zoom-in").onclick = () => svg.transition().duration(280).call(zoom.scaleBy, 1.5);
-  document.getElementById("btn-zoom-out").onclick = () => svg.transition().duration(280).call(zoom.scaleBy, 0.67);
-  document.getElementById("btn-reset").onclick = () => svg.transition().duration(420).call(zoom.transform, d3.zoomIdentity);
+  document.getElementById("mode-poa").onclick = () => switchMode("POA");
 
-  // Sliders de tamanho mínimo e máximo
+  document.getElementById("br-zoom-in").onclick = () => brMap.zoomIn();
+  document.getElementById("br-zoom-out").onclick = () => brMap.zoomOut();
+  document.getElementById("br-reset").onclick = () => {
+    if (brBounds) brMap.fitBounds(brBounds, { padding: [26, 26] });
+    else brMap.setView([-14.235, -51.925], 4);
+  };
+
   const sMin = document.getElementById("slider-min-r");
   const sMax = document.getElementById("slider-max-r");
 
