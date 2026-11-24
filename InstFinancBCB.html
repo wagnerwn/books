@@ -64,7 +64,7 @@
       color: var(--muted);
     }
 
-    /* Seletor de Escala Geográfica (Brasil / SP / POA) */
+    /* Seletor de Escala Geográfica */
     .mode-switch {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -471,8 +471,16 @@
 
     .dot-ok { width: 8px; height: 8px; border-radius: 50%; background: #10b981; flex-shrink: 0; }
     .dot-warn { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; }
+    .dot-pulse {
+      width: 8px; height: 8px; border-radius: 50%; background: #2563eb; flex-shrink: 0;
+      animation: pulse 1.1s infinite ease-in-out;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
 
-    /* Painel de Mapa Base (reutilizado em BR, SP e POA) */
+    /* Painel de Mapa Base */
     .layer-panel {
       position: absolute;
       right: 16px;
@@ -483,7 +491,7 @@
       box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
       z-index: 600;
       font-size: 0.74rem;
-      min-width: 242px;
+      min-width: 244px;
     }
 
     .layer-title {
@@ -517,7 +525,7 @@
       align-items: center;
       gap: 6px;
       z-index: 600;
-      max-width: calc(100% - 395px);
+      max-width: calc(100% - 410px);
     }
 
     .city-chip {
@@ -538,15 +546,6 @@
       border-color: #94a3b8;
     }
 
-    .city-chip.primary {
-      background: #0f766e;
-      color: #ffffff;
-      border-color: #0f766e;
-    }
-
-    .city-chip.primary:hover { background: #115e59; }
-    .city-chip:disabled { opacity: 0.65; cursor: wait; }
-
     /* Fonte no Rodapé */
     .bottom-left-meta {
       position: absolute;
@@ -557,7 +556,7 @@
       gap: 6px;
       z-index: 600;
       pointer-events: none;
-      max-width: 590px;
+      max-width: 600px;
     }
 
     .source-note {
@@ -601,12 +600,12 @@
 
     /* Popup Leaflet */
     .city-popup {
-      max-height: 260px;
+      max-height: 270px;
       overflow-y: auto;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: 0.76rem;
       line-height: 1.4;
-      min-width: 240px;
+      min-width: 250px;
     }
 
     .city-popup-header {
@@ -654,7 +653,6 @@
       text-align: center;
     }
 
-    /* Ajustes Leaflet */
     .leaflet-bottom.leaflet-left {
       bottom: 60px !important;
       left: 6px !important;
@@ -776,7 +774,6 @@
       </div>
     </div>
 
-    <!-- Seletor de Mapa Base no Nível Nacional -->
     <div class="layer-panel" style="top: 90px;">
       <div class="layer-title">Mapa Base (Brasil)</div>
       <label class="layer-row">
@@ -843,15 +840,12 @@
       <button class="city-chip" onclick="focusSPHub('PAULISTA')">Av. Paulista</button>
       <button class="city-chip" onclick="focusSPHub('BERRINI')">Berrini / Chucri Zaidan</button>
       <button class="city-chip" onclick="focusSPHub('CENTRO')">Centro Histórico</button>
-      <button class="city-chip primary" id="btn-refine-sp" onclick="refineCityWithBrasilAPI('SP')">
-        Refinar CEPs (BrasilAPI)
-      </button>
     </div>
 
     <div class="right-pills">
       <div class="status-pill">
-        <span class="dot-ok"></span>
-        <span id="sp-status-text">Esri Cinza Claro + Recorte SP (IBGE)</span>
+        <span class="dot-pulse" id="sp-geo-dot"></span>
+        <span id="sp-geo-status">Aguardando georreferenciamento...</span>
       </div>
     </div>
 
@@ -885,7 +879,7 @@
 
     <div class="bottom-left-meta">
       <div class="source-note">
-        <strong>Fonte:</strong> BCB (Relação de Instituições em Funcionamento, Out/2026 — endereços das sedes), IBGE (Malha Municipal 3550308), Esri ArcGIS, GeoSampa/PMSP e BrasilAPI (CEPs).
+        <strong>Fonte:</strong> BCB (Relação de Instituições em Funcionamento, Out/2026 — endereços das sedes), IBGE (Malha Municipal 3550308), Esri ArcGIS (Mapa Base e Geocodificação de Endereços) e GeoSampa/PMSP.
       </div>
     </div>
 
@@ -922,15 +916,12 @@
       <button class="city-chip" onclick="focusPOAHub('MOINHOS')">Moinhos de Vento</button>
       <button class="city-chip" onclick="focusPOAHub('QUARTO_DISTRITO')">4º Distrito / Assis Brasil</button>
       <button class="city-chip" onclick="focusPOAHub('PRAIA_BELAS')">Praia de Belas</button>
-      <button class="city-chip primary" id="btn-refine-poa" onclick="refineCityWithBrasilAPI('POA')">
-        Refinar CEPs (BrasilAPI)
-      </button>
     </div>
 
     <div class="right-pills">
       <div class="status-pill">
-        <span class="dot-ok"></span>
-        <span id="poa-status-text">Esri Cinza Claro + Recorte POA (IBGE)</span>
+        <span class="dot-pulse" id="poa-geo-dot"></span>
+        <span id="poa-geo-status">Aguardando georreferenciamento...</span>
       </div>
     </div>
 
@@ -960,7 +951,7 @@
 
     <div class="bottom-left-meta">
       <div class="source-note">
-        <strong>Fonte:</strong> BCB (Relação de Instituições em Funcionamento, Out/2026 — endereços das sedes), IBGE (Malha Municipal 4314902), Esri ArcGIS e BrasilAPI (CEPs).
+        <strong>Fonte:</strong> BCB (Relação de Instituições em Funcionamento, Out/2026 — endereços das sedes), IBGE (Malha Municipal 4314902) e Esri ArcGIS (Mapa Base e Geocodificação de Endereços).
       </div>
     </div>
 
@@ -1019,8 +1010,8 @@ function classifyBCBSegment(rawSegment) {
 // ============================================================================
 const DEFAULT_RADIUS = {
   BR:  { min: 2.5, max: 23, minBound: [1, 14], maxBound: [8, 55] },
-  SP:  { min: 5.5, max: 20, minBound: [2, 16], maxBound: [10, 48] },
-  POA: { min: 6.0, max: 18, minBound: [2, 16], maxBound: [10, 44] }
+  SP:  { min: 5.0, max: 19, minBound: [2, 16], maxBound: [10, 48] },
+  POA: { min: 5.5, max: 17, minBound: [2, 16], maxBound: [10, 44] }
 };
 
 const radiusConfig = {
@@ -1029,7 +1020,7 @@ const radiusConfig = {
   POA: { min: DEFAULT_RADIUS.POA.min, max: DEFAULT_RADIUS.POA.max }
 };
 
-const globalMaxByMode = { BR: 500, SP: 20, POA: 6 };
+const globalMaxByMode = { BR: 500, SP: 15, POA: 5 };
 
 function radiusForMode(mode, count) {
   if (!count || count <= 0) return 0;
@@ -1058,7 +1049,7 @@ function syncSlidersToActiveMode() {
 }
 
 // ============================================================================
-// 3. ESTADO GLOBAL
+// 3. ESTADO GLOBAL & CACHE DE ENDEREÇOS GEOCODIFICADOS
 // ============================================================================
 let activeMode = "BR"; // "BR" | "SP" | "POA"
 let activeCategory = "ALL";
@@ -1067,24 +1058,21 @@ const cityRecords = { SP: [], POA: [] };
 let muniByCode = new Map();
 let muniByNameUF = new Map();
 
-// Mapa Brasil (Leaflet)
-let brMap = null;
-let brUFsLayer = null;
-let brBounds = null;
-let brMarkersLayer = null;
-let brBaseLayers = {};
-let brActiveBase = "clean";
-let brCurrentMarkers = [];
+let brMap = null, brUFsLayer = null, brBounds = null, brMarkersLayer = null;
+let brBaseLayers = {}, brActiveBase = "clean", brCurrentMarkers = [];
 
-// Mapas Intraurbanos (Leaflet)
 const cityState = {
-  SP:  { initialized: false, map: null, markersLayer: null, boundaryLayer: null, baseLayers: {}, bounds: null, currentMarkers: [] },
-  POA: { initialized: false, map: null, markersLayer: null, boundaryLayer: null, baseLayers: {}, bounds: null, currentMarkers: [] }
+  SP:  { initialized: false, geocoding: false, map: null, markersLayer: null, boundaryLayer: null, baseLayers: {}, bounds: null, currentMarkers: [] },
+  POA: { initialized: false, geocoding: false, map: null, markersLayer: null, boundaryLayer: null, baseLayers: {}, bounds: null, currentMarkers: [] }
 };
 
-const CEP_CACHE_KEY = "bcb_cities_cep_coords_v2";
-let cepCoordsCache = {};
-try { cepCoordsCache = JSON.parse(localStorage.getItem(CEP_CACHE_KEY) || "{}"); } catch (e) {}
+const ADDR_CACHE_KEY = "bcb_exact_addr_cache_v3";
+let addrCoordsCache = {};
+try { addrCoordsCache = JSON.parse(localStorage.getItem(ADDR_CACHE_KEY) || "{}"); } catch (e) {}
+
+function saveAddrCache() {
+  try { localStorage.setItem(ADDR_CACHE_KEY, JSON.stringify(addrCoordsCache)); } catch (e) {}
+}
 
 function normalizeName(str) {
   return (str || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Z0-9 ]/g, " ").replace(/\s+/g, " ").trim();
@@ -1102,7 +1090,7 @@ function getCountForCategory(row, catId) {
   return row.counts[catId] || 0;
 }
 
-async function fetchJsonWithTimeout(url, timeoutMs = 11000) {
+async function fetchJsonWithTimeout(url, timeoutMs = 10000) {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -1114,9 +1102,6 @@ async function fetchJsonWithTimeout(url, timeoutMs = 11000) {
   }
 }
 
-// ============================================================================
-// 4. BASES ESRI (REUTILIZÁVEIS EM BRASIL, SÃO PAULO E PORTO ALEGRE)
-// ============================================================================
 function createEsriLayers() {
   return {
     esri_gray: L.layerGroup([
@@ -1132,219 +1117,151 @@ function createEsriLayers() {
 }
 
 // ============================================================================
-// 5. GEOCODIFICADORES INTRAMUNICIPAIS (SÃO PAULO & PORTO ALEGRE)
+// 4. GEOCODIFICAÇÃO REAL POR ENDEREÇO (ARCGIS WORLD GEOCODER + BRASILAPI)
 // ============================================================================
-const SP_CORRIDORS = [
-  { match: ["FARIA LIMA"], minNum: 1200, maxNum: 4500, start: [-23.5675, -46.6938], end: [-23.5938, -46.6808] },
-  { match: ["PAULISTA"], minNum: 37, maxNum: 2550, start: [-23.5707, -46.6455], end: [-23.5558, -46.6625] },
-  { match: ["JUSCELINO KUBITSCHEK", "PRES JK", "PRESIDENTE JK"], minNum: 50, maxNum: 2041, start: [-23.5912, -46.6743], end: [-23.5906, -46.6897] },
-  { match: ["LUIS CARLOS BERRINI", "LUIZ CARLOS BERRINI", "BERRINI"], minNum: 100, maxNum: 1750, start: [-23.5996, -46.6961], end: [-23.6122, -46.6934] },
-  { match: ["CHUCRI ZAIDAN"], minNum: 80, maxNum: 2960, start: [-23.6197, -46.6975], end: [-23.6315, -46.7105] },
-  { match: ["NACOES UNIDAS"], minNum: 7800, maxNum: 14401, start: [-23.5635, -46.7034], end: [-23.6228, -46.7013] },
-  { match: ["ALFREDO EGYDIO DE SOUZA ARANHA", "ALFREDO EGIDIO"], minNum: 1, maxNum: 200, start: [-23.6368, -46.6413], end: [-23.6366, -46.6410] },
-  { match: ["FUNCHAL"], minNum: 100, maxNum: 650, start: [-23.5947, -46.6890], end: [-23.5919, -46.6873] },
-  { match: ["OLIMPIADAS"], minNum: 50, maxNum: 360, start: [-23.5956, -46.6866], end: [-23.5952, -46.6838] },
-  { match: ["GOMES DE CARVALHO"], minNum: 100, maxNum: 1666, start: [-23.5985, -46.6820], end: [-23.5960, -46.6893] },
-  { match: ["FIDENCIO RAMOS"], minNum: 100, maxNum: 320, start: [-23.5939, -46.6878], end: [-23.5936, -46.6848] },
-  { match: ["CHEDID JAFET"], minNum: 50, maxNum: 250, start: [-23.5946, -46.6895], end: [-23.5942, -46.6881] },
-  { match: ["JOAQUIM FLORIANO"], minNum: 100, maxNum: 1120, start: [-23.5836, -46.6730], end: [-23.5855, -46.6826] },
-  { match: ["IGUATEMI"], minNum: 100, maxNum: 450, start: [-23.5825, -46.6815], end: [-23.5850, -46.6788] },
-  { match: ["PEDROSO ALVARENGA"], minNum: 100, maxNum: 1284, start: [-23.5844, -46.6852], end: [-23.5822, -46.6750] },
-  { match: ["LEOPOLDO COUTO"], minNum: 100, maxNum: 1100, start: [-23.5848, -46.6750], end: [-23.5868, -46.6812] },
-  { match: ["NOVE DE JULHO", "9 DE JULHO"], minNum: 2500, maxNum: 5966, start: [-23.5665, -46.6605], end: [-23.5836, -46.6828] },
-  { match: ["REBOUCAS"], minNum: 1000, maxNum: 3970, start: [-23.5610, -46.6725], end: [-23.5731, -46.6962] },
-  { match: ["ALAMEDA SANTOS", "AL SANTOS"], minNum: 200, maxNum: 2400, start: [-23.5700, -46.6470], end: [-23.5567, -46.6632] },
-  { match: ["ROQUE PETRONI"], minNum: 100, maxNum: 1100, start: [-23.6231, -46.6976], end: [-23.6213, -46.6890] },
-  { match: ["MAGALHAES DE CASTRO"], minNum: 1000, maxNum: 5000, start: [-23.5978, -46.6990], end: [-23.5992, -46.6995] },
-  { match: ["BOA VISTA"], minNum: 50, maxNum: 360, start: [-23.5476, -46.6331], end: [-23.5449, -46.6336] },
-  { match: ["XV DE NOVEMBRO", "QUINZE DE NOVEMBRO"], minNum: 100, maxNum: 350, start: [-23.5488, -46.6339], end: [-23.5469, -46.6345] },
-  { match: ["LIBERO BADARO"], minNum: 100, maxNum: 600, start: [-23.5495, -46.6368], end: [-23.5453, -46.6361] },
-  { match: ["IPIRANGA"], minNum: 100, maxNum: 1200, start: [-23.5468, -46.6435], end: [-23.5418, -46.6352] },
-  { match: ["SAO LUIS"], minNum: 50, maxNum: 258, start: [-23.5478, -46.6430], end: [-23.5454, -46.6418] },
-  { match: ["SANTO AMARO"], minNum: 1000, maxNum: 5500, start: [-23.5930, -46.6730], end: [-23.6350, -46.6950] },
-  { match: ["IBIRAPUERA"], minNum: 1800, maxNum: 3400, start: [-23.5975, -46.6625], end: [-23.6115, -46.6675] },
-  { match: ["VERGUEIRO"], minNum: 1000, maxNum: 3500, start: [-23.5735, -46.6400], end: [-23.5945, -46.6360] },
-  { match: ["ANGELICA"], minNum: 500, maxNum: 2600, start: [-23.5380, -46.6575], end: [-23.5535, -46.6620] },
-  { match: ["AUGUSTA"], minNum: 1500, maxNum: 3000, start: [-23.5565, -46.6590], end: [-23.5675, -46.6705] },
-  { match: ["HADDOCK LOBO"], minNum: 300, maxNum: 1700, start: [-23.5585, -46.6635], end: [-23.5670, -46.6700] },
-  { match: ["BELA CINTRA"], minNum: 500, maxNum: 2300, start: [-23.5560, -46.6615], end: [-23.5670, -46.6708] },
-  { match: ["AMAURI"], minNum: 100, maxNum: 500, start: [-23.5818, -46.6820], end: [-23.5835, -46.6845] },
-  { match: ["HELENA"], minNum: 100, maxNum: 350, start: [-23.5944, -46.6868], end: [-23.5938, -46.6838] },
-  { match: ["CIDADE JARDIM"], minNum: 100, maxNum: 900, start: [-23.5855, -46.6825], end: [-23.5880, -46.6915] },
-  { match: ["BRIGADEIRO LUIS ANTONIO", "BRIGADEIRO LUIZ ANTONIO"], minNum: 1500, maxNum: 4500, start: [-23.5665, -46.6485], end: [-23.5825, -46.6645] },
-  { match: ["MARQUES DE SAO VICENTE"], minNum: 100, maxNum: 2500, start: [-23.5240, -46.6650], end: [-23.5165, -46.6870] }
-];
-
-const SP_BAIRROS = {
-  "ITAIM BIBI": [-23.5855, -46.6805], "VILA OLIMPIA": [-23.5950, -46.6855],
-  "BELA VISTA": [-23.5635, -46.6510], "CERQUEIRA CESAR": [-23.5610, -46.6645],
-  "JARDIM PAULISTA": [-23.5695, -46.6635], "JARDIM PAULISTANO": [-23.5765, -46.6840],
-  "JARDIM EUROPA": [-23.5785, -46.6810], "JARDIM AMERICA": [-23.5680, -46.6705],
-  "PINHEIROS": [-23.5645, -46.6920], "ALTO DE PINHEIROS": [-23.5520, -46.7090],
-  "VILA MADALENA": [-23.5535, -46.6915], "CENTRO": [-23.5475, -46.6365],
-  "SE": [-23.5495, -46.6340], "REPUBLICA": [-23.5445, -46.6435],
-  "CONSOLACAO": [-23.5535, -46.6565], "HIGIENOPOLIS": [-23.5450, -46.6575],
-  "SANTA CECILIA": [-23.5385, -46.6515], "BOM RETIRO": [-23.5285, -46.6375],
-  "BRAS": [-23.5425, -46.6175], "LIBERDADE": [-23.5595, -46.6355],
-  "PARAISO": [-23.5735, -46.6445], "VILA MARIANA": [-23.5880, -46.6380],
-  "MOEMA": [-23.6015, -46.6635], "INDIANOPOLIS": [-23.6080, -46.6615],
-  "VILA NOVA CONCEICAO": [-23.5915, -46.6710], "BROOKLIN": [-23.6115, -46.6895],
-  "CIDADE MONCOES": [-23.6065, -46.6935], "VILA CORDEIRO": [-23.6215, -46.6915],
-  "CHACARA SANTO ANTONIO": [-23.6315, -46.7025], "SANTO AMARO": [-23.6505, -46.7085],
-  "CAMPO BELO": [-23.6225, -46.6745], "SAUDE": [-23.6155, -46.6395],
-  "JABAQUARA": [-23.6465, -46.6415], "MORUMBI": [-23.6020, -46.7165],
-  "BUTANTA": [-23.5705, -46.7190], "PERDIZES": [-23.5375, -46.6785],
-  "BARRA FUNDA": [-23.5255, -46.6675], "LAPA": [-23.5225, -46.7025],
-  "MOOCA": [-23.5595, -46.5975], "TATUAPE": [-23.5405, -46.5755],
-  "SANTANA": [-23.5025, -46.6255], "IPIRANGA": [-23.5915, -46.6055]
-};
-
-const POA_CORRIDORS = [
-  { match: ["SETE DE SETEMBRO", "7 DE SETEMBRO"], minNum: 500, maxNum: 1200, start: [-30.0298, -51.2330], end: [-30.0273, -51.2248] },
-  { match: ["ANDRADAS"], minNum: 800, maxNum: 1800, start: [-30.0322, -51.2355], end: [-30.0285, -51.2242] },
-  { match: ["URUGUAI"], minNum: 50, maxNum: 400, start: [-30.0278, -51.2292], end: [-30.0315, -51.2286] },
-  { match: ["SIQUEIRA CAMPOS"], minNum: 700, maxNum: 1300, start: [-30.0282, -51.2335], end: [-30.0265, -51.2255] },
-  { match: ["CALDAS JUNIOR"], minNum: 20, maxNum: 200, start: [-30.0298, -51.2312], end: [-30.0280, -51.2308] },
-  { match: ["CAPITAO MONTANHA"], minNum: 50, maxNum: 200, start: [-30.0285, -51.2325], end: [-30.0296, -51.2322] },
-  { match: ["BORGES DE MEDEIROS"], minNum: 200, maxNum: 2650, start: [-30.0280, -51.2285], end: [-30.0565, -51.2282] },
-  { match: ["MAUA"], minNum: 800, maxNum: 2200, start: [-30.0265, -51.2320], end: [-30.0250, -51.2210] },
-  { match: ["CARLOS GOMES"], minNum: 50, maxNum: 2250, start: [-30.0175, -51.1865], end: [-30.0378, -51.1795] },
-  { match: ["NILO PECANHA"], minNum: 500, maxNum: 3200, start: [-30.0308, -51.1900], end: [-30.0268, -51.1620] },
-  { match: ["SOLEDADE"], minNum: 100, maxNum: 700, start: [-30.0318, -51.1825], end: [-30.0342, -51.1775] },
-  { match: ["MOSTARDEIRO"], minNum: 100, maxNum: 1100, start: [-30.0295, -51.2065], end: [-30.0258, -51.1975] },
-  { match: ["24 DE OUTUBRO", "VINTE E QUATRO DE OUTUBRO"], minNum: 100, maxNum: 1850, start: [-30.0265, -51.2045], end: [-30.0218, -51.1890] },
-  { match: ["PADRE CHAGAS"], minNum: 50, maxNum: 450, start: [-30.0262, -51.2035], end: [-30.0235, -51.2008] },
-  { match: ["CRISTOVAO COLOMBO"], minNum: 500, maxNum: 3500, start: [-30.0255, -51.2130], end: [-30.0145, -51.1865] },
-  { match: ["FARRAPOS"], minNum: 100, maxNum: 4800, start: [-30.0245, -51.2185], end: [-29.9970, -51.2020] },
-  { match: ["ASSIS BRASIL"], minNum: 500, maxNum: 6500, start: [-30.0082, -51.1835], end: [-29.9990, -51.1240] },
-  { match: ["IPIRANGA"], minNum: 500, maxNum: 7500, start: [-30.0495, -51.2280], end: [-30.0595, -51.1710] },
-  { match: ["PRAIA DE BELAS"], minNum: 500, maxNum: 2300, start: [-30.0465, -51.2295], end: [-30.0568, -51.2295] },
-  { match: ["INDEPENDENCIA"], minNum: 100, maxNum: 1300, start: [-30.0315, -51.2210], end: [-30.0295, -51.2070] },
-  { match: ["OSVALDO ARANHA", "OSWALDO ARANHA"], minNum: 200, maxNum: 1450, start: [-30.0345, -51.2175], end: [-30.0320, -51.2085] },
-  { match: ["PROTASIO ALVES"], minNum: 1000, maxNum: 6500, start: [-30.0325, -51.2075], end: [-30.0425, -51.1550] },
-  { match: ["JOAO PESSOA"], minNum: 300, maxNum: 2500, start: [-30.0345, -51.2215], end: [-30.0455, -51.2170] },
-  { match: ["BENTO GONCALVES"], minNum: 500, maxNum: 6000, start: [-30.0535, -51.2065], end: [-30.0685, -51.1450] },
-  { match: ["SERTORIO"], minNum: 500, maxNum: 6500, start: [-30.0055, -51.2015], end: [-29.9965, -51.1350] },
-  { match: ["BENJAMIN CONSTANT"], minNum: 200, maxNum: 1800, start: [-30.0075, -51.2005], end: [-30.0175, -51.1920] },
-  { match: ["RAMIRO BARCELOS"], minNum: 500, maxNum: 2400, start: [-30.0270, -51.2125], end: [-30.0405, -51.2080] },
-  { match: ["WENCESLAU ESCOBAR"], minNum: 1000, maxNum: 3500, start: [-30.0955, -51.2515], end: [-30.1155, -51.2555] },
-  { match: ["DIARIO DE NOTICIAS"], minNum: 100, maxNum: 600, start: [-30.0845, -51.2465], end: [-30.0865, -51.2495] },
-  { match: ["PLINIO BRASIL MILANO"], minNum: 500, maxNum: 2400, start: [-30.0205, -51.1905], end: [-30.0165, -51.1745] },
-  { match: ["GETULIO VARGAS"], minNum: 500, maxNum: 1900, start: [-30.0455, -51.2235], end: [-30.0585, -51.2230] }
-];
-
-const POA_BAIRROS = {
-  "CENTRO HISTORICO": [-30.0292, -51.2290], "CENTRO": [-30.0292, -51.2290],
-  "MOINHOS DE VENTO": [-30.0252, -51.2015], "AUXILIADORA": [-30.0218, -51.1905],
-  "BELA VISTA": [-30.0315, -51.1875], "BOA VISTA": [-30.0245, -51.1795],
-  "TRES FIGUEIRAS": [-30.0325, -51.1745], "MONT SERRAT": [-30.0275, -51.1935],
-  "MONTSERRAT": [-30.0275, -51.1935], "PETROPOLIS": [-30.0395, -51.1865],
-  "INDEPENDENCIA": [-30.0305, -51.2135], "RIO BRANCO": [-30.0325, -51.2025],
-  "BOM FIM": [-30.0335, -51.2125], "FARROUPILHA": [-30.0375, -51.2165],
-  "SANTANA": [-30.0445, -51.2085], "FLORESTA": [-30.0225, -51.2135],
-  "SAO GERALDO": [-30.0125, -51.2055], "NAVEGANTES": [-30.0025, -51.2015],
-  "HIGIENOPOLIS": [-30.0165, -51.1875], "SAO JOAO": [-30.0105, -51.1915],
-  "PASSO D AREIA": [-30.0145, -51.1665], "PASSO DAREIA": [-30.0145, -51.1665],
-  "CRISTO REDENTOR": [-30.0125, -51.1575], "SAO SEBASTIAO": [-30.0095, -51.1475],
-  "PRAIA DE BELAS": [-30.0505, -51.2295], "MENINO DEUS": [-30.0545, -51.2225],
-  "CIDADE BAIXA": [-30.0395, -51.2245], "AZENHA": [-30.0485, -51.2145],
-  "PARTENON": [-30.0595, -51.1855], "JARDIM BOTANICO": [-30.0495, -51.1785],
-  "CHACARA DAS PEDRAS": [-30.0295, -51.1645], "CRISTAL": [-30.0855, -51.2465],
-  "TRISTEZA": [-30.1055, -51.2535], "IPANEMA": [-30.1325, -51.2355],
-  "CAVALHADA": [-30.0985, -51.2325], "SARANDI": [-29.9945, -51.1325],
-  "SANTA CECILIA": [-30.0385, -51.2025], "MEDIANEIRA": [-30.0625, -51.2125],
-  "GLORIA": [-30.0725, -51.2015], "RESTINGA": [-30.1555, -51.1465]
-};
-
-function hashJitter(seedStr, scale = 0.0028) {
-  let h = 2166136261;
-  for (let i = 0; i < seedStr.length; i++) {
-    h ^= seedStr.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  const a = ((h >>> 0) % 1000) / 1000 - 0.5;
-  const b = (((h * 31) >>> 0) % 1000) / 1000 - 0.5;
-  return [a * scale, b * scale];
+function cleanBCBAddress(rawEnd) {
+  let s = (rawEnd || "").trim();
+  // Corta complementos (andar, conjunto, sala, torre, bloco, loja, sobreloja)
+  s = s.replace(/\b(\d+[º°o]?\s*ANDAR|ANDAR|CONJ\.?|CJ\.?|SALA|SL\.?|BLOCO|BL\.?|TORRE|ED\.?|EDIFICIO|LOJA|LJ\.?|SOBRELOJA|APTO?\.?|PAVIMENTO|PARTE|FUNDOS|TERREO)\b.*$/i, "");
+  // Remove hífens ou vírgulas sobrando no final
+  s = s.replace(/[-,;/\s]+$/, "").trim();
+  // Expande abreviações comuns do BCB
+  s = s.replace(/^AV\.?\s+/i, "Avenida ")
+       .replace(/^R\.?\s+/i, "Rua ")
+       .replace(/^AL\.?\s+/i, "Alameda ")
+       .replace(/^PCA\.?\s+|^PRACA\s+/i, "Praça ")
+       .replace(/^TV\.?\s+/i, "Travessa ")
+       .replace(/^ESTR\.?\s+/i, "Estrada ")
+       .replace(/^ROD\.?\s+/i, "Rodovia ");
+  return s;
 }
 
-function extractStreetNumber(end) {
-  const m = (end || "").match(/\b(\d{1,5})\b/);
-  return m ? parseInt(m[1], 10) : null;
+function getAddressCacheKey(cityKey, rec) {
+  const clean = normalizeName(cleanBCBAddress(rec.endereco));
+  return `${cityKey}|${clean}|${rec.cep || ""}`;
 }
 
-function geocodeCityRecord(cityKey, rec) {
-  if (rec.cep && cepCoordsCache[rec.cep]) {
-    const c = cepCoordsCache[rec.cep];
-    return { lat: c.lat, lon: c.lon, precision: "CEP exato (BrasilAPI)" };
-  }
+async function geocodeSingleAddress(cityKey, rec) {
+  const meta = CITY_META[cityKey];
+  const bbox = meta.bbox;
+  const cleanEnd = cleanBCBAddress(rec.endereco);
+  const cepFmt = (rec.cep && rec.cep.length === 8 && rec.cep !== "00000000")
+    ? `${rec.cep.slice(0, 5)}-${rec.cep.slice(5)}`
+    : "";
 
-  const corridors = cityKey === "SP" ? SP_CORRIDORS : POA_CORRIDORS;
-  const bairros = cityKey === "SP" ? SP_BAIRROS : POA_BAIRROS;
-  const endNorm = normalizeName(rec.endereco);
-  const bairroNorm = normalizeName(rec.bairro);
+  const queryParts = [cleanEnd, rec.bairro, meta.cityName, meta.uf, cepFmt, "Brasil"].filter(Boolean);
+  const singleLine = queryParts.join(", ");
 
-  for (const cor of corridors) {
-    if (cor.match.some(k => endNorm.includes(k))) {
-      const num = extractStreetNumber(endNorm);
-      let t = 0.5;
-      if (num !== null) {
-        t = (num - cor.minNum) / Math.max(1, cor.maxNum - cor.minNum);
-        t = Math.max(0.02, Math.min(0.98, t));
-      } else {
-        const [j] = hashJitter(rec.cep || endNorm, 0.5);
-        t = 0.5 + j;
+  // 1) Tentativa Principal: ArcGIS World Geocoding Service (numeração predial exata)
+  try {
+    const arcUrl =
+      `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates` +
+      `?f=json&SingleLine=${encodeURIComponent(singleLine)}` +
+      `&countryCode=BRA&outFields=Addr_type,Match_addr&maxLocations=1`;
+
+    const data = await fetchJsonWithTimeout(arcUrl, 7000);
+    if (data && data.candidates && data.candidates.length > 0) {
+      const best = data.candidates[0];
+      const lat = best.location.y;
+      const lon = best.location.x;
+      if (best.score >= 72 && lat > bbox.minLat && lat < bbox.maxLat && lon > bbox.minLon && lon < bbox.maxLon) {
+        return {
+          lat,
+          lon,
+          precision: `Endereço exato (${best.attributes?.Addr_type || "ArcGIS"})`,
+          matched: best.address
+        };
       }
-      const [jLat, jLon] = hashJitter(rec.cep || endNorm, 0.00045);
-      return {
-        lat: cor.start[0] + (cor.end[0] - cor.start[0]) * t + jLat,
-        lon: cor.start[1] + (cor.end[1] - cor.start[1]) * t + jLon,
-        precision: "Logradouro (eixo financeiro)"
-      };
     }
+  } catch (e) {}
+
+  // 2) Fallback: BrasilAPI CEP v2
+  if (rec.cep && rec.cep.length === 8 && rec.cep !== "00000000") {
+    try {
+      const res = await fetchJsonWithTimeout(`https://brasilapi.com.br/api/cep/v2/${rec.cep}`, 5000);
+      const coords = res && res.location && res.location.coordinates;
+      if (coords && coords.latitude && coords.longitude) {
+        const lat = parseFloat(coords.latitude);
+        const lon = parseFloat(coords.longitude);
+        if (lat > bbox.minLat && lat < bbox.maxLat && lon > bbox.minLon && lon < bbox.maxLon) {
+          return { lat, lon, precision: "CEP exato (BrasilAPI)", matched: res.street || rec.endereco };
+        }
+      }
+    } catch (e) {}
   }
 
-  for (const [bName, coords] of Object.entries(bairros)) {
-    if (bairroNorm === bName || bairroNorm.includes(bName)) {
-      const [jLat, jLon] = hashJitter(rec.cep || rec.endereco || rec.nome, 0.0045);
-      return { lat: coords[0] + jLat, lon: coords[1] + jLon, precision: "Bairro (estimado)" };
+  return null;
+}
+
+async function ensureCityGeocoded(cityKey) {
+  const st = cityState[cityKey];
+  const recs = cityRecords[cityKey];
+  if (!st.initialized || st.geocoding || recs.length === 0) return;
+
+  const dotEl = document.getElementById(`${cityKey.toLowerCase()}-geo-dot`);
+  const statusEl = document.getElementById(`${cityKey.toLowerCase()}-geo-status`);
+
+  // Deduplica endereços únicos que ainda não estão no cache
+  const pendingMap = new Map();
+  recs.forEach(r => {
+    const key = getAddressCacheKey(cityKey, r);
+    if (!(key in addrCoordsCache) && !pendingMap.has(key)) {
+      pendingMap.set(key, r);
     }
+  });
+
+  const pendingEntries = Array.from(pendingMap.entries());
+  if (pendingEntries.length === 0) {
+    const validCount = recs.filter(r => addrCoordsCache[getAddressCacheKey(cityKey, r)]).length;
+    dotEl.className = "dot-ok";
+    statusEl.textContent = `Endereços georreferenciados: ${validCount}/${recs.length} (ArcGIS)`;
+    recomputeGlobalMaxes();
+    renderLegend(cityKey);
+    renderCityMap(cityKey);
+    return;
   }
 
-  const p3 = (rec.cep || "").slice(0, 3);
-  let base;
-  if (cityKey === "SP") {
-    base = [-23.565, -46.655];
-    if (["010", "011", "012"].includes(p3)) base = [-23.546, -46.638];
-    else if (["013", "014", "015"].includes(p3)) base = [-23.566, -46.660];
-    else if (["040", "041", "042", "043"].includes(p3)) base = [-23.605, -46.645];
-    else if (["045", "046", "047"].includes(p3)) base = [-23.600, -46.688];
-    else if (["050", "053", "054", "055"].includes(p3)) base = [-23.558, -46.705];
-    else if (["020", "021", "022", "023"].includes(p3)) base = [-23.502, -46.625];
-    else if (["030", "031", "032", "033"].includes(p3)) base = [-23.552, -46.580];
-  } else {
-    base = [-30.032, -51.215];
-    if (p3 === "900") base = [-30.029, -51.229];
-    else if (p3 === "901") base = [-30.052, -51.224];
-    else if (p3 === "902") base = [-30.014, -51.206];
-    else if (p3 === "904" || p3 === "905") base = [-30.026, -51.192];
-    else if (p3 === "906") base = [-30.044, -51.202];
-    else if (p3 === "910" || p3 === "911") base = [-30.011, -51.158];
-    else if (p3 === "913" || p3 === "914") base = [-30.030, -51.168];
-    else if (p3 === "917" || p3 === "919") base = [-30.098, -51.246];
+  st.geocoding = true;
+  dotEl.className = "dot-pulse";
+  let done = 0;
+  const total = pendingEntries.length;
+  const batchSize = 6;
+
+  for (let i = 0; i < total; i += batchSize) {
+    const batch = pendingEntries.slice(i, i + batchSize);
+    await Promise.all(batch.map(async ([key, rec]) => {
+      const result = await geocodeSingleAddress(cityKey, rec);
+      addrCoordsCache[key] = result; // Salva resultado (ou null para não repetir falha)
+      done++;
+    }));
+
+    statusEl.textContent = `Georreferenciando endereços: ${done}/${total}...`;
+    if (done % 12 === 0 || done === total) {
+      saveAddrCache();
+      recomputeGlobalMaxes();
+      renderLegend(cityKey);
+      renderCityMap(cityKey);
+    }
+    await new Promise(r => setTimeout(r, 60));
   }
 
-  const [jLat, jLon] = hashJitter(rec.cep || rec.endereco || rec.nome, 0.008);
-  return { lat: base[0] + jLat, lon: base[1] + jLon, precision: "Região/CEP (estimado)" };
+  st.geocoding = false;
+  const validCount = recs.filter(r => addrCoordsCache[getAddressCacheKey(cityKey, r)]).length;
+  dotEl.className = "dot-ok";
+  statusEl.textContent = `Endereços georreferenciados: ${validCount}/${recs.length} (ArcGIS)`;
+  recomputeGlobalMaxes();
+  renderLegend(cityKey);
+  renderCityMap(cityKey);
 }
 
 function buildCityClusters(cityKey, records) {
   const clusters = new Map();
   records.forEach(rec => {
-    const geo = geocodeCityRecord(cityKey, rec);
-    const key = (rec.cep && rec.cep !== "00000000" && cepCoordsCache[rec.cep])
-      ? `CEP:${rec.cep}`
-      : `${geo.lat.toFixed(4)}|${geo.lon.toFixed(4)}`;
+    const geo = addrCoordsCache[getAddressCacheKey(cityKey, rec)];
+    if (!geo) return; // Só plota endereços efetivamente georreferenciados
 
+    // Agrupa sedes no mesmo edifício (~12 metros)
+    const key = `${geo.lat.toFixed(4)}|${geo.lon.toFixed(4)}`;
     if (!clusters.has(key)) {
       clusters.set(key, { lat: geo.lat, lon: geo.lon, precision: geo.precision, items: [] });
     }
@@ -1360,13 +1277,15 @@ function recomputeGlobalMaxes() {
   ["SP", "POA"].forEach(cityKey => {
     if (cityRecords[cityKey].length > 0) {
       const allCl = buildCityClusters(cityKey, cityRecords[cityKey]);
-      globalMaxByMode[cityKey] = Math.max(2, ...allCl.map(c => c.items.length));
+      if (allCl.length > 0) {
+        globalMaxByMode[cityKey] = Math.max(2, ...allCl.map(c => c.items.length));
+      }
     }
   });
 }
 
 // ============================================================================
-// 6. INICIALIZAÇÃO DO MAPA NACIONAL (LEAFLET + IBGE UFs + BASES ESRI)
+// 5. INICIALIZAÇÃO DO MAPA NACIONAL (LEAFLET + IBGE UFs + BASES ESRI)
 // ============================================================================
 async function init() {
   const loadingEl = document.getElementById("loading");
@@ -1379,7 +1298,6 @@ async function init() {
       attributionControl: false
     });
 
-    // Pane dedicado para círculos ficarem SEMPRE acima das divisas de UFs
     brMap.createPane("circlesPane");
     brMap.getPane("circlesPane").style.zIndex = 460;
 
@@ -1388,7 +1306,6 @@ async function init() {
     brBaseLayers = createEsriLayers();
     brMarkersLayer = L.layerGroup().addTo(brMap);
 
-    // 1) Carrega Malha Territorial de UFs do IBGE (GeoJSON v3)
     const ufUrls = [
       "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF&qualidade=intermediaria&formato=application/vnd.geo%2Bjson",
       "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF&qualidade=minima&formato=application/vnd.geo%2Bjson"
@@ -1437,12 +1354,8 @@ async function init() {
 }
 
 function getBRUFStyle() {
-  if (brActiveBase === "clean") {
-    return { fillColor: "#ffffff", fillOpacity: 1, color: "#cbd5e1", weight: 1.1 };
-  }
-  if (brActiveBase === "esri_sat") {
-    return { fillOpacity: 0, color: "#e2e8f0", weight: 1.1, opacity: 0.75 };
-  }
+  if (brActiveBase === "clean") return { fillColor: "#ffffff", fillOpacity: 1, color: "#cbd5e1", weight: 1.1 };
+  if (brActiveBase === "esri_sat") return { fillOpacity: 0, color: "#e2e8f0", weight: 1.1, opacity: 0.75 };
   return { fillOpacity: 0, color: "#64748b", weight: 1.0, opacity: 0.65 };
 }
 
@@ -1457,7 +1370,6 @@ function setBRBaseLayer(key) {
     container.style.background = "#e2e8f0";
     brBaseLayers[key].addTo(brMap);
   }
-
   if (brUFsLayer) brUFsLayer.setStyle(getBRUFStyle());
 }
 
@@ -1468,7 +1380,7 @@ function toggleBRUFs(checked) {
 }
 
 // ============================================================================
-// 7. CARREGAMENTO DAS COORDENADAS IBGE + BCB OLINDA AO VIVO
+// 6. COORDENADAS IBGE + BCB OLINDA AO VIVO
 // ============================================================================
 async function loadMunicipalCoords() {
   const munisUrl = "https://raw.githubusercontent.com/kelvins/municipios-brasileiros/main/json/municipios.json";
@@ -1554,11 +1466,8 @@ async function fetchBCBOlindaLive() {
           cep: String(r.CEP || "").replace(/\D/g, "").padStart(8, "0").slice(0, 8)
         };
 
-        if (ibge7 === "3550308" || (muniNorm === "SAO PAULO" && ufUpper === "SP")) {
-          spList.push(recordObj);
-        } else if (ibge7 === "4314902" || (muniNorm === "PORTO ALEGRE" && ufUpper === "RS")) {
-          poaList.push(recordObj);
-        }
+        if (ibge7 === "3550308" || (muniNorm === "SAO PAULO" && ufUpper === "SP")) spList.push(recordObj);
+        else if (ibge7 === "4314902" || (muniNorm === "PORTO ALEGRE" && ufUpper === "RS")) poaList.push(recordObj);
       });
     });
 
@@ -1574,8 +1483,7 @@ async function fetchBCBOlindaLive() {
       renderSidebar();
       renderLegend("BR");
       renderMapBR();
-      if (cityState.SP.initialized) { renderLegend("SP"); renderCityMap("SP"); }
-      if (cityState.POA.initialized) { renderLegend("POA"); renderCityMap("POA"); }
+      if (activeMode === "SP" || activeMode === "POA") ensureCityGeocoded(activeMode);
     }
   } catch (err) {
     console.warn("Falha ao consultar API Olinda BCB:", err);
@@ -1585,7 +1493,7 @@ async function fetchBCBOlindaLive() {
 }
 
 // ============================================================================
-// 8. ALTERNÂNCIA DE MODO: BRASIL <-> SÃO PAULO <-> PORTO ALEGRE
+// 7. ALTERNÂNCIA DE MODO: BRASIL <-> SÃO PAULO <-> PORTO ALEGRE
 // ============================================================================
 function switchMode(mode) {
   if (activeMode === mode) return;
@@ -1613,15 +1521,18 @@ function switchMode(mode) {
       renderSidebar();
       renderLegend(mode);
       renderCityMap(mode);
+      ensureCityGeocoded(mode);
     });
   }
 }
 
 // ============================================================================
-// 9. INICIALIZAÇÃO DOS MAPAS INTRAURBANOS (SÃO PAULO & PORTO ALEGRE)
+// 8. INICIALIZAÇÃO DOS MAPAS INTRAURBANOS (SÃO PAULO & PORTO ALEGRE)
 // ============================================================================
 const CITY_META = {
   SP: {
+    cityName: "São Paulo",
+    uf: "SP",
     containerId: "sp-map-container",
     ibgeCode: "3550308",
     initialCenter: [-23.582, -46.665],
@@ -1632,6 +1543,8 @@ const CITY_META = {
     bbox: { minLat: -24.05, maxLat: -23.30, minLon: -46.90, maxLon: -46.30 }
   },
   POA: {
+    cityName: "Porto Alegre",
+    uf: "RS",
     containerId: "poa-map-container",
     ibgeCode: "4314902",
     initialCenter: [-30.033, -51.202],
@@ -1673,9 +1586,7 @@ async function initCityMap(cityKey) {
     });
   }
 
-  // Esri Cinza Claro como base inicial nítida em SP e Porto Alegre
   st.baseLayers.esri_gray.addTo(st.map);
-
   st.markersLayer = L.layerGroup().addTo(st.map);
 
   document.getElementById(meta.zoomInId).onclick = () => st.map.zoomIn();
@@ -1685,7 +1596,6 @@ async function initCityMap(cityKey) {
     else focusPOAHub("MUNICIPIO");
   };
 
-  // Carrega Recorte Municipal oficial do IBGE
   try {
     const geo = await fetchJsonWithTimeout(
       `https://servicodados.ibge.gov.br/api/v3/malhas/municipios/${meta.ibgeCode}?qualidade=intermediaria&formato=application/vnd.geo%2Bjson`,
@@ -1723,13 +1633,6 @@ function setSPBaseLayer(key) {
   if (!st.map) return;
   Object.values(st.baseLayers).forEach(l => { if (st.map.hasLayer(l)) st.map.removeLayer(l); });
   if (st.baseLayers[key]) st.baseLayers[key].addTo(st.map);
-  const labels = {
-    esri_gray: "Esri Cinza Claro + Recorte SP (IBGE)",
-    geosampa: "GeoSampa (Mapa Político e Ruas) + IBGE",
-    esri_streets: "Esri Mapa Viário + Recorte SP (IBGE)",
-    geosampa_orto: "GeoSampa (Ortofoto 2020) + IBGE"
-  };
-  document.getElementById("sp-status-text").textContent = labels[key] || "São Paulo";
 }
 
 function setPOABaseLayer(key) {
@@ -1737,12 +1640,6 @@ function setPOABaseLayer(key) {
   if (!st.map) return;
   Object.values(st.baseLayers).forEach(l => { if (st.map.hasLayer(l)) st.map.removeLayer(l); });
   if (st.baseLayers[key]) st.baseLayers[key].addTo(st.map);
-  const labels = {
-    esri_gray: "Esri Cinza Claro + Recorte POA (IBGE)",
-    esri_streets: "Esri Mapa Viário + Recorte POA (IBGE)",
-    esri_sat: "Esri Satélite + Recorte POA (IBGE)"
-  };
-  document.getElementById("poa-status-text").textContent = labels[key] || "Porto Alegre";
 }
 
 function toggleCityBoundary(cityKey, checked) {
@@ -1778,7 +1675,7 @@ function focusPOAHub(hub) {
 }
 
 // ============================================================================
-// 10. RENDERIZAÇÃO DOS CÍRCULOS (BRASIL & INTRAURBANO)
+// 9. RENDERIZAÇÃO DOS CÍRCULOS (BRASIL & INTRAURBANO)
 // ============================================================================
 function renderMapBR() {
   if (!brMap || !brMarkersLayer) return;
@@ -1872,14 +1769,14 @@ function renderCityMap(cityKey) {
       fillColor: cat.color,
       color: "#ffffff",
       weight: 1.3,
-      fillOpacity: 0.76
+      fillOpacity: 0.78
     });
 
     const first = cl.items[0];
-    const cityLabel = cityKey === "SP" ? "São Paulo" : "Porto Alegre";
+    const cityLabel = CITY_META[cityKey].cityName;
     const title = n === 1
       ? first.nome
-      : `${n} sedes neste local (${first.bairro || cityLabel})`;
+      : `${n} sedes neste endereço (${first.bairro || cityLabel})`;
 
     circle.bindTooltip(
       `<strong>${title}</strong><br/><span style="opacity:0.85">${first.endereco || first.bairro}</span>`,
@@ -1929,69 +1826,7 @@ function applyRadiusLive() {
 }
 
 // ============================================================================
-// 11. REFINAMENTO DE COORDENADAS POR CEP (BRASILAPI v2 — SP & PORTO ALEGRE)
-// ============================================================================
-const refiningCity = { SP: false, POA: false };
-
-async function refineCityWithBrasilAPI(cityKey) {
-  const recs = cityRecords[cityKey];
-  if (refiningCity[cityKey] || recs.length === 0) return;
-  refiningCity[cityKey] = true;
-
-  const btn = document.getElementById(`btn-refine-${cityKey.toLowerCase()}`);
-  const bbox = CITY_META[cityKey].bbox;
-  const uniqueCeps = Array.from(new Set(
-    recs.map(r => r.cep).filter(c => c && c.length === 8 && c !== "00000000" && !cepCoordsCache[c])
-  ));
-
-  if (uniqueCeps.length === 0) {
-    btn.textContent = "CEPs já refinados ✓";
-    refiningCity[cityKey] = false;
-    return;
-  }
-
-  btn.disabled = true;
-  let done = 0, found = 0;
-  const batchSize = 5;
-
-  for (let i = 0; i < uniqueCeps.length; i += batchSize) {
-    const batch = uniqueCeps.slice(i, i + batchSize);
-    await Promise.all(batch.map(async (cep) => {
-      try {
-        const res = await fetchJsonWithTimeout(`https://brasilapi.com.br/api/cep/v2/${cep}`, 5000);
-        const coords = res && res.location && res.location.coordinates;
-        if (coords && coords.latitude && coords.longitude) {
-          const lat = parseFloat(coords.latitude);
-          const lon = parseFloat(coords.longitude);
-          if (lat > bbox.minLat && lat < bbox.maxLat && lon > bbox.minLon && lon < bbox.maxLon) {
-            cepCoordsCache[cep] = { lat, lon };
-            found++;
-          }
-        }
-      } catch (e) {}
-      done++;
-    }));
-
-    btn.textContent = `Refinando CEPs: ${done}/${uniqueCeps.length} (${found} exatos)...`;
-    if (done % 10 === 0 || done === uniqueCeps.length) {
-      try { localStorage.setItem(CEP_CACHE_KEY, JSON.stringify(cepCoordsCache)); } catch (e) {}
-      recomputeGlobalMaxes();
-      renderLegend(cityKey);
-      renderCityMap(cityKey);
-    }
-    await new Promise(r => setTimeout(r, 120));
-  }
-
-  btn.disabled = false;
-  btn.textContent = `CEPs refinados (${found} novos exatos) ✓`;
-  refiningCity[cityKey] = false;
-  recomputeGlobalMaxes();
-  renderLegend(cityKey);
-  renderCityMap(cityKey);
-}
-
-// ============================================================================
-// 12. MENU LATERAL E LEGENDAS ADAPTATIVAS
+// 10. MENU LATERAL E LEGENDAS ADAPTATIVAS
 // ============================================================================
 function renderSidebar() {
   const menu = document.getElementById("sidebar-menu");
@@ -2109,7 +1944,7 @@ function renderLegend(mode) {
 }
 
 // ============================================================================
-// 13. IMPORTAÇÃO OPCIONAL DE CSV DO BCB + CONTROLES
+// 11. IMPORTAÇÃO OPCIONAL DE CSV DO BCB + CONTROLES
 // ============================================================================
 function parseBCBCsv(csvText) {
   const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
@@ -2188,7 +2023,7 @@ document.getElementById("csv-upload").addEventListener("change", (e) => {
       document.getElementById("bcb-status").textContent = `CSV carregado: ${br.length} municípios`;
       renderSidebar();
       if (activeMode === "BR") { renderLegend("BR"); renderMapBR(); }
-      else { renderLegend(activeMode); renderCityMap(activeMode); }
+      else { ensureCityGeocoded(activeMode); }
     } else {
       alert("Não foi possível identificar as colunas de Município, UF e Segmento no CSV.");
     }
