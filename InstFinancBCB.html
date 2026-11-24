@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mapa das Instituições Financeiras no Brasil — BCB (Out/2026)</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+  <style>
+    :root {
+      --bg: #f4f7fa;
+      --panel: #ffffff;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --muted: #64748b;
+      --accent: #0d9488;
+      --accent-soft: #f0fdfa;
+      --fintech-bg: #eff6ff;
+      --fintech-border: #bfdbfe;
+      --fintech-accent: #1d4ed8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Barra Lateral */
+    aside {
+      width: 335px;
+      min-width: 315px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      z-index: 10;
+      box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04);
+    }
+
+    .sidebar-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+    }
+
+    .sidebar-header h1 {
+      font-size: 1.06rem;
+      font-weight: 700;
+      color: #0f172a;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .sidebar-header p {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .summary-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+      padding: 8px 10px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .sum-box {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .sum-label {
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .sum-val {
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: #0f172a;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px 20px;
+    }
+
+    .section-title {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      font-weight: 700;
+      margin: 14px 0 6px;
+    }
+
+    .section-title:first-child { margin-top: 2px; }
+
+    .filter-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 10px;
+      margin-bottom: 4px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.81rem;
+      color: var(--text);
+      transition: all 0.12s ease;
+    }
+
+    .filter-btn:hover {
+      background: #f1f5f9;
+      border-color: var(--border);
+    }
+
+    .filter-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      font-weight: 600;
+      color: #0f766e;
+    }
+
+    .filter-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 1px solid rgba(15, 23, 42, 0.25);
+    }
+
+    .filter-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .filter-count {
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      margin-left: 8px;
+    }
+
+    /* Menu Específico de Fintechs */
+    .fintech-box {
+      background: var(--fintech-bg);
+      border: 1px solid var(--fintech-border);
+      border-radius: 9px;
+      padding: 9px;
+      margin: 10px 0 12px;
+    }
+
+    .fintech-box .section-title {
+      color: var(--fintech-accent);
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .fintech-badge {
+      font-size: 0.62rem;
+      background: var(--fintech-accent);
+      color: #fff;
+      padding: 2px 6px;
+      border-radius: 99px;
+      letter-spacing: 0.03em;
+    }
+
+    .fintech-box .filter-btn:hover {
+      background: #dbeafe;
+      border-color: var(--fintech-border);
+    }
+
+    .fintech-box .filter-btn.active {
+      background: #dbeafe;
+      border-color: var(--fintech-accent);
+      color: var(--fintech-accent);
+    }
+
+    .sidebar-footer {
+      padding: 10px 14px;
+      border-top: 1px solid var(--border);
+      background: #f8fafc;
+    }
+
+    .upload-label {
+      display: block;
+      text-align: center;
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.73rem;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+
+    .upload-label:hover { background: #f1f5f9; }
+    #csv-upload { display: none; }
+
+    /* Área Principal do Mapa */
+    main {
+      flex: 1;
+      position: relative;
+      background: var(--bg);
+      overflow: hidden;
+    }
+
+    /* Controles de Zoom + Seta do Norte (Superior Esquerdo) */
+    .left-controls {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      z-index: 6;
+    }
+
+    .zoom-group {
+      display: flex;
+      flex-direction: column;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+    }
+
+    .zoom-btn {
+      background: #ffffff;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 8px 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .zoom-btn:last-child {
+      border-bottom: none;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .zoom-btn:hover { background: #f1f5f9; }
+
+    .north-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 10px;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Pílulas de Status (Superior Direito) */
+    .right-pills {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      z-index: 6;
+      pointer-events: none;
+    }
+
+    .status-pill {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #334155;
+      box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .dot-ok {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      flex-shrink: 0;
+    }
+
+    .dot-warn {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      flex-shrink: 0;
+    }
+
+    /* Escala Gráfica + Fonte (Inferior Esquerdo) */
+    .bottom-left-meta {
+      position: absolute;
+      bottom: 14px;
+      left: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 6;
+      pointer-events: none;
+      max-width: 560px;
+    }
+
+    .scale-box {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px 5px;
+      width: fit-content;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    }
+
+    .source-note {
+      font-size: 0.70rem;
+      color: #475569;
+      background: rgba(255, 255, 255, 0.88);
+      padding: 5px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      line-height: 1.35;
+    }
+
+    /* Legenda de Círculos (Inferior Direito) */
+    .legend-card {
+      position: absolute;
+      bottom: 16px;
+      right: 16px;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 13px 16px 10px;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+      z-index: 6;
+      min-width: 196px;
+    }
+
+    .legend-title {
+      font-size: 0.73rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #0f172a;
+      margin-bottom: 2px;
+    }
+
+    .legend-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    #map-container {
+      width: 100%;
+      height: 100%;
+    }
+
+    #map-container svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      cursor: grab;
+    }
+
+    #map-container svg:active { cursor: grabbing; }
+
+    .uf-path {
+      fill: #ffffff;
+      stroke: #cbd5e1;
+      stroke-width: 1px;
+      vector-effect: non-scaling-stroke;
+      transition: fill 0.15s;
+    }
+
+    .uf-path:hover { fill: #f8fafc; }
+
+    .sede-circle {
+      fill-opacity: 0.50;
+      stroke-width: 1.05px;
+      vector-effect: non-scaling-stroke;
+      cursor: pointer;
+      transition: fill-opacity 0.12s, stroke-width 0.12s;
+    }
+
+    .sede-circle:hover {
+      fill-opacity: 0.88;
+      stroke: #0f172a !important;
+      stroke-width: 1.6px;
+    }
+
+    /* Tooltip */
+    #tooltip {
+      position: fixed;
+      pointer-events: none;
+      opacity: 0;
+      background: rgba(15, 23, 42, 0.95);
+      color: #fff;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.25);
+      z-index: 100;
+      max-width: 270px;
+      transition: opacity 0.1s;
+    }
+
+    #tooltip .tt-city {
+      font-weight: 700;
+      font-size: 0.86rem;
+      margin-bottom: 3px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      padding-bottom: 3px;
+    }
+
+    .loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(244, 247, 250, 0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+      font-weight: 600;
+      color: #0f766e;
+      font-size: 0.95rem;
+      padding: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<aside>
+  <div class="sidebar-header">
+    <h1>Sedes de Instituições Financeiras</h1>
+    <p>Distribuição por município • Ref.: Out/2026 (BCB)</p>
+
+    <div class="summary-strip">
+      <div class="sum-box">
+        <span class="sum-label">Sedes</span>
+        <span class="sum-val" id="stat-total">—</span>
+      </div>
+      <div class="sum-box">
+        <span class="sum-label">Municípios</span>
+        <span class="sum-val" id="stat-munis">—</span>
+      </div>
+      <div class="sum-box">
+        <span class="sum-label">Líder</span>
+        <span class="sum-val" id="stat-leader">—</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-content" id="sidebar-menu"></div>
+
+  <div class="sidebar-footer">
+    <label class="upload-label" for="csv-upload">
+      Importar CSV alternativo do BCB
+    </label>
+    <input type="file" id="csv-upload" accept=".csv,.txt" />
+  </div>
+</aside>
+
+<main>
+  <div class="loading-overlay" id="loading">Carregando malha territorial do IBGE...</div>
+
+  <!-- Controles de Zoom + Seta do Norte -->
+  <div class="left-controls">
+    <div class="zoom-group">
+      <button class="zoom-btn" id="btn-zoom-in" title="Aproximar">+</button>
+      <button class="zoom-btn" id="btn-zoom-out" title="Afastar">−</button>
+      <button class="zoom-btn" id="btn-reset" title="Centralizar Brasil">Resetar</button>
+    </div>
+
+    <div class="north-card" title="Norte Geográfico">
+      <svg width="24" height="34" viewBox="0 0 24 34">
+        <text x="12" y="9" text-anchor="middle" font-size="9" font-weight="700" fill="#1e293b">N</text>
+        <polygon points="12,12 17,30 12,26" fill="#1e293b" />
+        <polygon points="12,12 7,30 12,26" fill="#94a3b8" />
+      </svg>
+    </div>
+  </div>
+
+  <!-- Status das Conexões (IBGE e BCB) -->
+  <div class="right-pills">
+    <div class="status-pill">
+      <span class="dot-warn" id="ibge-dot"></span>
+      <span id="ibge-status">Malha UFs: carregando IBGE...</span>
+    </div>
+    <div class="status-pill">
+      <span class="dot-warn" id="bcb-dot"></span>
+      <span id="bcb-status">Conectando ao BCB Olinda...</span>
+    </div>
+  </div>
+
+  <!-- Canvas do Mapa -->
+  <div id="map-container"></div>
+
+  <!-- Escala Gráfica + Fonte dos Dados -->
+  <div class="bottom-left-meta">
+    <div class="scale-box">
+      <svg id="scale-svg" width="160" height="24"></svg>
+    </div>
+    <div class="source-note">
+      <strong>Fonte:</strong> Banco Central do Brasil (BCB — Relação de Instituições em Funcionamento, Out/2026) e Instituto Brasileiro de Geografia e Estatística (IBGE — Malha Territorial de UFs e Sedes Municipais).
+    </div>
+  </div>
+
+  <!-- Legenda de Círculos Proporcionais -->
+  <div class="legend-card">
+    <div class="legend-title">Sedes / Município</div>
+    <div class="legend-sub">Escala padronizada fixa</div>
+    <svg id="legend-svg" width="175" height="78"></svg>
+  </div>
+</main>
+
+<div id="tooltip"></div>
+
+<script>
+// ============================================================================
+// 1. TAXONOMIA DE INSTITUIÇÕES FINANCEIRAS (BCB) E CORES ÚNICAS
+// ============================================================================
+const CATEGORIES = {
+  ALL: {
+    id: "ALL",
+    label: "Todas as Instituições (Soma)",
+    color: "#0d9488",
+    group: "GERAL"
+  },
+  // --- MENU ESPECÍFICO: FINTECHS ---
+  FINTECH_ALL: {
+    id: "FINTECH_ALL",
+    label: "Todas as Fintechs (SCD + IP + SEP)",
+    color: "#2563eb",
+    group: "FINTECH"
+  },
+  SCD: {
+    id: "SCD",
+    label: "Soc. de Crédito Direto (SCD)",
+    color: "#1d4ed8",
+    group: "FINTECH"
+  },
+  IP: {
+    id: "IP",
+    label: "Instituição de Pagamento (IP)",
+    color: "#0284c7",
+    group: "FINTECH"
+  },
+  SEP: {
+    id: "SEP",
+    label: "Soc. Empréstimo entre Pessoas (SEP)",
+    color: "#4f46e5",
+    group: "FINTECH"
+  },
+  // --- BANCOS E CONGLOMERADOS ---
+  BANCO_MULTIPLO: {
+    id: "BANCO_MULTIPLO",
+    label: "Bancos Múltiplos e Comerciais",
+    color: "#dc2626",
+    group: "BANCOS"
+  },
+  BANCO_INVEST_DESENV: {
+    id: "BANCO_INVEST_DESENV",
+    label: "Bancos de Investimento / Desenv.",
+    color: "#9a3412",
+    group: "BANCOS"
+  },
+  // --- COOPERATIVAS ---
+  COOPERATIVA: {
+    id: "COOPERATIVA",
+    label: "Cooperativas de Crédito",
+    color: "#16a34a",
+    group: "COOPERATIVAS"
+  },
+  // --- MERCADO DE CAPITAIS E CÂMBIO ---
+  DTVM_CTVM: {
+    id: "DTVM_CTVM",
+    label: "DTVMs e CTVMs",
+    color: "#7c3aed",
+    group: "CAPITAIS"
+  },
+  CAMBIO: {
+    id: "CAMBIO",
+    label: "Corretoras de Câmbio",
+    color: "#c026d3",
+    group: "CAPITAIS"
+  },
+  // --- CRÉDITO, FINANCIAMENTO E FOMENTO ---
+  SCFI: {
+    id: "SCFI",
+    label: "Financeiras (SCFI)",
+    color: "#d97706",
+    group: "CREDITO"
+  },
+  SCM_FOMENTO: {
+    id: "SCM_FOMENTO",
+    label: "Microempreendedor (SCM) e Fomento",
+    color: "#ca8a04",
+    group: "CREDITO"
+  },
+  LEASING_IMOB: {
+    id: "LEASING_IMOB",
+    label: "Arrendamento e Crédito Imobiliário",
+    color: "#0891b2",
+    group: "CREDITO"
+  },
+  // --- CONSÓRCIOS ---
+  CONSORCIO: {
+    id: "CONSORCIO",
+    label: "Administradoras de Consórcio",
+    color: "#475569",
+    group: "OUTRAS"
+  }
+};
+
+const FINTECH_KEYS = ["SCD", "IP", "SEP"];
+
+function classifyBCBSegment(rawSegment) {
+  const s = (rawSegment || "").toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (s.includes("CREDITO DIRETO") || s === "SCD") return "SCD";
+  if (s.includes("EMPRESTIMO ENTRE PESSOAS") || s === "SEP") return "SEP";
+  if (s.includes("PAGAMENTO") || s === "IP") return "IP";
+  if (s.includes("COOPERATIVA")) return "COOPERATIVA";
+  if (s.includes("BANCO MULTIPLO") || s.includes("BANCO COMERCIAL") || s.includes("CAIXA ECONOMICA")) return "BANCO_MULTIPLO";
+  if (s.includes("INVESTIMENTO") || s.includes("DESENVOLVIMENTO") || s.includes("BANCO DE CAMBIO")) return "BANCO_INVEST_DESENV";
+  if (s.includes("DTVM") || s.includes("CTVM") || s.includes("TITULOS E VALORES")) return "DTVM_CTVM";
+  if (s.includes("CORRETORA DE CAMBIO")) return "CAMBIO";
+  if (s.includes("FINANCIAMENTO E INVESTIMENTO") || s.includes("SCFI")) return "SCFI";
+  if (s.includes("MICROEMPREENDEDOR") || s.includes("FOMENTO")) return "SCM_FOMENTO";
+  if (s.includes("ARRENDAMENTO") || s.includes("IMOBILIARIO") || s.includes("HIPOTECARIA")) return "LEASING_IMOB";
+  if (s.includes("CONSORCIO")) return "CONSORCIO";
+  return "SCFI";
+}
+
+// ============================================================================
+// 2. ESCALA PROPORCIONAL FIXA (1 SEDE MANTÉM SEMPRE O MESMO RAIO)
+// ============================================================================
+function radiusForCount(count) {
+  if (!count || count <= 0) return 0;
+  return 1.5 + Math.sqrt(count) * 0.95;
+}
+
+// ============================================================================
+// 3. CORREÇÃO DE ORIENTAÇÃO DOS POLÍGONOS GEOJSON DO IBGE PARA D3
+// ============================================================================
+function rewindRing(ring, isHole) {
+  const area = d3.geoArea({ type: "Polygon", coordinates: [ring] });
+  if ((!isHole && area > 2 * Math.PI) || (isHole && area < 2 * Math.PI)) {
+    ring.reverse();
+  }
+}
+
+function rewindGeometry(geom) {
+  if (!geom) return;
+  if (geom.type === "Polygon") {
+    geom.coordinates.forEach((ring, i) => rewindRing(ring, i > 0));
+  } else if (geom.type === "MultiPolygon") {
+    geom.coordinates.forEach(poly => {
+      poly.forEach((ring, i) => rewindRing(ring, i > 0));
+    });
+  } else if (geom.type === "GeometryCollection") {
+    geom.geometries.forEach(rewindGeometry);
+  }
+}
+
+function rewindGeoJSON(geo) {
+  if (!geo) return geo;
+  if (geo.type === "FeatureCollection") {
+    geo.features.forEach(f => rewindGeometry(f.geometry));
+  } else if (geo.type === "Feature") {
+    rewindGeometry(geo.geometry);
+  } else {
+    rewindGeometry(geo);
+  }
+  return geo;
+}
+
+// ============================================================================
+// 4. ESTADO GLOBAL E UTILITÁRIOS
+// ============================================================================
+let activeCategory = "ALL";
+let dataset = [];
+let muniByCode = new Map();
+let muniByNameUF = new Map();
+let svg, gMap, gUFs, gCircles, projection, path, zoom;
+let mapWidth = 960, mapHeight = 680;
+let currentZoomK = 1;
+
+function normalizeName(str) {
+  return (str || "")
+    .toUpperCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Z0-9 ]/g, "")
+    .trim();
+}
+
+function getCountForCategory(row, catId) {
+  if (catId === "ALL") {
+    return Object.values(row.counts).reduce((a, b) => a + b, 0);
+  }
+  if (catId === "FINTECH_ALL") {
+    return FINTECH_KEYS.reduce((sum, k) => sum + (row.counts[k] || 0), 0);
+  }
+  return row.counts[catId] || 0;
+}
+
+async function fetchJsonWithTimeout(url, timeoutMs = 10000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json();
+  } finally {
+    clearTimeout(id);
+  }
+}
+
+// ============================================================================
+// 5. INICIALIZAÇÃO (MALHA GEOJSON IBGE CORRIGIDA + SEDES IBGE + BCB OLINDA)
+// ============================================================================
+async function init() {
+  const loadingEl = document.getElementById("loading");
+  try {
+    const container = document.getElementById("map-container");
+    mapWidth = container.clientWidth || window.innerWidth - 335 || 960;
+    mapHeight = container.clientHeight || window.innerHeight || 680;
+
+    svg = d3.select("#map-container").append("svg")
+      .attr("viewBox", [0, 0, mapWidth, mapHeight]);
+
+    gMap = svg.append("g");
+    gUFs = gMap.append("g").attr("class", "ufs-layer");
+    gCircles = gMap.append("g").attr("class", "circles-layer");
+
+    zoom = d3.zoom()
+      .scaleExtent([0.85, 22])
+      .on("zoom", (event) => {
+        gMap.attr("transform", event.transform);
+        currentZoomK = event.transform.k;
+        updateGraphicScale();
+      });
+
+    svg.call(zoom);
+
+    // 1) Carrega Malha Territorial de UFs diretamente do IBGE (GeoJSON v3)
+    const ufUrls = [
+      "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF&qualidade=intermediaria&formato=application/vnd.geo%2Bjson",
+      "https://servicodados.ibge.gov.br/api/v3/malhas/paises/BR?intrarregiao=UF&qualidade=minima&formato=application/vnd.geo%2Bjson"
+    ];
+
+    let ufGeo = null;
+    for (const url of ufUrls) {
+      try {
+        const data = await fetchJsonWithTimeout(url, 10000);
+        if (data && data.features && data.features.length > 0) {
+          ufGeo = rewindGeoJSON(data);
+          break;
+        }
+      } catch (e) {
+        console.warn("Tentativa malha IBGE falhou:", url, e);
+      }
+    }
+
+    if (!ufGeo) {
+      loadingEl.textContent = "Não foi possível carregar a malha do IBGE. Recarregue a página.";
+      return;
+    }
+
+    document.getElementById("ibge-dot").className = "dot-ok";
+    document.getElementById("ibge-status").textContent = "Malha UFs: IBGE carregada";
+
+    // Enquadra e centraliza o Brasil automaticamente na abertura
+    projection = d3.geoMercator().fitExtent(
+      [[55, 32], [mapWidth - 55, mapHeight - 64]],
+      ufGeo
+    );
+    path = d3.geoPath().projection(projection);
+
+    gUFs.selectAll("path")
+      .data(ufGeo.features)
+      .join("path")
+      .attr("class", "uf-path")
+      .attr("d", path);
+
+    renderSidebar();
+    renderLegend();
+    updateGraphicScale();
+    bindControls();
+
+    // Libera a visualização do mapa imediatamente
+    loadingEl.style.display = "none";
+
+    // 2) Carrega coordenadas das sedes municipais (IBGE) e dados do BCB Olinda
+    await loadMunicipalCoords();
+    await fetchBCBOlindaLive();
+  } catch (err) {
+    console.error("Erro ao inicializar o mapa:", err);
+    loadingEl.textContent = "Erro ao renderizar mapa: " + err.message;
+  }
+}
+
+async function loadMunicipalCoords() {
+  const munisUrl = "https://raw.githubusercontent.com/kelvins/municipios-brasileiros/main/json/municipios.json";
+  const ufsUrl = "https://raw.githubusercontent.com/kelvins/municipios-brasileiros/main/json/estados.json";
+  try {
+    const [munis, estados] = await Promise.all([
+      fetchJsonWithTimeout(munisUrl, 10000),
+      fetchJsonWithTimeout(ufsUrl, 10000)
+    ]);
+    const ufByCode = new Map(estados.map(e => [e.codigo_uf, e.uf]));
+    munis.forEach(m => {
+      const uf = ufByCode.get(m.codigo_uf) || "";
+      const info = { lat: m.latitude, lon: m.longitude, muni: m.nome, uf };
+      muniByCode.set(String(m.codigo_ibge).trim(), info);
+      muniByNameUF.set(`${normalizeName(m.nome)}|${uf}`, info);
+    });
+  } catch (e) {
+    console.error("Erro ao carregar coordenadas das sedes municipais:", e);
+  }
+}
+
+async function fetchBCBOlindaLive() {
+  const bcbDot = document.getElementById("bcb-dot");
+  const bcbStatus = document.getElementById("bcb-status");
+
+  const base = "https://olinda.bcb.gov.br/olinda/servico/Instituicoes_em_funcionamento/versao/v1/odata";
+  const endpoints = [
+    { url: `${base}/SedesBancoComMultCE?$format=json`, forcedCat: null },
+    { url: `${base}/SedesCooperativas?$format=json`, forcedCat: "COOPERATIVA" },
+    { url: `${base}/SedesSociedades?$format=json`, forcedCat: null },
+    { url: `${base}/SedesConsorcios?$format=json`, forcedCat: "CONSORCIO" }
+  ];
+
+  try {
+    const results = await Promise.all(
+      endpoints.map(ep => fetchJsonWithTimeout(ep.url, 12000))
+    );
+
+    const agg = new Map();
+    let totalMatched = 0;
+
+    results.forEach((res, idx) => {
+      const rows = (res && res.value) ? res.value : [];
+      const forcedCat = endpoints[idx].forcedCat;
+
+      rows.forEach(r => {
+        const ibge7 = String(r.MUNICIPIO_IBGE || "").trim();
+        const nameKey = `${normalizeName(r.MUNICIPIO)}|${String(r.UF || "").trim().toUpperCase()}`;
+        const coord = muniByCode.get(ibge7) || muniByNameUF.get(nameKey);
+        if (!coord) return;
+
+        totalMatched++;
+        const cat = forcedCat || classifyBCBSegment(r.SEGMENTO || r.CLASSE || "");
+        const key = `${coord.muni}|${coord.uf}`;
+
+        if (!agg.has(key)) {
+          agg.set(key, {
+            muni: coord.muni,
+            uf: coord.uf,
+            lat: coord.lat,
+            lon: coord.lon,
+            counts: {}
+          });
+        }
+        const entry = agg.get(key);
+        entry.counts[cat] = (entry.counts[cat] || 0) + 1;
+      });
+    });
+
+    const liveData = Array.from(agg.values());
+    if (liveData.length > 0) {
+      dataset = liveData;
+      bcbDot.className = "dot-ok";
+      bcbStatus.textContent = `BCB Olinda: ${totalMatched.toLocaleString("pt-BR")} sedes (${liveData.length.toLocaleString("pt-BR")} municípios)`;
+      renderSidebar();
+      renderMap();
+    }
+  } catch (err) {
+    console.warn("Falha ao consultar API Olinda BCB:", err);
+    bcbDot.className = "dot-warn";
+    bcbStatus.textContent = "API BCB indisponível (use o botão de CSV)";
+  }
+}
+
+// ============================================================================
+// 6. ESCALA GRÁFICA DINÂMICA (KM)
+// ============================================================================
+function updateGraphicScale() {
+  if (!projection) return;
+  const p1 = projection.invert([mapWidth / 2, mapHeight / 2]);
+  const p2 = projection.invert([mapWidth / 2 + 100, mapHeight / 2]);
+  if (!p1 || !p2) return;
+
+  const kmPer100Px = (d3.geoDistance(p1, p2) * 6371) / currentZoomK;
+  const kmPerPx = kmPer100Px / 100;
+
+  const candidates = [2000, 1000, 500, 250, 200, 100, 50, 25, 20, 10, 5, 2, 1];
+  let niceKm = 500;
+  for (const c of candidates) {
+    const px = c / kmPerPx;
+    if (px >= 68 && px <= 145) {
+      niceKm = c;
+      break;
+    }
+  }
+
+  const barPx = Math.round(niceKm / kmPerPx);
+  const halfPx = Math.round(barPx / 2);
+
+  const sSvg = d3.select("#scale-svg");
+  sSvg.attr("width", barPx + 42);
+  sSvg.selectAll("*").remove();
+
+  sSvg.append("rect")
+    .attr("x", 6).attr("y", 13)
+    .attr("width", halfPx).attr("height", 5)
+    .attr("fill", "#1e293b").attr("stroke", "#1e293b").attr("stroke-width", 1);
+
+  sSvg.append("rect")
+    .attr("x", 6 + halfPx).attr("y", 13)
+    .attr("width", barPx - halfPx).attr("height", 5)
+    .attr("fill", "#ffffff").attr("stroke", "#1e293b").attr("stroke-width", 1);
+
+  const drawLabel = (x, text) =>
+    sSvg.append("text")
+      .attr("x", x).attr("y", 9)
+      .attr("text-anchor", "middle")
+      .attr("font-size", "9.5px")
+      .attr("font-weight", "600")
+      .attr("fill", "#334155")
+      .text(text);
+
+  drawLabel(6, "0");
+  drawLabel(6 + halfPx, `${niceKm / 2}`);
+  drawLabel(6 + barPx, `${niceKm} km`);
+}
+
+// ============================================================================
+// 7. MENU LATERAL (COM MENU DEDICADO DE FINTECHS)
+// ============================================================================
+function renderSidebar() {
+  const menu = document.getElementById("sidebar-menu");
+  menu.innerHTML = "";
+
+  const totalFor = (catId) => dataset.reduce((s, r) => s + getCountForCategory(r, catId), 0);
+
+  const createBtn = (cat) => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn" + (activeCategory === cat.id ? " active" : "");
+    btn.innerHTML = `
+      <span class="filter-left">
+        <span class="swatch" style="background:${cat.color}"></span>
+        <span class="filter-name" title="${cat.label}">${cat.label}</span>
+      </span>
+      <span class="filter-count">${totalFor(cat.id).toLocaleString("pt-BR")}</span>
+    `;
+    btn.onclick = () => {
+      activeCategory = cat.id;
+      renderSidebar();
+      renderLegend();
+      renderMap();
+    };
+    return btn;
+  };
+
+  const tGeral = document.createElement("div");
+  tGeral.className = "section-title";
+  tGeral.textContent = "Visão Geral";
+  menu.appendChild(tGeral);
+  menu.appendChild(createBtn(CATEGORIES.ALL));
+
+  const fintechBox = document.createElement("div");
+  fintechBox.className = "fintech-box";
+  fintechBox.innerHTML = `
+    <div class="section-title">
+      <span>Menu Fintechs</span>
+      <span class="fintech-badge">BCB</span>
+    </div>
+  `;
+  ["FINTECH_ALL", "SCD", "IP", "SEP"].forEach(k => fintechBox.appendChild(createBtn(CATEGORIES[k])));
+  menu.appendChild(fintechBox);
+
+  const groups = [
+    { key: "BANCOS", title: "Bancos e Conglomerados" },
+    { key: "COOPERATIVAS", title: "Cooperativismo de Crédito" },
+    { key: "CAPITAIS", title: "Mercado de Capitais e Câmbio" },
+    { key: "CREDITO", title: "Crédito, Financiamento e Fomento" },
+    { key: "OUTRAS", title: "Consórcios" }
+  ];
+
+  groups.forEach(g => {
+    const title = document.createElement("div");
+    title.className = "section-title";
+    title.textContent = g.title;
+    menu.appendChild(title);
+
+    Object.values(CATEGORIES)
+      .filter(c => c.group === g.key)
+      .forEach(c => menu.appendChild(createBtn(c)));
+  });
+}
+
+// ============================================================================
+// 8. RENDERIZAÇÃO DO MAPA DE CÍRCULOS PROPORCIONAIS
+// ============================================================================
+function renderMap() {
+  const cat = CATEGORIES[activeCategory];
+  const tooltip = document.getElementById("tooltip");
+
+  // Ordena do maior para o menor para que círculos menores fiquem visíveis por cima
+  const points = dataset
+    .map(d => ({
+      ...d,
+      value: getCountForCategory(d, activeCategory),
+      coords: projection([d.lon, d.lat])
+    }))
+    .filter(d => d.value > 0 && d.coords)
+    .sort((a, b) => b.value - a.value);
+
+  const totalSedes = points.reduce((s, p) => s + p.value, 0);
+  document.getElementById("stat-total").textContent = totalSedes.toLocaleString("pt-BR");
+  document.getElementById("stat-munis").textContent = points.length.toLocaleString("pt-BR");
+  document.getElementById("stat-leader").textContent = points.length
+    ? `${points[0].muni}/${points[0].uf}`
+    : "—";
+
+  gCircles.selectAll("circle")
+    .data(points, d => `${d.muni}-${d.uf}`)
+    .join(
+      enter => enter.append("circle")
+        .attr("class", "sede-circle")
+        .attr("cx", d => d.coords[0])
+        .attr("cy", d => d.coords[1])
+        .attr("r", 0)
+        .attr("fill", cat.color)
+        .attr("stroke", cat.color)
+        .call(sel => sel.transition().duration(320).attr("r", d => radiusForCount(d.value))),
+      update => update
+        .attr("fill", cat.color)
+        .attr("stroke", cat.color)
+        .call(sel => sel.transition().duration(320).attr("r", d => radiusForCount(d.value))),
+      exit => exit.transition().duration(180).attr("r", 0).remove()
+    )
+    .on("mousemove", (event, d) => {
+      const share = totalSedes > 0 ? ((d.value / totalSedes) * 100).toFixed(1) : "0.0";
+      tooltip.style.opacity = 1;
+      tooltip.style.left = (event.clientX + 14) + "px";
+      tooltip.style.top = (event.clientY - 12) + "px";
+      tooltip.innerHTML = `
+        <div class="tt-city">${d.muni} — ${d.uf}</div>
+        <div><strong>${cat.label}:</strong> ${d.value.toLocaleString("pt-BR")} ${d.value === 1 ? "sede" : "sedes"} (${share}%)</div>
+        <div style="opacity:0.78; font-size:0.72rem; margin-top:3px;">
+          Total geral no município: ${getCountForCategory(d, "ALL").toLocaleString("pt-BR")}
+        </div>
+      `;
+    })
+    .on("mouseleave", () => {
+      tooltip.style.opacity = 0;
+    });
+}
+
+// ============================================================================
+// 9. LEGENDA DE CÍRCULOS PROPORCIONAIS (ESCALA FIXA SEM SOBREPOSIÇÃO)
+// ============================================================================
+function renderLegend() {
+  const cat = CATEGORIES[activeCategory];
+  const lsvg = d3.select("#legend-svg");
+  lsvg.selectAll("*").remove();
+
+  const values = [1, 50, 200, 500];
+  const baseY = 66;
+  const cx = 34;
+
+  values.slice().reverse().forEach(v => {
+    const r = radiusForCount(v);
+    lsvg.append("circle")
+      .attr("cx", cx)
+      .attr("cy", baseY - r)
+      .attr("r", r)
+      .attr("fill", cat.color)
+      .attr("fill-opacity", 0.22)
+      .attr("stroke", cat.color)
+      .attr("stroke-width", 1.1);
+
+    lsvg.append("line")
+      .attr("x1", cx)
+      .attr("x2", 94)
+      .attr("y1", baseY - 2 * r)
+      .attr("y2", baseY - 2 * r)
+      .attr("stroke", "#94a3b8")
+      .attr("stroke-dasharray", "2,2")
+      .attr("stroke-width", 0.85);
+
+    lsvg.append("text")
+      .attr("x", 100)
+      .attr("y", baseY - 2 * r + 3)
+      .attr("font-size", "10px")
+      .attr("font-weight", "600")
+      .attr("fill", "#334155")
+      .text(v === 1 ? "1 sede" : `${v} sedes`);
+  });
+}
+
+// ============================================================================
+// 10. IMPORTAÇÃO OPCIONAL DE CSV DO BCB
+// ============================================================================
+function parseBCBCsv(csvText) {
+  const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if (lines.length < 2) return [];
+
+  const sep = lines[0].includes(";") ? ";" : ",";
+  let headerIdx = lines.findIndex(l => {
+    const u = l.toUpperCase();
+    return (u.includes("MUNIC") || u.includes("CIDADE")) && (u.includes("UF") || u.includes("SEGMENTO") || u.includes("TIPO"));
+  });
+  if (headerIdx === -1) headerIdx = 0;
+
+  const headers = lines[headerIdx].split(sep).map(h => normalizeName(h));
+  const idxMuni = headers.findIndex(h => h.includes("MUNIC") || h.includes("CIDADE"));
+  const idxUF = headers.findIndex(h => h === "UF" || h.includes("ESTADO"));
+  const idxSeg = headers.findIndex(h => h.includes("SEGMENTO") || h.includes("TIPO") || h.includes("CLASSE"));
+  const idxIbge = headers.findIndex(h => h.includes("IBGE"));
+
+  if (idxMuni === -1 || idxUF === -1) return [];
+
+  const agg = new Map();
+  for (let i = headerIdx + 1; i < lines.length; i++) {
+    const cols = lines[i].split(sep).map(c => c.replace(/^"|"$/g, "").trim());
+    if (cols.length <= Math.max(idxMuni, idxUF)) continue;
+
+    const muniRaw = cols[idxMuni];
+    const ufRaw = cols[idxUF].toUpperCase().slice(0, 2);
+    const segRaw = idxSeg !== -1 ? cols[idxSeg] : "";
+    const ibgeRaw = idxIbge !== -1 ? cols[idxIbge] : "";
+    const cat = classifyBCBSegment(segRaw);
+
+    const coord = muniByCode.get(ibgeRaw) || muniByNameUF.get(`${normalizeName(muniRaw)}|${ufRaw}`);
+    if (!coord) continue;
+
+    const key = `${coord.muni}|${coord.uf}`;
+    if (!agg.has(key)) {
+      agg.set(key, {
+        muni: coord.muni,
+        uf: coord.uf,
+        lat: coord.lat,
+        lon: coord.lon,
+        counts: {}
+      });
+    }
+    const entry = agg.get(key);
+    entry.counts[cat] = (entry.counts[cat] || 0) + 1;
+  }
+
+  return Array.from(agg.values());
+}
+
+document.getElementById("csv-upload").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const parsed = parseBCBCsv(ev.target.result);
+    if (parsed.length > 0) {
+      dataset = parsed;
+      document.getElementById("bcb-dot").className = "dot-ok";
+      document.getElementById("bcb-status").textContent = `CSV carregado: ${parsed.length} municípios`;
+      renderSidebar();
+      renderMap();
+    } else {
+      alert("Não foi possível identificar as colunas de Município, UF e Segmento no CSV.");
+    }
+  };
+  reader.readAsText(file, "ISO-8859-1");
+});
+
+function bindControls() {
+  document.getElementById("btn-zoom-in").onclick = () =>
+    svg.transition().duration(280).call(zoom.scaleBy, 1.5);
+  document.getElementById("btn-zoom-out").onclick = () =>
+    svg.transition().duration(280).call(zoom.scaleBy, 0.67);
+  document.getElementById("btn-reset").onclick = () =>
+    svg.transition().duration(420).call(zoom.transform, d3.zoomIdentity);
+}
+
+init();
+</script>
+</body>
+</html>
