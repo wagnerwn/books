@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Congresso Nacional do Brasil — 1ª a 57ª Legislatura (1826–2027)</title>
+  <!-- Fonte Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    .seat-node {
+      transition: opacity 0.18s ease, transform 0.14s ease;
+      transform-box: fill-box;
+      transform-origin: center;
+      cursor: pointer;
+    }
+    .seat-node:hover {
+      transform: scale(1.38);
+    }
+    .seat-dimmed {
+      opacity: 0.13;
+    }
+    .hemicycle-fade {
+      animation: fadeInChart 0.22s ease-out;
+    }
+    @keyframes fadeInChart {
+      from { opacity: 0.35; transform: scale(0.992); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+
+  <!-- Cabeçalho Enxuto -->
+  <header class="bg-white border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-4">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div class="min-w-0">
+          <h1 class="text-lg sm:text-2xl font-bold tracking-tight text-slate-900">
+            Congresso Nacional do Brasil — 1ª a 57ª Legislatura
+          </h1>
+          <p id="leg-context" class="text-xs sm:text-sm text-slate-600 mt-0.5 truncate sm:whitespace-normal"></p>
+        </div>
+        <button
+          id="btn-export-png"
+          type="button"
+          class="self-start sm:self-center shrink-0 inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 rounded-xl shadow-xs transition"
+        >
+          <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Exportar PNG
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-5 space-y-4">
+
+    <!-- Painel de Navegação: Eras + Botões Rápidos + Dropdown/Setas -->
+    <nav aria-label="Navegação de Legislaturas" class="bg-white border border-slate-200 rounded-2xl p-3 sm:p-4 shadow-xs space-y-3">
+      <!-- Linha 1: 6 Períodos Históricos -->
+      <div id="era-bar" class="flex flex-wrap gap-1.5"></div>
+
+      <!-- Linha 2: Botões rápidos da era selecionada -->
+      <div id="leg-buttons" class="flex flex-wrap gap-1.5 pt-2 border-t border-slate-100"></div>
+
+      <!-- Linha 3: Seletor completo (1ª–57ª), setas ◀ ▶ e Alternador Câmara / Senado -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 pt-2.5 border-t border-slate-100">
+        <!-- Controles ◀ [Dropdown 1ª..57ª] ▶ -->
+        <div class="flex items-center gap-1.5">
+          <button
+            id="btn-prev"
+            type="button"
+            aria-label="Legislatura anterior"
+            class="w-9 h-9 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-35 disabled:pointer-events-none text-slate-700 font-bold transition"
+          >◀</button>
+
+          <select
+            id="leg-select"
+            aria-label="Escolher legislatura de 1ª a 57ª"
+            class="h-9 px-3 pr-8 text-xs sm:text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition min-w-[210px] sm:min-w-[260px]"
+          ></select>
+
+          <button
+            id="btn-next"
+            type="button"
+            aria-label="Próxima legislatura"
+            class="w-9 h-9 inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-35 disabled:pointer-events-none text-slate-700 font-bold transition"
+          >▶</button>
+        </div>
+
+        <!-- Alternador Exclusivo: Câmara dos Deputados / Senado -->
+        <div class="inline-flex items-center gap-1 bg-slate-100 p-1 rounded-xl self-start md:self-auto" role="tablist" aria-label="Selecionar Casa Legislativa">
+          <button type="button" role="tab" data-chamber="camara" id="tab-camara" class="chamber-tab px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition"></button>
+          <button type="button" role="tab" data-chamber="senado" id="tab-senado" class="chamber-tab px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition"></button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Cartão do Hemiciclo + Legenda Interativa abaixo -->
+    <section class="bg-white border border-slate-200 rounded-2xl shadow-xs p-4 sm:p-6">
+      <!-- Cabeçalho interno do gráfico -->
+      <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <span id="chart-badge" class="text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full"></span>
+          <span id="era-badge" class="text-xs font-medium text-slate-600 bg-slate-100 px-2.5 py-0.5 rounded-full"></span>
+        </div>
+
+        <span id="filter-pill" class="hidden items-center gap-1.5 text-xs font-medium text-indigo-800 bg-indigo-50 border border-indigo-200 px-2.5 py-0.5 rounded-full">
+          <span id="filter-pill-text"></span>
+          <button id="btn-clear-filter" type="button" class="text-indigo-500 hover:text-indigo-900 font-bold ml-0.5" aria-label="Limpar filtro">×</button>
+        </span>
+      </div>
+
+      <!-- Área do Hemiciclo SVG -->
+      <div id="hemicycle-wrap" class="w-full flex items-center justify-center py-1">
+        <svg
+          id="hemicycle-svg"
+          viewBox="0 0 900 480"
+          class="w-full h-auto max-h-[480px] select-none"
+          role="img"
+          aria-label="Hemiciclo parlamentar por partidos políticos"
+        ></svg>
+      </div>
+
+      <!-- Aviso limpo para a 36ª Legislatura (Unicameral) no modo Senado -->
+      <div id="unicameral-notice" class="hidden py-16 px-6 text-center">
+        <div class="inline-flex flex-col items-center max-w-md mx-auto bg-slate-50 border border-slate-200 rounded-2xl px-6 py-6">
+          <span class="w-10 h-10 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-lg mb-3">!</span>
+          <h2 class="text-base font-bold text-slate-900">36ª Legislatura (1933–1935) — Assembleia Unicameral</h2>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
+            A Assembleia Nacional Constituinte de 1933–1935 funcionou em câmara única, sem Senado Federal. O Senado foi restabelecido na 37ª Legislatura (1935–1937).
+          </p>
+        </div>
+      </div>
+
+      <!-- Legenda Interativa (logo abaixo do gráfico) -->
+      <div id="legend-section" class="mt-4 pt-4 border-t border-slate-100">
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">
+            Distribuição por Partido
+          </h2>
+          <span id="legend-total" class="text-xs font-semibold text-slate-600"></span>
+        </div>
+
+        <div id="legend-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2"></div>
+
+        <!-- Detalhe de "Outros partidos" quando aplicável -->
+        <p id="others-note" class="hidden text-[11px] text-slate-500 mt-3 leading-relaxed"></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Tooltip Leve ao Passar o Mouse -->
+  <div
+    id="seat-tooltip"
+    class="fixed z-50 pointer-events-none hidden max-w-[260px] bg-slate-900/95 text-white rounded-xl shadow-xl px-3 py-2 text-xs border border-slate-700"
+  >
+    <div class="flex items-center gap-2">
+      <span id="tt-dot" class="w-2.5 h-2.5 rounded-full shrink-0"></span>
+      <span id="tt-party" class="font-bold text-white leading-snug"></span>
+    </div>
+    <div id="tt-stats" class="text-[11px] text-slate-300 mt-1"></div>
+  </div>
+
+  <!-- Toast Discreto -->
+  <div
+    id="toast"
+    class="fixed bottom-4 right-4 z-50 hidden items-center bg-slate-900 text-white text-xs font-medium px-3.5 py-2 rounded-xl shadow-lg"
+  >
+    <span id="toast-msg"></span>
+  </div>
+
+  <script>
+    (() => {
+      'use strict';
+
+      // =========================================================================
+      // 1. ERAS HISTÓRICAS E PALETA CONSISTENTE DE PARTIDOS (1826–2027)
+      // =========================================================================
+      const ERAS = [
+        { id: 'imperio', label: 'Império', range: '1ª–20ª', years: '1826–1889' },
+        { id: 'rep_velha', label: 'Rep. Velha', range: '21ª–35ª', years: '1890–1930' },
+        { id: 'vargas', label: 'Era Vargas', range: '36ª–37ª', years: '1933–1937' },
+        { id: 'populista', label: 'Rep. Populista', range: '38ª–42ª', years: '1946–1967' },
+        { id: 'militar', label: 'Regime Militar', range: '43ª–47ª', years: '1967–1987' },
+        { id: 'nova_rep', label: 'Nova República', range: '48ª–57ª', years: '1987–2027' },
+      ];
+
+      // Cores padronizadas e consistentes ao longo das décadas
+      const PARTY_COLORS = {
+        // Império
+        'Sem filiação / Moderados': '#64748b',
+        'Moderados (Sem partido formal)': '#475569',
+        'Exaltados (Sem partido formal)': '#dc2626',
+        'Caramurus / Restauradores': '#1e3a8a',
+        'Regressistas': '#1d4ed8',
+        'Progressistas': '#e11d48',
+        'Partido Conservador': '#1e3a8a',
+        'Partido Liberal': '#dc2626',
+        'Liga Progressista': '#0d9488',
+        'Partido Republicano': '#d97706',
+        'Sem filiação': '#94a3b8',
+
+        // República Velha & Era Vargas
+        'PRM (Minas Gerais)': '#2563eb',
+        'PRP (São Paulo)': '#dc2626',
+        'PRB (Bahia)': '#d97706',
+        'PRR (Rio Grande do Sul)': '#15803d',
+        'PRPE (Pernambuco)': '#059669',
+        'PRJ / Fluminense (RJ)': '#0284c7',
+        'Outros PRs Estaduais': '#6366f1',
+        'PRF (Partido Republicano Federal)': '#1d4ed8',
+        'PR / Concentração (Prudentistas)': '#1e40af',
+        'PRF Glicerista / Oposição': '#e11d48',
+        'PRC (Partido Republicano Conservador)': '#1e3a8a',
+        'Civilistas / PRP (Oposição)': '#dc2626',
+        'PD-SP (Partido Democrático)': '#7c3aed',
+        'Aliança Liberal': '#b91c1c',
+        'Partidos Situacionistas (PRs)': '#1d4ed8',
+        'Partidos Estaduais (Base Vargas)': '#0f766e',
+        'Oposição Estadual (PC-SP / FUG / Outros)': '#dc2626',
+        'Bancada Classista (Sem filiação)': '#94a3b8',
+
+        // República Populista (1946–1967)
+        'PSD (1945)': '#d97706',
+        'UDN': '#1d4ed8',
+        'PTB': '#b91c1c',
+        'PSP': '#0d9488',
+        'PR': '#4f46e5',
+        'PDC': '#0284c7',
+        'PCB': '#991b1b',
+        'PTN': '#7c3aed',
+        'PL (1945)': '#059669',
+        'PSB': '#ea580c',
+        'PST': '#ca8a04',
+        'PRP (Integralista)': '#334155',
+
+        // Regime Militar (1967–1987)
+        'ARENA': '#1e3a8a',
+        'MDB (1966)': '#15803d',
+        'PDS': '#1e40af',
+
+        // Nova República (1987–2027)
+        'PMDB': '#16a34a',
+        'MDB': '#16a34a',
+        'PFL': '#0284c7',
+        'DEM': '#0284c7',
+        'UNIÃO': '#0369a1',
+        'PSDB': '#2563eb',
+        'PT': '#dc2626',
+        'PPR': '#1e40af',
+        'PPB': '#1d4ed8',
+        'PP': '#1e40af',
+        'PL': '#1e3a8a',
+        'PR (PL)': '#1e3a8a',
+        'PDT': '#e11d48',
+        'PSD': '#f59e0b',
+        'PSL': '#0f172a',
+        'Republicanos': '#0284c7',
+        'PRB': '#0284c7',
+        'PODE': '#0891b2',
+        'PSOL': '#9333ea',
+        'PRN': '#0f766e',
+        'PCdoB': '#991b1b',
+        'PV': '#22c55e',
+        'PPS': '#db2777',
+        'Cidadania': '#db2777',
+        'PSC': '#15803d',
+        'SD': '#f97316',
+        'Solidariedade': '#f97316',
+        'NOVO': '#ea580c',
+        'REDE': '#10b981',
+        'Avante': '#ca8a04',
+        'Patriota': '#166534',
+        'PROS': '#0d9488',
+        'PRONA': '#334155',
+        'Outros partidos': '#94a3b8',
+      };
+
+      function getColor(name) {
+        return PARTY_COLORS[name] || '#64748b';
+      }
+
+      // Auxiliar para gerar blocos padrão de Partidos Republicanos Estaduais (Rep. Velha)
+      // 1890–1893: 205 deputados (MG 37, SP 22, BA 22, RJ 17, PE 17, RS 16, Outros 74)
+      // 1894–1930: 212 deputados (MG 37, SP 22, BA 22, RJ 17, PE 17, RS 16, Outros 81)
+      function prEstaduaisCamara(total) {
+        const outros = total - (37 + 22 + 22 + 17 + 17 + 16);
+        return [
+          ['PRM (Minas Gerais)', 37],
+          ['PRP (São Paulo)', 22],
+          ['PRB (Bahia)', 22],
+          ['PRJ / Fluminense (RJ)', 17],
+          ['PRPE (Pernambuco)', 17],
+          ['PRR (Rio Grande do Sul)', 16],
+          ['Outros PRs Estaduais', outros],
+        ];
+      }
+
+      function prEstaduaisSenado() {
+        return [
+          ['PRM (Minas Gerais)', 3],
+          ['PRP (São Paulo)', 3],
+          ['PRB (Bahia)', 3],
+          ['PRJ / Fluminense (RJ)', 3],
+          ['PRPE (Pernambuco)', 3],
+          ['PRR (Rio Grande do Sul)', 3],
+          ['Outros PRs Estaduais', 45],
+        ];
+      }
+
+      // =========================================================================
+      // 2. TODAS AS 57 LEGISLATURAS (1826–2027) — SOMAS EXATAS POR CASA
+      // =========================================================================
+      const LEGISLATURES = [
+        // --- IMPÉRIO DO BRASIL (1ª a 20ª: 1826–1889) ---
+        {
+          n: 1, years: '1826–1829', era: 'imperio',
+          context: 'Primeiro Reinado (D. Pedro I) — Sem partidos formais; deputados alinhados em correntes moderadas e exaltadas.',
+          camara: [['Sem filiação / Moderados', 78], ['Exaltados (Sem partido formal)', 22]],
+          senado: [['Sem filiação / Moderados', 50]],
+        },
+        {
+          n: 2, years: '1830–1833', era: 'imperio',
+          context: 'Abdicação de D. Pedro I (1831) e início da Regência — Moderados, Exaltados e Caramurus (sem partidos formais).',
+          camara: [['Moderados (Sem partido formal)', 62], ['Exaltados (Sem partido formal)', 23], ['Caramurus / Restauradores', 15]],
+          senado: [['Moderados (Sem partido formal)', 28], ['Caramurus / Restauradores', 22]],
+        },
+        {
+          n: 3, years: '1834–1837', era: 'imperio',
+          context: 'Ato Adicional de 1834 e Regência Una de Feijó — Formação das alas Regressista e Progressista.',
+          camara: [['Progressistas', 56], ['Regressistas', 36], ['Sem filiação', 8]],
+          senado: [['Regressistas', 32], ['Progressistas', 18]],
+        },
+        {
+          n: 4, years: '1838–1841', era: 'imperio',
+          context: 'Regresso Conservador e Golpe da Maioridade (1840) — Consolidação dos partidos Conservador e Liberal.',
+          camara: [['Partido Conservador', 58], ['Partido Liberal', 42]],
+          senado: [['Partido Conservador', 33], ['Partido Liberal', 17]],
+        },
+        {
+          n: 5, years: '1843–1844', era: 'imperio',
+          context: 'Início do Segundo Reinado — Maioria conservadora após dissolução da Câmara de 1842 e Revoltas Liberais.',
+          camara: [['Partido Conservador', 84], ['Partido Liberal', 18]],
+          senado: [['Partido Conservador', 34], ['Partido Liberal', 16]],
+        },
+        {
+          n: 6, years: '1845–1847', era: 'imperio',
+          context: 'Quinquênio Liberal e criação da Presidência do Conselho de Ministros (1847).',
+          camara: [['Partido Liberal', 88], ['Partido Conservador', 14]],
+          senado: [['Partido Conservador', 31], ['Partido Liberal', 20]],
+        },
+        {
+          n: 7, years: '1848', era: 'imperio',
+          context: 'Queda dos gabinetes liberais e ascensão conservadora (dissolução antecipada em 1849).',
+          camara: [['Partido Liberal', 82], ['Partido Conservador', 20]],
+          senado: [['Partido Conservador', 32], ['Partido Liberal', 19]],
+        },
+        {
+          n: 8, years: '1850–1852', era: 'imperio',
+          context: 'Hegemonia Conservadora — Lei Eusébio de Queirós (fim do tráfico negreiro) e Lei de Terras.',
+          camara: [['Partido Conservador', 110], ['Partido Liberal', 2]],
+          senado: [['Partido Conservador', 37], ['Partido Liberal', 19]],
+        },
+        {
+          n: 9, years: '1853–1856', era: 'imperio',
+          context: 'Gabinete da Conciliação (Marquês de Paraná) — Predomínio conservador com abertura a moderados.',
+          camara: [['Partido Conservador', 98], ['Partido Liberal', 14]],
+          senado: [['Partido Conservador', 38], ['Partido Liberal', 18]],
+        },
+        {
+          n: 10, years: '1857–1860', era: 'imperio',
+          context: 'Lei dos Círculos (voto distrital) — Maior equilíbrio entre conservadores e liberais na Câmara.',
+          camara: [['Partido Conservador', 76], ['Partido Liberal', 38]],
+          senado: [['Partido Conservador', 37], ['Partido Liberal', 20]],
+        },
+        {
+          n: 11, years: '1861–1863', era: 'imperio',
+          context: 'Avanço liberal nas capitais e gestação da Liga Progressista frente aos conservadores puros.',
+          camara: [['Partido Conservador', 74], ['Partido Liberal', 48]],
+          senado: [['Partido Conservador', 38], ['Partido Liberal', 20]],
+        },
+        {
+          n: 12, years: '1864–1866', era: 'imperio',
+          context: 'Hegemonia da Liga Progressista (união de liberais e conservadores moderados) no início da Guerra do Paraguai.',
+          camara: [['Liga Progressista', 102], ['Partido Conservador', 20]],
+          senado: [['Partido Conservador', 34], ['Liga Progressista', 24]],
+        },
+        {
+          n: 13, years: '1867–1868', era: 'imperio',
+          context: 'Gabinete Zacarias (Liga Progressista) — Crise ministerial de 1868 e dissolução da Câmara.',
+          camara: [['Liga Progressista', 96], ['Partido Conservador', 26]],
+          senado: [['Partido Conservador', 35], ['Liga Progressista', 23]],
+        },
+        {
+          n: 14, years: '1869–1872', era: 'imperio',
+          context: 'Retorno Conservador (Visconde de Itaboraí e Rio Branco) — Lei do Ventre Livre (1871).',
+          camara: [['Partido Conservador', 120], ['Partido Liberal', 2]],
+          senado: [['Partido Conservador', 37], ['Partido Liberal', 21]],
+        },
+        {
+          n: 15, years: '1872–1875', era: 'imperio',
+          context: 'Gabinete Rio Branco — Maioria conservadora e Questão Religiosa.',
+          camara: [['Partido Conservador', 108], ['Partido Liberal', 14]],
+          senado: [['Partido Conservador', 38], ['Partido Liberal', 20]],
+        },
+        {
+          n: 16, years: '1877–1878', era: 'imperio',
+          context: 'Gabinete Caxias — Câmara conservadora dissolvida em 1878 com a volta dos liberais ao poder.',
+          camara: [['Partido Conservador', 104], ['Partido Liberal', 18]],
+          senado: [['Partido Conservador', 38], ['Partido Liberal', 20]],
+        },
+        {
+          n: 17, years: '1878–1881', era: 'imperio',
+          context: 'Gabinetes Sinimbu e Saraiva — Câmara quase unânime liberal aprova a Lei Saraiva (eleição direta).',
+          camara: [['Partido Liberal', 120], ['Partido Conservador', 2]],
+          senado: [['Partido Conservador', 36], ['Partido Liberal', 22]],
+        },
+        {
+          n: 18, years: '1882–1884', era: 'imperio',
+          context: 'Primeira eleição direta pela Lei Saraiva — Disputa competitiva entre Liberais e Conservadores.',
+          camara: [['Partido Liberal', 75], ['Partido Conservador', 47]],
+          senado: [['Partido Conservador', 35], ['Partido Liberal', 23]],
+        },
+        {
+          n: 19, years: '1885', era: 'imperio',
+          context: 'Lei dos Sexagenários e ingresso dos primeiros 3 deputados do Partido Republicano (SP e MG).',
+          camara: [['Partido Liberal', 67], ['Partido Conservador', 55], ['Partido Republicano', 3]],
+          senado: [['Partido Conservador', 34], ['Partido Liberal', 26]],
+        },
+        {
+          n: 20, years: '1886–1889', era: 'imperio',
+          context: 'Última legislatura do Império — Maioria conservadora, Lei Áurea (1888) e Proclamação da República.',
+          camara: [['Partido Conservador', 103], ['Partido Liberal', 20], ['Partido Republicano', 2]],
+          senado: [['Partido Conservador', 36], ['Partido Liberal', 24]],
+        },
+
+        // --- REPÚBLICA VELHA (21ª a 35ª: 1890–1930) ---
+        {
+          n: 21, years: '1890–1891', era: 'rep_velha',
+          context: 'Congresso Constituinte da República (Constituição de 1891) — Partidos Republicanos Estaduais.',
+          camara: prEstaduaisCamara(205),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 22, years: '1891–1893', era: 'rep_velha',
+          context: 'Primeira legislatura ordinária da República (Deodoro / Floriano) — Partidos Republicanos Estaduais.',
+          camara: prEstaduaisCamara(205),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 23, years: '1894–1896', era: 'rep_velha',
+          context: 'Governo Prudente de Morais — Hegemonia do Partido Republicano Federal (PRF) de Francisco Glicério.',
+          camara: [['PRF (Partido Republicano Federal)', 193], ['Outros PRs Estaduais', 19]],
+          senado: [['PRF (Partido Republicano Federal)', 58], ['Outros PRs Estaduais', 5]],
+        },
+        {
+          n: 24, years: '1897–1899', era: 'rep_velha',
+          context: 'Cisão do PRF (1897) entre a Concentração Prudentista e o PRF Glicerista.',
+          camara: [['PR / Concentração (Prudentistas)', 149], ['PRF Glicerista / Oposição', 63]],
+          senado: [['PR / Concentração (Prudentistas)', 44], ['PRF Glicerista / Oposição', 19]],
+        },
+        {
+          n: 25, years: '1900–1902', era: 'rep_velha',
+          context: 'Campos Sales — Consolidação da Política dos Governadores e domínio dos Partidos Republicanos Estaduais.',
+          camara: prEstaduaisCamara(212),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 26, years: '1903–1905', era: 'rep_velha',
+          context: 'Rodrigues Alves — Estabilidade oligárquica dos partidos estaduais ("Café com Leite").',
+          camara: prEstaduaisCamara(212),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 27, years: '1906–1908', era: 'rep_velha',
+          context: 'Afonso Pena — Partidos estaduais articulados entre o "Jardim da Infância" e o "Bloco" de Pinheiro Machado.',
+          camara: prEstaduaisCamara(212),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 28, years: '1909–1911', era: 'rep_velha',
+          context: 'Campanha Civilista e fundação do Partido Republicano Conservador (PRC, 1910) frente ao PRP.',
+          camara: [['PRC (Partido Republicano Conservador)', 159], ['Civilistas / PRP (Oposição)', 53]],
+          senado: [['PRC (Partido Republicano Conservador)', 55], ['Civilistas / PRP (Oposição)', 8]],
+        },
+        {
+          n: 29, years: '1912–1914', era: 'rep_velha',
+          context: 'Hermes da Fonseca — Auge do PRC e Política das Salvações diante da oposição paulista (PRP).',
+          camara: [['PRC (Partido Republicano Conservador)', 176], ['Civilistas / PRP (Oposição)', 36]],
+          senado: [['PRC (Partido Republicano Conservador)', 57], ['Civilistas / PRP (Oposição)', 6]],
+        },
+        {
+          n: 30, years: '1915–1917', era: 'rep_velha',
+          context: 'Venceslau Brás — Pacto de Ouro Fino e declínio do PRC após a morte de Pinheiro Machado (1915).',
+          camara: prEstaduaisCamara(212),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 31, years: '1918–1920', era: 'rep_velha',
+          context: 'Delfim Moreira / Epitácio Pessoa — Retorno integral ao arranjo dos Partidos Republicanos Estaduais.',
+          camara: prEstaduaisCamara(212),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 32, years: '1921–1923', era: 'rep_velha',
+          context: 'Epitácio Pessoa / Artur Bernardes — Reação Republicana e domínio das máquinas partidárias estaduais.',
+          camara: prEstaduaisCamara(212),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 33, years: '1924–1926', era: 'rep_velha',
+          context: 'Artur Bernardes — Reforma Constitucional de 1926 sob estado de sítio e hegemonia dos PRs.',
+          camara: prEstaduaisCamara(212),
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 34, years: '1927–1929', era: 'rep_velha',
+          context: 'Washington Luís — Domínio dos PRs estaduais com ingresso do Partido Democrático de São Paulo (PD-SP).',
+          camara: [
+            ['PRM (Minas Gerais)', 37], ['PRB (Bahia)', 22], ['PRP (São Paulo)', 19],
+            ['PRJ / Fluminense (RJ)', 17], ['PRPE (Pernambuco)', 17], ['PRR (Rio Grande do Sul)', 16],
+            ['PD-SP (Partido Democrático)', 3], ['Outros PRs Estaduais', 81],
+          ],
+          senado: prEstaduaisSenado(),
+        },
+        {
+          n: 35, years: '1930', era: 'rep_velha',
+          context: 'Ruptura do "Café com Leite" — Situacionismo (PRP e aliados) vs. Aliança Liberal (MG, RS, PB e PD-SP); fechada em out/1930.',
+          camara: [['Partidos Situacionistas (PRs)', 148], ['Aliança Liberal', 59], ['PD-SP (Partido Democrático)', 5]],
+          senado: [['Partidos Situacionistas (PRs)', 52], ['Aliança Liberal', 11]],
+        },
+
+        // --- ERA VARGAS (36ª e 37ª: 1933–1937) ---
+        {
+          n: 36, years: '1933–1935', era: 'vargas',
+          context: 'Assembleia Nacional Constituinte (unicameral, 254 deputados) — Partidos estaduais + 40 classistas sem filiação.',
+          camara: [
+            ['Partidos Estaduais (Base Vargas)', 178],
+            ['Bancada Classista (Sem filiação)', 40],
+            ['Oposição Estadual (PC-SP / FUG / Outros)', 36],
+          ],
+          senado: [], // Unicameral!
+        },
+        {
+          n: 37, years: '1935–1937', era: 'vargas',
+          context: 'Constituição de 1934 — Câmara com 250 estaduais + 50 classistas e Senado com 42; fechada pelo Estado Novo (nov/1937).',
+          camara: [
+            ['Partidos Estaduais (Base Vargas)', 192],
+            ['Oposição Estadual (PC-SP / FUG / Outros)', 58],
+            ['Bancada Classista (Sem filiação)', 50],
+          ],
+          senado: [
+            ['Partidos Estaduais (Base Vargas)', 34],
+            ['Oposição Estadual (PC-SP / FUG / Outros)', 8],
+          ],
+        },
+
+        // --- REPÚBLICA POPULISTA (38ª a 42ª: 1946–1967) ---
+        {
+          n: 38, years: '1946–1951', era: 'populista',
+          context: 'Redemocratização e Constituição de 1946 (Dutra) — Predomínio do PSD e UDN; bancada do PCB cassada em 1948.',
+          camara: [
+            ['PSD (1945)', 151], ['UDN', 77], ['PTB', 22], ['PCB', 14],
+            ['PR', 7], ['PDC', 2], ['PRP (Integralista)', 2], ['PL (1945)', 1], ['Outros partidos', 10],
+          ],
+          senado: [['PSD (1945)', 26], ['UDN', 10], ['PTB', 2], ['PCB', 1], ['Outros partidos', 3]],
+          othersDetail: 'PPS (4), UDN/PR coligações estaduais e legendas menores.',
+        },
+        {
+          n: 39, years: '1951–1955', era: 'populista',
+          context: 'Segundo Governo Vargas e Café Filho — Crescimento do PTB e do PSP frente a PSD e UDN.',
+          camara: [
+            ['PSD (1945)', 112], ['UDN', 81], ['PTB', 51], ['PSP', 24],
+            ['PR', 11], ['PST', 9], ['PL (1945)', 5], ['PDC', 2], ['Outros partidos', 9],
+          ],
+          senado: [['PSD (1945)', 24], ['UDN', 16], ['PTB', 12], ['PSP', 5], ['PR', 2], ['PL (1945)', 2], ['Outros partidos', 2]],
+          othersDetail: 'PTN, PSB, PRP e PRT.',
+        },
+        {
+          n: 40, years: '1955–1959', era: 'populista',
+          context: 'Governo Juscelino Kubitschek — Aliança PSD-PTB sustenta o Plano de Metas frente à oposição da UDN.',
+          camara: [
+            ['PSD (1945)', 114], ['UDN', 74], ['PTB', 56], ['PSP', 32],
+            ['PR', 19], ['PL (1945)', 8], ['PTN', 6], ['PDC', 2], ['Outros partidos', 15],
+          ],
+          senado: [['PSD (1945)', 22], ['UDN', 16], ['PTB', 15], ['PSP', 4], ['PR', 2], ['PL (1945)', 2], ['Outros partidos', 2]],
+          othersDetail: 'PSB, PST, PRP e PRT.',
+        },
+        {
+          n: 41, years: '1959–1963', era: 'populista',
+          context: 'JK, Jânio Quadros e início de João Goulart — Avanço trabalhista (PTB) e fase parlamentarista (1961–63).',
+          camara: [
+            ['PSD (1945)', 115], ['UDN', 70], ['PTB', 66], ['PSP', 25],
+            ['PR', 17], ['PSB', 9], ['PDC', 7], ['PTN', 7], ['Outros partidos', 10],
+          ],
+          senado: [['PSD (1945)', 22], ['UDN', 18], ['PTB', 15], ['PSP', 3], ['PR', 2], ['PL (1945)', 1], ['Outros partidos', 2]],
+          othersDetail: 'PL, PRP, PST e PRT.',
+        },
+        {
+          n: 42, years: '1963–1967', era: 'populista',
+          context: 'Governo João Goulart e Golpe de 1964 — Empate técnico PSD-PTB na Câmara antes do AI-2 (extinção partidária em 1965).',
+          camara: [
+            ['PSD (1945)', 118], ['PTB', 116], ['UDN', 91], ['PSP', 21],
+            ['PDC', 20], ['PTN', 11], ['PST', 7], ['PSB', 5], ['PR', 4], ['Outros partidos', 16],
+          ],
+          senado: [['PSD (1945)', 22], ['PTB', 17], ['UDN', 16], ['PSP', 3], ['PDC', 2], ['PTN', 2], ['PSB', 1], ['Outros partidos', 3]],
+          othersDetail: 'MTR (4), PRP, PL e PRT.',
+        },
+
+        // --- REGIME MILITAR (43ª a 47ª: 1967–1987) ---
+        {
+          n: 43, years: '1967–1971', era: 'militar',
+          context: 'Costa e Silva / Junta / Médici — Estreia do bipartidarismo (ARENA vs. MDB) e edição do AI-5 (1968).',
+          camara: [['ARENA', 277], ['MDB (1966)', 132]],
+          senado: [['ARENA', 48], ['MDB (1966)', 18]],
+        },
+        {
+          n: 44, years: '1971–1975', era: 'militar',
+          context: 'Governo Médici — Redução do tamanho da Câmara e auge da maioria arenista no Congresso.',
+          camara: [['ARENA', 223], ['MDB (1966)', 87]],
+          senado: [['ARENA', 59], ['MDB (1966)', 7]],
+        },
+        {
+          n: 45, years: '1975–1979', era: 'militar',
+          context: 'Governo Geisel — Forte crescimento eleitoral do MDB nas eleições de 1974 (especialmente no Senado).',
+          camara: [['ARENA', 203], ['MDB (1966)', 161]],
+          senado: [['ARENA', 46], ['MDB (1966)', 20]],
+        },
+        {
+          n: 46, years: '1979–1983', era: 'militar',
+          context: 'Governo Figueiredo — Última eleição bipartidária (1978), seguida pela reforma partidária de 1979.',
+          camara: [['ARENA', 231], ['MDB (1966)', 189]],
+          senado: [['ARENA', 42], ['MDB (1966)', 25]],
+        },
+        {
+          n: 47, years: '1983–1987', era: 'militar',
+          context: 'Retorno do pluripartidarismo — PDS perde a maioria absoluta na Câmara; Diretas Já e eleição de Tancredo Neves.',
+          camara: [['PDS', 235], ['PMDB', 200], ['PDT', 23], ['PTB', 13], ['PT', 8]],
+          senado: [['PDS', 46], ['PMDB', 21], ['PDT', 1], ['PTB', 1]],
+        },
+
+        // --- NOVA REPÚBLICA (48ª a 57ª: 1987–2027) ---
+        {
+          n: 48, years: '1987–1991', era: 'nova_rep',
+          context: 'Assembleia Nacional Constituinte (Constituição de 1988) — Maioria absoluta do PMDB após o Plano Cruzado.',
+          camara: [
+            ['PMDB', 260], ['PFL', 118], ['PDS', 33], ['PDT', 24], ['PTB', 17],
+            ['PT', 16], ['PL', 6], ['PDC', 5], ['PCB', 3], ['PCdoB', 3], ['PSB', 1], ['PSC', 1],
+          ],
+          senado: [
+            ['PMDB', 45], ['PFL', 15], ['PDS', 5], ['PDT', 2],
+            ['PTB', 1], ['PDC', 1], ['PSB', 1], ['Outros partidos', 2],
+          ],
+          othersDetail: 'PMB e PL no Senado.',
+        },
+        {
+          n: 49, years: '1991–1995', era: 'nova_rep',
+          context: 'Governos Collor e Itamar Franco — Fragmentação partidária, ascensão do PSDB/PRN, impeachment (1992) e Plano Real.',
+          camara: [
+            ['PMDB', 108], ['PFL', 84], ['PDT', 46], ['PDS', 42], ['PRN', 40],
+            ['PTB', 38], ['PSDB', 38], ['PT', 35], ['PDC', 22], ['PL', 16],
+            ['PSB', 11], ['PCdoB', 5], ['Outros partidos', 18],
+          ],
+          senado: [
+            ['PMDB', 27], ['PFL', 15], ['PSDB', 10], ['PTB', 8], ['PDT', 5],
+            ['PDC', 4], ['PDS', 3], ['PRN', 3], ['PSB', 2], ['PT', 1], ['Outros partidos', 3],
+          ],
+          othersDetail: 'PSC, PRS, PCB, PST, PTR, PMN e PSD.',
+        },
+        {
+          n: 50, years: '1995–1999', era: 'nova_rep',
+          context: '1º Governo Fernando Henrique Cardoso — Coalizão PSDB-PFL-PMDB e consolidação de 513 deputados na Câmara.',
+          camara: [
+            ['PMDB', 107], ['PFL', 89], ['PSDB', 62], ['PPR', 52], ['PT', 49],
+            ['PP', 36], ['PDT', 34], ['PTB', 31], ['PSB', 15], ['PL', 13],
+            ['PCdoB', 10], ['Outros partidos', 15],
+          ],
+          senado: [
+            ['PMDB', 22], ['PFL', 19], ['PSDB', 11], ['PPR', 6], ['PDT', 6],
+            ['PT', 5], ['PTB', 5], ['PP', 4], ['PSB', 1], ['Outros partidos', 2],
+          ],
+          othersDetail: 'PMN, PSD, PSC, PPS, PRP, PRN e PV.',
+        },
+        {
+          n: 51, years: '1999–2003', era: 'nova_rep',
+          context: '2º Governo FHC — PFL e PSDB lideram a Câmara; aprovação da Lei de Responsabilidade Fiscal.',
+          camara: [
+            ['PFL', 105], ['PSDB', 99], ['PMDB', 83], ['PPB', 60], ['PT', 59],
+            ['PTB', 31], ['PDT', 25], ['PSB', 19], ['PL', 12], ['PCdoB', 7], ['Outros partidos', 13],
+          ],
+          senado: [
+            ['PMDB', 26], ['PFL', 20], ['PSDB', 16], ['PT', 7],
+            ['PPB', 5], ['PDT', 3], ['PSB', 3], ['PTB', 1],
+          ],
+          othersDetail: 'PPS, PSD, PMN, PSC, PRN, PST, PV e PSL.',
+        },
+        {
+          n: 52, years: '2003–2007', era: 'nova_rep',
+          context: '1º Governo Lula — PT alcança a maior bancada da Câmara pela primeira vez (91 deputados).',
+          camara: [
+            ['PT', 91], ['PFL', 84], ['PMDB', 76], ['PSDB', 70], ['PPB', 48],
+            ['PL', 26], ['PTB', 26], ['PSB', 22], ['PDT', 21], ['PPS', 15],
+            ['PCdoB', 12], ['PRONA', 6], ['PV', 5], ['Outros partidos', 11],
+          ],
+          senado: [
+            ['PFL', 19], ['PMDB', 19], ['PT', 14], ['PSDB', 11], ['PDT', 5],
+            ['PSB', 4], ['PTB', 3], ['PL', 3], ['PPS', 1], ['PPB', 1], ['Outros partidos', 1],
+          ],
+          othersDetail: 'PSD, PST, PSC, PMN, PSL e PTC.',
+        },
+        {
+          n: 53, years: '2007–2011', era: 'nova_rep',
+          context: '2º Governo Lula — PMDB volta à liderança da Câmara e PFL (depois DEM) lidera o Senado.',
+          camara: [
+            ['PMDB', 89], ['PT', 83], ['PSDB', 66], ['PFL', 65], ['PP', 41],
+            ['PSB', 27], ['PDT', 24], ['PL', 23], ['PTB', 22], ['PPS', 22],
+            ['PCdoB', 13], ['PV', 13], ['PSC', 9], ['Outros partidos', 16],
+          ],
+          senado: [
+            ['PFL', 18], ['PMDB', 16], ['PSDB', 15], ['PT', 11], ['PDT', 5],
+            ['PTB', 4], ['PL', 3], ['PSB', 3], ['PP', 1], ['PCdoB', 1], ['PSOL', 1], ['Outros partidos', 3],
+          ],
+          othersDetail: 'PTC, PSOL, PMN, PRB, PHS, PRONA, PAN e PTdoB.',
+        },
+        {
+          n: 54, years: '2011–2015', era: 'nova_rep',
+          context: '1º Governo Dilma Rousseff — PT (88) e PMDB (79) dominam a coalizão majoritária no Congresso.',
+          camara: [
+            ['PT', 88], ['PMDB', 79], ['PSDB', 53], ['DEM', 43], ['PR (PL)', 41],
+            ['PP', 41], ['PSB', 34], ['PDT', 28], ['PTB', 21], ['PSC', 17],
+            ['PV', 15], ['PCdoB', 15], ['PPS', 12], ['PRB', 8], ['PSOL', 3], ['Outros partidos', 15],
+          ],
+          senado: [
+            ['PMDB', 20], ['PT', 15], ['PSDB', 11], ['DEM', 6], ['PTB', 6],
+            ['PR (PL)', 4], ['PDT', 4], ['PP', 4], ['PSB', 3], ['PCdoB', 2],
+            ['PRB', 2], ['PSOL', 2], ['Outros partidos', 2],
+          ],
+          othersDetail: 'PMN, PTdoB, PHS, PRP, PRTB, PTC e PSL.',
+        },
+        {
+          n: 55, years: '2015–2019', era: 'nova_rep',
+          context: '2º Governo Dilma e Governo Temer — Alta fragmentação (28 partidos eleitos na Câmara) e impeachment (2016).',
+          camara: [
+            ['PT', 69], ['PMDB', 66], ['PSDB', 54], ['PP', 38], ['PSD', 36],
+            ['PSB', 34], ['PR (PL)', 34], ['PTB', 25], ['PRB', 21], ['DEM', 21],
+            ['PDT', 19], ['SD', 15], ['PSC', 13], ['PCdoB', 10], ['PPS', 10],
+            ['PV', 8], ['PSOL', 5], ['Outros partidos', 35],
+          ],
+          senado: [
+            ['PMDB', 18], ['PT', 12], ['PSDB', 10], ['PDT', 8], ['PSB', 7],
+            ['PTB', 6], ['PP', 5], ['DEM', 5], ['PR (PL)', 4], ['PSD', 3],
+            ['PCdoB', 1], ['PRB', 1], ['Outros partidos', 1],
+          ],
+          othersDetail: 'PROS (11), PHS (5), PTN (4), PMN (3), PRP (3), PEN (2), PSDC (2), PTC (2), PRTB (1), PSL (1), PTdoB (1).',
+        },
+        {
+          n: 56, years: '2019–2023', era: 'nova_rep',
+          context: 'Governo Jair Bolsonaro — Pico de fragmentação (30 partidos) e forte ascensão do PSL na Câmara.',
+          camara: [
+            ['PT', 56], ['PSL', 52], ['PP', 37], ['PSD', 34], ['MDB', 34],
+            ['PR (PL)', 33], ['PSB', 32], ['PRB', 30], ['PSDB', 29], ['DEM', 29],
+            ['PDT', 28], ['SD', 13], ['PODE', 11], ['PSOL', 10], ['PTB', 10],
+            ['PCdoB', 9], ['NOVO', 8], ['PROS', 8], ['PSC', 8], ['PPS', 8],
+            ['Avante', 7], ['Outros partidos', 27],
+          ],
+          senado: [
+            ['MDB', 12], ['PSDB', 8], ['PSD', 7], ['DEM', 6], ['PT', 6],
+            ['PP', 5], ['PODE', 5], ['PDT', 5], ['REDE', 5], ['PSL', 4],
+            ['PSB', 2], ['PR (PL)', 2], ['PPS', 2], ['PTB', 2], ['PRB', 1],
+            ['PROS', 1], ['PSC', 1], ['Outros partidos', 7],
+          ],
+          othersDetail: 'PHS (6), Patriota (5), PV (4), PRP (4), PMN (3), PTC (2), PPL (1), DC (1), REDE (1).',
+        },
+        {
+          n: 57, years: '2023–2027', era: 'nova_rep',
+          context: '3º Governo Lula — Efeito da cláusula de barreira e federações; PL (99), PT (68) e UNIÃO (59) lideram a Câmara.',
+          camara: [
+            ['PL', 99], ['PT', 68], ['UNIÃO', 59], ['PP', 47], ['PSD', 42],
+            ['MDB', 42], ['Republicanos', 41], ['PDT', 17], ['PSB', 14], ['PSDB', 13],
+            ['PSOL', 12], ['PODE', 12], ['Avante', 7], ['PCdoB', 6], ['PV', 6],
+            ['PSC', 6], ['Cidadania', 5], ['Solidariedade', 4], ['Patriota', 4],
+            ['PROS', 3], ['NOVO', 3], ['REDE', 2], ['PTB', 1],
+          ],
+          senado: [
+            ['PL', 14], ['PSD', 11], ['MDB', 10], ['UNIÃO', 10], ['PT', 9],
+            ['PP', 6], ['PODE', 6], ['PSDB', 4], ['Republicanos', 3], ['PDT', 3],
+            ['PSB', 1], ['Cidadania', 1], ['PROS', 1], ['REDE', 1], ['PSC', 1],
+          ],
+        },
+      ];
+
+      // =========================================================================
+      // 3. ESTADO E REFERÊNCIAS DO DOM
+      // =========================================================================
+      const state = {
+        legIndex: 0,           // Inicia na 1ª Legislatura (1826–1829)
+        chamber: 'camara',     // 'camara' | 'senado'
+        selectedParty: null,   // Nome do partido destacado
+      };
+
+      const legContext = document.getElementById('leg-context');
+      const eraBar = document.getElementById('era-bar');
+      const legButtons = document.getElementById('leg-buttons');
+      const legSelect = document.getElementById('leg-select');
+      const btnPrev = document.getElementById('btn-prev');
+      const btnNext = document.getElementById('btn-next');
+      const tabCamara = document.getElementById('tab-camara');
+      const tabSenado = document.getElementById('tab-senado');
+
+      const chartBadge = document.getElementById('chart-badge');
+      const eraBadge = document.getElementById('era-badge');
+      const filterPill = document.getElementById('filter-pill');
+      const filterPillText = document.getElementById('filter-pill-text');
+      const btnClearFilter = document.getElementById('btn-clear-filter');
+
+      const hemicycleWrap = document.getElementById('hemicycle-wrap');
+      const svgEl = document.getElementById('hemicycle-svg');
+      const unicameralNotice = document.getElementById('unicameral-notice');
+      const legendSection = document.getElementById('legend-section');
+      const legendTotal = document.getElementById('legend-total');
+      const legendGrid = document.getElementById('legend-grid');
+      const othersNote = document.getElementById('others-note');
+      const btnExportPng = document.getElementById('btn-export-png');
+
+      const tooltip = document.getElementById('seat-tooltip');
+      const ttDot = document.getElementById('tt-dot');
+      const ttParty = document.getElementById('tt-party');
+      const ttStats = document.getElementById('tt-stats');
+
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      let toastTimer = null;
+
+      function showToast(msg) {
+        toastMsg.textContent = msg;
+        toast.classList.remove('hidden');
+        toast.classList.add('flex');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.add('hidden');
+          toast.classList.remove('flex');
+        }, 2600);
+      }
+
+      // =========================================================================
+      // 4. AUXILIARES DE DADOS E GEOMETRIA ADAPTATIVA DO HEMICICLO (42–513)
+      // =========================================================================
+      function currentLeg() {
+        return LEGISLATURES[state.legIndex];
+      }
+
+      function getSenateLabel(leg) {
+        return leg.n <= 20 ? 'Senado do Império' : 'Senado Federal';
+      }
+
+      function getChamberLabel(leg) {
+        return state.chamber === 'camara' ? 'Câmara dos Deputados' : getSenateLabel(leg);
+      }
+
+      function getPartyEntries(leg) {
+        const list = state.chamber === 'camara' ? leg.camara : leg.senado;
+        return list.map(([name, count]) => ({
+          name,
+          count,
+          color: getColor(name),
+        }));
+      }
+
+      function sumSeats(list) {
+        return list.reduce((acc, item) => acc + item[1], 0);
+      }
+
+      /**
+       * Calcula coordenadas em arco de 180° sem sobreposição para qualquer escala (42 a 513).
+       * Distribui assentos proporcionalmente aos raios das fileiras (método dos maiores restos)
+       * e ordena da esquerda para a direita para formar blocos radiais contínuos por partido.
+       */
+      function computeHemicyclePositions(totalSeats) {
+        let numRows, innerRadius, outerRadius, seatRadius;
+        if (totalSeats <= 55) {
+          numRows = 4; innerRadius = 186; outerRadius = 355; seatRadius = 12.6;
+        } else if (totalSeats <= 85) {
+          numRows = 5; innerRadius = 176; outerRadius = 372; seatRadius = 11.2;
+        } else if (totalSeats <= 130) {
+          numRows = 6; innerRadius = 168; outerRadius = 386; seatRadius = 9.8;
+        } else if (totalSeats <= 220) {
+          numRows = 7; innerRadius = 158; outerRadius = 398; seatRadius = 8.6;
+        } else if (totalSeats <= 330) {
+          numRows = 9; innerRadius = 148; outerRadius = 406; seatRadius = 7.0;
+        } else if (totalSeats <= 430) {
+          numRows = 10; innerRadius = 140; outerRadius = 412; seatRadius = 6.2;
+        } else {
+          numRows = 12; innerRadius = 134; outerRadius = 416; seatRadius = 5.4;
+        }
+
+        const cx = 450;
+        const cy = 442;
+        const radii = [];
+        for (let r = 0; r < numRows; r++) {
+          radii.push(innerRadius + (r / (numRows - 1)) * (outerRadius - innerRadius));
+        }
+
+        const sumRadii = radii.reduce((a, b) => a + b, 0);
+        const raw = radii.map((r) => (r / sumRadii) * totalSeats);
+        const rowCounts = raw.map((v) => Math.floor(v));
+        const rem = totalSeats - rowCounts.reduce((a, b) => a + b, 0);
+
+        raw
+          .map((v, i) => ({ i, frac: v - Math.floor(v) }))
+          .sort((a, b) => b.frac - a.frac)
+          .slice(0, rem)
+          .forEach(({ i }) => { rowCounts[i] += 1; });
+
+        const positions = [];
+        const margin = 0.025;
+        for (let r = 0; r < numRows; r++) {
+          const count = rowCounts[r];
+          const rad = radii[r];
+          for (let i = 0; i < count; i++) {
+            const t = count === 1 ? 0.5 : i / (count - 1);
+            const angle = Math.PI - margin - t * (Math.PI - 2 * margin);
+            positions.push({
+              x: cx + rad * Math.cos(angle),
+              y: cy - rad * Math.sin(angle),
+              angle,
+              rad,
+            });
+          }
+        }
+
+        // Ordena por ângulo (esquerda → direita) e depois por raio (interno → externo)
+        positions.sort((a, b) =>
+          Math.abs(b.angle - a.angle) > 0.0004 ? b.angle - a.angle : a.rad - b.rad
+        );
+
+        return { positions, seatRadius, cx, cy, innerRadius };
+      }
+
+      // =========================================================================
+      // 5. RENDERIZAÇÃO
+      // =========================================================================
+      function createSvg(tag, attrs = {}) {
+        const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+        for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, String(v));
+        return el;
+      }
+
+      function populateDropdownOnce() {
+        legSelect.innerHTML = '';
+        ERAS.forEach((era) => {
+          const og = document.createElement('optgroup');
+          og.label = `${era.label} (${era.years})`;
+          LEGISLATURES.forEach((leg, idx) => {
+            if (leg.era !== era.id) return;
+            const opt = document.createElement('option');
+            opt.value = String(idx);
+            opt.textContent = `${leg.n}ª Leg. (${leg.years})`;
+            og.appendChild(opt);
+          });
+          legSelect.appendChild(og);
+        });
+      }
+
+      function renderNavigation() {
+        const leg = currentLeg();
+        const activeEraId = leg.era;
+
+        // 1. Barra das 6 Eras
+        eraBar.innerHTML = '';
+        ERAS.forEach((era) => {
+          const active = era.id === activeEraId;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = active
+            ? 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-900 text-white shadow-xs transition'
+            : 'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition';
+          btn.innerHTML = `<span>${era.label}</span><span class="text-[10px] ${active ? 'text-slate-300' : 'text-slate-500'}">${era.range}</span>`;
+          btn.addEventListener('click', () => {
+            const firstIdx = LEGISLATURES.findIndex((l) => l.era === era.id);
+            if (firstIdx !== -1 && firstIdx !== state.legIndex) {
+              state.legIndex = firstIdx;
+              state.selectedParty = null;
+              renderAll(true);
+            }
+          });
+          eraBar.appendChild(btn);
+        });
+
+        // 2. Botões rápidos das legislaturas da era atual
+        legButtons.innerHTML = '';
+        LEGISLATURES.forEach((item, idx) => {
+          if (item.era !== activeEraId) return;
+          const active = idx === state.legIndex;
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = active
+            ? 'px-2.5 py-1 rounded-lg text-xs font-bold bg-indigo-600 text-white shadow-xs transition'
+            : 'px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-50 text-slate-700 border border-slate-200 hover:bg-slate-100 transition';
+          btn.innerHTML = `${item.n}ª <span class="text-[10px] font-normal ${active ? 'text-indigo-100' : 'text-slate-400'}">${item.years.split('–')[0]}</span>`;
+          btn.title = `${item.n}ª Legislatura (${item.years})`;
+          btn.addEventListener('click', () => {
+            if (state.legIndex === idx) return;
+            state.legIndex = idx;
+            state.selectedParty = null;
+            renderAll(true);
+          });
+          legButtons.appendChild(btn);
+        });
+
+        // 3. Dropdown e setas ◀ ▶
+        legSelect.value = String(state.legIndex);
+        btnPrev.disabled = state.legIndex === 0;
+        btnNext.disabled = state.legIndex === LEGISLATURES.length - 1;
+
+        // 4. Alternador Câmara / Senado (apenas 2 botões)
+        const depTotal = sumSeats(leg.camara);
+        const senTotal = sumSeats(leg.senado);
+        const senName = getSenateLabel(leg);
+
+        tabCamara.textContent = `Câmara dos Deputados (${depTotal})`;
+        tabSenado.textContent = senTotal > 0 ? `${senName} (${senTotal})` : `${senName} (—)`;
+
+        [tabCamara, tabSenado].forEach((btn) => {
+          const active = btn.dataset.chamber === state.chamber;
+          btn.setAttribute('aria-selected', String(active));
+          btn.className = active
+            ? 'chamber-tab px-3.5 py-1.5 text-xs sm:text-sm font-semibold rounded-lg bg-white text-slate-900 shadow-xs transition'
+            : 'chamber-tab px-3.5 py-1.5 text-xs sm:text-sm font-medium rounded-lg text-slate-600 hover:text-slate-900 transition';
+        });
+
+        // 5. Cabeçalho contextual (1 linha)
+        const eraObj = ERAS.find((e) => e.id === leg.era);
+        legContext.textContent = `${leg.n}ª Legislatura (${leg.years}) — ${leg.context}`;
+        chartBadge.textContent = `${leg.n}ª Legislatura • ${leg.years}`;
+        eraBadge.textContent = eraObj ? eraObj.label : '';
+
+        // 6. Pílula de filtro ativo
+        if (state.selectedParty) {
+          filterPillText.textContent = state.selectedParty;
+          filterPill.classList.remove('hidden');
+          filterPill.classList.add('inline-flex');
+        } else {
+          filterPill.classList.add('hidden');
+          filterPill.classList.remove('inline-flex');
+        }
+      }
+
+      function renderChartAndLegend(animate = false) {
+        const leg = currentLeg();
+        const entries = getPartyEntries(leg);
+        const total = entries.reduce((acc, e) => acc + e.count, 0);
+
+        // Caso especial: 36ª Legislatura no modo Senado (unicameral)
+        if (total === 0) {
+          hemicycleWrap.classList.add('hidden');
+          legendSection.classList.add('hidden');
+          unicameralNotice.classList.remove('hidden');
+          return;
+        }
+
+        unicameralNotice.classList.add('hidden');
+        hemicycleWrap.classList.remove('hidden');
+        legendSection.classList.remove('hidden');
+
+        // Constrói array plano de assentos
+        const seats = [];
+        entries.forEach((p) => {
+          const pct = ((p.count / total) * 100).toFixed(1).replace('.', ',');
+          for (let i = 0; i < p.count; i++) {
+            seats.push({
+              party: p.name,
+              color: p.color,
+              count: p.count,
+              pct,
+            });
+          }
+        });
+
+        const { positions, seatRadius, cx, cy, innerRadius } = computeHemicyclePositions(seats.length);
+
+        svgEl.innerHTML = '';
+        if (animate) {
+          svgEl.classList.remove('hemicycle-fade');
+          void svgEl.offsetWidth;
+          svgEl.classList.add('hemicycle-fade');
+        }
+
+        // Guias discretas
+        const guides = createSvg('g', { 'pointer-events': 'none' });
+        const guideR = Math.max(106, innerRadius - 18);
+        guides.appendChild(createSvg('path', {
+          d: `M ${cx - guideR} ${cy} A ${guideR} ${guideR} 0 0 1 ${cx + guideR} ${cy}`,
+          fill: 'none', stroke: '#e2e8f0', 'stroke-width': '1.2',
+        }));
+        guides.appendChild(createSvg('line', {
+          x1: cx - 425, y1: cy, x2: cx + 425, y2: cy,
+          stroke: '#e2e8f0', 'stroke-width': '1.2',
+        }));
+        svgEl.appendChild(guides);
+
+        // Assentos
+        const seatGroup = createSvg('g');
+        const strokeW = total > 350 ? '0.6' : '0.9';
+        seats.forEach((seat, idx) => {
+          const pos = positions[idx];
+          const dimmed = state.selectedParty && seat.party !== state.selectedParty;
+          const circle = createSvg('circle', {
+            cx: pos.x.toFixed(2),
+            cy: pos.y.toFixed(2),
+            r: seatRadius.toFixed(2),
+            fill: seat.color,
+            stroke: '#ffffff',
+            'stroke-width': strokeW,
+            class: `seat-node${dimmed ? ' seat-dimmed' : ''}`,
+          });
+
+          circle.addEventListener('pointerenter', (e) => showTooltip(seat, e.clientX, e.clientY));
+          circle.addEventListener('pointermove', (e) => positionTooltip(e.clientX, e.clientY));
+          circle.addEventListener('pointerleave', hideTooltip);
+          circle.addEventListener('click', () => togglePartyFilter(seat.party));
+
+          seatGroup.appendChild(circle);
+        });
+        svgEl.appendChild(seatGroup);
+
+        // Centro do Hemiciclo: total e nome da Casa
+        const activeEntry = state.selectedParty
+          ? entries.find((e) => e.name === state.selectedParty)
+          : null;
+        const displayedNum = activeEntry ? activeEntry.count : total;
+        const houseLabel = getChamberLabel(leg);
+
+        const centerG = createSvg('g', { 'pointer-events': 'none', 'text-anchor': 'middle' });
+        const numText = createSvg('text', {
+          x: cx, y: cy - 42, fill: '#0f172a',
+          'font-size': '54', 'font-weight': '700',
+        });
+        numText.textContent = String(displayedNum);
+        centerG.appendChild(numText);
+
+        const houseText = createSvg('text', {
+          x: cx, y: cy - 18, fill: '#64748b',
+          'font-size': '13', 'font-weight': '600', 'letter-spacing': '0.05em',
+        });
+        houseText.textContent = houseLabel.toUpperCase();
+        centerG.appendChild(houseText);
+
+        if (activeEntry) {
+          const pct = ((activeEntry.count / total) * 100).toFixed(1).replace('.', ',');
+          const pctText = createSvg('text', {
+            x: cx, y: cy - 2, fill: '#4f46e5',
+            'font-size': '12', 'font-weight': '600',
+          });
+          pctText.textContent = `${pct}% de ${total}`;
+          centerG.appendChild(pctText);
+        }
+        svgEl.appendChild(centerG);
+
+        // Legenda interativa abaixo do gráfico
+        legendTotal.textContent = `${total} cadeiras`;
+        legendGrid.innerHTML = '';
+
+        entries.forEach((p) => {
+          const pct = ((p.count / total) * 100).toFixed(1).replace('.', ',');
+          const active = state.selectedParty === p.name;
+
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `flex items-center justify-between gap-2 px-3 py-2 rounded-xl border text-left transition ${
+            active
+              ? 'bg-indigo-50 border-indigo-300 ring-1 ring-indigo-200'
+              : 'bg-slate-50/70 border-slate-200/80 hover:bg-slate-100/80 hover:border-slate-300'
+          }`;
+
+          btn.innerHTML = `
+            <div class="flex items-center gap-2.5 min-w-0">
+              <span class="w-3 h-3 rounded-full shrink-0" style="background-color:${p.color}"></span>
+              <span class="text-xs sm:text-sm font-medium text-slate-800 truncate">${p.name}</span>
+            </div>
+            <div class="flex items-baseline gap-1.5 shrink-0">
+              <span class="text-xs sm:text-sm font-bold text-slate-900">${p.count}</span>
+              <span class="text-[11px] text-slate-500 w-11 text-right">${pct}%</span>
+            </div>
+          `;
+
+          btn.addEventListener('click', () => togglePartyFilter(p.name));
+          legendGrid.appendChild(btn);
+        });
+
+        // Nota discreta sobre "Outros partidos" quando presente
+        const hasOthers = entries.some((e) => e.name === 'Outros partidos');
+        if (hasOthers && leg.othersDetail) {
+          othersNote.textContent = `Outros partidos: ${leg.othersDetail}`;
+          othersNote.classList.remove('hidden');
+        } else {
+          othersNote.classList.add('hidden');
+        }
+      }
+
+      function togglePartyFilter(partyName) {
+        state.selectedParty = state.selectedParty === partyName ? null : partyName;
+        renderNavigation();
+        renderChartAndLegend(false);
+      }
+
+      function renderAll(animate = false) {
+        renderNavigation();
+        renderChartAndLegend(animate);
+      }
+
+      // =========================================================================
+      // 6. TOOLTIP LEVE
+      // =========================================================================
+      function showTooltip(seat, x, y) {
+        ttDot.style.backgroundColor = seat.color;
+        ttParty.textContent = seat.party;
+        ttStats.textContent = `${seat.count} ${seat.count === 1 ? 'cadeira' : 'cadeiras'} (${seat.pct}% da Casa)`;
+        tooltip.classList.remove('hidden');
+        positionTooltip(x, y);
+      }
+
+      function positionTooltip(x, y) {
+        const pad = 12;
+        const rect = tooltip.getBoundingClientRect();
+        let left = x + pad;
+        let top = y + pad;
+        if (left + rect.width > window.innerWidth - 10) left = x - rect.width - pad;
+        if (top + rect.height > window.innerHeight - 10) top = y - rect.height - pad;
+        tooltip.style.left = `${Math.max(8, left)}px`;
+        tooltip.style.top = `${Math.max(8, top)}px`;
+      }
+
+      function hideTooltip() {
+        tooltip.classList.add('hidden');
+      }
+
+      // =========================================================================
+      // 7. EXPORTAÇÃO EM PNG (CANVAS ALTA RESOLUÇÃO)
+      // =========================================================================
+      function exportPNG() {
+        try {
+          const leg = currentLeg();
+          const entries = getPartyEntries(leg);
+          const total = entries.reduce((acc, e) => acc + e.count, 0);
+
+          if (total === 0) {
+            showToast('A 36ª Legislatura foi unicameral (sem Senado para exportar).');
+            return;
+          }
+
+          const seats = [];
+          entries.forEach((p) => {
+            for (let i = 0; i < p.count; i++) {
+              seats.push({ party: p.name, color: p.color });
+            }
+          });
+
+          const { positions, seatRadius, innerRadius } = computeHemicyclePositions(seats.length);
+          const rowsLegend = Math.ceil(entries.length / 3);
+          const W = 1600;
+          const H = 840 + rowsLegend * 44;
+
+          const canvas = document.createElement('canvas');
+          canvas.width = W;
+          canvas.height = H;
+          const ctx = canvas.getContext('2d');
+
+          // Fundo branco
+          ctx.fillStyle = '#ffffff';
+          ctx.fillRect(0, 0, W, H);
+
+          // Título e contexto
+          const houseLabel = getChamberLabel(leg);
+          ctx.fillStyle = '#0f172a';
+          ctx.font = '700 34px Inter, system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(`Congresso Nacional — ${leg.n}ª Legislatura (${leg.years}) • ${houseLabel}`, W / 2, 66);
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '400 18px Inter, system-ui, sans-serif';
+          ctx.fillText(leg.context, W / 2, 100);
+
+          // Hemiciclo
+          const scale = 1.28;
+          const ox = (W - 900 * scale) / 2;
+          const oy = 128;
+          const cx = ox + 450 * scale;
+          const cy = oy + 442 * scale;
+          const guideR = Math.max(106, innerRadius - 18) * scale;
+
+          ctx.strokeStyle = '#e2e8f0';
+          ctx.lineWidth = 1.8;
+          ctx.beginPath();
+          ctx.arc(cx, cy, guideR, Math.PI, 0, false);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(cx - 425 * scale, cy);
+          ctx.lineTo(cx + 425 * scale, cy);
+          ctx.stroke();
+
+          seats.forEach((seat, i) => {
+            const p = positions[i];
+            const dimmed = state.selectedParty && seat.party !== state.selectedParty;
+            ctx.save();
+            ctx.globalAlpha = dimmed ? 0.13 : 1;
+            ctx.beginPath();
+            ctx.arc(ox + p.x * scale, oy + p.y * scale, seatRadius * scale, 0, Math.PI * 2);
+            ctx.fillStyle = seat.color;
+            ctx.fill();
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = total > 350 ? 0.9 : 1.3;
+            ctx.stroke();
+            ctx.restore();
+          });
+
+          // Contagem central
+          const activeEntry = state.selectedParty
+            ? entries.find((e) => e.name === state.selectedParty)
+            : null;
+          const displayedNum = activeEntry ? activeEntry.count : total;
+
+          ctx.fillStyle = '#0f172a';
+          ctx.font = '700 68px Inter, system-ui, sans-serif';
+          ctx.textAlign = 'center';
+          ctx.fillText(String(displayedNum), cx, cy - 54);
+
+          ctx.fillStyle = '#64748b';
+          ctx.font = '600 17px Inter, system-ui, sans-serif';
+          ctx.fillText(houseLabel.toUpperCase(), cx, cy - 22);
+
+          // Legenda em 3 colunas
+          const cols = Math.min(3, entries.length);
+          const colW = 470;
+          const startX = (W - cols * colW) / 2 + 20;
+          const startY = 760;
+
+          ctx.textAlign = 'left';
+          entries.forEach((p, i) => {
+            const col = i % cols;
+            const row = Math.floor(i / cols);
+            const lx = startX + col * colW;
+            const ly = startY + row * 42;
+            const pct = ((p.count / total) * 100).toFixed(1).replace('.', ',');
+
+            ctx.beginPath();
+            ctx.arc(lx, ly, 7.5, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '600 16px Inter, system-ui, sans-serif';
+            const label = p.name.length > 30 ? p.name.slice(0, 29) + '…' : p.name;
+            ctx.fillText(label, lx + 16, ly + 5);
+
+            ctx.fillStyle = '#475569';
+            ctx.font = '500 15px Inter, system-ui, sans-serif';
+            ctx.fillText(`${p.count} (${pct}%)`, lx + colW - 125, ly + 5);
+          });
+
+          const a = document.createElement('a');
+          a.download = `congresso-${leg.n}a-legislatura-${leg.years}-${state.chamber}.png`;
+          a.href = canvas.toDataURL('image/png');
+          a.click();
+          showToast('PNG exportado com sucesso.');
+        } catch (err) {
+          console.error(err);
+          showToast('Erro ao exportar PNG.');
+        }
+      }
+
+      // =========================================================================
+      // 8. EVENTOS E INICIALIZAÇÃO
+      // =========================================================================
+      legSelect.addEventListener('change', (e) => {
+        state.legIndex = Number(e.target.value);
+        state.selectedParty = null;
+        renderAll(true);
+      });
+
+      btnPrev.addEventListener('click', () => {
+        if (state.legIndex > 0) {
+          state.legIndex -= 1;
+          state.selectedParty = null;
+          renderAll(true);
+        }
+      });
+
+      btnNext.addEventListener('click', () => {
+        if (state.legIndex < LEGISLATURES.length - 1) {
+          state.legIndex += 1;
+          state.selectedParty = null;
+          renderAll(true);
+        }
+      });
+
+      [tabCamara, tabSenado].forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const next = btn.dataset.chamber;
+          if (state.chamber === next) return;
+          state.chamber = next;
+          state.selectedParty = null;
+          renderAll(true);
+        });
+      });
+
+      btnClearFilter.addEventListener('click', () => {
+        state.selectedParty = null;
+        renderNavigation();
+        renderChartAndLegend(false);
+      });
+
+      btnExportPng.addEventListener('click', exportPNG);
+
+      // Inicialização
+      populateDropdownOnce();
+      renderAll(false);
+    })();
+  </script>
+</body>
+</html>
